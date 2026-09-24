@@ -65,10 +65,11 @@ Markdown as it is.
   folder.
 - **Images**: `![[image-1.png]]` shows `assets/<note name>/image-1.png` from the note's
   folder (`![[image-1.png|300]]` sets the width). `assets` folders start collapsed in the
-  tree, and renaming a note renames its image folder too.
-- **Theme**: system, light, dark. **Zoom**: 50–200 %.
+  tree, and renaming a note renames its image folder too. A picture clicked in the tree
+  opens as a picture, not as text.
+- **Theme**: system, light, dark. **Zoom**: 50–200 %. **Width**: a centred column or the full pane.
 - Autosave one second after an edit, undo and redo, search within the note.
-- The theme, zoom, panel width and last opened note are remembered.
+- The theme, zoom, text width, panel width and last opened note are remembered.
 
 ## Keyboard shortcuts
 
@@ -89,12 +90,13 @@ Markdown as it is.
 ## Build
 
 ```sh
+./build.sh         # installs the dependencies if needed, then builds build/macaed.html
 npm install
 npm run build      # -> build/macaed.html
 npm run watch      # rebuild on changes in src/
 npm run typecheck  # tsc --noEmit
-npm test           # 69 checks of the block model and of formatting
-npm run test:browser  # 30 checks of the built editor in headless Chrome
+npm test           # 77 checks of the block model, formatting and Markdown syntax
+npm run test:browser  # 35 checks of the built editor in headless Chrome
 ```
 
 `build.mjs` bundles `src/main.ts` with esbuild into an IIFE and substitutes it, along with

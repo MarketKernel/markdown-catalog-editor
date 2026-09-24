@@ -338,6 +338,24 @@ await scenario('Intro\n\n![[dot.png]]\n\n![[gone.png]]\n', async (b) => {
     document.querySelector('.tree-item[data-path="assets"] .tree-mark')?.textContent,
     Boolean(document.querySelector('.tree-item[data-path="assets/Note"]')),
   ]`), ['▸', false]);
+
+  await b.click('.tree-item[data-path="assets"]', 'start');
+  await b.click('.tree-item[data-path="assets/Note/dot.png"]', 'start');
+  await b.sleep(200);
+  eq('a picture from the tree opens in the viewer, not the editor', await b.evaluate(`[
+    document.getElementById('doc').hidden,
+    document.querySelector('#viewer img')?.naturalWidth,
+    document.querySelector('#viewer figcaption')?.textContent,
+    document.getElementById('status-path').textContent,
+  ]`), [true, 1, 'dot.png · 1 × 1', 'assets/Note/dot.png']);
+
+  await b.click('.tree-item[data-path="Note.md"]', 'start');
+  await b.sleep(200);
+  eq('the note comes back after the picture', await b.evaluate(`[
+    document.getElementById('viewer').hidden,
+    document.getElementById('doc').hidden,
+    document.querySelector('img.embed')?.naturalWidth,
+  ]`), [true, false, 1]);
 }, { 'assets/Note/dot.png': PIXEL });
 
 console.log(`${passed} browser checks passed${failed ? `, ${failed} failed` : ''}`);

@@ -6,6 +6,8 @@ export interface Settings {
   theme: Theme;
   /** Percent; the document area scales, the chrome does not. */
   zoom: number;
+  /** The text fills the whole pane instead of a centred column. */
+  fullWidth: boolean;
   sidebar: number;
   sidebarHidden: boolean;
   mode: 'read' | 'edit';
@@ -24,6 +26,7 @@ export const ZOOM_STEP = 10;
 const DEFAULTS: Settings = {
   theme: 'system',
   zoom: 100,
+  fullWidth: false,
   sidebar: 260,
   sidebarHidden: false,
   mode: 'read',
@@ -71,6 +74,10 @@ export function applyTheme(theme: Theme): void {
 
 export function applyZoom(zoom: number): void {
   document.documentElement.style.setProperty('--zoom', String(zoom / 100));
+}
+
+export function applyFullWidth(full: boolean): void {
+  document.body.classList.toggle('doc-full', full);
 }
 
 export function applySidebar(width: number, hidden: boolean): void {

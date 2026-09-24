@@ -6,6 +6,7 @@
 import { Editor, type EditorStatus, type FormatAction, type Mode } from './editor';
 import { createMarkdown } from './markdown';
 import {
+  applyFullWidth,
   applySidebar,
   applyTheme,
   applyZoom,
@@ -47,6 +48,8 @@ const md = createMarkdown();
 const gate = el('gate');
 const app = el('app');
 const scroller = el<HTMLDivElement>('scroller');
+const doc = el('doc');
+const viewer = el('viewer');
 const placeholder = el('placeholder');
 const statusPath = el('status-path');
 const statusState = el('status-state');
@@ -54,6 +57,8 @@ const statusCount = el('status-count');
 
 let vault: Vault | null = null;
 let currentPath: string | null = null;
+/** An image opened from the tree; it replaces the note, so `currentPath` is null meanwhile. */
+let viewedPath: string | null = null;
 let dirty = false;
 /** Bumped on every edit, so a save knows whether the text moved on while it was writing. */
 let revision = 0;
@@ -64,7 +69,7 @@ const assets = new Map<string, string>();
  * Editor
  * ------------------------------------------------------------------ */
 
-const editor = new Editor(el('doc'), scroller, md, {
+const editor = new Editor(doc, scroller, md, {
   onChange: () => {
     dirty = true;
     revision += 1;
@@ -84,7 +89,7 @@ const editor = new Editor(el('doc'), scroller, md, {
 });
 
 const tree = new FileTree(el('tree'), el('note-count'), {
-  onOpen: (path) => void openNote(path),
+  onOpen: (path) => void (isNote(path) ? openNote(path) : openImage(path)),
   onCreateFile: (dir) => void createNote(dir),
   onCreateDir: (dir) => void createFolder(dir),
   onRename: (entry) => void renameEntry(entry),
@@ -108,6 +113,7 @@ async function useVault(next: Vault): Promise<void> {
   await flushSave();
   vault = next;
   currentPath = null;
+  closeImage();
   dirty = false;
   for (const url of assets.values()) URL.revokeObjectURL(url);
   assets.clear();
@@ -213,6 +219,7 @@ async function openNote(path: string): Promise<void> {
   try {
     const text = await vault.readText(path);
     currentPath = path;
+    closeImage();
     editor.load(text);
     dirty = false;
     tree.setActive(path);
@@ -285,28 +292,75 @@ function assetsDirOf(notePath: string): string {
   return join(join(dirOf(notePath), ASSETS_DIR), stripExtension(baseOf(notePath)));
 }
 
+/** A blob URL for a vault file, kept for as long as the vault is open. */
+async function assetUrl(path: string): Promise<string | null> {
+  const cached = assets.get(path);
+  if (cached) return cached;
+  const blob = await vault?.readBlob(path);
+  if (!blob) return null;
+  // Files from a flat list come without a type, and an SVG will not draw without one.
+  const typed = blob.type || !path.toLowerCase().endsWith('.svg') ? blob : blob.slice(0, blob.size, 'image/svg+xml');
+  const url = URL.createObjectURL(typed);
+  assets.set(path, url);
+  return url;
+}
+
 async function resolveAsset(image: HTMLImageElement): Promise<void> {
   if (!vault || !currentPath) return;
   const embed = image.dataset['embed'];
   const path = embed !== undefined
     ? join(assetsDirOf(currentPath), embed)
     : resolvePath(currentPath, safeDecode(image.dataset['asset'] ?? ''));
-  const cached = assets.get(path);
-  if (cached) {
-    image.src = cached;
-    return;
-  }
-  const blob = await vault.readBlob(path);
-  if (!blob) {
+  const url = await assetUrl(path);
+  if (!url) {
     image.replaceWith(Object.assign(document.createElement('span'), {
       className: 'missing-asset',
       textContent: `no such file: ${path}`,
     }));
     return;
   }
-  const url = URL.createObjectURL(blob);
-  assets.set(path, url);
   image.src = url;
+}
+
+/** Shows a picture from the tree in place of the note — never as text in the editor. */
+async function openImage(path: string): Promise<void> {
+  if (!vault || path === viewedPath) return;
+  await flushSave();
+  const url = await assetUrl(path);
+  if (!url) return void toast(`Could not read ${path}`, 'error');
+
+  const name = baseOf(path);
+  const caption = document.createElement('figcaption');
+  caption.textContent = name;
+  let media: HTMLElement;
+  if (path.toLowerCase().endsWith('.pdf')) {
+    media = Object.assign(document.createElement('iframe'), { src: url, title: name });
+  } else {
+    const image = Object.assign(document.createElement('img'), { src: url, alt: name });
+    image.addEventListener('load', () => {
+      caption.textContent = `${name} · ${image.naturalWidth} × ${image.naturalHeight}`;
+    });
+    media = image;
+  }
+  viewer.replaceChildren(media, caption);
+
+  currentPath = null;
+  viewedPath = path;
+  dirty = false;
+  editor.load('');
+  doc.hidden = true;
+  placeholder.hidden = true;
+  viewer.hidden = false;
+  tree.setActive(path);
+  document.title = `${name} — Notes editor`;
+  renderState();
+}
+
+function closeImage(): void {
+  viewedPath = null;
+  viewer.hidden = true;
+  viewer.replaceChildren();
+  doc.hidden = false;
 }
 
 /* ------------------------------------------------------------------ *
@@ -422,11 +476,16 @@ async function renameEntry(entry: TreeEntry): Promise<void> {
     }
     if (currentPath === entry.path) currentPath = next;
     else if (currentPath?.startsWith(`${entry.path}/`)) currentPath = next + currentPath.slice(entry.path.length);
+    if (viewedPath === entry.path) viewedPath = next;
+    else if (viewedPath?.startsWith(`${entry.path}/`)) viewedPath = next + viewedPath.slice(entry.path.length);
     await refreshTree();
     if (currentPath) {
       tree.setActive(currentPath);
       settings.lastPath = currentPath;
       persist();
+    } else if (viewedPath) {
+      tree.setActive(viewedPath);
+      renderState();
     }
   } catch (error) {
     toast(error instanceof Error ? error.message : String(error), 'error');
@@ -435,14 +494,15 @@ async function renameEntry(entry: TreeEntry): Promise<void> {
 
 async function deleteEntry(entry: TreeEntry): Promise<void> {
   if (!vault?.writable) return;
-  const kind = entry.kind === 'dir' ? 'folder' : 'note';
+  const kind = entry.kind === 'dir' ? 'folder' : isNote(entry.name) ? 'note' : 'file';
   const ok = await confirmAsk('Delete', `Delete the ${kind} "${entry.name}"? This cannot be undone.`);
   if (!ok) return;
   try {
     await vault.remove(entry.path, entry.kind);
-    const wasOpen = currentPath === entry.path || Boolean(currentPath?.startsWith(`${entry.path}/`));
-    if (wasOpen) {
+    const inside = (path: string | null): boolean => path === entry.path || Boolean(path?.startsWith(`${entry.path}/`));
+    if (inside(currentPath) || inside(viewedPath)) {
       currentPath = null;
+      closeImage();
       dirty = false;
       editor.load('');
       placeholder.hidden = false;
@@ -669,6 +729,19 @@ el('zoom-in').addEventListener('click', () => setZoom(settings.zoom + ZOOM_STEP)
 el('zoom-out').addEventListener('click', () => setZoom(settings.zoom - ZOOM_STEP));
 el('zoom-reset').addEventListener('click', () => setZoom(100));
 
+function syncWidthButton(): void {
+  const button = el('full-width');
+  button.title = settings.fullWidth ? 'Text: full width' : 'Text: centred column';
+  button.setAttribute('aria-pressed', String(settings.fullWidth));
+}
+
+el('full-width').addEventListener('click', () => {
+  settings.fullWidth = !settings.fullWidth;
+  applyFullWidth(settings.fullWidth);
+  syncWidthButton();
+  persist();
+});
+
 function setSidebar(width: number, hidden: boolean): void {
   settings.sidebar = Math.min(560, Math.max(160, Math.round(width)));
   settings.sidebarHidden = hidden;
@@ -700,7 +773,7 @@ resizer.addEventListener('keydown', (event) => {
  * ------------------------------------------------------------------ */
 
 function renderState(): void {
-  statusPath.textContent = currentPath ?? '—';
+  statusPath.textContent = currentPath ?? viewedPath ?? '—';
   if (!vault) statusState.textContent = '';
   else if (!vault.writable) statusState.textContent = 'read-only';
   else statusState.textContent = dirty ? 'unsaved' : 'saved';
@@ -769,6 +842,8 @@ document.addEventListener('keydown', (event) => {
 
 applyTheme(settings.theme);
 applyZoom(settings.zoom);
+applyFullWidth(settings.fullWidth);
+syncWidthButton();
 applySidebar(settings.sidebar, settings.sidebarHidden);
 el('zoom-reset').textContent = `${settings.zoom}%`;
 el('theme').title = THEME_LABEL[settings.theme];
