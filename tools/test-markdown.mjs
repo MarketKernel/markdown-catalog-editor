@@ -67,6 +67,22 @@ check(
   '<img src="" alt="alt" data-asset="pics/x.png">',
 );
 check('unclosed embed is text', inline('![[image.png'), '![[image.png');
+check(
+  'a fenced block is labelled with its language',
+  md.render('```sh\necho hi\n```').startsWith('<div class="code-block" data-lang="Bash"><pre><code class="language-sh">'),
+  true,
+);
+const label = (tag) => md.render('```' + tag + '\nx\n```').match(/data-lang="([^"]*)"/)?.[1];
+check('an alias shows the full name', label('ts'), 'TypeScript');
+check('C# keeps its symbol', label('cs'), 'C#');
+check('html is not "HTML, XML"', label('html'), 'HTML');
+check('toml is not "TOML, also INI"', label('toml'), 'TOML');
+check('an unknown language keeps its tag', label('mermaid'), 'mermaid');
+check(
+  'a fence without a language gets no label',
+  md.render('```\nplain\n```'),
+  '<pre><code>plain\n</code></pre>\n',
+);
 
 console.log(`${passed} checks passed${failed ? `, ${failed} failed` : ''}`);
 if (failed) process.exit(1);

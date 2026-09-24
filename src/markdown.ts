@@ -35,7 +35,18 @@ for (const [name, lang] of Object.entries({
   hljs.registerLanguage(name, lang);
 }
 
-const EXTERNAL = /^[a-z][a-z0-9+.-]*:|^\/\//i;
+// Where highlight.js's own name lumps several formats together, the fence tag decides.
+const LANGUAGE_NAMES: Record<string, string> = {
+  html: 'HTML', xhtml: 'XHTML', xml: 'XML', svg: 'SVG', rss: 'RSS', atom: 'Atom', plist: 'Property list',
+  ini: 'INI', toml: 'TOML', php: 'PHP',
+};
+
+/** `ts` → "TypeScript"; a language highlight.js doesn't know keeps its tag. */
+function languageName(tag: string): string {
+  return LANGUAGE_NAMES[tag.toLowerCase()] ?? hljs.getLanguage(tag)?.name ?? tag;
+}
+
+const EXTERNAL =/^[a-z][a-z0-9+.-]*:|^\/\//i;
 const IMAGE = /\.(png|jpe?g|gif|webp|svg|avif|bmp|ico)$/i;
 
 export function createMarkdown(): MarkdownIt {
@@ -104,6 +115,15 @@ export function createMarkdown(): MarkdownIt {
     return renderLink
       ? renderLink(tokens, index, options, env, self)
       : self.renderToken(tokens, index, options);
+  };
+
+  // A fenced block names its language in the corner; the label is CSS, so copying the code skips it.
+  const renderFence = md.renderer.rules['fence']!;
+  md.renderer.rules['fence'] = (tokens, index, options, env, self) => {
+    const html = renderFence(tokens, index, options, env, self);
+    const language = tokens[index]!.info.trim().split(/\s+/)[0] ?? '';
+    if (!language) return html;
+    return `<div class="code-block" data-lang="${md.utils.escapeHtml(languageName(language))}">${html}</div>\n`;
   };
 
   // A checkbox carries its line within the block, so a click can flip the source.
