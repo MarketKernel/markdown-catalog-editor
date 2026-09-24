@@ -98,6 +98,9 @@
         <button id="find" class="icon-button" type="button" title="Search (⌘F)">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         </button>
+        <button id="toggle-title" class="icon-button" type="button" title="Note title: shown" aria-pressed="true">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14M12 5v9M6 19h12"/></svg>
+        </button>
         <button id="full-width" class="icon-button" type="button" title="Text: centred column" aria-pressed="false">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5v14M21 5v14M7.5 12h9M10 9.5 7.5 12l2.5 2.5M14 9.5l2.5 2.5-2.5 2.5"/></svg>
         </button>
@@ -122,6 +125,7 @@
     </div>
 
     <div id="scroller" class="scroller" tabindex="0">
+      <h1 id="inline-title" class="inline-title" hidden></h1>
       <div id="doc" class="doc"></div>
       <figure id="viewer" class="viewer" hidden></figure>
       <div id="placeholder" class="placeholder">

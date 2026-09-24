@@ -117,6 +117,11 @@ export class Editor {
     return this.eol === '\n' ? this.text : this.text.replace(/\n/g, this.eol);
   }
 
+  /** The start of the document, cheap enough to look at on every keystroke. */
+  getHead(length: number): string {
+    return this.text.slice(0, length);
+  }
+
   getMode(): Mode {
     return this.mode;
   }

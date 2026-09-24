@@ -49,6 +49,7 @@ const gate = el('gate');
 const app = el('app');
 const scroller = el<HTMLDivElement>('scroller');
 const doc = el('doc');
+const inlineTitle = el('inline-title');
 const viewer = el('viewer');
 const placeholder = el('placeholder');
 const statusPath = el('status-path');
@@ -74,6 +75,7 @@ const editor = new Editor(doc, scroller, md, {
     dirty = true;
     revision += 1;
     renderState();
+    renderTitle();
     scheduleSave();
   },
   onOpenNote: (href) => {
@@ -124,6 +126,7 @@ async function useVault(next: Vault): Promise<void> {
   gate.hidden = true;
   app.hidden = false;
   renderState();
+  renderTitle();
 
   const notes = tree.notes();
   if (notes.length === 0) {
@@ -228,6 +231,7 @@ async function openNote(path: string): Promise<void> {
     document.title = `${stripExtension(baseOf(path))} — Notes editor`;
     placeholder.hidden = true;
     renderState();
+    renderTitle();
   } catch (error) {
     toast(error instanceof Error ? error.message : String(error), 'error');
   }
@@ -354,6 +358,7 @@ async function openImage(path: string): Promise<void> {
   tree.setActive(path);
   document.title = `${name} — Notes editor`;
   renderState();
+  renderTitle();
 }
 
 function closeImage(): void {
@@ -436,7 +441,8 @@ async function createNote(dir: string): Promise<void> {
   if (!name) return;
   try {
     const path = await vault.createFile(dir, withExtension(name));
-    await vault.writeText(path, `# ${stripExtension(baseOf(path))}\n\n`);
+    // The inline title already names the note; a heading is only needed without it.
+    await vault.writeText(path, settings.inlineTitle ? '' : `# ${stripExtension(baseOf(path))}\n\n`);
     await refreshTree();
     await openNote(path);
     editor.setMode('edit');
@@ -483,6 +489,7 @@ async function renameEntry(entry: TreeEntry): Promise<void> {
       tree.setActive(currentPath);
       settings.lastPath = currentPath;
       persist();
+      renderTitle();
     } else if (viewedPath) {
       tree.setActive(viewedPath);
       renderState();
@@ -510,6 +517,7 @@ async function deleteEntry(entry: TreeEntry): Promise<void> {
     }
     await refreshTree();
     renderState();
+    renderTitle();
   } catch (error) {
     toast(error instanceof Error ? error.message : String(error), 'error');
   }
@@ -742,6 +750,60 @@ el('full-width').addEventListener('click', () => {
   persist();
 });
 
+/* ------------------------------------------------------------------ *
+ * Inline title
+ * ------------------------------------------------------------------ */
+
+/** Enough of the note to get past any front matter to its first line of text. */
+const TITLE_HEAD = 8192;
+
+/** Compares titles the way a reader would: no emphasis marks, case or spacing. */
+function titleKey(text: string): string {
+  return text.replace(/\[\[|\]\]|[*_`~=]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+}
+
+/** The text of an H1 the note opens with (after front matter and blank lines), if it does. */
+function leadingHeading(head: string): string | null {
+  const lines = head.split('\n');
+  let at = 0;
+  if ((lines[0] ?? '').trim() === '---') {
+    const close = lines.findIndex((line, index) => index > 0 && (line.trim() === '---' || line.trim() === '...'));
+    if (close < 0) return null;
+    at = close + 1;
+  }
+  while (at < lines.length && lines[at]!.trim() === '') at += 1;
+  const line = lines[at] ?? '';
+  const atx = /^ {0,3}#[ \t]+(.*?)(?:[ \t]+#+)?[ \t]*$/.exec(line);
+  if (atx) return atx[1]!;
+  if (line.trim() && /^ {0,3}=+[ \t]*$/.test(lines[at + 1] ?? '')) return line;
+  return null;
+}
+
+/** Shows the file name above the note, unless it is switched off or the note already opens with it. */
+function renderTitle(): void {
+  if (!currentPath || !settings.inlineTitle) {
+    inlineTitle.hidden = true;
+    return;
+  }
+  const name = stripExtension(baseOf(currentPath));
+  const heading = leadingHeading(editor.getHead(TITLE_HEAD));
+  inlineTitle.textContent = name;
+  inlineTitle.hidden = heading !== null && titleKey(heading) === titleKey(name);
+}
+
+function syncTitleButton(): void {
+  const button = el('toggle-title');
+  button.title = settings.inlineTitle ? 'Note title: shown' : 'Note title: hidden';
+  button.setAttribute('aria-pressed', String(settings.inlineTitle));
+}
+
+el('toggle-title').addEventListener('click', () => {
+  settings.inlineTitle = !settings.inlineTitle;
+  syncTitleButton();
+  renderTitle();
+  persist();
+});
+
 function setSidebar(width: number, hidden: boolean): void {
   settings.sidebar = Math.min(560, Math.max(160, Math.round(width)));
   settings.sidebarHidden = hidden;
@@ -844,6 +906,7 @@ applyTheme(settings.theme);
 applyZoom(settings.zoom);
 applyFullWidth(settings.fullWidth);
 syncWidthButton();
+syncTitleButton();
 applySidebar(settings.sidebar, settings.sidebarHidden);
 el('zoom-reset').textContent = `${settings.zoom}%`;
 el('theme').title = THEME_LABEL[settings.theme];

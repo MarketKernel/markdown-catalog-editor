@@ -8,6 +8,8 @@ export interface Settings {
   zoom: number;
   /** The text fills the whole pane instead of a centred column. */
   fullWidth: boolean;
+  /** The file name shown as a title above the note, as Obsidian's inline title. */
+  inlineTitle: boolean;
   sidebar: number;
   sidebarHidden: boolean;
   mode: 'read' | 'edit';
@@ -27,6 +29,7 @@ const DEFAULTS: Settings = {
   theme: 'system',
   zoom: 100,
   fullWidth: false,
+  inlineTitle: true,
   sidebar: 260,
   sidebarHidden: false,
   mode: 'read',

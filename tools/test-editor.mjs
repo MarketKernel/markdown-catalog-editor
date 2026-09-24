@@ -358,5 +358,27 @@ await scenario('Intro\n\n![[dot.png]]\n\n![[gone.png]]\n', async (b) => {
   ]`), [true, false, 1]);
 }, { 'assets/Note/dot.png': PIXEL });
 
+const title = (b) => b.evaluate(`(() => { const t = document.getElementById('inline-title'); return t.hidden ? null : t.textContent; })()`);
+
+await scenario('Intro\n', async (b) => {
+  eq('the file name shows as a title', await title(b), 'Note');
+  await b.click('#doc > .block--paragraph', 'start');
+  await b.type('# note\n\n');
+  await b.press('Escape');
+  eq('a matching first heading hides the title', await title(b), null);
+  await b.click('#doc > .block--heading');
+  await b.type('s');
+  await b.press('Escape');
+  eq('a different first heading brings it back', await title(b), 'Note');
+  await b.click('#toggle-title', 'start');
+  eq('the toolbar button hides the title', await title(b), null);
+  await b.click('#toggle-title', 'start');
+  eq('and shows it again', await title(b), 'Note');
+});
+
+await scenario('---\ntags: [a]\n---\n\n# **Note**\n\nText\n', async (b) => {
+  eq('front matter and emphasis do not defeat the duplicate check', await title(b), null);
+});
+
 console.log(`${passed} browser checks passed${failed ? `, ${failed} failed` : ''}`);
 process.exit(failed ? 1 : 0);

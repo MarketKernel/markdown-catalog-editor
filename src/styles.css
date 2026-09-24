@@ -444,6 +444,18 @@ body:not(.mode-edit) .toolbar-group--format { opacity: 0.45; }
 }
 body.doc-full .doc { max-width: none; margin: 0; }
 
+/* The file name above the note; it lines up with the column the text sits in. */
+.inline-title {
+  max-width: calc(16px * var(--zoom) * 44);
+  margin: 0 auto calc(16px * var(--zoom) * 1.1);
+  font-size: calc(16px * var(--zoom) * 1.85);
+  line-height: 1.28;
+  font-weight: 700;
+  letter-spacing: -0.012em;
+  word-wrap: break-word;
+}
+body.doc-full .inline-title { max-width: none; margin-left: 0; margin-right: 0; }
+
 /* The two faces of a block share every metric that could shift the text. */
 .block {
   margin: 0 0 var(--gap);
