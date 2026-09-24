@@ -24,8 +24,8 @@ jobs:
       - name: Check out source
         uses: actions/checkout@v5
         with:
-          # При ручном запуске github.ref указывает на ветку, а собирать надо
-          # исходники самого тега.
+          # On a manual run github.ref points at the branch, but the tag's own
+          # sources are what must be built.
           ref: ${{ inputs.tag || github.ref }}
 
       - uses: actions/setup-node@v4
@@ -43,7 +43,7 @@ jobs:
         run: |
           mkdir -p dist
           cp build/macaed.html "dist/macaed-$RELEASE_TAG.html"
-          # Считаем из dist, иначе в файле сумм окажется путь, а не имя файла.
+          # Computed from dist, or the sums file would hold a path, not a file name.
           ( cd dist && shasum -a 256 ./*.html > SHA256SUMS.txt )
           cat dist/SHA256SUMS.txt
 

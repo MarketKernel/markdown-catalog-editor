@@ -36,7 +36,7 @@ const AUTOSAVE_DELAY = 1000;
 
 const el = <T extends HTMLElement>(id: string): T => {
   const node = document.getElementById(id);
-  if (!node) throw new Error(`Нет элемента #${id}`);
+  if (!node) throw new Error(`No element #${id}`);
   return node as T;
 };
 
@@ -87,7 +87,7 @@ const tree = new FileTree(el('tree'), el('note-count'), {
   onDelete: (entry) => void deleteEntry(entry),
   onReveal: (path) => {
     void navigator.clipboard?.writeText(path).catch(() => undefined);
-    toast(`Путь скопирован: ${path}`);
+    toast(`Path copied: ${path}`);
   },
   canEdit: () => Boolean(vault?.writable),
 });
@@ -115,7 +115,7 @@ async function useVault(next: Vault): Promise<void> {
 
   const notes = tree.notes();
   if (notes.length === 0) {
-    toast(next.writable ? 'В папке нет файлов .md — создайте первую заметку' : 'В папке нет файлов .md', 'error');
+    toast(next.writable ? 'No .md files in this folder — create the first note' : 'No .md files in this folder', 'error');
     return;
   }
   const remembered = settings.lastPath && notes.some((note) => note.path === settings.lastPath)
@@ -131,7 +131,7 @@ async function pickFolder(): Promise<void> {
       const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
       const writable = await ensureWritable(handle);
       await useVault(new DirectoryVault(handle, writable));
-      if (!writable) toast('Доступ только на чтение: сохранение будет предлагать скачать файл', 'error');
+      if (!writable) toast('Read-only access: saving will offer to download the file', 'error');
     } catch (error) {
       if ((error as DOMException)?.name !== 'AbortError') showGateError(error);
     }
@@ -185,15 +185,15 @@ async function acceptDrop(event: DragEvent): Promise<void> {
       return;
     }
   }
-  showGateError(new Error('Перетащите папку, а не отдельный файл'));
+  showGateError(new Error('Drag a folder, not a single file'));
 }
 
 if (!window.showDirectoryPicker) {
   const note = el('browser-note');
   note.hidden = false;
   note.textContent =
-    'Этот браузер не умеет записывать файлы на диск: папка откроется только для чтения, ' +
-    'а сохранение предложит скачать изменённый файл. Полная правка работает в Chrome, Edge и Arc.';
+    'This browser cannot write files to disk: the folder will open read-only, ' +
+    'and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.';
 }
 
 /* ------------------------------------------------------------------ *
@@ -212,7 +212,7 @@ async function openNote(path: string): Promise<void> {
     tree.setActive(path);
     settings.lastPath = path;
     persist();
-    document.title = `${stripExtension(baseOf(path))} — Редактор заметок`;
+    document.title = `${stripExtension(baseOf(path))} — Notes editor`;
     placeholder.hidden = true;
     renderState();
   } catch (error) {
@@ -240,7 +240,7 @@ async function openRelative(href: string): Promise<void> {
     await openNote(known.path);
     return;
   }
-  toast(`Не найдено: ${target}`, 'error');
+  toast(`Not found: ${target}`, 'error');
 }
 
 async function openWiki(target: string): Promise<void> {
@@ -256,10 +256,10 @@ async function openWiki(target: string): Promise<void> {
     return;
   }
   if (!vault?.writable) {
-    toast(`Заметка «${target}» не найдена`, 'error');
+    toast(`Note "${target}" not found`, 'error');
     return;
   }
-  const create = await confirmAsk('Заметка не найдена', `Создать «${target}.md»?`, 'Создать');
+  const create = await confirmAsk('Note not found', `Create "${target}.md"?`, 'Create');
   if (!create) return;
   const path = await vault.createFile(dirOf(currentPath ?? ''), `${target}.md`);
   await refreshTree();
@@ -278,7 +278,7 @@ async function resolveAsset(src: string, image: HTMLImageElement): Promise<void>
   if (!blob) {
     image.replaceWith(Object.assign(document.createElement('span'), {
       className: 'missing-asset',
-      textContent: `нет файла: ${path}`,
+      textContent: `no such file: ${path}`,
     }));
     return;
   }
@@ -315,7 +315,7 @@ async function save(): Promise<void> {
     dirty = false;
     renderState();
   } catch (error) {
-    toast(`Не удалось сохранить: ${error instanceof Error ? error.message : String(error)}`, 'error');
+    toast(`Could not save: ${error instanceof Error ? error.message : String(error)}`, 'error');
   }
 }
 
@@ -354,8 +354,8 @@ function withExtension(name: string): string {
 }
 
 async function createNote(dir: string): Promise<void> {
-  if (!vault?.writable) return void toast('Папка открыта только для чтения', 'error');
-  const name = await ask('Новая заметка', 'Имя файла', 'Без названия.md');
+  if (!vault?.writable) return void toast('The folder is open read-only', 'error');
+  const name = await ask('New note', 'File name', 'Untitled.md');
   if (!name) return;
   try {
     const path = await vault.createFile(dir, withExtension(name));
@@ -370,8 +370,8 @@ async function createNote(dir: string): Promise<void> {
 }
 
 async function createFolder(dir: string): Promise<void> {
-  if (!vault?.writable) return void toast('Папка открыта только для чтения', 'error');
-  const name = await ask('Новая папка', 'Имя папки', '');
+  if (!vault?.writable) return void toast('The folder is open read-only', 'error');
+  const name = await ask('New folder', 'Folder name', '');
   if (!name) return;
   try {
     await vault.createDir(dir, name);
@@ -383,7 +383,7 @@ async function createFolder(dir: string): Promise<void> {
 
 async function renameEntry(entry: TreeEntry): Promise<void> {
   if (!vault?.writable) return;
-  const name = await ask('Переименовать', 'Новое имя', entry.name);
+  const name = await ask('Rename', 'New name', entry.name);
   if (!name || name === entry.name) return;
   try {
     await flushSave();
@@ -403,8 +403,8 @@ async function renameEntry(entry: TreeEntry): Promise<void> {
 
 async function deleteEntry(entry: TreeEntry): Promise<void> {
   if (!vault?.writable) return;
-  const kind = entry.kind === 'dir' ? 'папку' : 'заметку';
-  const ok = await confirmAsk('Удаление', `Удалить ${kind} «${entry.name}»? Действие необратимо.`);
+  const kind = entry.kind === 'dir' ? 'folder' : 'note';
+  const ok = await confirmAsk('Delete', `Delete the ${kind} "${entry.name}"? This cannot be undone.`);
   if (!ok) return;
   try {
     await vault.remove(entry.path, entry.kind);
@@ -414,7 +414,7 @@ async function deleteEntry(entry: TreeEntry): Promise<void> {
       dirty = false;
       editor.load('');
       placeholder.hidden = false;
-      document.title = 'Редактор заметок';
+      document.title = 'Notes editor';
     }
     await refreshTree();
     renderState();
@@ -469,12 +469,12 @@ format.addEventListener('click', (event) => {
 });
 
 const COLORS: Array<{ name: string; value: string }> = [
-  { name: 'Красный', value: '#d7263d' },
-  { name: 'Оранжевый', value: '#d97706' },
-  { name: 'Зелёный', value: '#15803d' },
-  { name: 'Синий', value: '#1d4ed8' },
-  { name: 'Фиолетовый', value: '#7c3aed' },
-  { name: 'Серый', value: '#6b7280' },
+  { name: 'Red', value: '#d7263d' },
+  { name: 'Orange', value: '#d97706' },
+  { name: 'Green', value: '#15803d' },
+  { name: 'Blue', value: '#1d4ed8' },
+  { name: 'Violet', value: '#7c3aed' },
+  { name: 'Grey', value: '#6b7280' },
 ];
 
 const palette = el('palette');
@@ -488,12 +488,12 @@ colorButton.addEventListener('click', () => {
   }
   if (editor.getMode() !== 'edit') setMode('edit');
   palette.replaceChildren();
-  palette.append(swatchRow('Цвет текста', (color) => `color:${color}`));
-  palette.append(swatchRow('Фон', (color) => `background:${color}33`));
+  palette.append(swatchRow('Text colour', (color) => `color:${color}`));
+  palette.append(swatchRow('Background', (color) => `background:${color}33`));
   const clear = document.createElement('button');
   clear.type = 'button';
   clear.className = 'palette-clear';
-  clear.textContent = 'Убрать оформление';
+  clear.textContent = 'Clear formatting';
   clear.addEventListener('mousedown', (event) => event.preventDefault());
   clear.addEventListener('click', () => {
     editor.colorize('');
@@ -601,9 +601,9 @@ findInput.addEventListener('keydown', (event) => {
 
 const THEMES: Theme[] = ['system', 'light', 'dark'];
 const THEME_LABEL: Record<Theme, string> = {
-  system: 'Тема: как в системе',
-  light: 'Тема: светлая',
-  dark: 'Тема: тёмная',
+  system: 'Theme: match system',
+  light: 'Theme: light',
+  dark: 'Theme: dark',
 };
 
 function setTheme(theme: Theme): void {
@@ -667,13 +667,13 @@ resizer.addEventListener('keydown', (event) => {
 function renderState(): void {
   statusPath.textContent = currentPath ?? '—';
   if (!vault) statusState.textContent = '';
-  else if (!vault.writable) statusState.textContent = 'только чтение';
-  else statusState.textContent = dirty ? 'не сохранено' : 'сохранено';
+  else if (!vault.writable) statusState.textContent = 'read-only';
+  else statusState.textContent = dirty ? 'unsaved' : 'saved';
   statusState.classList.toggle('status-state--dirty', dirty && Boolean(vault?.writable));
 }
 
 function renderCount(status: EditorStatus): void {
-  statusCount.textContent = currentPath ? `${status.words} слов · ${status.chars} знаков` : '';
+  statusCount.textContent = currentPath ? `${status.words} words · ${status.chars} characters` : '';
 }
 
 function persist(): void {
@@ -756,7 +756,7 @@ void (async () => {
           return file;
         }),
       );
-      await useVault(new FileListVault(files, listing.name ?? 'Заметки'));
+      await useVault(new FileListVault(files, listing.name ?? 'Notes'));
     } catch {
       /* no listing next to the page — the folder picker stays */
     }

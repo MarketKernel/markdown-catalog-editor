@@ -72,7 +72,7 @@ export class FileTree {
     if (visible.length === 0) {
       const empty = document.createElement('p');
       empty.className = 'tree-empty';
-      empty.textContent = this.filter ? 'Ничего не найдено' : 'Папка пуста';
+      empty.textContent = this.filter ? 'Nothing found' : 'The folder is empty';
       this.root.append(empty);
     }
   }
@@ -133,14 +133,14 @@ export class FileTree {
     const dir = !entry ? '' : entry.kind === 'dir' ? entry.path : parentOf(entry.path);
 
     const items: MenuItem[] = [
-      { label: 'Новая заметка', action: () => this.host.onCreateFile(dir) },
-      { label: 'Новая папка', action: () => this.host.onCreateDir(dir) },
+      { label: 'New note', action: () => this.host.onCreateFile(dir) },
+      { label: 'New folder', action: () => this.host.onCreateDir(dir) },
     ];
     if (entry) {
       items.push(
-        { label: 'Переименовать', action: () => this.host.onRename(entry) },
-        { label: 'Показать путь', action: () => this.host.onReveal(entry.path) },
-        { label: 'Удалить', action: () => this.host.onDelete(entry), danger: true },
+        { label: 'Rename', action: () => this.host.onRename(entry) },
+        { label: 'Copy path', action: () => this.host.onReveal(entry.path) },
+        { label: 'Delete', action: () => this.host.onDelete(entry), danger: true },
       );
     }
     menu(event.clientX, event.clientY, items);

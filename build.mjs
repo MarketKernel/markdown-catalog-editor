@@ -32,7 +32,7 @@ async function bundleApp() {
     write: false,
   });
   const output = result.outputFiles[0];
-  if (!output) throw new Error('esbuild вернул пустой результат');
+  if (!output) throw new Error('esbuild returned an empty result');
   return output.text;
 }
 
@@ -45,7 +45,7 @@ function assertSelfContained(html) {
     [/url\(\s*["']?https?:/i, 'url(http…)'],
   ];
   for (const [pattern, name] of offenders) {
-    if (pattern.test(html)) throw new Error(`Во внешнем файле осталась ссылка: ${name}`);
+    if (pattern.test(html)) throw new Error(`An external reference is left in the file: ${name}`);
   }
 }
 
@@ -71,8 +71,8 @@ async function buildOnce() {
   await writeFile(outFile, html, 'utf8');
   const kb = (n) => (n / 1024).toFixed(1);
   console.log(
-    `build/macaed.html — ${kb(Buffer.byteLength(html, 'utf8'))} КБ ` +
-      `(код ${kb(appJs.length)} КБ, стили ${kb(styles.length)} КБ)`,
+    `build/macaed.html — ${kb(Buffer.byteLength(html, 'utf8'))} KB ` +
+      `(code ${kb(appJs.length)} KB, styles ${kb(styles.length)} KB)`,
   );
 }
 
@@ -87,5 +87,5 @@ if (watch) {
       pending = setTimeout(() => buildOnce().catch((error) => console.error(error.message)), 120);
     });
   }
-  console.log('слежу за src/ и vendor/ …');
+  console.log('watching src/ and vendor/ …');
 }

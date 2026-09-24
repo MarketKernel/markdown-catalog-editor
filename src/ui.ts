@@ -33,7 +33,7 @@ function dialog(options: DialogOptions): Promise<string | null> {
     ${options.message ? `<p class="dialog-text">${escape(options.message)}</p>` : ''}
     ${options.label ? `<label class="dialog-label">${escape(options.label)}<input class="dialog-input" type="text"></label>` : ''}
     <div class="dialog-row">
-      <button type="button" class="button button--ghost" data-cancel>Отмена</button>
+      <button type="button" class="button button--ghost" data-cancel>Cancel</button>
       <button type="submit" class="button ${options.danger ? 'button--danger' : 'button--primary'}">${escape(options.confirm)}</button>
     </div>`;
   host.append(box);
@@ -75,10 +75,10 @@ function dialog(options: DialogOptions): Promise<string | null> {
 }
 
 export function ask(title: string, label: string, value = ''): Promise<string | null> {
-  return dialog({ title, label, value, confirm: 'Готово' });
+  return dialog({ title, label, value, confirm: 'Done' });
 }
 
-export async function confirmAsk(title: string, message: string, confirm = 'Удалить'): Promise<boolean> {
+export async function confirmAsk(title: string, message: string, confirm = 'Delete'): Promise<boolean> {
   return (await dialog({ title, message, confirm, danger: true })) !== null;
 }
 

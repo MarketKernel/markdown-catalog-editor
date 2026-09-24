@@ -259,7 +259,7 @@ export function keepIndent(sel: Selection): string {
 }
 
 export function table(sel: Selection): Selection {
-  const text = '| Колонка | Колонка |\n| --- | --- |\n|  |  |';
+  const text = '| Column | Column |\n| --- | --- |\n|  |  |';
   return splice(sel.value, sel.start, sel.end, text, 2, 9);
 }
 

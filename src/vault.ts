@@ -71,7 +71,7 @@ export function join(dir: string, name: string): string {
 export function sortEntries(entries: TreeEntry[]): TreeEntry[] {
   entries.sort((a, b) => {
     if (a.kind !== b.kind) return a.kind === 'dir' ? -1 : 1;
-    return a.name.localeCompare(b.name, 'ru', { numeric: true, sensitivity: 'base' });
+    return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' });
   });
   for (const entry of entries) if (entry.children) sortEntries(entry.children);
   return entries;
@@ -143,7 +143,7 @@ export class DirectoryVault implements Vault {
 
   async writeText(path: string, text: string): Promise<void> {
     const handle = await this.fileHandle(path, true);
-    if (!handle.createWritable) throw new Error('Браузер не умеет записывать файлы');
+    if (!handle.createWritable) throw new Error('This browser cannot write files');
     const stream = await handle.createWritable();
     await stream.write(text);
     await stream.close();
@@ -174,7 +174,7 @@ export class DirectoryVault implements Vault {
       const source = await parent.getFileHandle(baseOf(path));
       const blob = await source.getFile();
       const created = await parent.getFileHandle(name, { create: true });
-      if (!created.createWritable) throw new Error('Браузер не умеет записывать файлы');
+      if (!created.createWritable) throw new Error('This browser cannot write files');
       const stream = await created.createWritable();
       await stream.write(blob);
       await stream.close();
@@ -196,7 +196,7 @@ export class DirectoryVault implements Vault {
   private async fileHandle(path: string, create = false): Promise<FileHandleLike> {
     const parts = splitPath(path);
     const name = parts.pop();
-    if (!name) throw new Error(`Пустой путь: ${path}`);
+    if (!name) throw new Error(`Empty path: ${path}`);
     const dir = await this.dirHandle(parts, create);
     return dir.getFileHandle(name, { create });
   }
@@ -215,7 +215,7 @@ function splitPath(path: string): string[] {
 /** Refuses to silently clobber an existing file or folder. */
 async function assertFree(parent: DirHandleLike, name: string): Promise<void> {
   for await (const child of parent.values()) {
-    if (child.name === name) throw new Error(`«${name}» уже существует`);
+    if (child.name === name) throw new Error(`"${name}" already exists`);
   }
 }
 
@@ -226,7 +226,7 @@ async function copyDir(from: DirHandleLike, to: DirHandleLike): Promise<void> {
     } else {
       const blob = await child.getFile();
       const created = await to.getFileHandle(child.name, { create: true });
-      if (!created.createWritable) throw new Error('Браузер не умеет записывать файлы');
+      if (!created.createWritable) throw new Error('This browser cannot write files');
       const stream = await created.createWritable();
       await stream.write(blob);
       await stream.close();
@@ -276,7 +276,7 @@ export class FileListVault implements Vault {
       if (!isNote(file.name) && !isAsset(file.name)) continue;
       this.files.set(path, file);
     }
-    this.name = root || 'Заметки';
+    this.name = root || 'Notes';
   }
 
   get size(): number {
@@ -305,7 +305,7 @@ export class FileListVault implements Vault {
 
   async readText(path: string): Promise<string> {
     const file = this.files.get(path);
-    if (!file) throw new Error(`Файл не найден: ${path}`);
+    if (!file) throw new Error(`File not found: ${path}`);
     return file.text();
   }
 
@@ -314,23 +314,23 @@ export class FileListVault implements Vault {
   }
 
   async writeText(): Promise<void> {
-    throw new Error('Папка открыта только для чтения');
+    throw new Error('The folder is open read-only');
   }
 
   async createFile(): Promise<string> {
-    throw new Error('Папка открыта только для чтения');
+    throw new Error('The folder is open read-only');
   }
 
   async createDir(): Promise<string> {
-    throw new Error('Папка открыта только для чтения');
+    throw new Error('The folder is open read-only');
   }
 
   async rename(): Promise<string> {
-    throw new Error('Папка открыта только для чтения');
+    throw new Error('The folder is open read-only');
   }
 
   async remove(): Promise<void> {
-    throw new Error('Папка открыта только для чтения');
+    throw new Error('The folder is open read-only');
   }
 }
 

@@ -243,7 +243,7 @@ export class Editor {
     area.value = block.text;
     area.rows = 1;
     area.spellcheck = true;
-    area.setAttribute('aria-label', 'Исходный текст блока');
+    area.setAttribute('aria-label', 'Block source text');
     area.addEventListener('beforeinput', this.onBeforeInput);
     area.addEventListener('input', this.onInput);
     area.addEventListener('keydown', this.onKeyDown);

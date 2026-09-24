@@ -19,11 +19,11 @@ jobs:
       - run: npm test
       - run: npm run build
 
-      # Единственный HTML не должен тянуть ничего из сети.
-      - name: В сборке нет внешних ссылок
+      # The single HTML file must not pull anything off the network.
+      - name: No external references in the build
         run: |
           if grep -oE '(src|href)="(https?:)?//[^"]*"' build/macaed.html; then
-            echo "::error::в build/macaed.html остались внешние ресурсы"
+            echo "::error::external resources are left in build/macaed.html"
             exit 1
           fi
 

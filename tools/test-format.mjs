@@ -17,7 +17,7 @@ function check(name, actual, expected) {
   if (a === b) passed += 1;
   else {
     failed += 1;
-    console.error(`FAIL  ${name}\n  ожидалось: ${b}\n  получено:  ${a}`);
+    console.error(`FAIL  ${name}\n  expected: ${b}\n  actual:   ${a}`);
   }
 }
 
@@ -32,51 +32,51 @@ function show(result) {
   return value.slice(0, start) + '|' + value.slice(start, end) + '|' + value.slice(end);
 }
 
-check('жирный', show(f.toggleInline(sel('раз |два| три'), 'bold')), 'раз **|два|** три');
-check('жирный снимается', show(f.toggleInline(sel('раз |**два**| три'), 'bold')), 'раз |два| три');
-check('жирный снимается снаружи', show(f.toggleInline(sel('раз **|два|** три'), 'bold')), 'раз |два| три');
-check('курсив по слову под кареткой', show(f.toggleInline(sel('раз дв|а три'), 'italic')), 'раз *|два|* три');
-check('выделение цветом', show(f.toggleInline(sel('|важно|'), 'mark')), '==|важно|==');
-check('моноширинный', show(f.toggleInline(sel('|kod|'), 'code')), '`|kod|`');
+check('bold', show(f.toggleInline(sel('one |two| three'), 'bold')), 'one **|two|** three');
+check('bold comes off', show(f.toggleInline(sel('one |**two**| three'), 'bold')), 'one |two| three');
+check('bold comes off from outside', show(f.toggleInline(sel('one **|two|** three'), 'bold')), 'one |two| three');
+check('italic on the word under the caret', show(f.toggleInline(sel('one tw|o three'), 'italic')), 'one *|two|* three');
+check('highlight', show(f.toggleInline(sel('|important|'), 'mark')), '==|important|==');
+check('monospace', show(f.toggleInline(sel('|code|'), 'code')), '`|code|`');
 
-check('ссылка из текста', show(f.makeLink(sel('|Anthropic|'))), '[Anthropic](||)');
-check('ссылка из URL', show(f.makeLink(sel('|https://example.org|'))), '[||](https://example.org)');
-check('вики-ссылка', show(f.makeWikiLink(sel('|Заметка|'))), '[[|Заметка|]]');
+check('link from text', show(f.makeLink(sel('|Anthropic|'))), '[Anthropic](||)');
+check('link from a URL', show(f.makeLink(sel('|https://example.org|'))), '[||](https://example.org)');
+check('wiki link', show(f.makeWikiLink(sel('|Note|'))), '[[|Note|]]');
 
-check('цвет текста', f.colorize(sel('|важно|'), 'color:#c00').value, '<span style="color:#c00">важно</span>');
-check('цвет снимается', f.colorize(sel('|<span style="color:#c00">важно</span>|'), '').value, 'важно');
+check('text colour', f.colorize(sel('|important|'), 'color:#c00').value, '<span style="color:#c00">important</span>');
+check('colour comes off', f.colorize(sel('|<span style="color:#c00">important</span>|'), '').value, 'important');
 
-check('заголовок', f.setHeading(sel('Текст|'), 2).value, '## Текст');
-check('заголовок меняет уровень', f.setHeading(sel('## Текст|'), 3).value, '### Текст');
-check('заголовок снимается', f.setHeading(sel('## Текст|'), 2).value, 'Текст');
-check('заголовок сбрасывается', f.setHeading(sel('### Текст|'), 0).value, 'Текст');
+check('heading', f.setHeading(sel('Text|'), 2).value, '## Text');
+check('heading changes level', f.setHeading(sel('## Text|'), 3).value, '### Text');
+check('heading comes off', f.setHeading(sel('## Text|'), 2).value, 'Text');
+check('heading is reset', f.setHeading(sel('### Text|'), 0).value, 'Text');
 
-check('маркированный список', f.toggleBullet(sel('|раз\nдва|')).value, '- раз\n- два');
-check('список снимается', f.toggleBullet(sel('|- раз\n- два|')).value, 'раз\nдва');
-check('нумерованный список', f.toggleOrdered(sel('|раз\nдва|')).value, '1. раз\n2. два');
-check('чекбокс из пункта', f.toggleTask(sel('|- раз|')).value, '- [ ] раз');
-check('чекбокс снимается', f.toggleTask(sel('|- [x] раз|')).value, '- раз');
-check('цитата', f.toggleQuote(sel('|раз\nдва|')).value, '> раз\n> два');
-check('цитата снимается', f.toggleQuote(sel('|> раз\n> два|')).value, 'раз\nдва');
+check('bulleted list', f.toggleBullet(sel('|one\ntwo|')).value, '- one\n- two');
+check('list comes off', f.toggleBullet(sel('|- one\n- two|')).value, 'one\ntwo');
+check('numbered list', f.toggleOrdered(sel('|one\ntwo|')).value, '1. one\n2. two');
+check('checkbox from an item', f.toggleTask(sel('|- one|')).value, '- [ ] one');
+check('checkbox comes off', f.toggleTask(sel('|- [x] one|')).value, '- one');
+check('quote', f.toggleQuote(sel('|one\ntwo|')).value, '> one\n> two');
+check('quote comes off', f.toggleQuote(sel('|> one\n> two|')).value, 'one\ntwo');
 
-check('отступ списка', f.indent(sel('- раз|')).value, '  - раз');
-check('отступ в тексте — табуляция', f.indent(sel('текст|')).value, 'текст  ');
-check('снятие отступа', f.outdent(sel('  - раз|')).value, '- раз');
+check('list indent', f.indent(sel('- one|')).value, '  - one');
+check('indent in text is a tab stop', f.indent(sel('text|')).value, 'text  ');
+check('outdent', f.outdent(sel('  - one|')).value, '- one');
 
-check('продолжение списка', f.continueLine(sel('- раз|')), { insert: '\n- ' });
-check('продолжение чекбоксов', f.continueLine(sel('- [x] раз|')), { insert: '\n- [ ] ' });
-check('нумерация растёт', f.continueLine(sel('3. раз|')), { insert: '\n4. ' });
-check('пустой вложенный пункт поднимается', f.continueLine(sel('  - |')), {
+check('list continues', f.continueLine(sel('- one|')), { insert: '\n- ' });
+check('checkboxes continue', f.continueLine(sel('- [x] one|')), { insert: '\n- [ ] ' });
+check('numbering grows', f.continueLine(sel('3. one|')), { insert: '\n4. ' });
+check('an empty nested item moves up a level', f.continueLine(sel('  - |')), {
   insert: '',
   clear: { from: 0, to: 4, text: '- ' },
 });
-check('пустой пункт выходит из списка', f.continueLine(sel('- |')), {
+check('an empty item leaves the list', f.continueLine(sel('- |')), {
   insert: '',
   clear: { from: 0, to: 2, text: '' },
 });
-check('продолжение цитаты', f.continueLine(sel('> раз|')), { insert: '\n> ' });
-check('обычный абзац не продолжается', f.continueLine(sel('раз|')), null);
-check('отступ сохраняется в коде', f.keepIndent(sel('    const a = 1;|')), '\n    ');
+check('a quote continues', f.continueLine(sel('> one|')), { insert: '\n> ' });
+check('a plain paragraph does not continue', f.continueLine(sel('one|')), null);
+check('indentation is kept in code', f.keepIndent(sel('    const a = 1;|')), '\n    ');
 
-console.log(`${passed} проверок пройдено${failed ? `, ${failed} провалено` : ''}`);
+console.log(`${passed} checks passed${failed ? `, ${failed} failed` : ''}`);
 if (failed) process.exit(1);

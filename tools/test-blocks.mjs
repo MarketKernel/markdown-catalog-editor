@@ -25,46 +25,46 @@ function check(name, actual, expected) {
     passed += 1;
   } else {
     failed += 1;
-    console.error(`FAIL  ${name}\n  ожидалось: ${b}\n  получено:  ${a}`);
+    console.error(`FAIL  ${name}\n  expected: ${b}\n  actual:   ${a}`);
   }
 }
 
 const kinds = (text) => blocks.splitBlocks(md, text).map((block) => block.kind);
 const texts = (text) => blocks.splitBlocks(md, text).map((block) => block.text);
 
-check('заголовок и абзац', kinds('# Заголовок\n\nТекст.'), ['heading', 'paragraph']);
-check('уровень заголовка', blocks.splitBlocks(md, '### Три').map((b) => b.level), [3]);
+check('heading and paragraph', kinds('# Heading\n\nText.'), ['heading', 'paragraph']);
+check('heading level', blocks.splitBlocks(md, '### Three').map((b) => b.level), [3]);
 
 check(
-  'список — один блок',
-  texts('- один\n- два\n- три'),
-  ['- один\n- два\n- три'],
+  'a list is one block',
+  texts('- one\n- two\n- three'),
+  ['- one\n- two\n- three'],
 );
 check(
-  'свободный список остаётся одним блоком',
-  kinds('1. один\n\n2. два\n\n3. три'),
+  'a loose list stays one block',
+  kinds('1. one\n\n2. two\n\n3. three'),
   ['list'],
 );
 check(
-  'код-блок с пустой строкой внутри',
+  'a code block with a blank line inside',
   texts('```js\nconst a = 1;\n\nconst b = 2;\n```'),
   ['```js\nconst a = 1;\n\nconst b = 2;\n```'],
 );
 check(
-  'таблица — один блок',
+  'a table is one block',
   kinds('| a | b |\n| - | - |\n| 1 | 2 |'),
   ['table'],
 );
-check('цитата', kinds('> цитата\n> вторая строка'), ['quote']);
-check('горизонтальная линия', kinds('текст\n\n---\n\nещё'), ['paragraph', 'hr', 'paragraph']);
-check('front matter', kinds('---\ntitle: Тест\n---\n\n# Привет'), ['frontmatter', 'heading']);
-check('пустой документ', kinds(''), ['paragraph']);
+check('quote', kinds('> quote\n> second line'), ['quote']);
+check('horizontal rule', kinds('text\n\n---\n\nmore'), ['paragraph', 'hr', 'paragraph']);
+check('front matter', kinds('---\ntitle: Test\n---\n\n# Hello'), ['frontmatter', 'heading']);
+check('empty document', kinds(''), ['paragraph']);
 
 // Blocks are line ranges over the original text, so nothing may be lost or reordered.
 for (const sample of [
-  '# A\n\nтекст\n\n- раз\n- два\n\n```sh\nls -la\n```\n\n> цитата\n\nхвост\n',
-  'Просто абзац без ничего',
-  '---\nkey: value\n---\n\nТело\n\n## Раздел\n\n| a | b |\n| - | - |\n| 1 | 2 |\n',
+  '# A\n\ntext\n\n- one\n- two\n\n```sh\nls -la\n```\n\n> quote\n\ntail\n',
+  'Just a paragraph and nothing else',
+  '---\nkey: value\n---\n\nBody\n\n## Section\n\n| a | b |\n| - | - |\n| 1 | 2 |\n',
 ]) {
   const lines = sample.split('\n');
   const parts = blocks.splitBlocks(md, sample);
@@ -80,20 +80,20 @@ for (const sample of [
     if ((lines[index] ?? '').trim() === '') continue;
     if (!parts.some((block) => index >= block.start && index < block.end)) ok = false;
   }
-  check(`покрытие: ${JSON.stringify(sample.slice(0, 18))}…`, ok, true);
+  check(`coverage: ${JSON.stringify(sample.slice(0, 18))}…`, ok, true);
 }
 
 // Offsets
-const lines = blocks.splitLines('раз\nдва\nтри');
+const lines = blocks.splitLines('one\ntwo\nten');
 const offsets = blocks.lineOffsets(lines);
-check('смещения строк', offsets, [0, 4, 8, 11]);
-check('строка по смещению 0', blocks.lineAtOffset(offsets, 0), 0);
-check('строка по смещению 5', blocks.lineAtOffset(offsets, 5), 1);
-check('строка по смещению 10', blocks.lineAtOffset(offsets, 10), 2);
+check('line offsets', offsets, [0, 4, 8, 11]);
+check('line at offset 0', blocks.lineAtOffset(offsets, 0), 0);
+check('line at offset 5', blocks.lineAtOffset(offsets, 5), 1);
+check('line at offset 10', blocks.lineAtOffset(offsets, 10), 2);
 
-check('каретка: слово в жирном тексте', blocks.sourceOffsetFor('**жирный** текст', 'жирны'), 7);
-check('каретка: заголовок', blocks.sourceOffsetFor('## Раздел', 'Разд'), 7);
-check('каретка: начало', blocks.sourceOffsetFor('- пункт', ''), 0);
+check('caret: a word inside bold text', blocks.sourceOffsetFor('**bold** text', 'bold'), 6);
+check('caret: heading', blocks.sourceOffsetFor('## Section', 'Sect'), 7);
+check('caret: start', blocks.sourceOffsetFor('- item', ''), 0);
 
-console.log(`${passed} проверок пройдено${failed ? `, ${failed} провалено` : ''}`);
+console.log(`${passed} checks passed${failed ? `, ${failed} failed` : ''}`);
 if (failed) process.exit(1);
