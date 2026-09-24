@@ -1,0 +1,23 @@
+{
+  "name": "markdown-catalog-editor",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A Markdown editor for a local folder of notes \u2014 one standalone HTML file",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "watch": "node build.mjs --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "node tools/test-blocks.mjs && node tools/test-format.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "highlight.js": "^11.11.1",
+    "markdown-it": "^15.0.2",
+    "typescript": "^5.7.0"
+  }
+}
