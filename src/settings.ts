@@ -11,6 +11,8 @@ export interface Settings {
   mode: 'read' | 'edit';
   lastPath: string | null;
   collapsed: string[];
+  /** `assets` folders the user opened; they are collapsed otherwise. */
+  expanded: string[];
 }
 
 const KEY = 'markdown-catalog-editor';
@@ -27,6 +29,7 @@ const DEFAULTS: Settings = {
   mode: 'read',
   lastPath: null,
   collapsed: [],
+  expanded: [],
 };
 
 export function loadSettings(): Settings {
@@ -40,6 +43,7 @@ export function loadSettings(): Settings {
       zoom: clampZoom(Number(stored.zoom ?? DEFAULTS.zoom)),
       sidebar: Math.min(560, Math.max(160, Number(stored.sidebar ?? DEFAULTS.sidebar))),
       collapsed: Array.isArray(stored.collapsed) ? stored.collapsed : [],
+      expanded: Array.isArray(stored.expanded) ? stored.expanded : [],
     };
   } catch {
     return { ...DEFAULTS };

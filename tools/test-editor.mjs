@@ -34,14 +34,18 @@ if (typeof WebSocket === 'undefined') {
   process.exit(1);
 }
 
-async function launch(note) {
+/** `files`: extra vault files beside the note, `{ 'assets/Note/a.png': Buffer }`. */
+async function launch(note, files = {}) {
   const html = await readFile(APP);
   const server = createServer((req, res) => {
+    const path = decodeURIComponent(req.url.slice(1));
     if (req.url.startsWith('/index.json')) {
       res.setHeader('content-type', 'application/json');
-      res.end(JSON.stringify({ name: 'T', files: ['Note.md'] }));
+      res.end(JSON.stringify({ name: 'T', files: ['Note.md', ...Object.keys(files)] }));
     } else if (req.url.startsWith('/Note.md')) {
       res.end(note);
+    } else if (path in files) {
+      res.end(files[path]);
     } else {
       res.setHeader('content-type', 'text/html');
       res.end(html);
@@ -175,8 +179,8 @@ const eq = (name, a, b) => {
   else failed += 1;
   if (!ok) console.error(`FAIL  ${name}\n  expected: ${JSON.stringify(b)}\n  actual:   ${JSON.stringify(a)}`);
 };
-async function scenario(note, fn) {
-  const b = await launch(note);
+async function scenario(note, fn, files) {
+  const b = await launch(note, files);
   try {
     await fn(b);
   } catch (error) {
@@ -323,6 +327,18 @@ await scenario(Array.from({ length: 40 }, (_, i) => `Para ${i} text.\n\n\`\`\`js
   eq('a clicked block does not jump', Math.abs(after - before) < 1, true);
   eq('the toolbar does not scroll away', await b.evaluate(`document.scrollingElement.scrollTop`), 0);
 });
+
+// A 1×1 PNG, for `![[embeds]]` served from the note's assets folder.
+const PIXEL = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=', 'base64');
+await scenario('Intro\n\n![[dot.png]]\n\n![[gone.png]]\n', async (b) => {
+  await b.sleep(200);
+  eq('an embed loads from assets/<note>/', await b.evaluate(`document.querySelector('img.embed')?.naturalWidth`), 1);
+  eq('a missing embed names the expected path', await b.evaluate(`document.querySelector('.missing-asset')?.textContent`), 'no such file: assets/Note/gone.png');
+  eq('the assets folder starts collapsed', await b.evaluate(`[
+    document.querySelector('.tree-item[data-path="assets"] .tree-mark')?.textContent,
+    Boolean(document.querySelector('.tree-item[data-path="assets/Note"]')),
+  ]`), ['▸', false]);
+}, { 'assets/Note/dot.png': PIXEL });
 
 console.log(`${passed} browser checks passed${failed ? `, ${failed} failed` : ''}`);
 process.exit(failed ? 1 : 0);

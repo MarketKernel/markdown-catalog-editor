@@ -18,6 +18,7 @@ import {
 import { FileTree, stripExtension } from './tree';
 import { ask, confirmAsk, toast } from './ui';
 import {
+  ASSETS_DIR,
   DirectoryVault,
   FileListVault,
   NOTE_EXTENSIONS,
@@ -76,8 +77,8 @@ const editor = new Editor(el('doc'), scroller, md, {
   onOpenWiki: (target) => {
     void openWiki(target);
   },
-  onAsset: (src, image) => {
-    void resolveAsset(src, image);
+  onAsset: (image) => {
+    void resolveAsset(image);
   },
   onStatus: (status) => renderCount(status),
 });
@@ -95,6 +96,7 @@ const tree = new FileTree(el('tree'), el('note-count'), {
   canEdit: () => Boolean(vault?.writable),
 });
 tree.setCollapsed(settings.collapsed);
+tree.setExpanded(settings.expanded);
 
 /* ------------------------------------------------------------------ *
  * Opening a folder
@@ -278,9 +280,17 @@ function safeDecode(uri: string): string {
   }
 }
 
-async function resolveAsset(src: string, image: HTMLImageElement): Promise<void> {
+/** Where a note keeps its embedded images: `dir/page.md` → `dir/assets/page`. */
+function assetsDirOf(notePath: string): string {
+  return join(join(dirOf(notePath), ASSETS_DIR), stripExtension(baseOf(notePath)));
+}
+
+async function resolveAsset(image: HTMLImageElement): Promise<void> {
   if (!vault || !currentPath) return;
-  const path = resolvePath(currentPath, safeDecode(src));
+  const embed = image.dataset['embed'];
+  const path = embed !== undefined
+    ? join(assetsDirOf(currentPath), embed)
+    : resolvePath(currentPath, safeDecode(image.dataset['asset'] ?? ''));
   const cached = assets.get(path);
   if (cached) {
     image.src = cached;
@@ -401,6 +411,15 @@ async function renameEntry(entry: TreeEntry): Promise<void> {
   try {
     await flushSave();
     const next = await vault.rename(entry.path, entry.kind, entry.kind === 'file' ? withExtension(name) : name);
+    // A note's images follow it, or its `![[embeds]]` would all break.
+    const images = entry.kind === 'file' && isNote(entry.name) ? tree.find(assetsDirOf(entry.path)) : null;
+    if (images?.kind === 'dir') {
+      try {
+        await vault.rename(images.path, 'dir', stripExtension(baseOf(next)));
+      } catch (error) {
+        toast(`The note was renamed, its images were not: ${error instanceof Error ? error.message : String(error)}`, 'error');
+      }
+    }
     if (currentPath === entry.path) currentPath = next;
     else if (currentPath?.startsWith(`${entry.path}/`)) currentPath = next + currentPath.slice(entry.path.length);
     await refreshTree();
@@ -694,6 +713,7 @@ function renderCount(status: EditorStatus): void {
 
 function persist(): void {
   settings.collapsed = tree.getCollapsed();
+  settings.expanded = tree.getExpanded();
   saveSettings(settings);
 }
 

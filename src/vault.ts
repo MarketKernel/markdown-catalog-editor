@@ -34,6 +34,8 @@ export interface Vault {
 }
 
 export const NOTE_EXTENSIONS = ['.md', '.markdown', '.mdown', '.mkd', '.txt'];
+/** Each folder keeps its notes' images in `assets/<note name>/`. */
+export const ASSETS_DIR = 'assets';
 const ASSET_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.avif', '.bmp', '.ico', '.pdf'];
 const MAX_DEPTH = 12;
 const MAX_ENTRIES = 40000;

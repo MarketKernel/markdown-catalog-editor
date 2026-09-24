@@ -36,8 +36,8 @@ export interface EditorHost {
   onOpenNote(href: string): void;
   /** A `[[wiki link]]`. */
   onOpenWiki(target: string): void;
-  /** An image whose `src` points inside the vault. */
-  onAsset(src: string, image: HTMLImageElement): void;
+  /** An image inside the vault: `data-asset` is a relative `src`, `data-embed` an `![[embed]]`. */
+  onAsset(image: HTMLImageElement): void;
   onStatus(status: EditorStatus): void;
 }
 
@@ -218,8 +218,8 @@ export class Editor {
     el.className = classFor('block', block.kind, block.level);
     el.dataset['key'] = key;
     el.innerHTML = this.renderBlock(block);
-    for (const image of Array.from(el.querySelectorAll<HTMLImageElement>('img[data-asset]'))) {
-      this.host.onAsset(image.dataset['asset'] ?? '', image);
+    for (const image of Array.from(el.querySelectorAll<HTMLImageElement>('img[data-asset], img[data-embed]'))) {
+      this.host.onAsset(image);
     }
     return el;
   }

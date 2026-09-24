@@ -1,6 +1,6 @@
 /** The folder tree in the left panel: navigation plus file and folder actions. */
 
-import { dirOf, isNote, type TreeEntry } from './vault';
+import { ASSETS_DIR, baseOf, dirOf, isNote, type TreeEntry } from './vault';
 import { menu, type MenuItem } from './ui';
 
 export interface TreeHost {
@@ -17,6 +17,8 @@ export interface TreeHost {
 export class FileTree {
   private entries: TreeEntry[] = [];
   private collapsed = new Set<string>();
+  /** `assets` folders start closed, so the tree remembers the ones opened instead. */
+  private expanded = new Set<string>();
   private active: string | null = null;
   private filter = '';
 
@@ -42,6 +44,26 @@ export class FileTree {
     return Array.from(this.collapsed);
   }
 
+  setExpanded(paths: readonly string[]): void {
+    this.expanded = new Set(paths);
+  }
+
+  getExpanded(): string[] {
+    return Array.from(this.expanded);
+  }
+
+  private isOpen(path: string): boolean {
+    return isAssets(path) ? this.expanded.has(path) : !this.collapsed.has(path);
+  }
+
+  private setOpen(path: string, open: boolean): void {
+    if (isAssets(path)) {
+      if (open) this.expanded.add(path);
+      else this.expanded.delete(path);
+    } else if (open) this.collapsed.delete(path);
+    else this.collapsed.add(path);
+  }
+
   setActive(path: string | null): void {
     this.active = path;
     this.expandTo(path);
@@ -61,7 +83,7 @@ export class FileTree {
     let prefix = '';
     for (const part of parts) {
       prefix = prefix ? `${prefix}/${part}` : part;
-      this.collapsed.delete(prefix);
+      this.setOpen(prefix, true);
     }
   }
 
@@ -92,7 +114,7 @@ export class FileTree {
       row.dataset['kind'] = entry.kind;
       row.title = entry.path;
 
-      const open = entry.kind === 'dir' && !this.collapsed.has(entry.path);
+      const open = entry.kind === 'dir' && this.isOpen(entry.path);
       const mark = document.createElement('span');
       mark.className = 'tree-mark';
       mark.textContent = entry.kind === 'dir' ? (open ? '▾' : '▸') : isNote(entry.name) ? '·' : '▫';
@@ -117,8 +139,7 @@ export class FileTree {
     if (!row) return;
     const path = row.dataset['path'] ?? '';
     if (row.dataset['kind'] === 'dir') {
-      if (this.collapsed.has(path)) this.collapsed.delete(path);
-      else this.collapsed.add(path);
+      this.setOpen(path, !this.isOpen(path));
       this.render();
       return;
     }
@@ -170,6 +191,10 @@ export class FileTree {
     walk(this.entries);
     return out;
   }
+}
+
+function isAssets(path: string): boolean {
+  return baseOf(path) === ASSETS_DIR;
 }
 
 export function stripExtension(name: string): string {

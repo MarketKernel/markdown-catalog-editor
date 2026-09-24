@@ -36,6 +36,7 @@ for (const [name, lang] of Object.entries({
 }
 
 const EXTERNAL = /^[a-z][a-z0-9+.-]*:|^\/\//i;
+const IMAGE = /\.(png|jpe?g|gif|webp|svg|avif|bmp|ico)$/i;
 
 export function createMarkdown(): MarkdownIt {
   const md = new MarkdownItFactory({
@@ -58,6 +59,7 @@ export function createMarkdown(): MarkdownIt {
 
   md.inline.ruler.before('emphasis', 'mark', markRule);
   md.inline.ruler.before('link', 'wikilink', wikiRule);
+  md.inline.ruler.before('image', 'embed', embedRule);
   md.core.ruler.after('inline', 'task_lists', taskRule);
 
   md.renderer.rules['mark_open'] = () => '<mark>';
@@ -66,6 +68,15 @@ export function createMarkdown(): MarkdownIt {
     const token = tokens[index]!;
     const target = String(token.attrGet('target') ?? '');
     return `<a class="wikilink" href="#" data-wiki="${md.utils.escapeHtml(target)}">${md.utils.escapeHtml(token.content)}</a>`;
+  };
+
+  // `![[image.png]]` lives in the note's own assets folder; the app knows where that is.
+  md.renderer.rules['embed'] = (tokens, index) => {
+    const token = tokens[index]!;
+    const name = md.utils.escapeHtml(String(token.attrGet('target') ?? ''));
+    const width = token.attrGet('width');
+    const size = width ? ` width="${width}"` : '';
+    return `<img class="embed" src="" alt="${md.utils.escapeHtml(token.content)}" data-embed="${name}"${size}>`;
   };
 
   // Images inside the vault are resolved to blob URLs after the HTML lands in the DOM.
@@ -155,6 +166,35 @@ function wikiRule(state: StateInline, silent: boolean): boolean {
     const token = state.push('wikilink', 'a', 0);
     token.content = label;
     token.attrSet('target', target);
+  }
+  state.pos = close + 2;
+  return true;
+}
+
+/**
+ * `![[image.png]]`, `![[image.png|300]]` (width) or `![[image.png|caption]]`.
+ * Anything but an image stays a plain wiki link — notes are not transcluded.
+ */
+function embedRule(state: StateInline, silent: boolean): boolean {
+  const start = state.pos;
+  if (state.src.charCodeAt(start) !== 0x21 || state.src.charCodeAt(start + 1) !== 0x5b) return false;
+  if (state.src.charCodeAt(start + 2) !== 0x5b) return false;
+  const close = state.src.indexOf(']]', start + 3);
+  if (close < 0 || close > state.posMax) return false;
+
+  const body = state.src.slice(start + 3, close);
+  if (!body || body.includes('[') || body.includes('\n')) return false;
+  const bar = body.indexOf('|');
+  const target = (bar < 0 ? body : body.slice(0, bar)).trim();
+  if (!IMAGE.test(target)) return false;
+
+  if (!silent) {
+    const option = bar < 0 ? '' : body.slice(bar + 1).trim();
+    const width = /^\d+$/.test(option) ? option : null;
+    const token = state.push('embed', 'img', 0);
+    token.content = width || !option ? target : option;
+    token.attrSet('target', target);
+    if (width) token.attrSet('width', width);
   }
   state.pos = close + 2;
   return true;

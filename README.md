@@ -63,6 +63,9 @@ Markdown as it is.
 - **Markup**: CommonMark plus tables, tasks with clickable checkboxes, `==highlight==`,
   `[[wiki links]]`, front matter, syntax highlighting for 19 languages, images from the
   folder.
+- **Images**: `![[image-1.png]]` shows `assets/<note name>/image-1.png` from the note's
+  folder (`![[image-1.png|300]]` sets the width). `assets` folders start collapsed in the
+  tree, and renaming a note renames its image folder too.
 - **Theme**: system, light, dark. **Zoom**: 50–200 %.
 - Autosave one second after an edit, undo and redo, search within the note.
 - The theme, zoom, panel width and last opened note are remembered.
@@ -109,7 +112,7 @@ src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
-src/markdown.ts     markdown-it: ==highlight==, [[wiki links]], tasks, code highlighting
+src/markdown.ts     markdown-it: ==highlight==, [[wiki links]], ![[embeds]], tasks, code highlighting
 src/tree.ts         folder and file tree
 src/settings.ts     localStorage: theme, zoom, panel width, last note
 src/ui.ts           dialogs, context menu, notifications
