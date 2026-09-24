@@ -58,7 +58,23 @@ check(
 check('quote', kinds('> quote\n> second line'), ['quote']);
 check('horizontal rule', kinds('text\n\n---\n\nmore'), ['paragraph', 'hr', 'paragraph']);
 check('front matter', kinds('---\ntitle: Test\n---\n\n# Hello'), ['frontmatter', 'heading']);
-check('empty document', kinds(''), ['paragraph']);
+check('empty document', kinds(''), ['blank']);
+
+// Blank lines: only a line with blank lines on both sides is a block of its own.
+check('one gap line is no block', kinds('A\n\nB'), ['paragraph', 'paragraph']);
+check('two gap lines are no block', kinds('A\n\n\nB'), ['paragraph', 'paragraph']);
+check('the middle of three is', kinds('A\n\n\n\nB'), ['paragraph', 'blank', 'paragraph']);
+check('the final newline is no line', kinds('A\n'), ['paragraph']);
+check('a blank line before it is', kinds('A\n\n\n'), ['paragraph', 'blank']);
+check('blank lines at the top', kinds('\n\nA'), ['blank', 'paragraph']);
+check('blank lines inside a fence stay in it', kinds('```\na\n\n\n\nb\n```'), ['code']);
+
+check('link definitions get a block', kinds('[a]: https://x.org\n\nSee [a].'), ['definition', 'paragraph']);
+const env = {};
+blocks.splitBlocks(md, '[a]: https://x.org\n\nSee [a].', env);
+check('link definitions reach the env', Object.keys(env.references ?? {}), ['A']);
+
+check('offsets', blocks.splitBlocks(md, 'one\n\ntwo\n\n\n\n# three').map((b) => b.from), [0, 5, 10, 12]);
 
 // Blocks are line ranges over the original text, so nothing may be lost or reordered.
 for (const sample of [
@@ -82,14 +98,6 @@ for (const sample of [
   }
   check(`coverage: ${JSON.stringify(sample.slice(0, 18))}…`, ok, true);
 }
-
-// Offsets
-const lines = blocks.splitLines('one\ntwo\nten');
-const offsets = blocks.lineOffsets(lines);
-check('line offsets', offsets, [0, 4, 8, 11]);
-check('line at offset 0', blocks.lineAtOffset(offsets, 0), 0);
-check('line at offset 5', blocks.lineAtOffset(offsets, 5), 1);
-check('line at offset 10', blocks.lineAtOffset(offsets, 10), 2);
 
 check('caret: a word inside bold text', blocks.sourceOffsetFor('**bold** text', 'bold'), 6);
 check('caret: heading', blocks.sourceOffsetFor('## Section', 'Sect'), 7);

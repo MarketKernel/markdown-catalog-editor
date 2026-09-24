@@ -8,16 +8,7 @@
  */
 
 import type { MarkdownIt } from 'markdown-it';
-import {
-  blockAtLine,
-  lineAtOffset,
-  lineOffsets,
-  sourceOffsetFor,
-  splitBlocks,
-  splitLines,
-  type Block,
-} from './blocks';
-import { collectEnv } from './markdown';
+import { sourceOffsetFor, splitBlocks, type Block, type BlockKind } from './blocks';
 import * as fmt from './format';
 
 export type Mode = 'read' | 'edit';
@@ -53,40 +44,49 @@ export interface EditorHost {
 export interface EditorStatus {
   words: number;
   chars: number;
-  undo: boolean;
-  redo: boolean;
 }
 
 interface Snapshot {
   text: string;
-  caret: number;
+  /** Null when no block was open, e.g. a checkbox ticked in read mode. */
+  caret: number | null;
 }
 
 const UNDO_LIMIT = 200;
 const TYPING_PAUSE = 600;
+const STATUS_DELAY = 150;
+
+/** `- [ ] task` in a list or a quote, bulleted or numbered. */
+const TASK_BOX = /^([\s>]*(?:[-*+]|\d+[.)])\s+\[)([ xX])\]/;
 
 export class Editor {
+  /** Always with `\n` line ends; the file's own ending is restored on the way out. */
   private text = '';
-  private lines: string[] = [''];
-  private offsets: number[] = [0, 0];
+  private eol = '\n';
   private blocks: Block[] = [];
   private nodes: HTMLElement[] = [];
   private env: Record<string, unknown> = {};
+  /** Rendered blocks can be reused only while the link references stay the same. */
+  private envKey = '';
+  private renderedEnvKey = '';
+  private renderedLength = 0;
 
   private mode: Mode = 'read';
   private active: number | null = null;
   private area: HTMLTextAreaElement | null = null;
-  /** Character offset of the active block, cached so typing stays O(1) in lookups. */
-  private activeStart = 0;
-  private activeLength = 0;
   private activeHead = '';
-
-  /** A blank line the author opened with Enter; it has no tokens of its own. */
-  private pending: { insertAt: number; line: number } | null = null;
+  /**
+   * Typing rewrites only the active block. The blocks after it keep their old
+   * offsets, off by `shift`, until the next resplit — so a keystroke costs no
+   * reparse, and `startOf` still answers correctly in between.
+   */
+  private shift = 0;
+  private stale = false;
 
   private undoStack: Snapshot[] = [];
   private redoStack: Snapshot[] = [];
   private typingTimer = 0;
+  private statusTimer = 0;
 
   constructor(
     private readonly root: HTMLElement,
@@ -103,20 +103,18 @@ export class Editor {
    * ---------------------------------------------------------------- */
 
   load(text: string): void {
-    this.text = text;
-    this.pending = null;
-    this.active = null;
-    this.area = null;
+    this.eol = text.includes('\r\n') ? '\r\n' : '\n';
+    this.text = text.replace(/\r\n/g, '\n');
     this.undoStack = [];
     this.redoStack = [];
     this.resplit();
-    this.render(false);
+    this.render();
     this.scroller.scrollTop = 0;
     this.report();
   }
 
   getText(): string {
-    return this.text;
+    return this.eol === '\n' ? this.text : this.text.replace(/\n/g, this.eol);
   }
 
   getMode(): Mode {
@@ -128,94 +126,97 @@ export class Editor {
     this.mode = mode;
     if (mode === 'read') {
       this.deactivate();
-    } else {
-      this.render();
-      this.activate(this.firstVisibleIndex(), 0);
+      return;
     }
-  }
-
-  isEditing(): boolean {
-    return this.mode === 'edit' && this.active !== null;
+    this.steady(this.startOf(this.firstVisibleIndex()), () => this.render());
+    this.focusAt(this.startOf(this.firstVisibleIndex()));
   }
 
   /* ---------------------------------------------------------------- *
    * Model
    * ---------------------------------------------------------------- */
 
+  /** Re-derives every block from the text. Leaves no block open. */
   private resplit(): void {
-    this.lines = splitLines(this.text);
-    this.offsets = lineOffsets(this.lines);
-    this.blocks = splitBlocks(this.md, this.text);
-    this.env = collectEnv(this.md, this.text);
-    this.insertPendingBlock();
+    this.env = {};
+    this.blocks = splitBlocks(this.md, this.text, this.env);
+    this.envKey = JSON.stringify(this.env['references'] ?? {});
+    this.active = null;
+    this.area = null;
+    this.shift = 0;
+    this.stale = false;
   }
 
-  /** An empty paragraph has no tokens, so the blank line is added back by hand. */
-  private insertPendingBlock(): void {
-    const pending = this.pending;
-    if (!pending) return;
-    const line = pending.line;
-    const blank = line < this.lines.length && (this.lines[line] ?? '').trim() === '';
-    const covered = this.blocks.some((block) => line >= block.start && line < block.end);
-    if (!blank || covered) {
-      this.pending = null;
-      return;
+  private startOf(index: number): number {
+    const block = this.blocks[index];
+    if (!block) return this.text.length;
+    return this.active !== null && index > this.active ? block.from + this.shift : block.from;
+  }
+
+  private endOf(index: number): number {
+    return this.startOf(index) + (this.blocks[index]?.text.length ?? 0);
+  }
+
+  /** The block holding `offset`; an offset in the gap between two blocks belongs to the next one. */
+  private indexAt(offset: number): number {
+    let low = 0;
+    let high = this.blocks.length - 1;
+    while (low < high) {
+      const mid = (low + high) >> 1;
+      if (this.endOf(mid) >= offset) high = mid;
+      else low = mid + 1;
     }
-    const empty: Block = { start: line, end: line + 1, kind: 'paragraph', level: 0, text: '' };
-    const at = this.blocks.findIndex((block) => block.start > line);
-    if (at < 0) this.blocks.push(empty);
-    else this.blocks.splice(at, 0, empty);
-  }
-
-  private blockStart(index: number): number {
-    const block = this.blocks[index];
-    return block ? (this.offsets[block.start] ?? 0) : 0;
-  }
-
-  private blockEnd(index: number): number {
-    const block = this.blocks[index];
-    return block ? this.blockStart(index) + block.text.length : 0;
-  }
-
-  private caretOffset(): number {
-    if (!this.area || this.active === null) return 0;
-    return this.activeStart + this.area.selectionStart;
+    return Math.max(0, low);
   }
 
   /* ---------------------------------------------------------------- *
    * Rendering
    * ---------------------------------------------------------------- */
 
-  private render(keepScroll = true): void {
-    const anchor = this.active ?? this.firstVisibleIndex();
-    const before = this.nodes[anchor]?.offsetTop ?? 0;
+  /** Rebuilds the document, reusing the rendered node of every block whose source is unchanged. */
+  private render(): void {
+    const pool = this.renderedEnvKey === this.envKey
+      ? new NodePool(this.nodes, this.text.length - this.renderedLength)
+      : null;
+    this.renderedEnvKey = this.envKey;
+    this.renderedLength = this.text.length;
 
-    const nodes: HTMLElement[] = [];
-    for (let index = 0; index < this.blocks.length; index += 1) {
-      const block = this.blocks[index]!;
-      if (this.mode === 'edit' && index === this.active) nodes.push(this.buildSource(block, index));
-      else nodes.push(this.buildRendered(block, index));
-    }
+    this.area = null;
+    const nodes = this.blocks.map((block, index) => {
+      if (this.mode === 'edit' && index === this.active) return this.buildSource(block);
+      const key = `${block.kind}${block.level}\n${block.text}`;
+      const node = pool?.take(key, block.from) ?? this.buildRendered(block, key);
+      node.dataset['index'] = String(index);
+      node.dataset['from'] = String(block.from);
+      return node;
+    });
 
-    this.root.replaceChildren(...nodes);
+    patchChildren(this.root, nodes);
     this.nodes = nodes;
     this.root.classList.toggle('doc--edit', this.mode === 'edit');
-
-    if (this.area) {
-      autosize(this.area);
-      this.area.focus({ preventScroll: true });
-    }
-    if (keepScroll) {
-      const after = this.nodes[anchor]?.offsetTop ?? 0;
-      this.scroller.scrollTop += after - before;
+    const area = this.area as HTMLTextAreaElement | null;
+    if (area) {
+      autosize(area);
+      area.focus({ preventScroll: true });
     }
   }
 
-  private buildRendered(block: Block, index: number): HTMLElement {
+  /** Runs `change`, then scrolls so that the text at `offset` stays put on screen. */
+  private steady(offset: number, change: () => void): void {
+    const top = (): number | null => {
+      const node = this.nodes[this.indexAt(offset)];
+      return node?.offsetParent ? node.offsetTop : null;
+    };
+    const before = top();
+    change();
+    const after = top();
+    if (before !== null && after !== null) this.scroller.scrollTop += after - before;
+  }
+
+  private buildRendered(block: Block, key: string): HTMLElement {
     const el = document.createElement('div');
-    el.className = `block block--${block.kind}`;
-    if (block.kind === 'heading') el.classList.add(`block--h${block.level}`);
-    el.dataset['index'] = String(index);
+    el.className = classFor('block', block.kind, block.level);
+    el.dataset['key'] = key;
     el.innerHTML = this.renderBlock(block);
     for (const image of Array.from(el.querySelectorAll<HTMLImageElement>('img[data-asset]'))) {
       this.host.onAsset(image.dataset['asset'] ?? '', image);
@@ -224,22 +225,20 @@ export class Editor {
   }
 
   private renderBlock(block: Block): string {
+    const escaped = this.md.utils.escapeHtml(block.text);
     if (!block.text.trim()) return '<p class="block-blank"><br></p>';
-    if (block.kind === 'frontmatter') {
-      return `<pre class="frontmatter"><code>${this.md.utils.escapeHtml(block.text)}</code></pre>`;
-    }
+    if (block.kind === 'frontmatter') return `<pre class="frontmatter"><code>${escaped}</code></pre>`;
+    if (block.kind === 'definition') return `<p class="definition">${escaped}</p>`;
     try {
       return this.md.render(block.text, this.env);
     } catch {
-      return `<pre class="frontmatter"><code>${this.md.utils.escapeHtml(block.text)}</code></pre>`;
+      return `<pre class="frontmatter"><code>${escaped}</code></pre>`;
     }
   }
 
-  private buildSource(block: Block, index: number): HTMLTextAreaElement {
+  private buildSource(block: Block): HTMLTextAreaElement {
     const area = document.createElement('textarea');
-    area.className = `block source source--${block.kind}`;
-    if (block.kind === 'heading') area.classList.add(`source--h${block.level}`);
-    area.dataset['index'] = String(index);
+    area.className = classFor('block source', block.kind, block.level, 'source');
     area.value = block.text;
     area.rows = 1;
     area.spellcheck = true;
@@ -249,8 +248,6 @@ export class Editor {
     area.addEventListener('keydown', this.onKeyDown);
     area.addEventListener('blur', this.onBlur);
     this.area = area;
-    this.activeStart = this.blockStart(index);
-    this.activeLength = block.text.length;
     this.activeHead = firstLine(block.text);
     return area;
   }
@@ -259,7 +256,7 @@ export class Editor {
     const top = this.scroller.scrollTop;
     for (let index = 0; index < this.nodes.length; index += 1) {
       const node = this.nodes[index]!;
-      if (node.offsetTop + node.offsetHeight > top) return index;
+      if (node.offsetParent && node.offsetTop + node.offsetHeight > top) return index;
     }
     return 0;
   }
@@ -268,17 +265,22 @@ export class Editor {
    * Activation
    * ---------------------------------------------------------------- */
 
-  private activate(index: number, caret: number): void {
-    if (this.mode !== 'edit' || this.blocks.length === 0) return;
-    const target = Math.max(0, Math.min(index, this.blocks.length - 1));
-    if (this.active !== null && this.active !== target) this.dropPendingIfEmpty(target);
-    this.active = Math.max(0, Math.min(target, this.blocks.length - 1));
-    this.area = null;
-    this.render();
+  /**
+   * Opens the block holding `offset` and puts the caret there. `anchor` is the
+   * offset — in the text as it was before an edit — that must not move on screen.
+   */
+  private focusAt(offset: number, length = 0, anchor = offset): void {
+    if (this.mode !== 'edit') return;
+    this.flushTyping();
+    this.steady(anchor, () => {
+      if (this.stale) this.resplit();
+      this.active = this.indexAt(offset);
+      this.render();
+    });
     const area = this.area as HTMLTextAreaElement | null;
-    if (area) {
-      const at = Math.max(0, Math.min(caret, area.value.length));
-      area.setSelectionRange(at, at);
+    if (area && this.active !== null) {
+      const at = Math.max(0, Math.min(offset - this.startOf(this.active), area.value.length));
+      area.setSelectionRange(at, Math.min(at + length, area.value.length));
       this.scrollIntoView(area);
     }
     this.report();
@@ -286,30 +288,13 @@ export class Editor {
 
   private deactivate(): void {
     this.flushTyping();
-    if (this.active !== null) this.dropPendingIfEmpty(null);
-    this.active = null;
-    this.area = null;
-    this.resplit();
-    this.render();
+    const anchor = this.startOf(this.active ?? this.firstVisibleIndex());
+    this.steady(anchor, () => {
+      if (this.stale) this.resplit();
+      this.active = null;
+      this.render();
+    });
     this.report();
-  }
-
-  /** Enter that opened a blank line and was abandoned leaves no trace in the file. */
-  private dropPendingIfEmpty(nextIndex: number | null): void {
-    const pending = this.pending;
-    if (!pending || !this.area) return;
-    const isPendingBlock = this.blocks[this.active ?? -1]?.start === pending.line;
-    if (!isPendingBlock || this.area.value.trim() !== '') {
-      this.pending = null;
-      return;
-    }
-    this.text = this.text.slice(0, pending.insertAt) + this.text.slice(pending.insertAt + 2);
-    this.pending = null;
-    this.resplit();
-    if (nextIndex !== null && nextIndex > (this.active ?? 0)) {
-      // The removed lines shifted everything after the gap up by one block.
-      this.active = Math.min(nextIndex, this.blocks.length - 1);
-    }
   }
 
   private scrollIntoView(area: HTMLTextAreaElement): void {
@@ -334,7 +319,7 @@ export class Editor {
     const index = Number(holder.dataset['index'] ?? '-1');
     if (index < 0) return;
     event.preventDefault();
-    this.activate(index, this.caretFromPoint(holder, event));
+    this.focusAt(this.startOf(index) + this.caretFromPoint(holder, event));
   };
 
   /** Maps the click to the matching place in the Markdown source. */
@@ -361,8 +346,7 @@ export class Editor {
     if (box) {
       event.preventDefault();
       const holder = box.closest<HTMLElement>('.block');
-      const block = this.blocks[Number(holder?.dataset['index'] ?? '-1')];
-      if (block) this.toggleTask(block.start + Number(box.dataset['taskLine'] ?? '0'));
+      this.toggleTask(Number(holder?.dataset['index'] ?? '-1'), Number(box.dataset['taskLine'] ?? '0'));
       return;
     }
 
@@ -381,20 +365,19 @@ export class Editor {
     }
   };
 
-  private toggleTask(line: number): void {
-    const source = this.lines[line];
+  private toggleTask(index: number, line: number): void {
+    const block = this.blocks[index];
+    if (!block || index === this.active) return;
+    const lines = block.text.split('\n');
+    const source = lines[line];
     if (source === undefined) return;
-    const flipped = source.replace(/^(\s*[-*+]\s+\[)([ xX])(\])/, (_all, head: string, mark: string, tail: string) =>
-      `${head}${mark === ' ' ? 'x' : ' '}${tail}`,
-    );
+    const flipped = source.replace(TASK_BOX, (_all, head: string, mark: string) => `${head}${mark === ' ' ? 'x' : ' '}]`);
     if (flipped === source) return;
+    const at = this.startOf(index) + lines.slice(0, line).reduce((sum, text) => sum + text.length + 1, 0);
     this.pushUndo();
-    const start = this.offsets[line] ?? 0;
-    this.text = this.text.slice(0, start) + flipped + this.text.slice(start + source.length);
-    const keep = this.active;
+    if (this.active !== null) this.deactivate();
+    this.text = this.text.slice(0, at) + flipped + this.text.slice(at + source.length);
     this.resplit();
-    this.active = keep !== null ? Math.min(keep, this.blocks.length - 1) : null;
-    this.area = null;
     this.render();
     this.changed();
   }
@@ -424,24 +407,27 @@ export class Editor {
   private syncFromArea(): void {
     const area = this.area;
     if (!area || this.active === null) return;
-    const value = area.value;
-    this.text = this.text.slice(0, this.activeStart) + value + this.text.slice(this.activeStart + this.activeLength);
-    this.activeLength = value.length;
     const block = this.blocks[this.active]!;
-    this.blocks[this.active] = { ...block, text: value, end: block.start + value.split('\n').length };
+    const value = area.value;
+    if (value === block.text) return;
+    const start = this.startOf(this.active);
+    this.text = this.text.slice(0, start) + value + this.text.slice(start + block.text.length);
+    this.shift += value.length - block.text.length;
+    this.blocks[this.active] = { ...block, text: value };
+    this.stale = true;
   }
 
   /** `# ` typed at the start of a line grows the source line to heading size. */
   private retypeActive(): void {
     const area = this.area;
     if (!area || this.active === null) return;
-    const probe = splitBlocks(this.md, area.value)[0];
-    if (!probe) return;
+    const probe = splitBlocks(this.md, area.value).find((block) => block.kind !== 'blank');
+    const kind = probe?.kind ?? 'blank';
+    const level = probe?.level ?? 0;
     const block = this.blocks[this.active]!;
-    if (probe.kind === block.kind && probe.level === block.level) return;
-    this.blocks[this.active] = { ...block, kind: probe.kind, level: probe.level };
-    area.className = `block source source--${probe.kind}`;
-    if (probe.kind === 'heading') area.classList.add(`source--h${probe.level}`);
+    if (kind === block.kind && level === block.level) return;
+    this.blocks[this.active] = { ...block, kind, level };
+    area.className = classFor('block source', kind, level, 'source');
     autosize(area);
   }
 
@@ -458,13 +444,12 @@ export class Editor {
     this.report();
   }
 
+  /** Counting words is a pass over the whole text — not something to do on every keystroke. */
   private report(): void {
-    this.host.onStatus({
-      words: countWords(this.text),
-      chars: this.text.length,
-      undo: this.undoStack.length > 0,
-      redo: this.redoStack.length > 0,
-    });
+    window.clearTimeout(this.statusTimer);
+    this.statusTimer = window.setTimeout(() => {
+      this.host.onStatus({ words: countWords(this.text), chars: this.text.length });
+    }, STATUS_DELAY);
   }
 
   /* ---------------------------------------------------------------- *
@@ -473,13 +458,14 @@ export class Editor {
 
   private readonly onKeyDown = (event: KeyboardEvent): void => {
     const area = this.area;
-    if (!area || this.active === null) return;
+    // Keys pressed while an input method composes a word belong to it.
+    if (!area || this.active === null || event.isComposing) return;
     const block = this.blocks[this.active]!;
     const mod = event.metaKey || event.ctrlKey;
 
     if (mod && event.altKey && /^[0-6]$/.test(event.key)) {
       event.preventDefault();
-      this.apply(fmt.setHeading(this.selection(), Number(event.key)));
+      this.heading(Number(event.key));
       return;
     }
     if (mod && !event.altKey) {
@@ -521,171 +507,107 @@ export class Editor {
     }
 
     if (event.key === 'Enter' && !mod && !event.shiftKey) {
-      this.onEnter(event, block);
-      return;
-    }
-
-    if (event.key === 'Backspace' && area.selectionStart === 0 && area.selectionEnd === 0) {
-      if (this.mergeBackward()) event.preventDefault();
-      return;
-    }
-    if (event.key === 'Delete' && area.selectionStart === area.value.length && area.selectionEnd === area.value.length) {
-      if (this.mergeForward()) event.preventDefault();
-      return;
-    }
-
-    this.onArrow(event, area);
-  };
-
-  private onEnter(event: KeyboardEvent, block: Block): void {
-    const selection = this.selection();
-    if (block.kind === 'code' || block.kind === 'frontmatter' || block.kind === 'html' || block.kind === 'table') {
       event.preventDefault();
       this.pushUndo();
+      this.onEnter(block.kind);
+      return;
+    }
+
+    const collapsed = area.selectionStart === area.selectionEnd;
+    if (event.key === 'Backspace' && collapsed && area.selectionStart === 0) {
+      if (this.join(this.active - 1)) event.preventDefault();
+      return;
+    }
+    if (event.key === 'Delete' && collapsed && area.selectionStart === area.value.length) {
+      if (this.join(this.active)) event.preventDefault();
+      return;
+    }
+
+    if (collapsed && !event.shiftKey && !mod && !event.altKey) this.onArrow(event, area);
+  };
+
+  private onEnter(kind: BlockKind): void {
+    const selection = this.selection();
+    if (kind === 'code' || kind === 'frontmatter' || kind === 'html' || kind === 'table') {
       this.insert(fmt.keepIndent(selection));
       return;
     }
-    if (block.kind === 'list' || block.kind === 'quote') {
+    if (kind === 'list' || kind === 'quote') {
       const next = fmt.continueLine(selection);
-      event.preventDefault();
-      this.pushUndo();
       if (!next) {
         this.insert('\n');
-        return;
-      }
-      if (next.clear) {
-        const cleared: fmt.Selection = {
-          value: selection.value.slice(0, next.clear.from) + next.clear.text + selection.value.slice(next.clear.to),
-          start: next.clear.from + next.clear.text.length,
-          end: next.clear.from + next.clear.text.length,
-        };
-        this.apply(cleared);
+      } else if (!next.clear) {
+        this.insert(next.insert);
+      } else {
+        const { from, to, text } = next.clear;
+        this.apply({
+          value: selection.value.slice(0, from) + text + selection.value.slice(to),
+          start: from + text.length,
+          end: from + text.length,
+        });
         // An emptied marker at the outer level means: leave the list.
-        if (next.clear.text === '') this.splitAtCaret();
-        return;
+        if (text === '') this.splitAtCaret();
       }
-      this.insert(next.insert);
       return;
     }
-    event.preventDefault();
-    this.pushUndo();
     this.splitAtCaret();
   }
 
   private onArrow(event: KeyboardEvent, area: HTMLTextAreaElement): void {
-    if (this.active === null) return;
+    const index = this.active;
+    if (index === null) return;
     const at = area.selectionStart;
-    const collapsed = area.selectionStart === area.selectionEnd;
-    if (!collapsed) return;
-
-    if (event.key === 'ArrowLeft' && at === 0) {
-      event.preventDefault();
-      this.moveTo(this.active - 1, Number.MAX_SAFE_INTEGER);
-      return;
-    }
-    if (event.key === 'ArrowRight' && at === area.value.length) {
-      event.preventDefault();
-      this.moveTo(this.active + 1, 0);
-      return;
-    }
-
     const head = area.value.slice(0, at);
     const column = at - (head.lastIndexOf('\n') + 1);
-    if (event.key === 'ArrowUp' && !head.includes('\n')) {
-      event.preventDefault();
-      const target = this.blocks[this.active - 1];
-      if (!target) return;
-      const lastStart = target.text.lastIndexOf('\n') + 1;
-      this.moveTo(this.active - 1, Math.min(lastStart + column, target.text.length));
-      return;
-    }
-    if (event.key === 'ArrowDown' && !area.value.slice(at).includes('\n')) {
-      event.preventDefault();
-      const target = this.blocks[this.active + 1];
-      if (!target) return;
-      const firstEnd = firstLine(target.text).length;
-      this.moveTo(this.active + 1, Math.min(column, firstEnd));
-    }
-  }
+    const previous = this.blocks[index - 1];
+    const next = this.blocks[index + 1];
 
-  private moveTo(index: number, caret: number): void {
-    if (index < 0 || index >= this.blocks.length) return;
-    this.flushTyping();
-    this.resplitKeepingActive(index);
-    const block = this.blocks[Math.min(index, this.blocks.length - 1)];
-    this.activate(index, Math.min(caret, block?.text.length ?? 0));
-  }
-
-  /**
-   * Re-derives the blocks after edits, then maps the wanted index back onto the
-   * new list by the character offset it used to point at.
-   */
-  private resplitKeepingActive(index: number): void {
-    const anchor = index <= (this.active ?? 0) ? this.blockStart(index) : this.blockEnd(index);
-    this.resplit();
-    const line = lineAtOffset(this.offsets, Math.min(anchor, Math.max(0, this.text.length - 1)));
-    const found = blockAtLine(this.blocks, line);
-    this.active = found;
+    let target: number | null = null;
+    if (event.key === 'ArrowLeft' && at === 0 && previous) {
+      target = this.endOf(index - 1);
+    } else if (event.key === 'ArrowRight' && at === area.value.length && next) {
+      target = this.startOf(index + 1);
+    } else if (event.key === 'ArrowUp' && !head.includes('\n') && previous) {
+      const lastStart = previous.text.lastIndexOf('\n') + 1;
+      target = this.startOf(index - 1) + Math.min(lastStart + column, previous.text.length);
+    } else if (event.key === 'ArrowDown' && !area.value.slice(at).includes('\n') && next) {
+      target = this.startOf(index + 1) + Math.min(column, firstLine(next.text).length);
+    }
+    if (target === null) return;
+    event.preventDefault();
+    this.focusAt(target);
   }
 
   /* ---------------------------------------------------------------- *
    * Structural edits
    * ---------------------------------------------------------------- */
 
+  /** Enter outside a list: the block splits in two at the caret. */
   private splitAtCaret(): void {
     const area = this.area;
     if (!area || this.active === null) return;
-    const offset = this.activeStart + area.selectionStart;
-    this.text = `${this.text.slice(0, offset)}\n\n${this.text.slice(offset)}`;
-    this.pending = null;
-    this.resplit();
-
-    const target = offset + 2;
-    const line = lineAtOffset(this.offsets, target);
-    let index = this.blocks.findIndex((block) => line >= block.start && line < block.end);
-    if (index < 0) {
-      this.pending = { insertAt: offset, line };
-      this.insertPendingBlock();
-      index = this.blocks.findIndex((block) => block.start === line);
-    }
-    this.active = null;
-    this.area = null;
-    this.activate(index < 0 ? this.blocks.length - 1 : index, 0);
+    this.syncFromArea();
+    const start = this.startOf(this.active);
+    const split = fmt.splitBlock(
+      this.text.slice(0, start),
+      this.selection(),
+      this.text.slice(start + area.value.length),
+    );
+    this.text = split.text;
+    this.stale = true;
+    this.focusAt(split.caret, 0, start + area.selectionStart);
     this.changed();
   }
 
-  private mergeBackward(): boolean {
-    if (this.active === null || this.active === 0) return false;
-    const previousEnd = this.blockEnd(this.active - 1);
-    const start = this.blockStart(this.active);
-    if (start <= previousEnd) return false;
+  /** Backspace at the start of a block or Delete at its end: drops the gap between `index` and the next block. */
+  private join(index: number): boolean {
+    if (index < 0 || index >= this.blocks.length - 1) return false;
+    const end = this.endOf(index);
+    const next = this.startOf(index + 1);
     this.pushUndo();
-    this.text = this.text.slice(0, previousEnd) + this.text.slice(start);
-    this.pending = null;
-    this.resplit();
-    const line = lineAtOffset(this.offsets, previousEnd);
-    const index = blockAtLine(this.blocks, line);
-    this.active = null;
-    this.area = null;
-    this.activate(index, previousEnd - this.blockStart(index));
-    this.changed();
-    return true;
-  }
-
-  private mergeForward(): boolean {
-    if (this.active === null || this.active >= this.blocks.length - 1) return false;
-    const end = this.blockEnd(this.active);
-    const nextStart = this.blockStart(this.active + 1);
-    if (nextStart <= end) return false;
-    this.pushUndo();
-    this.text = this.text.slice(0, end) + this.text.slice(nextStart);
-    this.pending = null;
-    this.resplit();
-    const line = lineAtOffset(this.offsets, end);
-    const index = blockAtLine(this.blocks, line);
-    this.active = null;
-    this.area = null;
-    this.activate(index, end - this.blockStart(index));
+    this.text = this.text.slice(0, end) + this.text.slice(next);
+    this.stale = true;
+    this.focusAt(end);
     this.changed();
     return true;
   }
@@ -731,7 +653,7 @@ export class Editor {
         this.apply(wrapBlock(selection, '```\n', '\n```'));
         return;
       case 'rule':
-        this.insert('\n\n---\n');
+        this.insert(selection.value.trim() ? '\n\n---\n' : '---');
     }
   }
 
@@ -781,22 +703,24 @@ export class Editor {
    * ---------------------------------------------------------------- */
 
   private snapshot(): Snapshot {
-    return { text: this.text, caret: this.caretOffset() };
+    const caret = this.area && this.active !== null ? this.startOf(this.active) + this.area.selectionStart : null;
+    return { text: this.text, caret };
   }
 
   private pushUndo(): void {
     this.flushTyping();
+    this.record();
+  }
+
+  private record(): void {
     this.undoStack.push(this.snapshot());
     if (this.undoStack.length > UNDO_LIMIT) this.undoStack.shift();
     this.redoStack = [];
   }
 
+  /** A run of keystrokes is one undo step: only the first one records. */
   private markTyping(): void {
-    if (!this.typingTimer) {
-      this.undoStack.push(this.snapshot());
-      if (this.undoStack.length > UNDO_LIMIT) this.undoStack.shift();
-      this.redoStack = [];
-    }
+    if (!this.typingTimer) this.record();
     window.clearTimeout(this.typingTimer);
     this.typingTimer = window.setTimeout(() => {
       this.typingTimer = 0;
@@ -809,34 +733,22 @@ export class Editor {
   }
 
   undo(): void {
-    this.flushTyping();
-    const previous = this.undoStack.pop();
-    if (!previous) return;
-    this.redoStack.push(this.snapshot());
-    this.restore(previous);
+    this.step(this.undoStack, this.redoStack);
   }
 
   redo(): void {
-    this.flushTyping();
-    const next = this.redoStack.pop();
-    if (!next) return;
-    this.undoStack.push(this.snapshot());
-    this.restore(next);
+    this.step(this.redoStack, this.undoStack);
   }
 
-  private restore(snapshot: Snapshot): void {
-    this.text = snapshot.text;
-    this.pending = null;
-    this.active = null;
-    this.area = null;
+  private step(from: Snapshot[], to: Snapshot[]): void {
+    this.flushTyping();
+    const target = from.pop();
+    if (!target) return;
+    to.push(this.snapshot());
+    this.text = target.text;
     this.resplit();
-    if (this.mode === 'edit') {
-      const line = lineAtOffset(this.offsets, Math.min(snapshot.caret, Math.max(0, this.text.length - 1)));
-      const index = blockAtLine(this.blocks, line);
-      this.activate(index, snapshot.caret - this.blockStart(index));
-    } else {
-      this.render();
-    }
+    if (this.mode === 'edit' && target.caret !== null) this.focusAt(target.caret);
+    else this.render();
     this.changed();
   }
 
@@ -856,24 +768,18 @@ export class Editor {
     return hits;
   }
 
-  reveal(offset: number, length: number): void {
-    const line = lineAtOffset(this.offsets, Math.min(offset, Math.max(0, this.text.length - 1)));
-    const index = blockAtLine(this.blocks, line);
-    if (this.mode === 'edit') {
-      this.activate(index, offset - this.blockStart(index));
-      const area = this.area;
-      if (area) {
-        const start = offset - this.activeStart;
-        area.setSelectionRange(start, start + length);
-        this.scrollIntoView(area);
-      }
-      return;
-    }
-    const node = this.nodes[index];
+  /** Scrolls a search hit into view and flashes its block. Focus stays in the search field. */
+  reveal(offset: number): void {
+    const node = this.nodes[this.indexAt(offset)];
     if (!node) return;
     this.scroller.scrollTop = Math.max(0, node.offsetTop - 48);
     node.classList.add('block--flash');
     window.setTimeout(() => node.classList.remove('block--flash'), 900);
+  }
+
+  /** Puts the caret on a search hit once the search is over. */
+  select(offset: number, length: number): void {
+    this.focusAt(offset, length);
   }
 }
 
@@ -884,6 +790,72 @@ export class Editor {
 function autosize(area: HTMLTextAreaElement): void {
   area.style.height = '0px';
   area.style.height = `${area.scrollHeight}px`;
+}
+
+/**
+ * The rendered blocks of the previous render, to be found again by source.
+ * Identical blocks — two equal lists, a run of blank lines — are told apart
+ * by position: where the block was, or where an edit of `shift` characters
+ * before it has moved it to. Handing them out in any other order would move
+ * every one of them in the DOM.
+ */
+class NodePool {
+  private readonly byPlace = new Map<string, HTMLElement>();
+  private readonly byKey = new Map<string, HTMLElement[]>();
+  private readonly next = new Map<string, number>();
+  private readonly used = new Set<HTMLElement>();
+
+  constructor(nodes: readonly HTMLElement[], private readonly shift: number) {
+    for (const node of nodes) {
+      const key = node.dataset['key'];
+      if (key === undefined) continue;
+      this.byPlace.set(`${node.dataset['from']}:${key}`, node);
+      const same = this.byKey.get(key);
+      if (same) same.push(node);
+      else this.byKey.set(key, [node]);
+    }
+  }
+
+  take(key: string, from: number): HTMLElement | null {
+    for (const place of [from, from - this.shift]) {
+      const node = this.byPlace.get(`${place}:${key}`);
+      if (node && !this.used.has(node)) return this.claim(node);
+    }
+    const same = this.byKey.get(key) ?? [];
+    for (let at = this.next.get(key) ?? 0; at < same.length; at += 1) {
+      const node = same[at]!;
+      if (this.used.has(node)) continue;
+      this.next.set(key, at + 1);
+      return this.claim(node);
+    }
+    return null;
+  }
+
+  private claim(node: HTMLElement): HTMLElement {
+    this.used.add(node);
+    return node;
+  }
+}
+
+/**
+ * Makes `nodes` the children of `parent`, touching only what changed: moving
+ * every node of a long note on each caret move would relayout all of it.
+ */
+function patchChildren(parent: HTMLElement, nodes: readonly HTMLElement[]): void {
+  const keep = new Set<Node>(nodes);
+  for (const child of Array.from(parent.children)) {
+    if (!keep.has(child)) child.remove();
+  }
+  let cursor = parent.firstChild;
+  for (const node of nodes) {
+    if (cursor === node) cursor = cursor.nextSibling;
+    else parent.insertBefore(node, cursor);
+  }
+}
+
+function classFor(base: string, kind: BlockKind, level: number, prefix = 'block'): string {
+  const name = `${base} ${prefix}--${kind}`;
+  return kind === 'heading' ? `${name} ${prefix}--h${level}` : name;
 }
 
 function firstLine(text: string): string {

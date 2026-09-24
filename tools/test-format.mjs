@@ -78,5 +78,21 @@ check('a quote continues', f.continueLine(sel('> one|')), { insert: '\n> ' });
 check('a plain paragraph does not continue', f.continueLine(sel('one|')), null);
 check('indentation is kept in code', f.keepIndent(sel('    const a = 1;|')), '\n    ');
 
+// Enter outside a list. `head` and `tail` are the document around the block.
+const split = (head, marked, tail) => {
+  const { text, caret } = f.splitBlock(head, sel(marked), tail);
+  return text.slice(0, caret) + '|' + text.slice(caret);
+};
+check('split in the middle', split('', 'Hel|lo', '\n'), 'Hel\n\n|lo\n');
+check('enter at the end opens a blank line', split('', 'Hello|', '\n\nWorld'), 'Hello\n\n|\n\nWorld');
+check('…padded when the next block is glued on', split('', '# Head|', '\ntext'), '# Head\n\n|\n\ntext');
+check('…and at the end of a file without a newline', split('', 'Hello|', ''), 'Hello\n\n|\n');
+check('…but not when the file ends with one', split('', 'Hello|', '\n'), 'Hello\n\n|\n');
+check('enter on a blank line adds one more', split('Hello\n\n', '|', '\n\nWorld'), 'Hello\n\n\n|\n\nWorld');
+check('enter at the start pushes the block down', split('A\n\n', '|B', '\n'), 'A\n\n\n\n|B\n');
+check('…padded after a glued-on block', split('# H\n', '|text', '\n'), '# H\n\n\n\n|text\n');
+check('an emptied last list line leaves the list', split('', '- a\n|', '\n'), '- a\n\n|\n');
+check('a selection is replaced', split('', 'a|bc|d', ''), 'a\n\n|d');
+
 console.log(`${passed} checks passed${failed ? `, ${failed} failed` : ''}`);
 if (failed) process.exit(1);

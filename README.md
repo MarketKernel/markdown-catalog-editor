@@ -45,6 +45,14 @@ code block gains two fence lines of `` ``` ``, and a table in source form takes 
 lines as are written in it. Neighbouring blocks do not twitch in the process — only what is
 below shifts.
 
+Enter outside a list starts a new block. Pressed at the end of a block, or on an empty line,
+it opens an empty line below and puts the caret on it; pressed again, it adds another. In
+Markdown a single blank line only separates two blocks, so an empty line you can type into
+is one with blank lines on both sides — the editor adds the separating line itself, and
+typed text never glues onto the neighbouring block. Such lines and link reference
+definitions (`[id]: https://…`) are shown only in edit mode; the read view renders the
+Markdown as it is.
+
 ## Features
 
 - **File tree**: collapsible folders, filtering by name, creating, renaming and deleting
@@ -82,7 +90,8 @@ npm install
 npm run build      # -> build/macaed.html
 npm run watch      # rebuild on changes in src/
 npm run typecheck  # tsc --noEmit
-npm test           # 53 checks of the block model and of formatting
+npm test           # 69 checks of the block model and of formatting
+npm run test:browser  # 30 checks of the built editor in headless Chrome
 ```
 
 `build.mjs` bundles `src/main.ts` with esbuild into an IIFE and substitutes it, along with
@@ -104,7 +113,7 @@ src/markdown.ts     markdown-it: ==highlight==, [[wiki links]], tasks, code high
 src/tree.ts         folder and file tree
 src/settings.ts     localStorage: theme, zoom, panel width, last note
 src/ui.ts           dialogs, context menu, notifications
-tools/              tests for the block model and for formatting
+tools/              tests: block model, formatting, the editor in headless Chrome
 vendor/icon.svg     the icon
 docs/               working notes (not under git)
 build/macaed.html   the build output

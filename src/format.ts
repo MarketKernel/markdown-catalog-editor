@@ -251,6 +251,50 @@ function clearOr(from: number, to: number, indentText: string, marker: string): 
   return { insert: '', clear: { from, to, text: '' } };
 }
 
+/* ------------------------------------------------------------------ *
+ * Enter outside a list
+ * ------------------------------------------------------------------ */
+
+export interface Split {
+  /** The whole document after the split. */
+  text: string;
+  /** Where the caret goes: the start of the second half. */
+  caret: number;
+}
+
+/**
+ * Splits the block `sel.value`, which sits between `head` and `tail` in the
+ * document, into two blocks at the selection.
+ *
+ * An empty half becomes a blank line of its own. It gets an extra gap line
+ * wherever it would otherwise touch a neighbouring block: a blank line next to
+ * a block is not shown, and whatever is typed into it later would glue onto
+ * that block. Two blank lines need no gap between them.
+ */
+export function splitBlock(head: string, sel: Selection, tail: string): Split {
+  const before = sel.value.slice(0, sel.start).replace(/\n[ \t]*$/, '');
+  const after = sel.value.slice(sel.end).replace(/^[ \t]*\n/, '');
+  const emptyBefore = before.trim() === '';
+  const emptyAfter = after.trim() === '';
+  const lead = emptyBefore && !endsWithBlankLine(head) ? '\n' : '';
+  const gap = emptyBefore && emptyAfter ? '\n' : '\n\n';
+  const trail = emptyAfter && !startsWithBlankLine(tail) ? '\n' : '';
+  return {
+    text: head + lead + before + gap + after + trail + tail,
+    caret: head.length + lead.length + before.length + gap.length,
+  };
+}
+
+/** Nothing comes before, or what does ends on a blank line. */
+function endsWithBlankLine(head: string): boolean {
+  return head === '' || /(^|\n)[ \t]*\n$/.test(head);
+}
+
+/** A blank line follows — the newline that ends the file counts as one. */
+function startsWithBlankLine(tail: string): boolean {
+  return /^\n[ \t]*(\n|$)/.test(tail);
+}
+
 /** Keeps the leading whitespace when Enter is pressed inside a fenced block. */
 export function keepIndent(sel: Selection): string {
   const lineStart = sel.value.lastIndexOf('\n', Math.max(0, sel.start - 1)) + 1;

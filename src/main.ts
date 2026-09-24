@@ -54,6 +54,8 @@ const statusCount = el('status-count');
 let vault: Vault | null = null;
 let currentPath: string | null = null;
 let dirty = false;
+/** Bumped on every edit, so a save knows whether the text moved on while it was writing. */
+let revision = 0;
 let saveTimer = 0;
 const assets = new Map<string, string>();
 
@@ -64,6 +66,7 @@ const assets = new Map<string, string>();
 const editor = new Editor(el('doc'), scroller, md, {
   onChange: () => {
     dirty = true;
+    revision += 1;
     renderState();
     scheduleSave();
   },
@@ -100,6 +103,7 @@ tree.setCollapsed(settings.collapsed);
 const gateError = el('gate-error');
 
 async function useVault(next: Vault): Promise<void> {
+  await flushSave();
   vault = next;
   currentPath = null;
   dirty = false;
@@ -266,9 +270,17 @@ async function openWiki(target: string): Promise<void> {
   await openNote(path);
 }
 
+function safeDecode(uri: string): string {
+  try {
+    return decodeURI(uri);
+  } catch {
+    return uri;
+  }
+}
+
 async function resolveAsset(src: string, image: HTMLImageElement): Promise<void> {
   if (!vault || !currentPath) return;
-  const path = resolvePath(currentPath, decodeURI(src));
+  const path = resolvePath(currentPath, safeDecode(src));
   const cached = assets.get(path);
   if (cached) {
     image.src = cached;
@@ -310,9 +322,10 @@ async function save(): Promise<void> {
     renderState();
     return;
   }
+  const saving = revision;
   try {
     await vault.writeText(currentPath, editor.getText());
-    dirty = false;
+    dirty = revision !== saving;
     renderState();
   } catch (error) {
     toast(`Could not save: ${error instanceof Error ? error.message : String(error)}`, 'error');
@@ -554,14 +567,14 @@ function runFind(): void {
   hits = editor.findAll(findInput.value, findCase.checked);
   hitIndex = 0;
   findCount.textContent = hits.length ? `1 / ${hits.length}` : '0 / 0';
-  if (hits.length) editor.reveal(hits[0]!, findInput.value.length);
+  if (hits.length) editor.reveal(hits[0]!);
 }
 
 function stepFind(delta: number): void {
   if (hits.length === 0) return;
   hitIndex = (hitIndex + delta + hits.length) % hits.length;
   findCount.textContent = `${hitIndex + 1} / ${hits.length}`;
-  editor.reveal(hits[hitIndex]!, findInput.value.length);
+  editor.reveal(hits[hitIndex]!);
 }
 
 function openFind(): void {
@@ -571,9 +584,13 @@ function openFind(): void {
   if (findInput.value) runFind();
 }
 
+/** Closing the search leaves the caret on the current hit, or at least the focus in the document. */
 function closeFind(): void {
   findbar.hidden = true;
+  const hit = hits[hitIndex];
   hits = [];
+  scroller.focus();
+  if (hit !== undefined) editor.select(hit, findInput.value.length);
 }
 
 el('find').addEventListener('click', () => (findbar.hidden ? openFind() : closeFind()));
@@ -591,7 +608,6 @@ findInput.addEventListener('keydown', (event) => {
   if (event.key === 'Escape') {
     event.preventDefault();
     closeFind();
-    scroller.focus();
   }
 });
 

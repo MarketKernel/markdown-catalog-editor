@@ -88,14 +88,14 @@ export function createMarkdown(): MarkdownIt {
       token.attrSet('target', '_blank');
       token.attrSet('rel', 'noreferrer noopener');
     } else if (href && !href.startsWith('#')) {
-      token.attrSet('data-note', decodeURI(href));
+      token.attrSet('data-note', safeDecode(href));
     }
     return renderLink
       ? renderLink(tokens, index, options, env, self)
       : self.renderToken(tokens, index, options);
   };
 
-  // Headings and task lists need to point back at the source line they came from.
+  // A checkbox carries its line within the block, so a click can flip the source.
   md.renderer.rules['checkbox'] = (tokens, index) => {
     const token = tokens[index]!;
     const checked = token.attrGet('checked') ? ' checked' : '';
@@ -187,25 +187,13 @@ function taskRule(state: StateCore): void {
 }
 
 function isFirstChildOfListItem(tokens: Token[], index: number): boolean {
-  const paragraph = tokens[index - 1];
-  const item = tokens[index - 2];
-  return (
-    paragraph?.type === 'paragraph_open' &&
-    (item?.type === 'list_item_open' || item?.type === 'blockquote_open')
-  );
+  return tokens[index - 1]?.type === 'paragraph_open' && tokens[index - 2]?.type === 'list_item_open';
 }
 
-/**
- * Link reference definitions live wherever the author put them, so the whole
- * document is parsed once and the resulting env is reused when rendering the
- * individual blocks of the live-preview editor.
- */
-export function collectEnv(md: MarkdownIt, text: string): Record<string, unknown> {
-  const env: Record<string, unknown> = {};
+function safeDecode(uri: string): string {
   try {
-    md.parse(text, env);
+    return decodeURI(uri);
   } catch {
-    /* a half-typed document is not worth a crash */
+    return uri;
   }
-  return env;
 }

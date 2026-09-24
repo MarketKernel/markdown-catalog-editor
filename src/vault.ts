@@ -346,7 +346,7 @@ export async function filesFromEntry(entry: FileSystemEntry): Promise<File[]> {
       out.push(file);
       return;
     }
-    if (depth >= MAX_DEPTH || (prefix && skipDir(baseOf(prefix)))) return;
+    if (depth >= MAX_DEPTH || (depth > 0 && skipDir(item.name))) return;
     const reader = (item as FileSystemDirectoryEntry).createReader();
     for (;;) {
       const batch = await new Promise<FileSystemEntry[]>((resolve, reject) =>

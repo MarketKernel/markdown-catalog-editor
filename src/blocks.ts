@@ -18,24 +18,34 @@ export type BlockKind =
   | 'table'
   | 'html'
   | 'hr'
-  | 'frontmatter';
+  | 'frontmatter'
+  /** Link reference definitions: markdown-it consumes them without a token. */
+  | 'definition'
+  /** An empty line the author can type into (see `isFreeLine`). */
+  | 'blank';
 
 export interface Block {
   /** First line of the block, inclusive. */
   start: number;
   /** Line after the block, exclusive. */
   end: number;
+  /** Character offset of the block's first character. */
+  from: number;
   kind: BlockKind;
   /** Heading depth 1–6, else 0. Drives the font size of the source line. */
   level: number;
   text: string;
 }
 
-export function splitLines(text: string): string[] {
+function splitLines(text: string): string[] {
   return text.split('\n');
 }
 
-export function splitBlocks(md: MarkdownIt, text: string): Block[] {
+/**
+ * Splits a document into blocks. `env` receives what markdown-it collects on
+ * the way — the link references the blocks are later rendered against.
+ */
+export function splitBlocks(md: MarkdownIt, text: string, env: Record<string, unknown> = {}): Block[] {
   const lines = splitLines(text);
   const blocks: Block[] = [];
   let scanFrom = 0;
@@ -48,7 +58,7 @@ export function splitBlocks(md: MarkdownIt, text: string): Block[] {
 
   const body = scanFrom === 0 ? text : lines.slice(scanFrom).join('\n');
   let covered = 0;
-  for (const token of parse(md, body)) {
+  for (const token of parse(md, body, env)) {
     if (token.level !== 0 || !token.map) continue;
     const [from, to] = token.map;
     if (from < covered) continue;
@@ -57,13 +67,59 @@ export function splitBlocks(md: MarkdownIt, text: string): Block[] {
     if (block.end > block.start) blocks.push(block);
   }
 
-  if (blocks.length === 0) blocks.push(makeBlock(lines, 0, Math.min(1, lines.length), 'paragraph', 0));
-  return blocks;
+  const all = withGaps(lines, blocks);
+  if (all.length === 0) all.push(makeBlock(lines, 0, 1, 'blank', 0));
+  const offsets = lineOffsets(lines);
+  for (const block of all) block.from = offsets[block.start] ?? 0;
+  return all;
 }
 
-function parse(md: MarkdownIt, text: string): Token[] {
+/**
+ * Fills the lines no token claimed. Text there is a run of link definitions;
+ * a blank line becomes a block only when it is free.
+ */
+function withGaps(lines: string[], blocks: Block[]): Block[] {
+  const out: Block[] = [];
+  let line = 0;
+  const fill = (until: number): void => {
+    while (line < until) {
+      if (isBlank(lines[line])) {
+        if (isFreeLine(lines, line)) out.push(makeBlock(lines, line, line + 1, 'blank', 0));
+        line += 1;
+        continue;
+      }
+      const from = line;
+      while (line < until && !isBlank(lines[line])) line += 1;
+      out.push(makeBlock(lines, from, line, 'definition', 0));
+    }
+  };
+  for (const block of blocks) {
+    fill(block.start);
+    out.push(block);
+    line = block.end;
+  }
+  fill(lines.length);
+  return out;
+}
+
+/**
+ * A blank line is shown — and can be typed into — only when both of its
+ * neighbours are blank too. The line next to a block is the gap that keeps the
+ * blocks apart; text typed there would glue onto that block. The last line of
+ * the file is the newline that ends it, not a line of its own.
+ */
+function isFreeLine(lines: string[], line: number): boolean {
+  if (line >= lines.length - 1) return false;
+  return (line === 0 || isBlank(lines[line - 1])) && isBlank(lines[line + 1]);
+}
+
+function isBlank(line: string | undefined): boolean {
+  return (line ?? '').trim() === '';
+}
+
+function parse(md: MarkdownIt, text: string, env: Record<string, unknown>): Token[] {
   try {
-    return md.parse(text, {});
+    return md.parse(text, env);
   } catch {
     return [];
   }
@@ -72,8 +128,8 @@ function parse(md: MarkdownIt, text: string): Token[] {
 /** Trailing blank lines belong to the gap between blocks, not to the block. */
 function makeBlock(lines: string[], start: number, end: number, kind: BlockKind, level: number): Block {
   let last = end;
-  while (last > start + 1 && (lines[last - 1] ?? '').trim() === '') last -= 1;
-  return { start, end: last, kind, level, text: lines.slice(start, last).join('\n') };
+  while (last > start + 1 && isBlank(lines[last - 1])) last -= 1;
+  return { start, end: last, from: 0, kind, level, text: lines.slice(start, last).join('\n') };
 }
 
 function kindOf(token: Token): BlockKind {
@@ -120,7 +176,7 @@ function frontMatterEnd(lines: string[]): number {
  * ------------------------------------------------------------------ */
 
 /** Character offset of the first character of every line, plus the end. */
-export function lineOffsets(lines: string[]): number[] {
+function lineOffsets(lines: string[]): number[] {
   const offsets = new Array<number>(lines.length + 1);
   let at = 0;
   for (let index = 0; index < lines.length; index += 1) {
@@ -129,25 +185,6 @@ export function lineOffsets(lines: string[]): number[] {
   }
   offsets[lines.length] = Math.max(0, at - 1);
   return offsets;
-}
-
-export function lineAtOffset(offsets: readonly number[], offset: number): number {
-  let low = 0;
-  let high = offsets.length - 2;
-  while (low < high) {
-    const mid = (low + high + 1) >> 1;
-    if ((offsets[mid] ?? 0) <= offset) low = mid;
-    else high = mid - 1;
-  }
-  return low;
-}
-
-export function blockAtLine(blocks: readonly Block[], line: number): number {
-  for (let index = 0; index < blocks.length; index += 1) {
-    const block = blocks[index]!;
-    if (line < block.end) return index;
-  }
-  return Math.max(0, blocks.length - 1);
 }
 
 /**

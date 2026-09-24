@@ -1,6 +1,6 @@
 /** The folder tree in the left panel: navigation plus file and folder actions. */
 
-import { isNote, type TreeEntry } from './vault';
+import { dirOf, isNote, type TreeEntry } from './vault';
 import { menu, type MenuItem } from './ui';
 
 export interface TreeHost {
@@ -130,7 +130,7 @@ export class FileTree {
     event.preventDefault();
     const row = (event.target as HTMLElement | null)?.closest<HTMLElement>('.tree-item');
     const entry = row ? this.find(row.dataset['path'] ?? '') : null;
-    const dir = !entry ? '' : entry.kind === 'dir' ? entry.path : parentOf(entry.path);
+    const dir = !entry ? '' : entry.kind === 'dir' ? entry.path : dirOf(entry.path);
 
     const items: MenuItem[] = [
       { label: 'New note', action: () => this.host.onCreateFile(dir) },
@@ -158,7 +158,7 @@ export class FileTree {
     return walk(this.entries);
   }
 
-  /** All note paths in tree order — used by wiki links and by ⌘P. */
+  /** All note paths in tree order — used by wiki links. */
   notes(): TreeEntry[] {
     const out: TreeEntry[] = [];
     const walk = (entries: readonly TreeEntry[]): void => {
@@ -170,11 +170,6 @@ export class FileTree {
     walk(this.entries);
     return out;
   }
-}
-
-function parentOf(path: string): string {
-  const cut = path.lastIndexOf('/');
-  return cut < 0 ? '' : path.slice(0, cut);
 }
 
 export function stripExtension(name: string): string {
