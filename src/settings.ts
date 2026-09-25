@@ -33,7 +33,7 @@ const DEFAULTS: Settings = {
   language: 'auto',
   theme: 'system',
   zoom: 100,
-  fullWidth: false,
+  fullWidth: true,
   inlineTitle: true,
   sidebar: 260,
   sidebarHidden: false,
