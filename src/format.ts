@@ -302,9 +302,14 @@ export function keepIndent(sel: Selection): string {
   return `\n${/^[ \t]*/.exec(line)?.[0] ?? ''}`;
 }
 
+/**
+ * A table cannot share its lines with text, so it goes below the block — or
+ * in its place when the block is empty — with the first header selected.
+ */
 export function table(sel: Selection): Selection {
   const text = '| Column | Column |\n| --- | --- |\n|  |  |';
-  return splice(sel.value, sel.start, sel.end, text, 2, 9);
+  const head = sel.value.trim() ? `${sel.value.replace(/\s+$/, '')}\n\n` : '';
+  return { value: head + text, start: head.length + 2, end: head.length + 8 };
 }
 
 function splice(value: string, from: number, to: number, text: string, selStart: number, selEnd: number): Selection {

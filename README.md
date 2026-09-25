@@ -33,17 +33,17 @@ up by itself — provided an `index.json` sits alongside it, of the form
 ## Live preview
 
 In edit mode the document stays formatted, and only the block the caret sits in turns into
-raw Markdown. A block is a paragraph, a heading, a whole list, a code block, a table or a
-quote: a list does not fall apart line by line.
+raw Markdown. A block is a paragraph, a heading, a whole list, a code block or a quote: a
+list does not fall apart line by line. Tables are edited differently — see
+"[Tables](#tables)".
 
 The source line keeps the font size, weight and line height of the formatted one, so the text
 does not jump: `# Heading` is shown at heading size. This is checked automatically — when a
 block is switched its top edge moves by less than a pixel at any zoom level from 50 to 200 %.
 
-There are two places where the height does change, and that is unavoidable for this mode: a
-code block gains two fence lines of `` ``` ``, and a table in source form takes up as many
-lines as are written in it. Neighbouring blocks do not twitch in the process — only what is
-below shifts.
+There is one place where the height does change, and that is unavoidable for this mode: a
+code block gains two fence lines of `` ``` ``. Neighbouring blocks do not twitch in the
+process — only what is below shifts.
 
 Enter outside a list starts a new block. Pressed at the end of a block, or on an empty line,
 it opens an empty line below and puts the caret on it; pressed again, it adds another. In
@@ -52,6 +52,31 @@ is one with blank lines on both sides — the editor adds the separating line it
 typed text never glues onto the neighbouring block. Such lines and link reference
 definitions (`[id]: https://…`) are shown only in edit mode; the read view renders the
 Markdown as it is.
+
+## Tables
+
+A table never turns into `| pipes |`. A click opens just the cell under the pointer, and the
+cell shows its own text — `**bold**` rather than bold — so inline formatting and the
+toolbar's marks, links and colours still work inside it. Typing rewrites only that cell in
+the file; the rest of the table keeps its padding and alignment.
+
+- **Moving**: Tab and Shift+Tab go to the next and previous cell, Enter to the cell below,
+  the arrows to the neighbouring cell at the edge of the text — and past the edge of the
+  table on to the block next to it. Enter on the last row starts a new block below the table.
+- **Line breaks**: Ctrl+Enter (also ⌘Enter or Shift+Enter) starts a new line inside the
+  cell. A table row is one line of Markdown, so the break is written as `<br>`; the cell
+  being edited shows it as a real line break, and pasted text keeps its lines the same way.
+  Within a cell of several lines, the up and down arrows move between its lines first. Cell
+  text is aligned to the top.
+- **Adding**: in edit mode, hovering over a table shows a bar with **+** below it, which adds
+  a row, and one to its right, which adds a column. Tab in the last cell adds a row too.
+- **Deleting**: only empty rows and columns are deleted, so no text is lost by a slip.
+  Hovering over an empty row shows a **×** to its left, over an empty column a **×** above
+  it. Backspace in an empty cell does the same from the keyboard: it deletes the row if the
+  whole row is empty, else the column if the whole column is (header included); a table with
+  no text left in it is deleted as a whole. The header row stays — a table needs one.
+
+Adding or deleting rewrites the table in the plain `| a | b |` form.
 
 ## Features
 

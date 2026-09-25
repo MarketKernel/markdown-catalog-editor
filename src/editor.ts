@@ -5,11 +5,15 @@
  * sits in is swapped for a textarea holding its Markdown source, styled with
  * the same font size and line height as the rendered version so the text does
  * not jump. Move the caret away and the block renders again.
+ *
+ * A table is the exception: it stays rendered, and a click opens just the
+ * cell under the pointer, showing that cell's own text.
  */
 
 import type { MarkdownIt } from 'markdown-it';
 import { sourceOffsetFor, splitBlocks, type Block, type BlockKind } from './blocks';
 import * as fmt from './format';
+import * as grid from './table';
 
 export type Mode = 'read' | 'edit';
 
@@ -46,6 +50,14 @@ export interface EditorStatus {
   chars: number;
 }
 
+/** A table cell open for typing. */
+interface OpenCell {
+  el: HTMLElement;
+  index: number;
+  row: number;
+  col: number;
+}
+
 interface Snapshot {
   text: string;
   /** Null when no block was open, e.g. a checkbox ticked in read mode. */
@@ -58,6 +70,10 @@ const STATUS_DELAY = 150;
 
 /** `- [ ] task` in a list or a quote, bulleted or numbered. */
 const TASK_BOX = /^([\s>]*(?:[-*+]|\d+[.)])\s+\[)([ xX])\]/;
+
+const SHORTCUTS: Record<string, FormatAction> = { b: 'bold', i: 'italic', k: 'link' };
+const SHIFT_SHORTCUTS: Record<string, FormatAction> = { c: 'code', h: 'mark', k: 'wikilink' };
+const INLINE = new Set<FormatAction>(['bold', 'italic', 'strike', 'code', 'mark']);
 
 export class Editor {
   /** Always with `\n` line ends; the file's own ending is restored on the way out. */
@@ -75,6 +91,8 @@ export class Editor {
   private active: number | null = null;
   private area: HTMLTextAreaElement | null = null;
   private activeHead = '';
+  /** Tables never open as source; while a cell is open, no block is active. */
+  private cell: OpenCell | null = null;
   /**
    * Typing rewrites only the active block. The blocks after it keep their old
    * offsets, off by `shift`, until the next resplit — so a keystroke costs no
@@ -96,6 +114,7 @@ export class Editor {
   ) {
     this.root.addEventListener('mousedown', this.onMouseDown);
     this.root.addEventListener('click', this.onClick);
+    this.root.addEventListener('mouseover', this.onMouseOver);
   }
 
   /* ---------------------------------------------------------------- *
@@ -143,6 +162,7 @@ export class Editor {
 
   /** Re-derives every block from the text. Leaves no block open. */
   private resplit(): void {
+    this.closeCell();
     this.env = {};
     this.blocks = splitBlocks(this.md, this.text, this.env);
     this.envKey = JSON.stringify(this.env['references'] ?? {});
@@ -186,10 +206,11 @@ export class Editor {
     this.renderedEnvKey = this.envKey;
     this.renderedLength = this.text.length;
 
+    this.closeCell();
     this.area = null;
     const nodes = this.blocks.map((block, index) => {
       if (this.mode === 'edit' && index === this.active) return this.buildSource(block);
-      const key = `${block.kind}${block.level}${block.joined ? '+' : ''}\n${block.text}`;
+      const key = keyFor(block);
       const node = pool?.take(key, block.from) ?? this.buildRendered(block, key);
       node.dataset['index'] = String(index);
       node.dataset['from'] = String(block.from);
@@ -223,6 +244,7 @@ export class Editor {
     el.className = classFor('block', block.kind, block.level, 'block', block.joined);
     el.dataset['key'] = key;
     el.innerHTML = this.renderBlock(block);
+    if (block.kind === 'table') decorateTable(el);
     for (const image of Array.from(el.querySelectorAll<HTMLImageElement>('img[data-asset], img[data-embed]'))) {
       this.host.onAsset(image);
     }
@@ -277,11 +299,20 @@ export class Editor {
   private focusAt(offset: number, length = 0, anchor = offset): void {
     if (this.mode !== 'edit') return;
     this.flushTyping();
+    let table = -1;
     this.steady(anchor, () => {
       if (this.stale) this.resplit();
-      this.active = this.indexAt(offset);
+      const index = this.indexAt(offset);
+      table = this.blocks[index]?.kind === 'table' ? index : -1;
+      this.active = table < 0 ? index : null;
       this.render();
     });
+    if (table >= 0) {
+      const at = grid.cellAt(this.blocks[table]!.text, offset - this.startOf(table));
+      this.openCell(table, at.row, at.col, at.caret, length);
+      this.report();
+      return;
+    }
     const area = this.area as HTMLTextAreaElement | null;
     if (area && this.active !== null) {
       const at = Math.max(0, Math.min(offset - this.startOf(this.active), area.value.length));
@@ -302,13 +333,12 @@ export class Editor {
     this.report();
   }
 
-  private scrollIntoView(area: HTMLTextAreaElement): void {
-    const top = area.offsetTop;
-    const bottom = top + area.offsetHeight;
-    const viewTop = this.scroller.scrollTop;
-    const viewBottom = viewTop + this.scroller.clientHeight;
-    if (top < viewTop + 24) this.scroller.scrollTop = Math.max(0, top - 24);
-    else if (bottom > viewBottom - 24) this.scroller.scrollTop = bottom - this.scroller.clientHeight + 24;
+  /** A source block or a table cell. */
+  private scrollIntoView(el: HTMLElement): void {
+    const box = el.getBoundingClientRect();
+    const view = this.scroller.getBoundingClientRect();
+    if (box.top < view.top + 24) this.scroller.scrollTop -= view.top + 24 - box.top;
+    else if (box.bottom > view.bottom - 24) this.scroller.scrollTop += box.bottom - view.bottom + 24;
   }
 
   /* ---------------------------------------------------------------- *
@@ -318,6 +348,11 @@ export class Editor {
   private readonly onMouseDown = (event: MouseEvent): void => {
     if (this.mode !== 'edit') return;
     const target = event.target as HTMLElement | null;
+    const frame = target?.closest<HTMLElement>('.table-frame');
+    if (target && frame) {
+      this.onTableMouseDown(event, frame, target);
+      return;
+    }
     if (!target || target.closest('a, input, button')) return;
     const holder = target.closest<HTMLElement>('.block');
     if (!holder || holder.tagName === 'TEXTAREA') return;
@@ -346,6 +381,13 @@ export class Editor {
   private readonly onClick = (event: MouseEvent): void => {
     const target = event.target as HTMLElement | null;
     if (!target) return;
+
+    const tool = target.closest<HTMLElement>('.table-tool');
+    if (tool) {
+      event.preventDefault();
+      this.onTableTool(tool);
+      return;
+    }
 
     const box = target.closest<HTMLInputElement>('input.task');
     if (box) {
@@ -380,6 +422,7 @@ export class Editor {
     if (flipped === source) return;
     const at = this.startOf(index) + lines.slice(0, line).reduce((sum, text) => sum + text.length + 1, 0);
     this.pushUndo();
+    this.closeCell();
     if (this.active !== null) this.deactivate();
     this.text = this.text.slice(0, at) + flipped + this.text.slice(at + source.length);
     this.resplit();
@@ -486,10 +529,7 @@ export class Editor {
         this.redo();
         return;
       }
-      const shortcut: Record<string, FormatAction> = event.shiftKey
-        ? { c: 'code', h: 'mark', k: 'wikilink' }
-        : { b: 'bold', i: 'italic', k: 'link' };
-      const action = shortcut[key];
+      const action = (event.shiftKey ? SHIFT_SHORTCUTS : SHORTCUTS)[key];
       if (action) {
         event.preventDefault();
         this.format(action);
@@ -607,6 +647,13 @@ export class Editor {
   /** Backspace at the start of a block or Delete at its end: drops the gap between `index` and the next block. */
   private join(index: number): boolean {
     if (index < 0 || index >= this.blocks.length - 1) return false;
+    const upper = this.blocks[index]!;
+    const lower = this.blocks[index + 1]!;
+    // Text glued onto a table would turn into one of its rows: step into the table instead.
+    if ((upper.kind === 'table' && lower.kind !== 'blank') || (lower.kind === 'table' && upper.kind !== 'blank')) {
+      this.focusAt(upper.kind === 'table' ? this.endOf(index) : this.startOf(index + 1));
+      return true;
+    }
     const end = this.endOf(index);
     const next = this.startOf(index + 1);
     this.pushUndo();
@@ -618,10 +665,392 @@ export class Editor {
   }
 
   /* ---------------------------------------------------------------- *
+   * Tables
+   * ---------------------------------------------------------------- */
+
+  /**
+   * Opens one cell for typing. It shows its own text — `**bold**` rather than
+   * bold — but never the pipes around it. The caret is an offset into that
+   * text, or `end`; `length` selects from it.
+   */
+  private openCell(index: number, row: number, col: number, caret: number | 'end' = 'end', length = 0): void {
+    this.closeCell();
+    const block = this.blocks[index];
+    const el = this.nodes[index]?.querySelector<HTMLElement>(`[data-row="${row}"][data-col="${col}"]`);
+    if (!block || !el) return;
+    const value = grid.cellValue(block.text, row, col);
+    setCellText(el, value);
+    el.contentEditable = editableMode();
+    el.spellcheck = true;
+    el.classList.add('cell--editing');
+    el.addEventListener('beforeinput', this.onBeforeInput);
+    el.addEventListener('input', this.onCellInput);
+    el.addEventListener('keydown', this.onCellKeyDown);
+    el.addEventListener('paste', this.onCellPaste);
+    el.addEventListener('blur', this.onCellBlur);
+    this.cell = { el, index, row, col };
+    el.focus({ preventScroll: true });
+    const at = caret === 'end' ? value.length : Math.min(caret, value.length);
+    setTextSelection(el, at, Math.min(at + length, value.length));
+    this.scrollIntoView(el);
+  }
+
+  /** Renders the open cell again. Runs before anything re-derives the blocks. */
+  private closeCell(): void {
+    const cell = this.cell;
+    if (!cell) return;
+    this.cell = null;
+    const { el } = cell;
+    el.removeEventListener('beforeinput', this.onBeforeInput);
+    el.removeEventListener('input', this.onCellInput);
+    el.removeEventListener('keydown', this.onCellKeyDown);
+    el.removeEventListener('paste', this.onCellPaste);
+    el.removeEventListener('blur', this.onCellBlur);
+    el.removeAttribute('contenteditable');
+    el.classList.remove('cell--editing');
+    const block = this.blocks[cell.index];
+    const value = block?.kind === 'table' ? grid.cellValue(block.text, cell.row, cell.col) : '';
+    try {
+      el.innerHTML = this.md.renderInline(value.replace(/\n/g, '<br>'), this.env);
+    } catch {
+      el.textContent = value;
+    }
+    for (const image of Array.from(el.querySelectorAll<HTMLImageElement>('img[data-asset], img[data-embed]'))) {
+      this.host.onAsset(image);
+    }
+  }
+
+  private readonly onCellBlur = (): void => {
+    const el = this.cell?.el;
+    window.setTimeout(() => {
+      if (el && this.cell?.el === el && document.activeElement !== el) this.closeCell();
+    }, 0);
+  };
+
+  private readonly onCellInput = (): void => {
+    const cell = this.cell;
+    if (!cell) return;
+    const block = this.blocks[cell.index]!;
+    this.spliceBlock(cell.index, grid.setCell(block.text, cell.row, cell.col, cell.el.textContent ?? ''));
+    // A cell that just got text is no longer an empty row or column to delete.
+    for (const tool of Array.from(this.nodes[cell.index]!.querySelectorAll<HTMLElement>('.table-tool--drop-row, .table-tool--drop-col'))) {
+      tool.hidden = true;
+    }
+    this.changed();
+  };
+
+  /** Pasted text goes in as plain text; its line breaks stay, as `<br>` in the file. */
+  private readonly onCellPaste = (event: ClipboardEvent): void => {
+    const text = event.clipboardData?.getData('text/plain');
+    if (text === undefined) return;
+    event.preventDefault();
+    this.markTyping();
+    this.insertInCell(text.replace(/\r\n?/g, '\n').replace(/^\n+|\n+$/g, ''));
+  };
+
+  private insertInCell(text: string): void {
+    const sel = this.cellSelection(this.cell!);
+    const at = sel.start + text.length;
+    this.applyCell({ value: sel.value.slice(0, sel.start) + text + sel.value.slice(sel.end), start: at, end: at });
+  }
+
+  /**
+   * Rewrites one block in place while no block is active. The blocks after it
+   * only move, and the rendered nodes stay: nothing is parsed per keystroke.
+   */
+  private spliceBlock(index: number, text: string): void {
+    const block = this.blocks[index]!;
+    if (text === block.text) return;
+    const delta = text.length - block.text.length;
+    this.text = this.text.slice(0, block.from) + text + this.text.slice(block.from + block.text.length);
+    this.blocks[index] = { ...block, text };
+    for (let at = index + 1; at < this.blocks.length; at += 1) {
+      const next = this.blocks[at]!;
+      next.from += delta;
+      const node = this.nodes[at];
+      if (node) node.dataset['from'] = String(next.from);
+    }
+    this.renderedLength += delta;
+    const node = this.nodes[index];
+    if (node) node.dataset['key'] = keyFor(this.blocks[index]!);
+  }
+
+  /**
+   * Adds or removes rows and columns: the table is written out anew. `change`
+   * returns null to remove the whole table; `focus` is the cell to open after.
+   */
+  private editTable(index: number, change: (table: grid.Table) => grid.Table | null, focus?: { row: number; col: number }): void {
+    const block = this.blocks[index];
+    const table = block ? grid.parseTable(block.text) : null;
+    if (!block || !table) return;
+    const next = change(table);
+    this.pushUndo();
+    this.closeCell();
+    let from = block.from;
+    let to = block.from + block.text.length;
+    // A removed table takes one of the gaps around it along.
+    if (!next && index > 0) from = this.endOf(index - 1);
+    else if (!next && index < this.blocks.length - 1) to = this.startOf(index + 1);
+    this.text = this.text.slice(0, from) + (next ? grid.formatTable(next) : '') + this.text.slice(to);
+    this.resplit();
+    this.render();
+    this.changed();
+    if (!next) this.focusAt(from);
+    else if (focus) this.openCell(index, focus.row, focus.col);
+  }
+
+  private onTableMouseDown(event: MouseEvent, frame: HTMLElement, target: HTMLElement): void {
+    // The controls must not pull focus out of the cell being typed into.
+    if (target.closest('button')) {
+      event.preventDefault();
+      return;
+    }
+    const cell = target.closest<HTMLElement>('th, td');
+    if (cell && cell === this.cell?.el) return;
+    if (target.closest('a, input')) return;
+    event.preventDefault();
+    const holder = frame.closest<HTMLElement>('.block');
+    if (!cell || !holder) return;
+    const row = Number(cell.dataset['row']);
+    const col = Number(cell.dataset['col']);
+    const block = this.blocks[Number(holder.dataset['index'])];
+    // Read the click before the open block closes and the page may scroll.
+    const caret = block ? cellCaretFromPoint(cell, grid.cellValue(block.text, row, col), event) : 'end';
+    if (this.active !== null) this.deactivate();
+    this.openCell(Number(holder.dataset['index']), row, col, caret);
+  }
+
+  private onTableTool(tool: HTMLElement): void {
+    if (this.mode !== 'edit') return;
+    if (this.active !== null) this.deactivate();
+    const index = Number(tool.closest<HTMLElement>('.block')?.dataset['index'] ?? '-1');
+    const table = grid.parseTable(this.blocks[index]?.text ?? '');
+    if (!table) return;
+    const row = Number(tool.dataset['row']);
+    const col = Number(tool.dataset['col']);
+    switch (tool.dataset['table']) {
+      case 'add-row':
+        this.editTable(index, (t) => grid.addRow(t), { row: table.rows.length, col: 0 });
+        return;
+      case 'add-col':
+        this.editTable(index, (t) => grid.addColumn(t), { row: 0, col: table.align.length });
+        return;
+      case 'drop-row':
+        this.editTable(index, (t) => grid.removeRow(t, row));
+        return;
+      case 'drop-col':
+        this.editTable(index, (t) => grid.removeColumn(t, col));
+    }
+  }
+
+  /** Puts the × of an empty row and an empty column next to the cell under the pointer. */
+  private readonly onMouseOver = (event: MouseEvent): void => {
+    if (this.mode !== 'edit') return;
+    const target = event.target as HTMLElement | null;
+    const cell = target?.closest<HTMLElement>('th, td');
+    const frame = cell?.closest<HTMLElement>('.table-frame');
+    const index = Number(frame?.closest<HTMLElement>('.block')?.dataset['index'] ?? '-1');
+    const table = grid.parseTable(this.blocks[index]?.text ?? '');
+    if (!cell || !frame || !table) return;
+    const row = Number(cell.dataset['row']);
+    const col = Number(cell.dataset['col']);
+    const box = frame.getBoundingClientRect();
+    const line = cell.parentElement!.getBoundingClientRect();
+    const column = cell.getBoundingClientRect();
+
+    const dropRow = frame.querySelector<HTMLElement>('.table-tool--drop-row')!;
+    dropRow.hidden = !(row > 0 && grid.rowIsEmpty(table, row));
+    dropRow.dataset['row'] = String(row);
+    dropRow.style.top = `${line.top - box.top}px`;
+    dropRow.style.height = `${line.height}px`;
+
+    const dropCol = frame.querySelector<HTMLElement>('.table-tool--drop-col')!;
+    dropCol.hidden = !(table.align.length > 1 && grid.columnIsEmpty(table, col));
+    dropCol.dataset['col'] = String(col);
+    dropCol.style.left = `${column.left - box.left}px`;
+    dropCol.style.width = `${column.width}px`;
+  };
+
+  private readonly onCellKeyDown = (event: KeyboardEvent): void => {
+    const cell = this.cell;
+    if (!cell || event.isComposing) return;
+    const mod = event.metaKey || event.ctrlKey;
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      // Ctrl+Enter (⌘Enter, Shift+Enter) breaks the line inside the cell; Enter alone goes down a row.
+      if (mod || event.shiftKey) {
+        this.pushUndo();
+        this.insertInCell('\n');
+      } else if (!event.altKey) {
+        this.cellBelow();
+      }
+      return;
+    }
+    if (mod && !event.altKey) {
+      const key = event.key.toLowerCase();
+      if (key === 'z' || key === 'y') {
+        event.preventDefault();
+        if (key === 'y' || event.shiftKey) this.redo();
+        else this.undo();
+        return;
+      }
+      const action = (event.shiftKey ? SHIFT_SHORTCUTS : SHORTCUTS)[key];
+      if (action) {
+        event.preventDefault();
+        this.format(action);
+      }
+      return;
+    }
+
+    const value = cell.el.textContent ?? '';
+    const { start, end } = textOffsets(cell.el);
+    const plain = start === end && !event.shiftKey && !mod && !event.altKey;
+    switch (event.key) {
+      case 'Escape':
+        event.preventDefault();
+        this.closeCell();
+        this.scroller.focus();
+        return;
+      case 'Tab':
+        event.preventDefault();
+        this.stepCell(event.shiftKey ? -1 : 1, 'all');
+        return;
+      case 'Backspace':
+        if (value === '') {
+          event.preventDefault();
+          this.dropEmpty();
+        }
+        return;
+      case 'ArrowUp':
+      case 'ArrowDown':
+        // Within a cell of several lines the arrows move between its lines first.
+        if (!plain || (event.key === 'ArrowUp' ? value.slice(0, start) : value.slice(start)).includes('\n')) return;
+        event.preventDefault();
+        this.moveRow(event.key === 'ArrowUp' ? -1 : 1);
+        return;
+      case 'ArrowLeft':
+        if (!plain || start > 0) return;
+        event.preventDefault();
+        this.stepCell(-1, 'end');
+        return;
+      case 'ArrowRight':
+        if (!plain || start < value.length) return;
+        event.preventDefault();
+        this.stepCell(1, 'start');
+    }
+  };
+
+  /** The next or previous cell in reading order. Tab past the last cell adds a row. */
+  private stepCell(delta: 1 | -1, where: 'start' | 'end' | 'all'): void {
+    const cell = this.cell!;
+    const table = grid.parseTable(this.blocks[cell.index]!.text);
+    if (!table) return;
+    const width = table.align.length;
+    const flat = cell.row * width + cell.col + delta;
+    if (flat < 0) {
+      this.leaveTable(-1);
+    } else if (flat >= table.rows.length * width) {
+      if (where === 'all') this.editTable(cell.index, (t) => grid.addRow(t), { row: table.rows.length, col: 0 });
+      else this.leaveTable(1);
+    } else {
+      const row = Math.floor(flat / width);
+      const col = flat % width;
+      const length = where === 'all' ? grid.cellValue(this.blocks[cell.index]!.text, row, col).length : 0;
+      this.openCell(cell.index, row, col, where === 'end' ? 'end' : 0, length);
+    }
+  }
+
+  private moveRow(delta: 1 | -1): void {
+    const cell = this.cell!;
+    const rows = grid.parseTable(this.blocks[cell.index]!.text)?.rows.length ?? 0;
+    const row = cell.row + delta;
+    if (row < 0 || row >= rows) this.leaveTable(delta);
+    else this.openCell(cell.index, row, cell.col);
+  }
+
+  /** Enter goes down a row; on the last row it starts a new block below the table. */
+  private cellBelow(): void {
+    const cell = this.cell!;
+    const block = this.blocks[cell.index]!;
+    const rows = grid.parseTable(block.text)?.rows.length ?? 0;
+    if (cell.row + 1 < rows) {
+      this.openCell(cell.index, cell.row + 1, cell.col);
+      return;
+    }
+    this.pushUndo();
+    this.closeCell();
+    const end = block.from + block.text.length;
+    const split = fmt.splitBlock(
+      this.text.slice(0, block.from),
+      { value: block.text, start: block.text.length, end: block.text.length },
+      this.text.slice(end),
+    );
+    this.text = split.text;
+    this.stale = true;
+    this.focusAt(split.caret, 0, block.from);
+    this.changed();
+  }
+
+  /** Arrows past the edge of the table go on to the block next to it. */
+  private leaveTable(direction: 1 | -1): void {
+    const index = this.cell!.index;
+    if (direction < 0 && index > 0) this.focusAt(this.endOf(index - 1));
+    else if (direction > 0 && index < this.blocks.length - 1) this.focusAt(this.startOf(index + 1));
+  }
+
+  /**
+   * Backspace in an empty cell. It removes the row when the whole row is
+   * empty, else the column when the whole column is; a table left with no
+   * text at all goes as a whole. Otherwise the caret steps back a cell.
+   */
+  private dropEmpty(): void {
+    const { index, row, col } = this.cell!;
+    const table = grid.parseTable(this.blocks[index]!.text);
+    if (!table) return;
+    if (row > 0 && grid.rowIsEmpty(table, row)) {
+      this.editTable(index, (t) => grid.removeRow(t, row), { row: row - 1, col });
+    } else if (table.align.length > 1 && grid.columnIsEmpty(table, col)) {
+      this.editTable(index, (t) => grid.removeColumn(t, col), { row, col: Math.max(0, col - 1) });
+    } else if (grid.isEmpty(table)) {
+      this.editTable(index, () => null);
+    } else {
+      this.stepCell(-1, 'end');
+    }
+  }
+
+  /** Inline marks, links and colours work inside a cell; block formats do not. */
+  private formatCell(action: FormatAction): void {
+    const sel = this.cellSelection(this.cell!);
+    let next: fmt.Selection | null = null;
+    if (INLINE.has(action)) next = fmt.toggleInline(sel, action as fmt.InlineMark);
+    else if (action === 'link') next = fmt.makeLink(sel);
+    else if (action === 'wikilink') next = fmt.makeWikiLink(sel);
+    if (!next) return;
+    this.pushUndo();
+    this.applyCell(next);
+  }
+
+  private cellSelection(cell: OpenCell): fmt.Selection {
+    return { value: cell.el.textContent ?? '', ...textOffsets(cell.el) };
+  }
+
+  private applyCell(next: fmt.Selection): void {
+    const cell = this.cell;
+    if (!cell) return;
+    setCellText(cell.el, next.value);
+    setTextSelection(cell.el, next.start, next.end);
+    this.onCellInput();
+  }
+
+  /* ---------------------------------------------------------------- *
    * Toolbar
    * ---------------------------------------------------------------- */
 
   format(action: FormatAction): void {
+    if (this.cell) {
+      this.formatCell(action);
+      return;
+    }
     if (!this.area) return;
     const selection = this.selection();
     this.pushUndo();
@@ -651,9 +1080,13 @@ export class Editor {
       case 'quote':
         this.apply(fmt.toggleQuote(selection));
         return;
-      case 'table':
+      case 'table': {
         this.apply(fmt.table(selection));
+        // The new table opens at once, in its first header cell.
+        const area = this.area as HTMLTextAreaElement;
+        this.focusAt(this.startOf(this.active!) + area.selectionStart, area.selectionEnd - area.selectionStart);
         return;
+      }
       case 'codeblock':
         this.apply(wrapBlock(selection, '```\n', '\n```'));
         return;
@@ -669,6 +1102,11 @@ export class Editor {
   }
 
   colorize(style: string): void {
+    if (this.cell) {
+      this.pushUndo();
+      this.applyCell(fmt.colorize(this.cellSelection(this.cell), style));
+      return;
+    }
     if (!this.area) return;
     this.pushUndo();
     this.apply(fmt.colorize(this.selection(), style));
@@ -708,6 +1146,11 @@ export class Editor {
    * ---------------------------------------------------------------- */
 
   private snapshot(): Snapshot {
+    if (this.cell) {
+      const { el, index, row, col } = this.cell;
+      const block = this.blocks[index]!;
+      return { text: this.text, caret: block.from + grid.cellOffset(block.text, row, col) + textOffsets(el).start };
+    }
     const caret = this.area && this.active !== null ? this.startOf(this.active) + this.area.selectionStart : null;
     return { text: this.text, caret };
   }
@@ -855,6 +1298,129 @@ function patchChildren(parent: HTMLElement, nodes: readonly HTMLElement[]): void
   for (const node of nodes) {
     if (cursor === node) cursor = cursor.nextSibling;
     else parent.insertBefore(node, cursor);
+  }
+}
+
+/** What a rendered block is recognised by when the document renders again. */
+function keyFor(block: Block): string {
+  return `${block.kind}${block.level}${block.joined ? '+' : ''}\n${block.text}`;
+}
+
+/**
+ * Tags every cell with its place in the grid and adds the controls that show
+ * around the table on hover in edit mode: a bar below it adds a row, a bar to
+ * its right a column, and a × deletes an empty row or column.
+ */
+function decorateTable(el: HTMLElement): void {
+  const table = el.querySelector('table');
+  if (!table) return;
+  const frame = document.createElement('div');
+  frame.className = 'table-frame';
+  table.replaceWith(frame);
+  frame.append(table);
+  Array.from(table.rows).forEach((line, row) => {
+    Array.from(line.cells).forEach((cell, col) => {
+      cell.dataset['row'] = String(row);
+      cell.dataset['col'] = String(col);
+    });
+  });
+  frame.append(
+    tableTool('add-row', 'Add a row'),
+    tableTool('add-col', 'Add a column'),
+    tableTool('drop-row', 'Delete this empty row'),
+    tableTool('drop-col', 'Delete this empty column'),
+  );
+}
+
+function tableTool(action: string, label: string): HTMLButtonElement {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.className = `table-tool table-tool--${action}`;
+  button.dataset['table'] = action;
+  button.title = label;
+  button.setAttribute('aria-label', label);
+  button.tabIndex = -1;
+  button.hidden = action.startsWith('drop');
+  return button;
+}
+
+/**
+ * A trailing line break shows no empty line of its own, and the caret could
+ * not get onto it: a `<br>` after the text holds that line open. It is not part
+ * of `textContent`, which stays the cell's text.
+ */
+function setCellText(el: HTMLElement, value: string): void {
+  el.textContent = value;
+  if (value.endsWith('\n')) el.append(document.createElement('br'));
+}
+
+let plainEditable: string | null = null;
+
+/** `plaintext-only` keeps pasted formatting out of a cell; older browsers lack it. */
+function editableMode(): string {
+  if (plainEditable === null) {
+    const probe = document.createElement('div');
+    try {
+      probe.contentEditable = 'plaintext-only';
+    } catch {
+      /* not supported */
+    }
+    plainEditable = probe.contentEditable === 'plaintext-only' ? 'plaintext-only' : 'true';
+  }
+  return plainEditable;
+}
+
+/** The selection inside an editable cell, as offsets into its text. */
+function textOffsets(el: HTMLElement): { start: number; end: number } {
+  const selection = window.getSelection();
+  if (!selection || selection.rangeCount === 0) return { start: 0, end: 0 };
+  const range = selection.getRangeAt(0);
+  if (!el.contains(range.startContainer) || !el.contains(range.endContainer)) {
+    const length = el.textContent?.length ?? 0;
+    return { start: length, end: length };
+  }
+  const offset = (node: Node, at: number): number => {
+    const before = document.createRange();
+    before.selectNodeContents(el);
+    before.setEnd(node, at);
+    return before.toString().length;
+  };
+  return { start: offset(range.startContainer, range.startOffset), end: offset(range.endContainer, range.endOffset) };
+}
+
+function setTextSelection(el: HTMLElement, start: number, end: number): void {
+  const selection = window.getSelection();
+  if (!selection) return;
+  const place = (at: number): [Node, number] => {
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    let left = at;
+    for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+      const length = node.textContent?.length ?? 0;
+      if (left <= length) return [node, left];
+      left -= length;
+    }
+    return [el, el.childNodes.length];
+  };
+  const range = document.createRange();
+  range.setStart(...place(start));
+  range.setEnd(...place(end));
+  selection.removeAllRanges();
+  selection.addRange(range);
+}
+
+/** Maps a click inside a rendered cell to the same place in the cell's text. */
+function cellCaretFromPoint(cell: HTMLElement, value: string, event: MouseEvent): number | 'end' {
+  const point = caretRangeAt(event.clientX, event.clientY);
+  if (!point || !cell.contains(point.node)) return 'end';
+  try {
+    const range = document.createRange();
+    range.setStart(cell, 0);
+    range.setEnd(point.node, point.offset);
+    const prefix = range.toString();
+    // Past the last character: after any closing `**` too.
+    return prefix === cell.textContent ? 'end' : sourceOffsetFor(value, prefix);
+  } catch {
+    return 'end';
   }
 }
 

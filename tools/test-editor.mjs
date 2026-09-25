@@ -413,5 +413,107 @@ await scenario('> [!note] \n> **Disks**\n> Vault_A, Vault_B\n\nAfter\n', async (
   eq('a click opens its source', (await b.view())[0].startsWith('[> [!note]'), true);
 });
 
+const cellState = (b) => b.evaluate(`(() => {
+  const open = document.querySelector('#doc .cell--editing');
+  return {
+    textarea: Boolean(document.querySelector('#doc textarea')),
+    cell: open ? [Number(open.dataset.row), Number(open.dataset.col), open.textContent] : null,
+    focused: open ? document.activeElement === open : false,
+  };
+})()`);
+const TABLE = 'Intro\n\n| Name | Size |\n| --- | --- |\n| **a** | 1 |\n\nAfter\n';
+
+await scenario(TABLE, async (b) => {
+  await b.click('#doc td[data-row="1"][data-col="0"]');
+  eq('a click opens one cell, not the table source', await cellState(b), { textarea: false, cell: [1, 0, '**a**'], focused: true });
+  await b.type('b');
+  eq('typing writes into that cell only', await b.text(), 'Intro\n\n| Name | Size |\n| --- | --- |\n| **a**b | 1 |\n\nAfter\n');
+  await b.press('Tab');
+  eq('Tab goes to the next cell', (await cellState(b)).cell, [1, 1, '1']);
+  await b.press('Tab');
+  eq('Tab past the last cell adds a row', (await cellState(b)).cell, [2, 0, '']);
+  await b.type('c');
+  eq('the new row is written', await b.text(), 'Intro\n\n| Name | Size |\n| --- | --- |\n| **a**b | 1 |\n| c |  |\n\nAfter\n');
+  eq('the closed cell renders again', await b.evaluate(`document.querySelector('#doc td[data-row="1"][data-col="0"]').innerHTML`), '<strong>a</strong>b');
+  await b.press('z', 4);
+  eq('undo reopens the cell it steps back in', (await cellState(b)).cell, [2, 0, '']);
+  eq('undo steps back', await b.text(), 'Intro\n\n| Name | Size |\n| --- | --- |\n| **a**b | 1 |\n|  |  |\n\nAfter\n');
+});
+
+await scenario(TABLE, async (b) => {
+  await b.click('#doc > .block--paragraph');
+  await b.press('ArrowDown');
+  eq('arrow down from the text above opens the header', (await cellState(b)).cell?.slice(0, 2), [0, 0]);
+  await b.press('ArrowDown');
+  await b.press('ArrowDown');
+  eq('arrow down past the last row leaves the table', (await b.view()).at(-1), '[|After]');
+  await b.press('ArrowUp');
+  eq('arrow up comes back into the last row', (await cellState(b)).cell?.slice(0, 2), [1, 0]);
+  await b.press('Enter');
+  eq('Enter on the last row starts a block below', (await b.view()).at(-2), '[|]');
+  await b.type('New');
+  await b.press('Escape');
+  eq('the block lands after the table', await b.text(), 'Intro\n\n| Name | Size |\n| --- | --- |\n| **a** | 1 |\n\nNew\n\nAfter\n');
+});
+
+await scenario(TABLE, async (b) => {
+  await b.evaluate(`document.querySelector('#doc .table-tool--add-row').click()`);
+  eq('the row bar adds a row and opens it', (await cellState(b)).cell, [2, 0, '']);
+  await b.evaluate(`document.querySelector('#doc .table-tool--add-col').click()`);
+  eq('the column bar adds a column and opens its header', (await cellState(b)).cell, [0, 2, '']);
+  eq('both land in the text', await b.text(), 'Intro\n\n| Name | Size |  |\n| --- | --- | --- |\n| **a** | 1 |  |\n|  |  |  |\n\nAfter\n');
+  await b.press('Backspace');
+  eq('Backspace in an empty column removes it', (await cellState(b)).cell, [0, 1, 'Size']);
+  await b.click('#doc td[data-row="2"][data-col="1"]');
+  await b.press('Backspace');
+  eq('Backspace in an empty row removes it', (await cellState(b)).cell, [1, 1, '1']);
+  eq('the table is back to how it was', await b.text(), 'Intro\n\n| Name | Size |\n| --- | --- |\n| **a** | 1 |\n\nAfter\n');
+});
+
+await scenario('| A | B |\n| - | - |\n| x |  |\n|  |  |\n', async (b) => {
+  const hover = async (selector) => {
+    const box = await b.evaluate(`(() => { const r = document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; })()`);
+    await b.evaluate(`document.querySelector(${JSON.stringify(selector)}).dispatchEvent(new MouseEvent('mouseover', { bubbles: true }))`);
+    return box;
+  };
+  const tools = `['drop-row', 'drop-col'].map((name) => !document.querySelector('#doc .table-tool--' + name).hidden)`;
+  await hover('#doc td[data-row="1"][data-col="0"]');
+  eq('a row with text offers no ×', await b.evaluate(tools), [false, false]);
+  await hover('#doc td[data-row="2"][data-col="1"]');
+  eq('an empty row offers a ×', await b.evaluate(tools), [true, false]);
+  await b.evaluate(`document.querySelector('#doc .table-tool--drop-row').click()`);
+  eq('the × removes it', await b.text(), '| A | B |\n| --- | --- |\n| x |  |\n');
+  eq('read mode hides the controls', await b.evaluate(`(() => {
+    document.querySelector('.seg[data-mode=read]').click();
+    return getComputedStyle(document.querySelector('#doc .table-tool--add-row')).display;
+  })()`), 'none');
+});
+
+await scenario('| A | B |\n| - | - |\n| one | x |\n| y | z |\n', async (b) => {
+  await b.click('#doc td[data-row="1"][data-col="0"]');
+  await b.press('Enter', 2);
+  eq('Ctrl+Enter breaks the line inside the cell', await cellState(b), { textarea: false, cell: [1, 0, 'one\n'], focused: true });
+  const lines = `(() => { const c = document.querySelector('#doc .cell--editing'); const st = getComputedStyle(c); return Math.round((c.clientHeight - parseFloat(st.paddingTop) - parseFloat(st.paddingBottom)) / parseFloat(st.lineHeight)); })()`;
+  eq('the new empty line shows', await b.evaluate(lines), 2);
+  await b.type('two');
+  eq('it is written as <br>', await b.text(), '| A | B |\n| - | - |\n| one<br>two | x |\n| y | z |\n');
+  await b.press('ArrowUp');
+  eq('arrow up moves within the cell first', (await cellState(b)).cell, [1, 0, 'one\ntwo']);
+  await b.press('ArrowDown');
+  await b.press('ArrowDown');
+  eq('and leaves it from its last line', (await cellState(b)).cell?.slice(0, 2), [2, 0]);
+  eq('the closed cell renders the break', await b.evaluate(`document.querySelector('#doc td[data-row="1"][data-col="0"]').innerHTML`), 'one<br>two');
+  eq('cells align to the top', await b.evaluate(`getComputedStyle(document.querySelector('#doc td')).verticalAlign`), 'top');
+});
+
+await scenario('Text\n', async (b) => {
+  await b.click('#doc > .block--paragraph');
+  await b.evaluate(`document.querySelector('[data-action=table]').click()`);
+  eq('a new table opens in its first header, below the text', await cellState(b), { textarea: false, cell: [0, 0, 'Column'], focused: true });
+  await b.type('Name');
+  await b.press('Escape');
+  eq('and the header takes the typing', await b.text(), 'Text\n\n| Name | Column |\n| --- | --- |\n|  |  |\n');
+});
+
 console.log(`${passed} browser checks passed${failed ? `, ${failed} failed` : ''}`);
 process.exit(failed ? 1 : 0);

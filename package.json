@@ -12,7 +12,7 @@
     "build": "node build.mjs",
     "watch": "node build.mjs --watch",
     "typecheck": "tsc --noEmit",
-    "test": "node tools/test-blocks.mjs && node tools/test-format.mjs && node tools/test-markdown.mjs",
+    "test": "node tools/test-blocks.mjs && node tools/test-format.mjs && node tools/test-table.mjs && node tools/test-markdown.mjs",
     "test:browser": "node --experimental-websocket tools/test-editor.mjs"
   },
   "devDependencies": {

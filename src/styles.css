@@ -703,8 +703,49 @@ details.callout[open] > summary.callout-title::after { transform: rotate(45deg);
 }
 
 .doc table { border-collapse: collapse; width: 100%; font-size: 0.94em; }
-.doc th, .doc td { border: 1px solid var(--edge); padding: 0.4em 0.65em; text-align: left; }
+.doc th, .doc td { border: 1px solid var(--edge); padding: 0.4em 0.65em; text-align: left; vertical-align: top; }
+/* An empty cell keeps the height of a line, so an empty row can still be clicked. */
+.doc th:empty::after, .doc td:empty::after { content: '\200b'; }
 .doc th { background: var(--panel); font-weight: 600; }
+
+/* In edit mode a table stays a table: a click opens one cell, and the bars that
+   show on hover add a row below and a column to the right. */
+.table-frame { position: relative; }
+.doc--edit th, .doc--edit td { cursor: text; }
+.doc th.cell--editing, .doc td.cell--editing {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+  background: var(--accent-bg);
+  white-space: pre-wrap;
+}
+.table-tool {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: var(--panel);
+  color: var(--faint);
+  font: inherit;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+.doc:not(.doc--edit) .table-tool, .table-tool[hidden] { display: none; }
+.table-frame:hover .table-tool { opacity: 1; }
+.table-tool:hover { background: var(--accent-bg); color: var(--accent); }
+.table-tool--add-row::before, .table-tool--add-col::before { content: '+'; }
+.table-tool--drop-row::before, .table-tool--drop-col::before { content: '×'; }
+.table-tool--drop-row:hover, .table-tool--drop-col:hover { color: var(--danger); }
+/* The row bar sits in the gap below the table, the column × in the gap above it. */
+.table-tool--add-row { left: 0; right: 0; top: calc(100% + 2px); height: max(9px, calc(var(--gap) - 3px)); }
+.table-tool--add-col { top: 0; bottom: 0; left: calc(100% + 3px); width: 14px; }
+.table-tool--drop-row { right: calc(100% + 3px); width: 14px; }
+.table-tool--drop-col { bottom: calc(100% + 2px); height: max(9px, calc(var(--gap) - 3px)); }
 
 /* A rule stands in for one line of `---`. Its own height carries the line, so
    no margin can collapse into the block wrapper and shorten it. */
