@@ -34,6 +34,8 @@ export interface Block {
   kind: BlockKind;
   /** Heading depth 1–6, else 0. Drives the font size of the source line. */
   level: number;
+  /** A line of the paragraph above it: no gap in between. */
+  joined: boolean;
   text: string;
 }
 
@@ -58,14 +60,22 @@ export function splitBlocks(md: MarkdownIt, text: string, env: Record<string, un
 
   const body = scanFrom === 0 ? text : lines.slice(scanFrom).join('\n');
   let covered = 0;
-  for (const token of parse(md, body, env)) {
-    if (token.level !== 0 || !token.map) continue;
+  const tokens = parse(md, body, env);
+  tokens.forEach((token, index) => {
+    if (token.level !== 0 || !token.map) return;
     const [from, to] = token.map;
-    if (from < covered) continue;
+    if (from < covered) return;
     covered = to;
     const block = makeBlock(lines, from + scanFrom, Math.min(to + scanFrom, lines.length), kindOf(token), levelOf(token));
-    if (block.end > block.start) blocks.push(block);
-  }
+    if (block.end <= block.start) return;
+    if (block.kind === 'paragraph' && block.end - block.start > 1 && splitsIntoLines(md, tokens[index + 1], lines.slice(block.start, block.end), env)) {
+      for (let line = block.start; line < block.end; line += 1) {
+        blocks.push({ ...makeBlock(lines, line, line + 1, 'paragraph', 0), joined: line > block.start });
+      }
+    } else {
+      blocks.push(block);
+    }
+  });
 
   const all = withGaps(lines, blocks);
   if (all.length === 0) all.push(makeBlock(lines, 0, 1, 'blank', 0));
@@ -113,6 +123,27 @@ function isFreeLine(lines: string[], line: number): boolean {
   return (line === 0 || isBlank(lines[line - 1])) && isBlank(lines[line + 1]);
 }
 
+/**
+ * A paragraph whose lines each read the same on their own opens line by line.
+ * It does not when a line alone would turn into something else (`2. item`, an
+ * indented line) or when inline syntax runs across the break (`**bold\nstill**`).
+ */
+function splitsIntoLines(md: MarkdownIt, inline: Token | undefined, lines: string[], env: Record<string, unknown>): boolean {
+  const children = inline?.type === 'inline' ? inline.children ?? [] : [];
+  const segments: Token[][] = [[]];
+  for (const child of children) {
+    if (child.type === 'softbreak' || child.type === 'hardbreak') segments.push([]);
+    else segments[segments.length - 1]!.push(child);
+  }
+  if (segments.length !== lines.length) return false;
+  return lines.every((line, index) => {
+    const alone = parse(md, line, {});
+    if (alone.length !== 3 || alone[0]!.type !== 'paragraph_open') return false;
+    const render = (tokens: Token[]): string => md.renderer.renderInline(tokens, md.options, env);
+    return render(alone[1]!.children ?? []) === render(segments[index]!);
+  });
+}
+
 function isBlank(line: string | undefined): boolean {
   return (line ?? '').trim() === '';
 }
@@ -129,7 +160,7 @@ function parse(md: MarkdownIt, text: string, env: Record<string, unknown>): Toke
 function makeBlock(lines: string[], start: number, end: number, kind: BlockKind, level: number): Block {
   let last = end;
   while (last > start + 1 && isBlank(lines[last - 1])) last -= 1;
-  return { start, end: last, from: 0, kind, level, text: lines.slice(start, last).join('\n') };
+  return { start, end: last, from: 0, kind, level, joined: false, text: lines.slice(start, last).join('\n') };
 }
 
 function kindOf(token: Token): BlockKind {

@@ -84,5 +84,20 @@ check(
   '<pre><code>plain\n</code></pre>\n',
 );
 
+const render = (text) => md.render(text).replace(/<svg[^]*?<\/svg>/g, '<svg>');
+check(
+  'callout with a title-less marker',
+  render('> [!note]\n> **Disks**\n> Vault_A'),
+  '<blockquote class="callout" data-callout="note">\n<div class="callout-title"><svg><span class="callout-title-text">Note</span></div>\n<p><strong>Disks</strong><br>\nVault_A</p>\n</blockquote>\n',
+);
+check(
+  'foldable callout with an alias and a Markdown title',
+  render('> [!Caution]- Mind *this*\n> body'),
+  '<details class="callout" data-callout="warning">\n<summary class="callout-title"><svg><span class="callout-title-text">Mind <em>this</em></span></summary>\n<p>body</p>\n</details>\n',
+);
+check('an unknown type looks like a note', render('> [!disks] Drives').includes('data-callout="note"><div') || render('> [!disks] Drives').includes('data-callout="note">'), true);
+check('an unknown type keeps its name as the title', render('> [!disks]').includes('>Disks</span>'), true);
+check('a plain quote stays a quote', md.render('> [x] plain'), '<blockquote>\n<p>[x] plain</p>\n</blockquote>\n');
+
 console.log(`${passed} checks passed${failed ? `, ${failed} failed` : ''}`);
 if (failed) process.exit(1);

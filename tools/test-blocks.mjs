@@ -69,6 +69,20 @@ check('a blank line before it is', kinds('A\n\n\n'), ['paragraph', 'blank']);
 check('blank lines at the top', kinds('\n\nA'), ['blank', 'paragraph']);
 check('blank lines inside a fence stay in it', kinds('```\na\n\n\n\nb\n```'), ['code']);
 
+// Lines of one paragraph open one by one, unless a line alone would read differently.
+check(
+  'paragraph lines are blocks',
+  texts('**Goodram** (**Backup**) - one.\n**Samsung** - two.'),
+  ['**Goodram** (**Backup**) - one.', '**Samsung** - two.'],
+);
+check('only the next lines are joined', blocks.splitBlocks(md, 'a\nb\nc\n\nd').map((b) => b.joined), [false, true, true, false]);
+check('line offsets', blocks.splitBlocks(md, 'ab\ncd').map((b) => b.from), [0, 3]);
+check('bold across lines stays whole', texts('**bold\nstill bold**'), ['**bold\nstill bold**']);
+check('a code span across lines stays whole', texts('`a\nb`'), ['`a\nb`']);
+check('a line that would be a list stays whole', texts('Text\n2. not a list'), ['Text\n2. not a list']);
+check('an indented line stays whole', texts('Text\n    more'), ['Text\n    more']);
+check('a lazy line that would be a definition stays whole', texts('Text\n[a]: x'), ['Text\n[a]: x']);
+
 check('link definitions get a block', kinds('[a]: https://x.org\n\nSee [a].'), ['definition', 'paragraph']);
 const env = {};
 blocks.splitBlocks(md, '[a]: https://x.org\n\nSee [a].', env);

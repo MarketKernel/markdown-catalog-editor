@@ -64,6 +64,19 @@ export class FileTree {
     else this.collapsed.add(path);
   }
 
+  /** Closes every folder, `assets` ones included. */
+  collapseAll(): void {
+    this.collapsed = new Set(dirPaths(this.entries).filter((path) => !isAssets(path)));
+    this.expanded.clear();
+    this.render();
+  }
+
+  /** Opens every folder except `assets` ones, which would bury the notes under pictures. */
+  expandAll(): void {
+    this.collapsed.clear();
+    this.render();
+  }
+
   setActive(path: string | null): void {
     this.active = path;
     this.expandTo(path);
@@ -200,6 +213,16 @@ function isAssets(path: string): boolean {
 export function stripExtension(name: string): string {
   const cut = name.lastIndexOf('.');
   return cut > 0 ? name.slice(0, cut) : name;
+}
+
+function dirPaths(entries: readonly TreeEntry[]): string[] {
+  const out: string[] = [];
+  for (const entry of entries) {
+    if (entry.kind !== 'dir') continue;
+    out.push(entry.path);
+    if (entry.children) out.push(...dirPaths(entry.children));
+  }
+  return out;
 }
 
 function countNotes(entries: readonly TreeEntry[]): number {

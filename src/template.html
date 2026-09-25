@@ -45,7 +45,17 @@
     <div class="sidebar-search">
       <input id="tree-filter" type="search" placeholder="Filter by name" aria-label="Filter files" autocomplete="off">
     </div>
-    <div class="sidebar-heading"><span>Notes</span><span id="note-count" class="count"></span></div>
+    <div class="sidebar-heading">
+      <span>Notes</span><span id="note-count" class="count"></span>
+      <div class="tree-tools">
+        <button id="expand-all" class="tree-tool" type="button" title="Expand all folders">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 9 4-4 4 4M8 15l4 4 4-4"/></svg>
+        </button>
+        <button id="collapse-all" class="tree-tool" type="button" title="Collapse all folders">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 4 4 4-4M8 19l4-4 4 4"/></svg>
+        </button>
+      </div>
+    </div>
     <nav id="tree" class="tree" aria-label="File tree"></nav>
   </aside>
 

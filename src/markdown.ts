@@ -54,7 +54,8 @@ export function createMarkdown(): MarkdownIt {
     // Own notes, own machine: raw HTML is what makes `<span style="color:…">` work.
     html: true,
     linkify: true,
-    breaks: false,
+    // A line break in the source is one on screen, as in Obsidian.
+    breaks: true,
     highlight(code, lang) {
       const language = lang.trim().split(/\s+/)[0] ?? '';
       if (language && hljs.getLanguage(language)) {
@@ -72,6 +73,7 @@ export function createMarkdown(): MarkdownIt {
   md.inline.ruler.before('link', 'wikilink', wikiRule);
   md.inline.ruler.before('image', 'embed', embedRule);
   md.core.ruler.after('inline', 'task_lists', taskRule);
+  md.core.ruler.before('inline', 'callouts', calloutRule);
 
   md.renderer.rules['mark_open'] = () => '<mark>';
   md.renderer.rules['mark_close'] = () => '</mark>';
@@ -125,6 +127,13 @@ export function createMarkdown(): MarkdownIt {
     if (!language) return html;
     return `<div class="code-block" data-lang="${md.utils.escapeHtml(languageName(language))}">${html}</div>\n`;
   };
+
+  // `> [!tip] Title`: the title row carries the icon; a foldable one is a <details>.
+  md.renderer.rules['callout_title_open'] = (tokens, index) => {
+    const token = tokens[index]!;
+    return `<${token.tag} class="callout-title">${calloutIcon(token.info)}<span class="callout-title-text">`;
+  };
+  md.renderer.rules['callout_title_close'] = (tokens, index) => `</span></${tokens[index]!.tag}>\n`;
 
   // A checkbox carries its line within the block, so a click can flip the source.
   md.renderer.rules['checkbox'] = (tokens, index) => {
@@ -218,6 +227,88 @@ function embedRule(state: StateInline, silent: boolean): boolean {
   }
   state.pos = close + 2;
   return true;
+}
+
+const CALLOUT = /^\[!([\w-]+)\]([+-]?)[ \t]*(.*)(?:\n|$)/;
+
+/** Obsidian's callout types and their aliases; an unknown type looks like a note. */
+const CALLOUT_ALIASES: Record<string, string> = {
+  summary: 'abstract', tldr: 'abstract',
+  hint: 'tip', important: 'tip',
+  check: 'success', done: 'success',
+  help: 'question', faq: 'question',
+  caution: 'warning', attention: 'warning',
+  fail: 'failure', missing: 'failure',
+  error: 'danger',
+  cite: 'quote',
+};
+
+const CALLOUT_ICONS: Record<string, string> = {
+  note: 'M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z',
+  abstract: 'M9 2h6v4H9zM16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2M9 12h6M9 16h6',
+  info: 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20ZM12 16v-4M12 8h.01',
+  todo: 'M22 11.1V12a10 10 0 1 1-5.9-9.1M22 4 12 14l-3-3',
+  tip: 'M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1.1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3.1a2.5 2.5 0 0 0 2.5 2.6Z',
+  success: 'M20 6 9 17l-5-5',
+  question: 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20ZM9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01',
+  warning: 'M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0ZM12 9v4M12 17h.01',
+  failure: 'M18 6 6 18M6 6l12 12',
+  danger: 'M13 2 3 14h9l-1 8 10-12h-9l1-8Z',
+  bug: 'M9 7.1V6a3 3 0 1 1 6 0v1.1M12 20c-3.3 0-6-2.7-6-6v-3a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v3c0 3.3-2.7 6-6 6ZM12 20v-9M6 13H2M22 13h-4M6.5 17C4.6 17.2 3 18.9 3 21M17.5 17c1.9.2 3.5 1.9 3.5 4M6.5 9C4.6 8.8 3 7.1 3 5M17.5 9c1.9-.2 3.5-1.9 3.5-4',
+  example: 'M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01',
+  quote: 'M3 21c3 0 7-1 7-8V5c0-1.2-.8-2-2-2H4c-1.3 0-2 .8-2 2v6c0 1.1.8 2 2 2h3c0 4-2 6-4 6M15 21c3 0 7-1 7-8V5c0-1.2-.8-2-2-2h-4c-1.3 0-2 .8-2 2v6c0 1.1.8 2 2 2h3c0 4-2 6-4 6',
+};
+
+function calloutIcon(kind: string): string {
+  return `<svg class="callout-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="${CALLOUT_ICONS[kind] ?? CALLOUT_ICONS['note']}"/></svg>`;
+}
+
+/**
+ * `> [!note] Title` turns the quote into a callout: the marker line becomes
+ * the title row, and `[!note]-` / `[!note]+` make it fold, closed or open.
+ * Runs before inline parsing, so the title is Markdown like any other text.
+ */
+function calloutRule(state: StateCore): void {
+  const tokens = state.tokens;
+  for (let index = 0; index < tokens.length; index += 1) {
+    const open = tokens[index]!;
+    const inline = tokens[index + 2];
+    if (open.type !== 'blockquote_open' || tokens[index + 1]?.type !== 'paragraph_open' || inline?.type !== 'inline') continue;
+    const match = CALLOUT.exec(inline.content);
+    if (!match) continue;
+
+    const type = match[1]!.toLowerCase();
+    const kind = CALLOUT_ALIASES[type] ?? (type in CALLOUT_ICONS ? type : 'note');
+    const fold = match[2];
+    const title = match[3]!.trim() || type.charAt(0).toUpperCase() + type.slice(1);
+
+    open.attrJoin('class', 'callout');
+    open.attrSet('data-callout', kind);
+    if (fold) {
+      const close = tokens.slice(index + 1).find((token) => token.type === 'blockquote_close' && token.level === open.level);
+      open.tag = 'details';
+      if (close) close.tag = 'details';
+      if (fold === '+') open.attrSet('open', '');
+    }
+
+    const titleOpen = new state.Token('callout_title_open', fold ? 'summary' : 'div', 1);
+    titleOpen.info = kind;
+    const titleText = new state.Token('inline', '', 0);
+    titleText.content = title;
+    titleText.map = inline.map;
+    titleText.children = [];
+    const titleClose = new state.Token('callout_title_close', titleOpen.tag, -1);
+    for (const token of [titleOpen, titleText, titleClose]) token.level = open.level + 1;
+
+    const rest = inline.content.slice(match[0].length);
+    if (rest.trim()) {
+      inline.content = rest;
+      tokens.splice(index + 1, 0, titleOpen, titleText, titleClose);
+    } else {
+      // Only the marker line: its paragraph is the title and nothing else.
+      tokens.splice(index + 1, 3, titleOpen, titleText, titleClose);
+    }
+  }
 }
 
 /** Turns `- [ ] item` into a real checkbox that carries its source line. */

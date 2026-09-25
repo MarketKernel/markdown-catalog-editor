@@ -526,6 +526,15 @@ async function deleteEntry(entry: TreeEntry): Promise<void> {
 el('new-note').addEventListener('click', () => void createNote(dirOf(currentPath ?? '')));
 el('new-folder').addEventListener('click', () => void createFolder(dirOf(currentPath ?? '')));
 
+el('expand-all').addEventListener('click', () => {
+  tree.expandAll();
+  persist();
+});
+el('collapse-all').addEventListener('click', () => {
+  tree.collapseAll();
+  persist();
+});
+
 el<HTMLInputElement>('tree-filter').addEventListener('input', (event) => {
   tree.setFilter((event.target as HTMLInputElement).value);
 });

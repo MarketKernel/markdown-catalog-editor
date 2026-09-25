@@ -263,12 +263,36 @@ body.sidebar-hidden .resizer { display: none; }
 
 .sidebar-heading {
   display: flex;
-  justify-content: space-between;
-  padding: 4px 14px 6px;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px 6px 14px;
   font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--faint);
+}
+.tree-tools { display: flex; gap: 2px; margin-left: auto; }
+.tree-tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 22px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--faint);
+  cursor: pointer;
+}
+.tree-tool:hover { background: var(--panel-2); color: var(--text); }
+.tree-tool svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .tree { flex: 1; overflow: auto; padding: 0 6px 18px; }
@@ -511,6 +535,9 @@ body.doc-full .inline-title { max-width: none; margin-left: 0; margin-right: 0; 
   tab-size: 2;
 }
 
+/* The next line of the same paragraph: the negative margin cancels the gap above it. */
+.block--joined, .source.block--joined { margin-top: calc(-1 * var(--gap)); }
+
 .block--flash { background: var(--accent-bg); border-radius: 7px; transition: background 0.5s; }
 
 /* Headings — the source line keeps the rendered size, so nothing jumps. */
@@ -585,6 +612,57 @@ body.doc-full .inline-title { max-width: none; margin-left: 0; margin-right: 0; 
   border-left: 3px solid var(--accent-soft);
   color: var(--muted);
 }
+/* Callouts: `> [!note]`. The colour is one RGB triple per type, tinted for the background. */
+.doc .callout {
+  --callout: 8, 109, 221;
+  padding: 0.5em 0.9em;
+  border-left: 3px solid rgb(var(--callout));
+  border-radius: 6px;
+  background: rgba(var(--callout), 0.08);
+  color: var(--text);
+}
+.doc .callout[data-callout='abstract'],
+.doc .callout[data-callout='tip'] { --callout: 0, 170, 168; }
+.doc .callout[data-callout='success'] { --callout: 8, 170, 78; }
+.doc .callout[data-callout='question'],
+.doc .callout[data-callout='warning'] { --callout: 226, 112, 0; }
+.doc .callout[data-callout='failure'],
+.doc .callout[data-callout='danger'],
+.doc .callout[data-callout='bug'] { --callout: 225, 52, 72; }
+.doc .callout[data-callout='example'] { --callout: 120, 82, 238; }
+.doc .callout[data-callout='quote'] { --callout: 150, 150, 158; }
+.callout-title {
+  display: flex;
+  align-items: center;
+  gap: 0.45em;
+  font-weight: 650;
+  color: rgb(var(--callout));
+}
+.callout-title + * { margin-top: 0.2em; }
+.callout-icon {
+  width: 1.05em;
+  height: 1.05em;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+summary.callout-title { cursor: pointer; list-style: none; }
+summary.callout-title::-webkit-details-marker { display: none; }
+summary.callout-title::after {
+  content: '';
+  width: 0.45em;
+  height: 0.45em;
+  margin-left: 0.15em;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+  transition: transform 0.15s;
+}
+details.callout[open] > summary.callout-title::after { transform: rotate(45deg); }
+
 .source--quote {
   width: calc(100% + 10px);
   margin-left: 0;

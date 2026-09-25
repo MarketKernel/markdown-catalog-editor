@@ -380,5 +380,38 @@ await scenario('---\ntags: [a]\n---\n\n# **Note**\n\nText\n', async (b) => {
   eq('front matter and emphasis do not defeat the duplicate check', await title(b), null);
 });
 
+await scenario('Text\n', async (b) => {
+  const shown = `['Folder', 'Folder/Sub', 'Folder/Sub/Deep.md', 'Folder/assets', 'Folder/assets/Pic']
+    .map((path) => Boolean(document.querySelector('.tree-item[data-path="' + path + '"]')))`;
+  await b.click('#collapse-all', 'start');
+  eq('collapse all closes every folder', await b.evaluate(shown), [true, false, false, false, false]);
+  await b.click('#expand-all', 'start');
+  eq('expand all opens them, but not assets', await b.evaluate(shown), [true, true, true, true, false]);
+  await b.click('.tree-item[data-path="Folder/assets"]', 'start');
+  await b.click('#collapse-all', 'start');
+  await b.click('#expand-all', 'start');
+  eq('collapse all closes an opened assets folder too', await b.evaluate(shown), [true, true, true, true, false]);
+}, { 'Folder/Sub/Deep.md': 'Deep\n', 'Folder/assets/Pic/dot.png': PIXEL });
+
+await scenario('Top\n\n**One** - a.\n**Two** - b.\n', async (b) => {
+  eq('each line of a paragraph is a block', await b.view(), ['block--paragraph:Top', 'block--paragraph:One - a.', 'block--paragraph block--joined:Two - b.']);
+  const gap = `(() => { const [a, c] = [...document.querySelectorAll('#doc > *')].slice(1).map((n) => n.getBoundingClientRect()); return Math.round(c.top - a.bottom); })()`;
+  eq('the lines sit without a gap', await b.evaluate(gap), 0);
+  await b.click('#doc > .block--joined');
+  eq('a click opens just that line', await b.view(), ['block--paragraph:Top', 'block--paragraph:One - a.', '[**Two** - b.|]']);
+  eq('the open line does not move', await b.evaluate(gap), 0);
+  await b.press('ArrowUp');
+  eq('arrow up opens the line above', (await b.view())[1], '[**One** - a.|]');
+  await b.type('!');
+  await b.press('Escape');
+  eq('the edit lands on that line', await b.text(), 'Top\n\n**One** - a.!\n**Two** - b.\n');
+});
+
+await scenario('> [!note] \n> **Disks**\n> Vault_A, Vault_B\n\nAfter\n', async (b) => {
+  eq('a callout renders with its title', await b.view(), ['block--quote:\nNote\nDisks\nVault_A, Vault_B', 'block--paragraph:After']);
+  await b.click('#doc > .block--quote');
+  eq('a click opens its source', (await b.view())[0].startsWith('[> [!note]'), true);
+});
+
 console.log(`${passed} browser checks passed${failed ? `, ${failed} failed` : ''}`);
 process.exit(failed ? 1 : 0);

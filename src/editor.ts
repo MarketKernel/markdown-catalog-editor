@@ -189,7 +189,7 @@ export class Editor {
     this.area = null;
     const nodes = this.blocks.map((block, index) => {
       if (this.mode === 'edit' && index === this.active) return this.buildSource(block);
-      const key = `${block.kind}${block.level}\n${block.text}`;
+      const key = `${block.kind}${block.level}${block.joined ? '+' : ''}\n${block.text}`;
       const node = pool?.take(key, block.from) ?? this.buildRendered(block, key);
       node.dataset['index'] = String(index);
       node.dataset['from'] = String(block.from);
@@ -220,7 +220,7 @@ export class Editor {
 
   private buildRendered(block: Block, key: string): HTMLElement {
     const el = document.createElement('div');
-    el.className = classFor('block', block.kind, block.level);
+    el.className = classFor('block', block.kind, block.level, 'block', block.joined);
     el.dataset['key'] = key;
     el.innerHTML = this.renderBlock(block);
     for (const image of Array.from(el.querySelectorAll<HTMLImageElement>('img[data-asset], img[data-embed]'))) {
@@ -243,7 +243,7 @@ export class Editor {
 
   private buildSource(block: Block): HTMLTextAreaElement {
     const area = document.createElement('textarea');
-    area.className = classFor('block source', block.kind, block.level, 'source');
+    area.className = classFor('block source', block.kind, block.level, 'source', block.joined);
     area.value = block.text;
     area.rows = 1;
     area.spellcheck = true;
@@ -432,7 +432,7 @@ export class Editor {
     const block = this.blocks[this.active]!;
     if (kind === block.kind && level === block.level) return;
     this.blocks[this.active] = { ...block, kind, level };
-    area.className = classFor('block source', kind, level, 'source');
+    area.className = classFor('block source', kind, level, 'source', block.joined);
     autosize(area);
   }
 
@@ -858,8 +858,8 @@ function patchChildren(parent: HTMLElement, nodes: readonly HTMLElement[]): void
   }
 }
 
-function classFor(base: string, kind: BlockKind, level: number, prefix = 'block'): string {
-  const name = `${base} ${prefix}--${kind}`;
+function classFor(base: string, kind: BlockKind, level: number, prefix = 'block', joined = false): string {
+  const name = `${base} ${prefix}--${kind}${joined ? ' block--joined' : ''}`;
   return kind === 'heading' ? `${name} ${prefix}--h${level}` : name;
 }
 
