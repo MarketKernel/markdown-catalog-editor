@@ -305,7 +305,9 @@ body.sidebar-hidden .resizer { display: none; }
  * Toolbar
  * ------------------------------------------------------------------ */
 
-.workspace { display: flex; flex-direction: column; min-width: 0; height: 100%; }
+/* Pinned to the last column: once the sidebar and resizer are hidden,
+   auto-placement would drop it into the first, zero-width one. */
+.workspace { grid-column: 3; display: flex; flex-direction: column; min-width: 0; height: 100%; }
 
 .toolbar {
   display: flex;
@@ -317,7 +319,8 @@ body.sidebar-hidden .resizer { display: none; }
   flex: none;
 }
 .toolbar-group { display: flex; align-items: center; gap: 3px; }
-.toolbar-group--format { flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; }
+/* Shrinks only when out of room, so » sits right after the last button that fits. */
+.toolbar-group--format { flex: 0 1 auto; min-width: 0; overflow-x: auto; scrollbar-width: none; }
 .toolbar-group--format::-webkit-scrollbar { display: none; }
 .toolbar-group--right { margin-left: auto; }
 
@@ -366,8 +369,30 @@ body.sidebar-hidden .resizer { display: none; }
   background: linear-gradient(135deg, #d7263d, #1d4ed8);
 }
 .tool-sep { width: 1px; height: 26px; background: var(--edge); margin: 0 7px; flex: none; }
+/* A group split between the toolbar and the » menu leaves a dangling separator. */
+.toolbar-group--format > .tool-sep:last-child,
+.format-menu > .tool-sep:first-child { display: none; }
 
-body:not(.mode-edit) .toolbar-group--format { opacity: 0.45; }
+/* The format buttons that don't fit the toolbar, moved here by main.ts. */
+.format-menu {
+  position: fixed;
+  z-index: 70;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  /* Wide enough for the longest group, seven buttons; wider would stretch to the viewport. */
+  max-width: min(330px, calc(100vw - 16px));
+  background: var(--bg);
+  border: 1px solid var(--edge);
+  border-radius: 11px;
+  box-shadow: var(--shadow);
+  padding: 5px;
+}
+/* Each toolbar group gets a row of its own. */
+.format-menu .tool-sep { flex-basis: 100%; width: auto; height: 1px; margin: 3px 4px; }
+
+body:not(.mode-edit) .toolbar-group--format,
+body:not(.mode-edit) .tool--more { opacity: 0.45; }
 
 .zoom {
   display: inline-flex;

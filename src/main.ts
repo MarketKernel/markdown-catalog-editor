@@ -553,20 +553,27 @@ for (const button of document.querySelectorAll<HTMLButtonElement>('.seg')) {
 }
 
 // Toolbar buttons must never take focus away from the block being edited.
+// The ones that don't fit move to the » menu (see fitFormat), so both hosts
+// handle clicks the same way.
 const format = el('format');
-format.addEventListener('mousedown', (event) => event.preventDefault());
-format.addEventListener('click', (event) => {
-  const button = (event.target as HTMLElement).closest<HTMLButtonElement>('button');
-  if (!button) return;
-  if (editor.getMode() !== 'edit') setMode('edit');
-  const heading = button.dataset['heading'];
-  if (heading !== undefined) {
-    editor.heading(Number(heading));
-    return;
-  }
-  const action = button.dataset['action'];
-  if (action) editor.format(action as FormatAction);
-});
+const formatMore = el('format-more');
+const formatMenu = el('format-menu');
+for (const host of [format, formatMenu]) {
+  host.addEventListener('mousedown', (event) => event.preventDefault());
+  host.addEventListener('click', (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>('button');
+    if (!button) return;
+    if (host === formatMenu) closeFormatMenu();
+    if (editor.getMode() !== 'edit') setMode('edit');
+    const heading = button.dataset['heading'];
+    if (heading !== undefined) {
+      editor.heading(Number(heading));
+      return;
+    }
+    const action = button.dataset['action'];
+    if (action) editor.format(action as FormatAction);
+  });
+}
 
 const COLORS: Array<{ name: string; value: string }> = [
   { name: 'Red', value: '#d7263d' },
@@ -601,7 +608,8 @@ colorButton.addEventListener('click', () => {
   });
   palette.append(clear);
 
-  const box = colorButton.getBoundingClientRect();
+  // Opened from the » menu, which closes on this click: hang it off the » instead.
+  const box = (formatMenu.contains(colorButton) ? formatMore : colorButton).getBoundingClientRect();
   palette.hidden = false;
   palette.style.left = `${Math.min(box.left, window.innerWidth - palette.offsetWidth - 8)}px`;
   palette.style.top = `${box.bottom + 6}px`;
@@ -637,6 +645,53 @@ document.addEventListener('mousedown', (event) => {
   if (palette.hidden) return;
   const target = event.target as Node;
   if (!palette.contains(target) && !colorButton.contains(target)) palette.hidden = true;
+});
+
+/** Every format button and separator, in toolbar order. */
+const formatItems = Array.from(format.children);
+
+/** Moves the format buttons that don't fit the toolbar, from the end, into the » menu. */
+function fitFormat(): void {
+  closeFormatMenu();
+  format.append(...formatItems);
+  formatMore.hidden = true;
+  if (format.scrollWidth <= format.clientWidth) return;
+  formatMore.hidden = false;
+  while (format.lastElementChild && format.scrollWidth > format.clientWidth) {
+    formatMenu.prepend(format.lastElementChild);
+  }
+}
+
+function closeFormatMenu(): void {
+  formatMenu.hidden = true;
+  formatMore.setAttribute('aria-expanded', 'false');
+}
+
+// The toolbar only resizes with the window and the file panel; the format
+// group itself would also resize when » appears and loop the observer.
+new ResizeObserver(fitFormat).observe(el('toolbar'));
+
+formatMore.addEventListener('mousedown', (event) => event.preventDefault());
+formatMore.addEventListener('click', () => {
+  if (!formatMenu.hidden) {
+    closeFormatMenu();
+    return;
+  }
+  palette.hidden = true;
+  const box = formatMore.getBoundingClientRect();
+  formatMenu.hidden = false;
+  formatMore.setAttribute('aria-expanded', 'true');
+  formatMenu.style.left = `${Math.max(8, box.right - formatMenu.offsetWidth)}px`;
+  formatMenu.style.top = `${box.bottom + 6}px`;
+});
+
+document.addEventListener('mousedown', (event) => {
+  if (formatMenu.hidden) return;
+  const target = event.target as Node;
+  if (!formatMenu.contains(target) && !formatMore.contains(target)) closeFormatMenu();
+});
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && !formatMenu.hidden) closeFormatMenu();
 });
 
 /* ------------------------------------------------------------------ *
