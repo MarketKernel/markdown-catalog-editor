@@ -8,6 +8,8 @@
  * downloading the file.
  */
 
+import { t } from './i18n';
+
 export type EntryKind = 'file' | 'dir';
 
 export interface TreeEntry {
@@ -145,7 +147,7 @@ export class DirectoryVault implements Vault {
 
   async writeText(path: string, text: string): Promise<void> {
     const handle = await this.fileHandle(path, true);
-    if (!handle.createWritable) throw new Error('This browser cannot write files');
+    if (!handle.createWritable) throw new Error(t('errors', 'This browser cannot write files'));
     const stream = await handle.createWritable();
     await stream.write(text);
     await stream.close();
@@ -176,7 +178,7 @@ export class DirectoryVault implements Vault {
       const source = await parent.getFileHandle(baseOf(path));
       const blob = await source.getFile();
       const created = await parent.getFileHandle(name, { create: true });
-      if (!created.createWritable) throw new Error('This browser cannot write files');
+      if (!created.createWritable) throw new Error(t('errors', 'This browser cannot write files'));
       const stream = await created.createWritable();
       await stream.write(blob);
       await stream.close();
@@ -217,7 +219,7 @@ function splitPath(path: string): string[] {
 /** Refuses to silently clobber an existing file or folder. */
 async function assertFree(parent: DirHandleLike, name: string): Promise<void> {
   for await (const child of parent.values()) {
-    if (child.name === name) throw new Error(`"${name}" already exists`);
+    if (child.name === name) throw new Error(t('errors', '"{name}" already exists', { name }));
   }
 }
 
@@ -228,7 +230,7 @@ async function copyDir(from: DirHandleLike, to: DirHandleLike): Promise<void> {
     } else {
       const blob = await child.getFile();
       const created = await to.getFileHandle(child.name, { create: true });
-      if (!created.createWritable) throw new Error('This browser cannot write files');
+      if (!created.createWritable) throw new Error(t('errors', 'This browser cannot write files'));
       const stream = await created.createWritable();
       await stream.write(blob);
       await stream.close();
@@ -307,7 +309,7 @@ export class FileListVault implements Vault {
 
   async readText(path: string): Promise<string> {
     const file = this.files.get(path);
-    if (!file) throw new Error(`File not found: ${path}`);
+    if (!file) throw new Error(t('errors', 'File not found: {path}', { path }));
     return file.text();
   }
 
@@ -316,23 +318,23 @@ export class FileListVault implements Vault {
   }
 
   async writeText(): Promise<void> {
-    throw new Error('The folder is open read-only');
+    throw new Error(t('errors', 'The folder is open read-only'));
   }
 
   async createFile(): Promise<string> {
-    throw new Error('The folder is open read-only');
+    throw new Error(t('errors', 'The folder is open read-only'));
   }
 
   async createDir(): Promise<string> {
-    throw new Error('The folder is open read-only');
+    throw new Error(t('errors', 'The folder is open read-only'));
   }
 
   async rename(): Promise<string> {
-    throw new Error('The folder is open read-only');
+    throw new Error(t('errors', 'The folder is open read-only'));
   }
 
   async remove(): Promise<void> {
-    throw new Error('The folder is open read-only');
+    throw new Error(t('errors', 'The folder is open read-only'));
   }
 }
 

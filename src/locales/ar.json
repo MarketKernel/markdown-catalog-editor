@@ -1,0 +1,166 @@
+{
+  "editor": {
+    "Block source text": "نص مصدر الكتلة",
+    "Add a row": "إضافة صف",
+    "Add a column": "إضافة عمود",
+    "Delete this empty row": "حذف هذا الصف الفارغ",
+    "Delete this empty column": "حذف هذا العمود الفارغ"
+  },
+  "tree": {
+    "Delete": "حذف",
+    "Nothing found": "لم يُعثر على شيء",
+    "The folder is empty": "المجلد فارغ",
+    "New note": "ملاحظة جديدة",
+    "New folder": "مجلد جديد",
+    "Rename": "إعادة تسمية",
+    "Copy path": "نسخ المسار"
+  },
+  "status": {
+    "{count} words": {
+      "zero": "{count} كلمة",
+      "one": "كلمة واحدة",
+      "two": "كلمتان",
+      "few": "{count} كلمات",
+      "many": "{count} كلمة",
+      "other": "{count} كلمة"
+    },
+    "read-only": "للقراءة فقط",
+    "unsaved": "غير محفوظ",
+    "saved": "محفوظ",
+    "{count} characters": {
+      "zero": "{count} حرف",
+      "one": "حرف واحد",
+      "two": "حرفان",
+      "few": "{count} أحرف",
+      "many": "{count} حرفًا",
+      "other": "{count} حرف"
+    }
+  },
+  "toast": {
+    "Path copied: {path}": "نُسخ المسار: {path}",
+    "No .md files in this folder — create the first note": "لا توجد ملفات .md في هذا المجلد — أنشئ أول ملاحظة",
+    "No .md files in this folder": "لا توجد ملفات .md في هذا المجلد",
+    "Read-only access: saving will offer to download the file": "وصول للقراءة فقط: عند الحفظ سيُعرض تنزيل الملف",
+    "Not found: {target}": "غير موجود: {target}",
+    "Note \"{target}\" not found": "الملاحظة «{target}» غير موجودة",
+    "Could not read {path}": "تعذّرت قراءة {path}",
+    "Could not save: {reason}": "تعذّر الحفظ: {reason}",
+    "The note was renamed, its images were not: {reason}": "أُعيدت تسمية الملاحظة، لكن لم تُعَد تسمية صورها: {reason}"
+  },
+  "gate": {
+    "Drag a folder, not a single file": "اسحب مجلدًا، لا ملفًا واحدًا",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "لا يستطيع هذا المتصفح كتابة الملفات على القرص: سيُفتح المجلد للقراءة فقط، وعند الحفظ سيُعرض تنزيل الملف المعدَّل. يعمل التحرير الكامل في Chrome و Edge و Arc.",
+    "local editor · one file": "محرر محلي · ملف واحد",
+    "Open a folder": "افتح مجلدًا",
+    "of notes": "للملاحظات",
+    "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "اختر مجلدًا يحتوي على ملفات {ext}. لا يُرسَل أي شيء إلى أي مكان: تُقرأ الملفات وتُحفظ مباشرةً على قرصك.",
+    "Open folder": "فتح مجلد",
+    "or drag a folder here": "أو اسحب مجلدًا إلى هنا"
+  },
+  "dialog": {
+    "Note not found": "الملاحظة غير موجودة",
+    "Create \"{name}\"?": "إنشاء «{name}»؟",
+    "Create": "إنشاء",
+    "New note": "ملاحظة جديدة",
+    "File name": "اسم الملف",
+    "Untitled": "بلا عنوان",
+    "New folder": "مجلد جديد",
+    "Folder name": "اسم المجلد",
+    "Rename": "إعادة تسمية",
+    "New name": "الاسم الجديد",
+    "Delete the folder \"{name}\"? This cannot be undone.": "حذف المجلد «{name}»؟ لا يمكن التراجع عن ذلك.",
+    "Delete the note \"{name}\"? This cannot be undone.": "حذف الملاحظة «{name}»؟ لا يمكن التراجع عن ذلك.",
+    "Delete the file \"{name}\"? This cannot be undone.": "حذف الملف «{name}»؟ لا يمكن التراجع عن ذلك.",
+    "Delete": "حذف",
+    "Cancel": "إلغاء",
+    "Done": "تم"
+  },
+  "doc": {
+    "no such file: {path}": "لا يوجد ملف: {path}",
+    "Pick a note on the left, or create a new one.": "اختر ملاحظة من الشريط الجانبي، أو أنشئ ملاحظة جديدة."
+  },
+  "errors": {
+    "The folder is open read-only": "المجلد مفتوح للقراءة فقط",
+    "This browser cannot write files": "لا يستطيع هذا المتصفح كتابة الملفات",
+    "\"{name}\" already exists": "«{name}» موجود بالفعل",
+    "File not found: {path}": "الملف غير موجود: {path}"
+  },
+  "palette": {
+    "Red": "أحمر",
+    "Orange": "برتقالي",
+    "Green": "أخضر",
+    "Blue": "أزرق",
+    "Violet": "بنفسجي",
+    "Grey": "رمادي",
+    "Text colour": "لون النص",
+    "Background": "الخلفية",
+    "Clear formatting": "مسح التنسيق"
+  },
+  "settings": {
+    "System": "النظام",
+    "Centred column": "عمود في الوسط",
+    "Full width": "العرض الكامل",
+    "Reset zoom (⌘0)": "إعادة ضبط التكبير (⌘0)",
+    "Zoom": "التكبير",
+    "Zoom out (⌘−)": "تصغير (⌘−)",
+    "Zoom in (⌘+)": "تكبير (⌘+)",
+    "Settings": "الإعدادات",
+    "Language": "اللغة",
+    "Theme": "السمة",
+    "Text width": "عرض النص",
+    "Show the note name as a title": "عرض اسم الملاحظة كعنوان",
+    "Light": "فاتحة",
+    "Dark": "داكنة"
+  },
+  "app": {
+    "Notes editor": "محرر الملاحظات"
+  },
+  "sidebar": {
+    "Notes": "الملاحظات",
+    "Open another folder": "فتح مجلد آخر",
+    "New note": "ملاحظة جديدة",
+    "New folder": "مجلد جديد",
+    "Filter by name": "تصفية حسب الاسم",
+    "Filter files": "تصفية الملفات",
+    "Expand all folders": "توسيع كل المجلدات",
+    "Collapse all folders": "طي كل المجلدات",
+    "File tree": "شجرة الملفات",
+    "File panel width": "عرض لوحة الملفات"
+  },
+  "toolbar": {
+    "Read": "قراءة",
+    "Edit": "تحرير",
+    "File panel (⌘\\)": "لوحة الملفات (⌘\\)",
+    "Mode": "الوضع",
+    "Save (⌘S)": "حفظ (⌘S)",
+    "Heading 1 (⌘⌥1)": "عنوان 1 (⌘⌥1)",
+    "Heading 2 (⌘⌥2)": "عنوان 2 (⌘⌥2)",
+    "Heading 3 (⌘⌥3)": "عنوان 3 (⌘⌥3)",
+    "Plain text (⌘⌥0)": "نص عادي (⌘⌥0)",
+    "Bold (⌘B)": "غامق (⌘B)",
+    "Italic (⌘I)": "مائل (⌘I)",
+    "Strikethrough": "يتوسطه خط",
+    "Monospace (⌘⇧C)": "خط أحادي المسافة (⌘⇧C)",
+    "Highlight (⌘⇧H)": "تمييز (⌘⇧H)",
+    "Text and background colour": "لون النص والخلفية",
+    "Link (⌘K)": "رابط (⌘K)",
+    "Link to a note (⌘⇧K)": "رابط إلى ملاحظة (⌘⇧K)",
+    "Bulleted list": "قائمة نقطية",
+    "Numbered list": "قائمة مرقّمة",
+    "Task list": "قائمة مهام",
+    "Quote": "اقتباس",
+    "Code block": "كتلة برمجية",
+    "Table": "جدول",
+    "Divider": "فاصل",
+    "More formatting": "مزيد من التنسيق",
+    "Search (⌘F)": "بحث (⌘F)",
+    "Settings": "الإعدادات"
+  },
+  "find": {
+    "Find in note": "البحث في الملاحظة",
+    "Find": "بحث",
+    "Previous (⇧Enter)": "السابق (⇧Enter)",
+    "Next (Enter)": "التالي (Enter)",
+    "Close (Esc)": "إغلاق (Esc)"
+  }
+}

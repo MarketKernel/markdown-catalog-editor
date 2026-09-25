@@ -1,0 +1,160 @@
+{
+  "editor": {
+    "Block source text": "Texto fuente del bloque",
+    "Add a row": "Añadir una fila",
+    "Add a column": "Añadir una columna",
+    "Delete this empty row": "Eliminar esta fila vacía",
+    "Delete this empty column": "Eliminar esta columna vacía"
+  },
+  "tree": {
+    "Delete": "Eliminar",
+    "Nothing found": "No se ha encontrado nada",
+    "The folder is empty": "La carpeta está vacía",
+    "New note": "Nueva nota",
+    "New folder": "Nueva carpeta",
+    "Rename": "Cambiar nombre",
+    "Copy path": "Copiar ruta"
+  },
+  "status": {
+    "{count} words": {
+      "one": "{count} palabra",
+      "many": "{count} de palabras",
+      "other": "{count} palabras"
+    },
+    "read-only": "solo lectura",
+    "unsaved": "sin guardar",
+    "saved": "guardado",
+    "{count} characters": {
+      "one": "{count} carácter",
+      "many": "{count} de caracteres",
+      "other": "{count} caracteres"
+    }
+  },
+  "toast": {
+    "Path copied: {path}": "Ruta copiada: {path}",
+    "No .md files in this folder — create the first note": "No hay archivos .md en esta carpeta — crea la primera nota",
+    "No .md files in this folder": "No hay archivos .md en esta carpeta",
+    "Read-only access: saving will offer to download the file": "Acceso de solo lectura: al guardar se ofrecerá descargar el archivo",
+    "Not found: {target}": "No encontrado: {target}",
+    "Note \"{target}\" not found": "No se ha encontrado la nota «{target}»",
+    "Could not read {path}": "No se pudo leer {path}",
+    "Could not save: {reason}": "No se pudo guardar: {reason}",
+    "The note was renamed, its images were not: {reason}": "Se cambió el nombre de la nota, pero no el de sus imágenes: {reason}"
+  },
+  "gate": {
+    "Drag a folder, not a single file": "Arrastra una carpeta, no un archivo suelto",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "Este navegador no puede escribir archivos en el disco: la carpeta se abrirá en solo lectura y, al guardar, se ofrecerá descargar el archivo modificado. La edición completa funciona en Chrome, Edge y Arc.",
+    "local editor · one file": "editor local · un solo archivo",
+    "Open a folder": "Abre una carpeta",
+    "of notes": "de notas",
+    "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "Elige una carpeta con archivos {ext}. No se envía nada a ningún sitio: los archivos se leen y se guardan directamente en tu disco.",
+    "Open folder": "Abrir carpeta",
+    "or drag a folder here": "o arrastra una carpeta aquí"
+  },
+  "dialog": {
+    "Note not found": "Nota no encontrada",
+    "Create \"{name}\"?": "¿Crear «{name}»?",
+    "Create": "Crear",
+    "New note": "Nueva nota",
+    "File name": "Nombre del archivo",
+    "Untitled": "Sin título",
+    "New folder": "Nueva carpeta",
+    "Folder name": "Nombre de la carpeta",
+    "Rename": "Cambiar nombre",
+    "New name": "Nuevo nombre",
+    "Delete the folder \"{name}\"? This cannot be undone.": "¿Eliminar la carpeta «{name}»? Esta acción no se puede deshacer.",
+    "Delete the note \"{name}\"? This cannot be undone.": "¿Eliminar la nota «{name}»? Esta acción no se puede deshacer.",
+    "Delete the file \"{name}\"? This cannot be undone.": "¿Eliminar el archivo «{name}»? Esta acción no se puede deshacer.",
+    "Delete": "Eliminar",
+    "Cancel": "Cancelar",
+    "Done": "Listo"
+  },
+  "doc": {
+    "no such file: {path}": "no existe el archivo: {path}",
+    "Pick a note on the left, or create a new one.": "Elige una nota a la izquierda o crea una nueva."
+  },
+  "errors": {
+    "The folder is open read-only": "La carpeta está abierta en solo lectura",
+    "This browser cannot write files": "Este navegador no puede escribir archivos",
+    "\"{name}\" already exists": "«{name}» ya existe",
+    "File not found: {path}": "Archivo no encontrado: {path}"
+  },
+  "palette": {
+    "Red": "Rojo",
+    "Orange": "Naranja",
+    "Green": "Verde",
+    "Blue": "Azul",
+    "Violet": "Violeta",
+    "Grey": "Gris",
+    "Text colour": "Color del texto",
+    "Background": "Fondo",
+    "Clear formatting": "Borrar formato"
+  },
+  "settings": {
+    "System": "Sistema",
+    "Centred column": "Columna centrada",
+    "Full width": "Ancho completo",
+    "Reset zoom (⌘0)": "Restablecer zoom (⌘0)",
+    "Zoom": "Zoom",
+    "Zoom out (⌘−)": "Alejar (⌘−)",
+    "Zoom in (⌘+)": "Acercar (⌘+)",
+    "Settings": "Ajustes",
+    "Language": "Idioma",
+    "Theme": "Tema",
+    "Text width": "Ancho del texto",
+    "Show the note name as a title": "Mostrar el nombre de la nota como título",
+    "Light": "Claro",
+    "Dark": "Oscuro"
+  },
+  "app": {
+    "Notes editor": "Editor de notas"
+  },
+  "sidebar": {
+    "Notes": "Notas",
+    "Open another folder": "Abrir otra carpeta",
+    "New note": "Nueva nota",
+    "New folder": "Nueva carpeta",
+    "Filter by name": "Filtrar por nombre",
+    "Filter files": "Filtrar archivos",
+    "Expand all folders": "Expandir todas las carpetas",
+    "Collapse all folders": "Contraer todas las carpetas",
+    "File tree": "Árbol de archivos",
+    "File panel width": "Ancho del panel de archivos"
+  },
+  "toolbar": {
+    "Read": "Lectura",
+    "Edit": "Edición",
+    "File panel (⌘\\)": "Panel de archivos (⌘\\)",
+    "Mode": "Modo",
+    "Save (⌘S)": "Guardar (⌘S)",
+    "Heading 1 (⌘⌥1)": "Encabezado 1 (⌘⌥1)",
+    "Heading 2 (⌘⌥2)": "Encabezado 2 (⌘⌥2)",
+    "Heading 3 (⌘⌥3)": "Encabezado 3 (⌘⌥3)",
+    "Plain text (⌘⌥0)": "Texto normal (⌘⌥0)",
+    "Bold (⌘B)": "Negrita (⌘B)",
+    "Italic (⌘I)": "Cursiva (⌘I)",
+    "Strikethrough": "Tachado",
+    "Monospace (⌘⇧C)": "Monoespaciado (⌘⇧C)",
+    "Highlight (⌘⇧H)": "Resaltar (⌘⇧H)",
+    "Text and background colour": "Color del texto y del fondo",
+    "Link (⌘K)": "Enlace (⌘K)",
+    "Link to a note (⌘⇧K)": "Enlace a una nota (⌘⇧K)",
+    "Bulleted list": "Lista con viñetas",
+    "Numbered list": "Lista numerada",
+    "Task list": "Lista de tareas",
+    "Quote": "Cita",
+    "Code block": "Bloque de código",
+    "Table": "Tabla",
+    "Divider": "Separador",
+    "More formatting": "Más formatos",
+    "Search (⌘F)": "Buscar (⌘F)",
+    "Settings": "Ajustes"
+  },
+  "find": {
+    "Find in note": "Buscar en la nota",
+    "Find": "Buscar",
+    "Previous (⇧Enter)": "Anterior (⇧Enter)",
+    "Next (Enter)": "Siguiente (Enter)",
+    "Close (Esc)": "Cerrar (Esc)"
+  }
+}

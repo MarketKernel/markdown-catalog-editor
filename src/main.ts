@@ -1,9 +1,10 @@
 /**
  * Wiring: the folder gate, the tree, the editor, saving, and the chrome around
- * them — theme, zoom, panel width, search and the toolbar.
+ * them — language, theme, zoom, panel width, search, settings and the toolbar.
  */
 
-import { Editor, type EditorStatus, type FormatAction, type Mode } from './editor';
+import { Editor, translateTableTools, type EditorStatus, type FormatAction, type Mode } from './editor';
+import { FLAGS, isRightToLeft, LANGUAGES, setLanguage, t, tn, translatePage, type Language } from './i18n';
 import { createMarkdown } from './markdown';
 import {
   applyFullWidth,
@@ -12,12 +13,14 @@ import {
   applyZoom,
   clampZoom,
   loadSettings,
+  resolveLanguage,
   saveSettings,
   ZOOM_STEP,
+  type Settings,
   type Theme,
 } from './settings';
 import { FileTree, stripExtension } from './tree';
-import { ask, confirmAsk, toast } from './ui';
+import { ask, confirmAsk, h, popover, toast } from './ui';
 import {
   ASSETS_DIR,
   DirectoryVault,
@@ -64,6 +67,7 @@ let dirty = false;
 /** Bumped on every edit, so a save knows whether the text moved on while it was writing. */
 let revision = 0;
 let saveTimer = 0;
+let lastStatus: EditorStatus | null = null;
 const assets = new Map<string, string>();
 
 /* ------------------------------------------------------------------ *
@@ -87,7 +91,10 @@ const editor = new Editor(doc, scroller, md, {
   onAsset: (image) => {
     void resolveAsset(image);
   },
-  onStatus: (status) => renderCount(status),
+  onStatus: (status) => {
+    lastStatus = status;
+    renderCount();
+  },
 });
 
 const tree = new FileTree(el('tree'), el('note-count'), {
@@ -98,7 +105,7 @@ const tree = new FileTree(el('tree'), el('note-count'), {
   onDelete: (entry) => void deleteEntry(entry),
   onReveal: (path) => {
     void navigator.clipboard?.writeText(path).catch(() => undefined);
-    toast(`Path copied: ${path}`);
+    toast(t('toast', 'Path copied: {path}', { path }));
   },
   canEdit: () => Boolean(vault?.writable),
 });
@@ -130,7 +137,7 @@ async function useVault(next: Vault): Promise<void> {
 
   const notes = tree.notes();
   if (notes.length === 0) {
-    toast(next.writable ? 'No .md files in this folder — create the first note' : 'No .md files in this folder', 'error');
+    toast(next.writable ? t('toast', 'No .md files in this folder — create the first note') : t('toast', 'No .md files in this folder'), 'error');
     return;
   }
   const remembered = settings.lastPath && notes.some((note) => note.path === settings.lastPath)
@@ -146,7 +153,7 @@ async function pickFolder(): Promise<void> {
       const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
       const writable = await ensureWritable(handle);
       await useVault(new DirectoryVault(handle, writable));
-      if (!writable) toast('Read-only access: saving will offer to download the file', 'error');
+      if (!writable) toast(t('toast', 'Read-only access: saving will offer to download the file'), 'error');
     } catch (error) {
       if ((error as DOMException)?.name !== 'AbortError') showGateError(error);
     }
@@ -200,16 +207,9 @@ async function acceptDrop(event: DragEvent): Promise<void> {
       return;
     }
   }
-  showGateError(new Error('Drag a folder, not a single file'));
+  showGateError(new Error(t('gate', 'Drag a folder, not a single file')));
 }
 
-if (!window.showDirectoryPicker) {
-  const note = el('browser-note');
-  note.hidden = false;
-  note.textContent =
-    'This browser cannot write files to disk: the folder will open read-only, ' +
-    'and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.';
-}
 
 /* ------------------------------------------------------------------ *
  * Notes
@@ -228,7 +228,7 @@ async function openNote(path: string): Promise<void> {
     tree.setActive(path);
     settings.lastPath = path;
     persist();
-    document.title = `${stripExtension(baseOf(path))} — Notes editor`;
+    renderDocumentTitle();
     placeholder.hidden = true;
     renderState();
     renderTitle();
@@ -257,7 +257,7 @@ async function openRelative(href: string): Promise<void> {
     await openNote(known.path);
     return;
   }
-  toast(`Not found: ${target}`, 'error');
+  toast(t('toast', 'Not found: {target}', { target }), 'error');
 }
 
 async function openWiki(target: string): Promise<void> {
@@ -273,10 +273,10 @@ async function openWiki(target: string): Promise<void> {
     return;
   }
   if (!vault?.writable) {
-    toast(`Note "${target}" not found`, 'error');
+    toast(t('toast', 'Note "{target}" not found', { target }), 'error');
     return;
   }
-  const create = await confirmAsk('Note not found', `Create "${target}.md"?`, 'Create');
+  const create = await confirmAsk(t('dialog', 'Note not found'), t('dialog', 'Create "{name}"?', { name: `${target}.md` }), t('dialog', 'Create'));
   if (!create) return;
   const path = await vault.createFile(dirOf(currentPath ?? ''), `${target}.md`);
   await refreshTree();
@@ -319,7 +319,7 @@ async function resolveAsset(image: HTMLImageElement): Promise<void> {
   if (!url) {
     image.replaceWith(Object.assign(document.createElement('span'), {
       className: 'missing-asset',
-      textContent: `no such file: ${path}`,
+      textContent: t('doc', 'no such file: {path}', { path }),
     }));
     return;
   }
@@ -331,7 +331,7 @@ async function openImage(path: string): Promise<void> {
   if (!vault || path === viewedPath) return;
   await flushSave();
   const url = await assetUrl(path);
-  if (!url) return void toast(`Could not read ${path}`, 'error');
+  if (!url) return void toast(t('toast', 'Could not read {path}', { path }), 'error');
 
   const name = baseOf(path);
   const caption = document.createElement('figcaption');
@@ -356,7 +356,7 @@ async function openImage(path: string): Promise<void> {
   placeholder.hidden = true;
   viewer.hidden = false;
   tree.setActive(path);
-  document.title = `${name} — Notes editor`;
+  renderDocumentTitle();
   renderState();
   renderTitle();
 }
@@ -397,7 +397,7 @@ async function save(): Promise<void> {
     dirty = revision !== saving;
     renderState();
   } catch (error) {
-    toast(`Could not save: ${error instanceof Error ? error.message : String(error)}`, 'error');
+    toast(t('toast', 'Could not save: {reason}', { reason: error instanceof Error ? error.message : String(error) }), 'error');
   }
 }
 
@@ -436,8 +436,8 @@ function withExtension(name: string): string {
 }
 
 async function createNote(dir: string): Promise<void> {
-  if (!vault?.writable) return void toast('The folder is open read-only', 'error');
-  const name = await ask('New note', 'File name', 'Untitled.md');
+  if (!vault?.writable) return void toast(t('errors', 'The folder is open read-only'), 'error');
+  const name = await ask(t('dialog', 'New note'), t('dialog', 'File name'), `${t('dialog', 'Untitled')}.md`);
   if (!name) return;
   try {
     const path = await vault.createFile(dir, withExtension(name));
@@ -453,8 +453,8 @@ async function createNote(dir: string): Promise<void> {
 }
 
 async function createFolder(dir: string): Promise<void> {
-  if (!vault?.writable) return void toast('The folder is open read-only', 'error');
-  const name = await ask('New folder', 'Folder name', '');
+  if (!vault?.writable) return void toast(t('errors', 'The folder is open read-only'), 'error');
+  const name = await ask(t('dialog', 'New folder'), t('dialog', 'Folder name'), '');
   if (!name) return;
   try {
     await vault.createDir(dir, name);
@@ -466,7 +466,7 @@ async function createFolder(dir: string): Promise<void> {
 
 async function renameEntry(entry: TreeEntry): Promise<void> {
   if (!vault?.writable) return;
-  const name = await ask('Rename', 'New name', entry.name);
+  const name = await ask(t('dialog', 'Rename'), t('dialog', 'New name'), entry.name);
   if (!name || name === entry.name) return;
   try {
     await flushSave();
@@ -477,7 +477,7 @@ async function renameEntry(entry: TreeEntry): Promise<void> {
       try {
         await vault.rename(images.path, 'dir', stripExtension(baseOf(next)));
       } catch (error) {
-        toast(`The note was renamed, its images were not: ${error instanceof Error ? error.message : String(error)}`, 'error');
+        toast(t('toast', 'The note was renamed, its images were not: {reason}', { reason: error instanceof Error ? error.message : String(error) }), 'error');
       }
     }
     if (currentPath === entry.path) currentPath = next;
@@ -501,8 +501,14 @@ async function renameEntry(entry: TreeEntry): Promise<void> {
 
 async function deleteEntry(entry: TreeEntry): Promise<void> {
   if (!vault?.writable) return;
-  const kind = entry.kind === 'dir' ? 'folder' : isNote(entry.name) ? 'note' : 'file';
-  const ok = await confirmAsk('Delete', `Delete the ${kind} "${entry.name}"? This cannot be undone.`);
+  const values = { name: entry.name };
+  const question =
+    entry.kind === 'dir'
+      ? t('dialog', 'Delete the folder "{name}"? This cannot be undone.', values)
+      : isNote(entry.name)
+        ? t('dialog', 'Delete the note "{name}"? This cannot be undone.', values)
+        : t('dialog', 'Delete the file "{name}"? This cannot be undone.', values);
+  const ok = await confirmAsk(t('dialog', 'Delete'), question);
   if (!ok) return;
   try {
     await vault.remove(entry.path, entry.kind);
@@ -513,7 +519,7 @@ async function deleteEntry(entry: TreeEntry): Promise<void> {
       dirty = false;
       editor.load('');
       placeholder.hidden = false;
-      document.title = 'Notes editor';
+      renderDocumentTitle();
     }
     await refreshTree();
     renderState();
@@ -584,14 +590,25 @@ for (const host of [format, formatMenu]) {
   });
 }
 
-const COLORS: Array<{ name: string; value: string }> = [
-  { name: 'Red', value: '#d7263d' },
-  { name: 'Orange', value: '#d97706' },
-  { name: 'Green', value: '#15803d' },
-  { name: 'Blue', value: '#1d4ed8' },
-  { name: 'Violet', value: '#7c3aed' },
-  { name: 'Grey', value: '#6b7280' },
-];
+const COLORS = [
+  { key: 'red', value: '#d7263d' },
+  { key: 'orange', value: '#d97706' },
+  { key: 'green', value: '#15803d' },
+  { key: 'blue', value: '#1d4ed8' },
+  { key: 'violet', value: '#7c3aed' },
+  { key: 'grey', value: '#6b7280' },
+] as const;
+
+function colorName(key: (typeof COLORS)[number]['key']): string {
+  return {
+    red: t('palette', 'Red'),
+    orange: t('palette', 'Orange'),
+    green: t('palette', 'Green'),
+    blue: t('palette', 'Blue'),
+    violet: t('palette', 'Violet'),
+    grey: t('palette', 'Grey'),
+  }[key];
+}
 
 const palette = el('palette');
 const colorButton = el('color');
@@ -604,12 +621,12 @@ colorButton.addEventListener('click', () => {
   }
   if (editor.getMode() !== 'edit') setMode('edit');
   palette.replaceChildren();
-  palette.append(swatchRow('Text colour', (color) => `color:${color}`));
-  palette.append(swatchRow('Background', (color) => `background:${color}33`));
+  palette.append(swatchRow(t('palette', 'Text colour'), (color) => `color:${color}`));
+  palette.append(swatchRow(t('palette', 'Background'), (color) => `background:${color}33`));
   const clear = document.createElement('button');
   clear.type = 'button';
   clear.className = 'palette-clear';
-  clear.textContent = 'Clear formatting';
+  clear.textContent = t('palette', 'Clear formatting');
   clear.addEventListener('mousedown', (event) => event.preventDefault());
   clear.addEventListener('click', () => {
     editor.colorize('');
@@ -638,7 +655,7 @@ function swatchRow(title: string, toStyle: (color: string) => string): HTMLEleme
     swatch.type = 'button';
     swatch.className = 'swatch';
     swatch.style.background = color.value;
-    swatch.title = color.name;
+    swatch.title = colorName(color.key);
     swatch.addEventListener('mousedown', (event) => event.preventDefault());
     swatch.addEventListener('click', () => {
       editor.colorize(toStyle(color.value));
@@ -763,28 +780,137 @@ findInput.addEventListener('keydown', (event) => {
 });
 
 /* ------------------------------------------------------------------ *
- * Theme, zoom, panel
+ * Settings: language, theme, zoom, text width, note title
  * ------------------------------------------------------------------ */
 
-const THEMES: Theme[] = ['system', 'light', 'dark'];
-const THEME_LABEL: Record<Theme, string> = {
-  system: 'Theme: match system',
-  light: 'Theme: light',
-  dark: 'Theme: dark',
-};
+const settingsButton = el('settings');
+let closeSettings: (() => void) | null = null;
+
+function selectBox<T extends string>(value: T, choices: [T, string][], onChange: (value: T) => void): HTMLSelectElement {
+  const node = h('select', { class: 'settings-select' });
+  for (const [choice, label] of choices) {
+    const option = h('option', { value: choice, text: label });
+    option.selected = choice === value;
+    node.append(option);
+  }
+  node.addEventListener('change', () => {
+    const picked = choices.find(([choice]) => choice === node.value);
+    if (picked) onChange(picked[0]);
+  });
+  return node;
+}
+
+function iconButton(text: string, title: string, onClick: () => void): HTMLButtonElement {
+  const button = h('button', { class: 'icon-button', type: 'button', title, 'aria-label': title, text });
+  button.addEventListener('click', onClick);
+  return button;
+}
+
+function openSettings(): void {
+  const row = (label: string, control: HTMLElement): HTMLElement =>
+    h('label', { class: 'settings-row' }, h('span', { text: label }), control);
+
+  const languages: [Settings['language'], string][] = [
+    ['auto', `🌐 ${t('settings', 'System')}`],
+    ...(Object.entries(LANGUAGES) as [Language, string][]).map(
+      ([code, name]): [Language, string] => [code, `${FLAGS[code]} ${name}`],
+    ),
+  ];
+  const language = selectBox(settings.language, languages, setLanguageChoice);
+
+  const themes: Theme[] = ['system', 'light', 'dark'];
+  const theme = selectBox(settings.theme, themes.map((choice): [Theme, string] => [choice, themeLabel(choice)]), setTheme);
+
+  const width = selectBox(
+    settings.fullWidth ? 'full' : 'column',
+    [
+      ['column', t('settings', 'Centred column')],
+      ['full', t('settings', 'Full width')],
+    ],
+    (choice) => {
+      settings.fullWidth = choice === 'full';
+      applyFullWidth(settings.fullWidth);
+      persist();
+    },
+  );
+
+  const zoomValue = h('button', { class: 'zoom-value', type: 'button', title: t('settings', 'Reset zoom (⌘0)'), text: `${settings.zoom}%` });
+  zoomValue.addEventListener('click', () => setZoom(100));
+  // A div, not a label: a click on the label's text would press its first button.
+  const zoom = h(
+    'div',
+    { class: 'settings-row' },
+    h('span', { text: t('settings', 'Zoom') }),
+    h(
+      'div',
+      { class: 'zoom', role: 'group', 'aria-label': t('settings', 'Zoom') },
+      iconButton('−', t('settings', 'Zoom out (⌘−)'), () => setZoom(settings.zoom - ZOOM_STEP)),
+      zoomValue,
+      iconButton('+', t('settings', 'Zoom in (⌘+)'), () => setZoom(settings.zoom + ZOOM_STEP)),
+    ),
+  );
+
+  const title = h('input', { type: 'checkbox', id: 'setting-inline-title' });
+  title.checked = settings.inlineTitle;
+  title.addEventListener('change', () => {
+    settings.inlineTitle = title.checked;
+    renderTitle();
+    persist();
+  });
+
+  const panel = h(
+    'div',
+    { class: 'settings' },
+    h('h3', { class: 'settings-title', text: t('settings', 'Settings') }),
+    row(t('settings', 'Language'), language),
+    row(t('settings', 'Theme'), theme),
+    zoom,
+    row(t('settings', 'Text width'), width),
+    h('label', { class: 'settings-row settings-row--check' }, title, h('span', { text: t('settings', 'Show the note name as a title') })),
+  );
+  settingsButton.setAttribute('aria-expanded', 'true');
+  closeSettings = popover(settingsButton, panel, () => {
+    closeSettings = null;
+    settingsButton.setAttribute('aria-expanded', 'false');
+  });
+}
+
+settingsButton.addEventListener('click', () => (closeSettings ? closeSettings() : openSettings()));
+
+function themeLabel(theme: Theme): string {
+  return { system: t('settings', 'System'), light: t('settings', 'Light'), dark: t('settings', 'Dark') }[theme];
+}
+
+/** Shows the interface in another language: the markup is translated again and the views redrawn. */
+function setLanguageChoice(choice: Settings['language']): void {
+  settings.language = choice;
+  persist();
+  applyLanguage();
+  tree.render();
+  renderState();
+  renderCount();
+  renderDocumentTitle();
+  // The panel itself is built from translated text: rebuilt, with the focus back on the language.
+  openSettings();
+  document.querySelector<HTMLSelectElement>('.popover .settings-select')?.focus();
+}
+
+function applyLanguage(): void {
+  setLanguage(resolveLanguage(settings.language));
+  translatePage();
+  translateTableTools(doc);
+  const note = el('browser-note');
+  note.hidden = Boolean(window.showDirectoryPicker);
+  note.textContent = note.hidden
+    ? ''
+    : t('gate', 'This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.');
+}
 
 function setTheme(theme: Theme): void {
   settings.theme = theme;
   applyTheme(theme);
-  el('theme').title = THEME_LABEL[theme];
   persist();
 }
-
-el('theme').addEventListener('click', () => {
-  const next = THEMES[(THEMES.indexOf(settings.theme) + 1) % THEMES.length]!;
-  setTheme(next);
-  toast(THEME_LABEL[next]);
-});
 
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
   if (settings.theme === 'system') applyTheme('system');
@@ -793,26 +919,10 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
 function setZoom(zoom: number): void {
   settings.zoom = clampZoom(zoom);
   applyZoom(settings.zoom);
-  el('zoom-reset').textContent = `${settings.zoom}%`;
+  const value = document.querySelector('.popover .zoom-value');
+  if (value) value.textContent = `${settings.zoom}%`;
   persist();
 }
-
-el('zoom-in').addEventListener('click', () => setZoom(settings.zoom + ZOOM_STEP));
-el('zoom-out').addEventListener('click', () => setZoom(settings.zoom - ZOOM_STEP));
-el('zoom-reset').addEventListener('click', () => setZoom(100));
-
-function syncWidthButton(): void {
-  const button = el('full-width');
-  button.title = settings.fullWidth ? 'Text: full width' : 'Text: centred column';
-  button.setAttribute('aria-pressed', String(settings.fullWidth));
-}
-
-el('full-width').addEventListener('click', () => {
-  settings.fullWidth = !settings.fullWidth;
-  applyFullWidth(settings.fullWidth);
-  syncWidthButton();
-  persist();
-});
 
 /* ------------------------------------------------------------------ *
  * Inline title
@@ -855,18 +965,10 @@ function renderTitle(): void {
   inlineTitle.hidden = heading !== null && titleKey(heading) === titleKey(name);
 }
 
-function syncTitleButton(): void {
-  const button = el('toggle-title');
-  button.title = settings.inlineTitle ? 'Note title: shown' : 'Note title: hidden';
-  button.setAttribute('aria-pressed', String(settings.inlineTitle));
+function renderDocumentTitle(): void {
+  const name = currentPath ? stripExtension(baseOf(currentPath)) : viewedPath ? baseOf(viewedPath) : null;
+  document.title = name ? `${name} — ${t('app', 'Notes editor')}` : t('app', 'Notes editor');
 }
-
-el('toggle-title').addEventListener('click', () => {
-  settings.inlineTitle = !settings.inlineTitle;
-  syncTitleButton();
-  renderTitle();
-  persist();
-});
 
 function setSidebar(width: number, hidden: boolean): void {
   settings.sidebar = Math.min(560, Math.max(160, Math.round(width)));
@@ -881,7 +983,9 @@ const resizer = el('sidebar-resizer');
 resizer.addEventListener('pointerdown', (event) => {
   event.preventDefault();
   resizer.setPointerCapture(event.pointerId);
-  const move = (moveEvent: PointerEvent): void => setSidebar(moveEvent.clientX, false);
+  // Right to left, the panel sits on the right and grows leftwards.
+  const move = (moveEvent: PointerEvent): void =>
+    setSidebar(isRightToLeft() ? window.innerWidth - moveEvent.clientX : moveEvent.clientX, false);
   const stop = (): void => {
     resizer.removeEventListener('pointermove', move);
     resizer.removeEventListener('pointerup', stop);
@@ -890,8 +994,10 @@ resizer.addEventListener('pointerdown', (event) => {
   resizer.addEventListener('pointerup', stop);
 });
 resizer.addEventListener('keydown', (event) => {
-  if (event.key === 'ArrowLeft') setSidebar(settings.sidebar - 16, settings.sidebarHidden);
-  if (event.key === 'ArrowRight') setSidebar(settings.sidebar + 16, settings.sidebarHidden);
+  const wider = isRightToLeft() ? 'ArrowLeft' : 'ArrowRight';
+  if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+    setSidebar(settings.sidebar + (event.key === wider ? 16 : -16), settings.sidebarHidden);
+  }
 });
 
 /* ------------------------------------------------------------------ *
@@ -901,13 +1007,16 @@ resizer.addEventListener('keydown', (event) => {
 function renderState(): void {
   statusPath.textContent = currentPath ?? viewedPath ?? '—';
   if (!vault) statusState.textContent = '';
-  else if (!vault.writable) statusState.textContent = 'read-only';
-  else statusState.textContent = dirty ? 'unsaved' : 'saved';
+  else if (!vault.writable) statusState.textContent = t('status', 'read-only');
+  else statusState.textContent = dirty ? t('status', 'unsaved') : t('status', 'saved');
   statusState.classList.toggle('status-state--dirty', dirty && Boolean(vault?.writable));
 }
 
-function renderCount(status: EditorStatus): void {
-  statusCount.textContent = currentPath ? `${status.words} words · ${status.chars} characters` : '';
+function renderCount(): void {
+  statusCount.textContent =
+    currentPath && lastStatus
+      ? `${tn('status', '{count} word', '{count} words', lastStatus.words)} · ${tn('status', '{count} character', '{count} characters', lastStatus.chars)}`
+      : '';
 }
 
 function persist(): void {
@@ -966,14 +1075,12 @@ document.addEventListener('keydown', (event) => {
  * Start
  * ------------------------------------------------------------------ */
 
+applyLanguage();
+renderDocumentTitle();
 applyTheme(settings.theme);
 applyZoom(settings.zoom);
 applyFullWidth(settings.fullWidth);
-syncWidthButton();
-syncTitleButton();
 applySidebar(settings.sidebar, settings.sidebarHidden);
-el('zoom-reset').textContent = `${settings.zoom}%`;
-el('theme').title = THEME_LABEL[settings.theme];
 editor.setMode(settings.mode);
 syncModeButtons();
 renderState();

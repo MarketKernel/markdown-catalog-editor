@@ -1,0 +1,162 @@
+{
+  "editor": {
+    "Block source text": "Вихідний текст блоку",
+    "Add a row": "Додати рядок",
+    "Add a column": "Додати стовпець",
+    "Delete this empty row": "Видалити цей порожній рядок",
+    "Delete this empty column": "Видалити цей порожній стовпець"
+  },
+  "tree": {
+    "Delete": "Видалити",
+    "Nothing found": "Нічого не знайдено",
+    "The folder is empty": "Папка порожня",
+    "New note": "Нова нотатка",
+    "New folder": "Нова папка",
+    "Rename": "Перейменувати",
+    "Copy path": "Копіювати шлях"
+  },
+  "status": {
+    "{count} words": {
+      "one": "{count} слово",
+      "few": "{count} слова",
+      "many": "{count} слів",
+      "other": "{count} слова"
+    },
+    "read-only": "лише читання",
+    "unsaved": "не збережено",
+    "saved": "збережено",
+    "{count} characters": {
+      "one": "{count} символ",
+      "few": "{count} символи",
+      "many": "{count} символів",
+      "other": "{count} символу"
+    }
+  },
+  "toast": {
+    "Path copied: {path}": "Шлях скопійовано: {path}",
+    "No .md files in this folder — create the first note": "У цій папці немає файлів .md — створіть першу нотатку",
+    "No .md files in this folder": "У цій папці немає файлів .md",
+    "Read-only access: saving will offer to download the file": "Доступ лише для читання: під час збереження буде запропоновано завантажити файл",
+    "Not found: {target}": "Не знайдено: {target}",
+    "Note \"{target}\" not found": "Нотатку «{target}» не знайдено",
+    "Could not read {path}": "Не вдалося прочитати {path}",
+    "Could not save: {reason}": "Не вдалося зберегти: {reason}",
+    "The note was renamed, its images were not: {reason}": "Нотатку перейменовано, але її зображення — ні: {reason}"
+  },
+  "gate": {
+    "Drag a folder, not a single file": "Перетягніть папку, а не окремий файл",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "Цей браузер не може записувати файли на диск: папку буде відкрито лише для читання, а під час збереження буде запропоновано завантажити змінений файл. Повноцінне редагування працює в Chrome, Edge та Arc.",
+    "local editor · one file": "локальний редактор · один файл",
+    "Open a folder": "Відкрийте папку",
+    "of notes": "з нотатками",
+    "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "Виберіть папку з файлами {ext}. Нічого нікуди не надсилається: файли читаються й зберігаються безпосередньо на вашому диску.",
+    "Open folder": "Відкрити папку",
+    "or drag a folder here": "або перетягніть папку сюди"
+  },
+  "dialog": {
+    "Note not found": "Нотатку не знайдено",
+    "Create \"{name}\"?": "Створити «{name}»?",
+    "Create": "Створити",
+    "New note": "Нова нотатка",
+    "File name": "Назва файлу",
+    "Untitled": "Без назви",
+    "New folder": "Нова папка",
+    "Folder name": "Назва папки",
+    "Rename": "Перейменувати",
+    "New name": "Нова назва",
+    "Delete the folder \"{name}\"? This cannot be undone.": "Видалити папку «{name}»? Цю дію не можна скасувати.",
+    "Delete the note \"{name}\"? This cannot be undone.": "Видалити нотатку «{name}»? Цю дію не можна скасувати.",
+    "Delete the file \"{name}\"? This cannot be undone.": "Видалити файл «{name}»? Цю дію не можна скасувати.",
+    "Delete": "Видалити",
+    "Cancel": "Скасувати",
+    "Done": "Готово"
+  },
+  "doc": {
+    "no such file: {path}": "файл не знайдено: {path}",
+    "Pick a note on the left, or create a new one.": "Виберіть нотатку ліворуч або створіть нову."
+  },
+  "errors": {
+    "The folder is open read-only": "Папку відкрито лише для читання",
+    "This browser cannot write files": "Цей браузер не може записувати файли",
+    "\"{name}\" already exists": "«{name}» вже існує",
+    "File not found: {path}": "Файл не знайдено: {path}"
+  },
+  "palette": {
+    "Red": "Червоний",
+    "Orange": "Помаранчевий",
+    "Green": "Зелений",
+    "Blue": "Синій",
+    "Violet": "Фіолетовий",
+    "Grey": "Сірий",
+    "Text colour": "Колір тексту",
+    "Background": "Фон",
+    "Clear formatting": "Очистити форматування"
+  },
+  "settings": {
+    "System": "Як у системі",
+    "Centred column": "Колонка по центру",
+    "Full width": "На всю ширину",
+    "Reset zoom (⌘0)": "Скинути масштаб (⌘0)",
+    "Zoom": "Масштаб",
+    "Zoom out (⌘−)": "Зменшити (⌘−)",
+    "Zoom in (⌘+)": "Збільшити (⌘+)",
+    "Settings": "Налаштування",
+    "Language": "Мова",
+    "Theme": "Тема",
+    "Text width": "Ширина тексту",
+    "Show the note name as a title": "Показувати назву нотатки як заголовок",
+    "Light": "Світла",
+    "Dark": "Темна"
+  },
+  "app": {
+    "Notes editor": "Редактор нотаток"
+  },
+  "sidebar": {
+    "Notes": "Нотатки",
+    "Open another folder": "Відкрити іншу папку",
+    "New note": "Нова нотатка",
+    "New folder": "Нова папка",
+    "Filter by name": "Фільтр за назвою",
+    "Filter files": "Фільтр файлів",
+    "Expand all folders": "Розгорнути всі папки",
+    "Collapse all folders": "Згорнути всі папки",
+    "File tree": "Дерево файлів",
+    "File panel width": "Ширина панелі файлів"
+  },
+  "toolbar": {
+    "Read": "Читання",
+    "Edit": "Редагування",
+    "File panel (⌘\\)": "Панель файлів (⌘\\)",
+    "Mode": "Режим",
+    "Save (⌘S)": "Зберегти (⌘S)",
+    "Heading 1 (⌘⌥1)": "Заголовок 1 (⌘⌥1)",
+    "Heading 2 (⌘⌥2)": "Заголовок 2 (⌘⌥2)",
+    "Heading 3 (⌘⌥3)": "Заголовок 3 (⌘⌥3)",
+    "Plain text (⌘⌥0)": "Звичайний текст (⌘⌥0)",
+    "Bold (⌘B)": "Жирний (⌘B)",
+    "Italic (⌘I)": "Курсив (⌘I)",
+    "Strikethrough": "Закреслений",
+    "Monospace (⌘⇧C)": "Моноширинний (⌘⇧C)",
+    "Highlight (⌘⇧H)": "Маркер (⌘⇧H)",
+    "Text and background colour": "Колір тексту й фону",
+    "Link (⌘K)": "Посилання (⌘K)",
+    "Link to a note (⌘⇧K)": "Посилання на нотатку (⌘⇧K)",
+    "Bulleted list": "Маркований список",
+    "Numbered list": "Нумерований список",
+    "Task list": "Список завдань",
+    "Quote": "Цитата",
+    "Code block": "Блок коду",
+    "Table": "Таблиця",
+    "Divider": "Роздільник",
+    "More formatting": "Більше форматування",
+    "Search (⌘F)": "Пошук (⌘F)",
+    "Settings": "Налаштування"
+  },
+  "find": {
+    "Find in note": "Знайти в нотатці",
+    "Find": "Знайти",
+    "Previous (⇧Enter)": "Попереднє (⇧Enter)",
+    "Next (Enter)": "Наступне (Enter)",
+    "Close (Esc)": "Закрити (Esc)"
+  }
+}

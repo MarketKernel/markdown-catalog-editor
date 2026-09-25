@@ -92,9 +92,15 @@ Adding or deleting rewrites the table in the plain `| a | b |` form.
   folder (`![[image-1.png|300]]` sets the width). `assets` folders start collapsed in the
   tree, and renaming a note renames its image folder too. A picture clicked in the tree
   opens as a picture, not as text.
-- **Theme**: system, light, dark. **Zoom**: 50–200 %. **Width**: a centred column or the full pane.
+- **Settings** (the gear at the top right, next to search): interface language, theme
+  (system, light, dark), zoom 50–200 %, text width (a centred column or the full pane) and
+  whether the note name is shown as a title.
+- **Languages**: English and 16 more — 中文, हिन्दी, Español, Français, العربية, বাংলা,
+  Português, Русский, اردو, Bahasa Indonesia, Deutsch, 日本語, Türkçe, 한국어, Italiano,
+  Українська. By default the interface follows the browser's language. In Arabic and Urdu the
+  chrome is mirrored right to left; the note itself keeps its own direction.
 - Autosave one second after an edit, undo and redo, search within the note.
-- The theme, zoom, text width, panel width and last opened note are remembered.
+- The language, theme, zoom, text width, panel width and last opened note are remembered.
 
 ## Keyboard shortcuts
 
@@ -112,6 +118,27 @@ Adding or deleting rewrites the table in the plain `| a | b |` form.
 | List indent | `Tab` · `⇧Tab` |
 | Leave the block | `Esc` |
 
+## Translations
+
+The English text stays in the code: `t('tree', 'Delete')`, `tn('status', '{count} word',
+'{count} words', n)`, and `data-i18n="context"` / `data-i18n-attr="context"` in the
+template. The first argument is the context — the part of the interface a string belongs
+to, so the same English word can be translated differently in two places. A dictionary,
+`src/locales/<code>.json`, maps context → English text → translation:
+
+```json
+{
+  "tree": { "Delete": "Удалить" },
+  "status": { "{count} words": { "one": "{count} слово", "few": "{count} слова", "many": "{count} слов", "other": "{count} слова" } }
+}
+```
+
+A string the dictionary lacks is shown in English. A text with a number has one form per
+plural category of the language (`Intl.PluralRules`), keyed by the English plural form.
+`npm run i18n` lists, per language, the strings not translated yet and the ones no longer
+used; `npm test` checks that every translation keeps the English placeholders and has all
+plural forms.
+
 ## Build
 
 ```sh
@@ -120,8 +147,9 @@ npm install
 npm run build      # -> build/macaed.html
 npm run watch      # rebuild on changes in src/
 npm run typecheck  # tsc --noEmit
-npm test           # 77 checks of the block model, formatting and Markdown syntax
-npm run test:browser  # 35 checks of the built editor in headless Chrome
+npm test           # the block model, formatting, Markdown syntax and the dictionaries
+npm run test:browser  # the built editor in headless Chrome
+npm run i18n       # strings each dictionary lacks or no longer needs
 ```
 
 `build.mjs` bundles `src/main.ts` with esbuild into an IIFE and substitutes it, along with
@@ -134,16 +162,18 @@ in it.
 ```
 src/template.html   markup with the __STYLES__/__APP__/__ICON__ placeholders
 src/styles.css      palette, light and dark themes, block paired with its source
-src/main.ts         opening a folder, saving, toolbar, search, theme, zoom
+src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
 src/markdown.ts     markdown-it: ==highlight==, [[wiki links]], ![[embeds]], tasks, code highlighting
 src/tree.ts         folder and file tree
-src/settings.ts     localStorage: theme, zoom, panel width, last note
-src/ui.ts           dialogs, context menu, notifications
-tools/              tests: block model, formatting, the editor in headless Chrome
+src/settings.ts     localStorage: language, theme, zoom, panel width, last note
+src/i18n.ts         t()/tn(), the language list and flags, translating the page's markup
+src/locales/        one dictionary per language
+src/ui.ts           dialogs, context menu, popover, notifications
+tools/              tests: block model, formatting, dictionaries, the editor in headless Chrome
 vendor/icon.svg     the icon
 docs/               working notes (not under git)
 build/macaed.html   the build output

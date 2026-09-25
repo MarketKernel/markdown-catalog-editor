@@ -1,8 +1,12 @@
-/** Theme, zoom and panel state, remembered in localStorage between sessions. */
+/** Language, theme, zoom and panel state, remembered in localStorage between sessions. */
+
+import { detectLanguage, isLanguage, type Language } from './i18n';
 
 export type Theme = 'system' | 'light' | 'dark';
 
 export interface Settings {
+  /** 'auto' follows the browser's languages. */
+  language: Language | 'auto';
   theme: Theme;
   /** Percent; the document area scales, the chrome does not. */
   zoom: number;
@@ -26,6 +30,7 @@ export const ZOOM_MAX = 200;
 export const ZOOM_STEP = 10;
 
 const DEFAULTS: Settings = {
+  language: 'auto',
   theme: 'system',
   zoom: 100,
   fullWidth: false,
@@ -46,6 +51,7 @@ export function loadSettings(): Settings {
     return {
       ...DEFAULTS,
       ...stored,
+      language: isLanguage(stored.language) ? stored.language : 'auto',
       zoom: clampZoom(Number(stored.zoom ?? DEFAULTS.zoom)),
       sidebar: Math.min(560, Math.max(160, Number(stored.sidebar ?? DEFAULTS.sidebar))),
       collapsed: Array.isArray(stored.collapsed) ? stored.collapsed : [],
@@ -67,6 +73,11 @@ export function saveSettings(settings: Settings): void {
 export function clampZoom(zoom: number): number {
   if (!Number.isFinite(zoom)) return DEFAULTS.zoom;
   return Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, Math.round(zoom / 5) * 5));
+}
+
+/** The language the interface is shown in. */
+export function resolveLanguage(choice: Settings['language']): Language {
+  return choice === 'auto' ? detectLanguage() : choice;
 }
 
 export function applyTheme(theme: Theme): void {

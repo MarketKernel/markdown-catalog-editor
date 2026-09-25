@@ -1,4 +1,6 @@
-/** Small dialogs, a context menu and toasts — enough to avoid native prompts. */
+/** Small dialogs, a context menu, popovers and toasts — enough to avoid native prompts. */
+
+import { t } from './i18n';
 
 let overlay: HTMLDivElement | null = null;
 
@@ -33,7 +35,7 @@ function dialog(options: DialogOptions): Promise<string | null> {
     ${options.message ? `<p class="dialog-text">${escape(options.message)}</p>` : ''}
     ${options.label ? `<label class="dialog-label">${escape(options.label)}<input class="dialog-input" type="text"></label>` : ''}
     <div class="dialog-row">
-      <button type="button" class="button button--ghost" data-cancel>Cancel</button>
+      <button type="button" class="button button--ghost" data-cancel>${escape(t('dialog', 'Cancel'))}</button>
       <button type="submit" class="button ${options.danger ? 'button--danger' : 'button--primary'}">${escape(options.confirm)}</button>
     </div>`;
   host.append(box);
@@ -75,10 +77,10 @@ function dialog(options: DialogOptions): Promise<string | null> {
 }
 
 export function ask(title: string, label: string, value = ''): Promise<string | null> {
-  return dialog({ title, label, value, confirm: 'Done' });
+  return dialog({ title, label, value, confirm: t('dialog', 'Done') });
 }
 
-export async function confirmAsk(title: string, message: string, confirm = 'Delete'): Promise<boolean> {
+export async function confirmAsk(title: string, message: string, confirm = t('dialog', 'Delete')): Promise<boolean> {
   return (await dialog({ title, message, confirm, danger: true })) !== null;
 }
 
@@ -122,6 +124,72 @@ export function menu(x: number, y: number, items: MenuItem[]): void {
     document.addEventListener('mousedown', dismiss, true);
     document.addEventListener('keydown', onKey, true);
   });
+}
+
+/** `h('div', { class: 'row' }, child, 'text')` — an element with its attributes and children. */
+export function h<K extends keyof HTMLElementTagNameMap>(
+  tag: K,
+  props: Partial<Record<string, string>> = {},
+  ...children: (Node | string | null | undefined | false)[]
+): HTMLElementTagNameMap[K] {
+  const node = document.createElement(tag);
+  for (const [key, value] of Object.entries(props)) {
+    if (value === undefined) continue;
+    if (key === 'class') node.className = value;
+    else if (key === 'text') node.textContent = value;
+    else node.setAttribute(key, value);
+  }
+  for (const child of children) if (child !== null && child !== undefined && child !== false) node.append(child);
+  return node;
+}
+
+/**
+ * A panel pinned under `anchor` that closes on an outside click or Escape.
+ * Returns the function that closes it.
+ */
+export function popover(anchor: HTMLElement, content: HTMLElement, onClose?: () => void): () => void {
+  document.querySelector('.popover')?.dispatchEvent(new Event('dismiss'));
+  const panel = h('div', { class: 'popover' }, content);
+  document.body.append(panel);
+  const place = (): void => {
+    const box = anchor.getBoundingClientRect();
+    const width = panel.offsetWidth;
+    const height = panel.offsetHeight;
+    const left = Math.max(8, Math.min(box.right - width, window.innerWidth - width - 8));
+    const below = box.bottom + 6;
+    const top = below + height > window.innerHeight - 8 ? Math.max(8, box.top - height - 6) : below;
+    panel.style.left = `${left}px`;
+    panel.style.top = `${top}px`;
+  };
+  place();
+
+  const onDown = (event: Event): void => {
+    if (event.target instanceof Node && (panel.contains(event.target) || anchor.contains(event.target))) return;
+    dismiss();
+  };
+  const onKey = (event: KeyboardEvent): void => {
+    if (event.key === 'Escape') {
+      event.stopPropagation();
+      dismiss();
+    }
+  };
+  let open = true;
+  function dismiss(): void {
+    if (!open) return;
+    open = false;
+    panel.remove();
+    document.removeEventListener('mousedown', onDown, true);
+    document.removeEventListener('keydown', onKey, true);
+    window.removeEventListener('resize', place);
+    onClose?.();
+  }
+  panel.addEventListener('dismiss', dismiss);
+  window.addEventListener('resize', place);
+  window.setTimeout(() => {
+    document.addEventListener('mousedown', onDown, true);
+    document.addEventListener('keydown', onKey, true);
+  });
+  return dismiss;
 }
 
 let toastTimer = 0;

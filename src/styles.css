@@ -181,7 +181,7 @@ button, input, textarea, select {
   border-radius: 9px;
   padding: 10px 14px;
   line-height: 1.5;
-  text-align: left;
+  text-align: start;
   margin: 0 0 18px;
 }
 .gate-hint { color: var(--faint); margin: 12px 0 0; }
@@ -215,13 +215,14 @@ body.sidebar-hidden .resizer { display: none; }
   flex-direction: column;
   min-width: 0;
   background: var(--panel);
-  border-right: 1px solid var(--edge);
+  border-inline-end: 1px solid var(--edge);
 }
 .sidebar-top {
   display: flex;
   align-items: center;
   gap: 4px;
-  padding: 10px 8px 6px 10px;
+  padding-block: 10px 6px;
+  padding-inline: 10px 8px;
 }
 .vault {
   display: flex;
@@ -235,7 +236,7 @@ body.sidebar-hidden .resizer { display: none; }
   padding: 5px 6px;
   font-weight: 600;
   cursor: pointer;
-  text-align: left;
+  text-align: start;
 }
 .vault:hover { background: var(--panel-2); }
 .vault svg {
@@ -265,13 +266,14 @@ body.sidebar-hidden .resizer { display: none; }
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 4px 8px 6px 14px;
+  padding-block: 4px 6px;
+  padding-inline: 14px 8px;
   font-size: 11px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--faint);
 }
-.tree-tools { display: flex; gap: 2px; margin-left: auto; }
+.tree-tools { display: flex; gap: 2px; margin-inline-start: auto; }
 .tree-tool {
   display: inline-flex;
   align-items: center;
@@ -346,7 +348,7 @@ body.sidebar-hidden .resizer { display: none; }
 /* Shrinks only when out of room, so » sits right after the last button that fits. */
 .toolbar-group--format { flex: 0 1 auto; min-width: 0; overflow-x: auto; scrollbar-width: none; }
 .toolbar-group--format::-webkit-scrollbar { display: none; }
-.toolbar-group--right { margin-left: auto; }
+.toolbar-group--right { margin-inline-start: auto; }
 
 .segmented {
   display: inline-flex;
@@ -874,7 +876,7 @@ details.callout[open] > summary.callout-title::after { transform: rotate(45deg);
 .context-item {
   display: block;
   width: 100%;
-  text-align: left;
+  text-align: start;
   border: 0;
   background: transparent;
   border-radius: 7px;
@@ -916,6 +918,44 @@ details.callout[open] > summary.callout-title::after { transform: rotate(45deg);
   color: var(--muted);
 }
 .palette-clear:hover { background: var(--panel-2); }
+
+/* ------------------------------------------------------------------ *
+ * Settings
+ * ------------------------------------------------------------------ */
+
+.popover {
+  position: fixed;
+  z-index: 70;
+  background: var(--bg);
+  border: 1px solid var(--edge);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  padding: 14px;
+}
+
+.settings { width: min(340px, calc(100vw - 32px)); }
+.settings-title { margin: 0 0 10px; font-size: 15px; }
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+}
+.settings-row--check { justify-content: flex-start; gap: 9px; cursor: pointer; }
+.settings-row--check input { accent-color: var(--accent); margin: 0; width: 16px; height: 16px; }
+.settings-select {
+  max-width: 190px;
+  border: 1px solid var(--edge);
+  background: var(--panel);
+  border-radius: 7px;
+  padding: 5px 8px;
+}
+.settings .zoom .icon-button { width: 34px; height: 30px; font-size: 17px; }
+.settings .zoom-value { min-width: 58px; font-size: 14px; }
+
+/* The arrow points the way the text reads. */
+[dir='rtl'] .arrow { display: inline-block; transform: scaleX(-1); }
 
 .toast {
   position: fixed;

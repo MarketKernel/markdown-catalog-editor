@@ -1,0 +1,158 @@
+{
+  "editor": {
+    "Block source text": "ब्लॉक का स्रोत टेक्स्ट",
+    "Add a row": "पंक्ति जोड़ें",
+    "Add a column": "कॉलम जोड़ें",
+    "Delete this empty row": "यह खाली पंक्ति हटाएँ",
+    "Delete this empty column": "यह खाली कॉलम हटाएँ"
+  },
+  "tree": {
+    "Delete": "हटाएँ",
+    "Nothing found": "कुछ नहीं मिला",
+    "The folder is empty": "फ़ोल्डर खाली है",
+    "New note": "नया नोट",
+    "New folder": "नया फ़ोल्डर",
+    "Rename": "नाम बदलें",
+    "Copy path": "पाथ कॉपी करें"
+  },
+  "status": {
+    "{count} words": {
+      "one": "{count} शब्द",
+      "other": "{count} शब्द"
+    },
+    "read-only": "केवल पढ़ने के लिए",
+    "unsaved": "सहेजा नहीं गया",
+    "saved": "सहेजा गया",
+    "{count} characters": {
+      "one": "{count} वर्ण",
+      "other": "{count} वर्ण"
+    }
+  },
+  "toast": {
+    "Path copied: {path}": "पाथ कॉपी हो गया: {path}",
+    "No .md files in this folder — create the first note": "इस फ़ोल्डर में कोई .md फ़ाइल नहीं है — पहला नोट बनाएँ",
+    "No .md files in this folder": "इस फ़ोल्डर में कोई .md फ़ाइल नहीं है",
+    "Read-only access: saving will offer to download the file": "केवल पढ़ने की अनुमति: सहेजते समय फ़ाइल डाउनलोड करने का विकल्प मिलेगा",
+    "Not found: {target}": "नहीं मिला: {target}",
+    "Note \"{target}\" not found": "नोट “{target}” नहीं मिला",
+    "Could not read {path}": "{path} पढ़ा नहीं जा सका",
+    "Could not save: {reason}": "सहेजा नहीं जा सका: {reason}",
+    "The note was renamed, its images were not: {reason}": "नोट का नाम बदल गया, पर उसकी छवियों का नहीं: {reason}"
+  },
+  "gate": {
+    "Drag a folder, not a single file": "फ़ोल्डर खींचें, कोई अकेली फ़ाइल नहीं",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "यह ब्राउज़र डिस्क पर फ़ाइलें नहीं लिख सकता: फ़ोल्डर केवल पढ़ने के लिए खुलेगा, और सहेजते समय बदली गई फ़ाइल डाउनलोड करने का विकल्प मिलेगा। पूरा संपादन Chrome, Edge और Arc में काम करता है।",
+    "local editor · one file": "लोकल एडिटर · एक फ़ाइल",
+    "Open a folder": "अपने नोट्स का",
+    "of notes": "फ़ोल्डर खोलें",
+    "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "{ext} फ़ाइलों वाला फ़ोल्डर चुनें। कुछ भी कहीं नहीं भेजा जाता: फ़ाइलें सीधे आपकी अपनी डिस्क पर पढ़ी और सहेजी जाती हैं।",
+    "Open folder": "फ़ोल्डर खोलें",
+    "or drag a folder here": "या फ़ोल्डर यहाँ खींचें"
+  },
+  "dialog": {
+    "Note not found": "नोट नहीं मिला",
+    "Create \"{name}\"?": "“{name}” बनाएँ?",
+    "Create": "बनाएँ",
+    "New note": "नया नोट",
+    "File name": "फ़ाइल का नाम",
+    "Untitled": "शीर्षकहीन",
+    "New folder": "नया फ़ोल्डर",
+    "Folder name": "फ़ोल्डर का नाम",
+    "Rename": "नाम बदलें",
+    "New name": "नया नाम",
+    "Delete the folder \"{name}\"? This cannot be undone.": "फ़ोल्डर “{name}” हटाएँ? इसे पूर्ववत नहीं किया जा सकता।",
+    "Delete the note \"{name}\"? This cannot be undone.": "नोट “{name}” हटाएँ? इसे पूर्ववत नहीं किया जा सकता।",
+    "Delete the file \"{name}\"? This cannot be undone.": "फ़ाइल “{name}” हटाएँ? इसे पूर्ववत नहीं किया जा सकता।",
+    "Delete": "हटाएँ",
+    "Cancel": "रद्द करें",
+    "Done": "हो गया"
+  },
+  "doc": {
+    "no such file: {path}": "ऐसी कोई फ़ाइल नहीं: {path}",
+    "Pick a note on the left, or create a new one.": "बाईं ओर से कोई नोट चुनें, या नया बनाएँ।"
+  },
+  "errors": {
+    "The folder is open read-only": "फ़ोल्डर केवल पढ़ने के लिए खुला है",
+    "This browser cannot write files": "यह ब्राउज़र फ़ाइलें नहीं लिख सकता",
+    "\"{name}\" already exists": "“{name}” पहले से मौजूद है",
+    "File not found: {path}": "फ़ाइल नहीं मिली: {path}"
+  },
+  "palette": {
+    "Red": "लाल",
+    "Orange": "नारंगी",
+    "Green": "हरा",
+    "Blue": "नीला",
+    "Violet": "बैंगनी",
+    "Grey": "स्लेटी",
+    "Text colour": "टेक्स्ट का रंग",
+    "Background": "पृष्ठभूमि",
+    "Clear formatting": "फ़ॉर्मेटिंग हटाएँ"
+  },
+  "settings": {
+    "System": "सिस्टम",
+    "Centred column": "बीच में कॉलम",
+    "Full width": "पूरी चौड़ाई",
+    "Reset zoom (⌘0)": "ज़ूम रीसेट करें (⌘0)",
+    "Zoom": "ज़ूम",
+    "Zoom out (⌘−)": "ज़ूम आउट (⌘−)",
+    "Zoom in (⌘+)": "ज़ूम इन (⌘+)",
+    "Settings": "सेटिंग्स",
+    "Language": "भाषा",
+    "Theme": "थीम",
+    "Text width": "टेक्स्ट की चौड़ाई",
+    "Show the note name as a title": "नोट का नाम शीर्षक के रूप में दिखाएँ",
+    "Light": "हल्की",
+    "Dark": "गहरी"
+  },
+  "app": {
+    "Notes editor": "नोट्स एडिटर"
+  },
+  "sidebar": {
+    "Notes": "नोट्स",
+    "Open another folder": "दूसरा फ़ोल्डर खोलें",
+    "New note": "नया नोट",
+    "New folder": "नया फ़ोल्डर",
+    "Filter by name": "नाम से फ़िल्टर करें",
+    "Filter files": "फ़ाइलें फ़िल्टर करें",
+    "Expand all folders": "सभी फ़ोल्डर फैलाएँ",
+    "Collapse all folders": "सभी फ़ोल्डर समेटें",
+    "File tree": "फ़ाइल ट्री",
+    "File panel width": "फ़ाइल पैनल की चौड़ाई"
+  },
+  "toolbar": {
+    "Read": "पढ़ें",
+    "Edit": "संपादित करें",
+    "File panel (⌘\\)": "फ़ाइल पैनल (⌘\\)",
+    "Mode": "मोड",
+    "Save (⌘S)": "सहेजें (⌘S)",
+    "Heading 1 (⌘⌥1)": "शीर्षक 1 (⌘⌥1)",
+    "Heading 2 (⌘⌥2)": "शीर्षक 2 (⌘⌥2)",
+    "Heading 3 (⌘⌥3)": "शीर्षक 3 (⌘⌥3)",
+    "Plain text (⌘⌥0)": "सादा टेक्स्ट (⌘⌥0)",
+    "Bold (⌘B)": "बोल्ड (⌘B)",
+    "Italic (⌘I)": "इटैलिक (⌘I)",
+    "Strikethrough": "स्ट्राइकथ्रू",
+    "Monospace (⌘⇧C)": "मोनोस्पेस (⌘⇧C)",
+    "Highlight (⌘⇧H)": "हाइलाइट (⌘⇧H)",
+    "Text and background colour": "टेक्स्ट और पृष्ठभूमि का रंग",
+    "Link (⌘K)": "लिंक (⌘K)",
+    "Link to a note (⌘⇧K)": "नोट का लिंक (⌘⇧K)",
+    "Bulleted list": "बुलेट सूची",
+    "Numbered list": "क्रमांकित सूची",
+    "Task list": "कार्य सूची",
+    "Quote": "उद्धरण",
+    "Code block": "कोड ब्लॉक",
+    "Table": "तालिका",
+    "Divider": "विभाजक",
+    "More formatting": "और फ़ॉर्मेटिंग",
+    "Search (⌘F)": "खोजें (⌘F)",
+    "Settings": "सेटिंग्स"
+  },
+  "find": {
+    "Find in note": "नोट में खोजें",
+    "Find": "खोजें",
+    "Previous (⇧Enter)": "पिछला (⇧Enter)",
+    "Next (Enter)": "अगला (Enter)",
+    "Close (Esc)": "बंद करें (Esc)"
+  }
+}

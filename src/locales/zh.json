@@ -1,0 +1,156 @@
+{
+  "editor": {
+    "Block source text": "块的源文本",
+    "Add a row": "添加行",
+    "Add a column": "添加列",
+    "Delete this empty row": "删除此空行",
+    "Delete this empty column": "删除此空列"
+  },
+  "tree": {
+    "Delete": "删除",
+    "Nothing found": "未找到结果",
+    "The folder is empty": "文件夹为空",
+    "New note": "新建笔记",
+    "New folder": "新建文件夹",
+    "Rename": "重命名",
+    "Copy path": "复制路径"
+  },
+  "status": {
+    "{count} words": {
+      "other": "{count} 个词"
+    },
+    "read-only": "只读",
+    "unsaved": "未保存",
+    "saved": "已保存",
+    "{count} characters": {
+      "other": "{count} 个字符"
+    }
+  },
+  "toast": {
+    "Path copied: {path}": "已复制路径：{path}",
+    "No .md files in this folder — create the first note": "此文件夹中没有 .md 文件 — 创建第一篇笔记吧",
+    "No .md files in this folder": "此文件夹中没有 .md 文件",
+    "Read-only access: saving will offer to download the file": "只读访问：保存时将提供文件下载",
+    "Not found: {target}": "未找到：{target}",
+    "Note \"{target}\" not found": "未找到笔记“{target}”",
+    "Could not read {path}": "无法读取 {path}",
+    "Could not save: {reason}": "无法保存：{reason}",
+    "The note was renamed, its images were not: {reason}": "笔记已重命名，但其图片未重命名：{reason}"
+  },
+  "gate": {
+    "Drag a folder, not a single file": "请拖入文件夹，而不是单个文件",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "此浏览器无法将文件写入磁盘：文件夹将以只读方式打开，保存时会下载修改后的文件。Chrome、Edge 和 Arc 支持完整编辑。",
+    "local editor · one file": "本地编辑器 · 单一文件",
+    "Open a folder": "打开一个",
+    "of notes": "笔记文件夹",
+    "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "选择一个包含 {ext} 文件的文件夹。不会向任何地方发送数据：文件直接在你自己的磁盘上读取和保存。",
+    "Open folder": "打开文件夹",
+    "or drag a folder here": "或将文件夹拖到此处"
+  },
+  "dialog": {
+    "Note not found": "未找到笔记",
+    "Create \"{name}\"?": "创建“{name}”？",
+    "Create": "创建",
+    "New note": "新建笔记",
+    "File name": "文件名",
+    "Untitled": "未命名",
+    "New folder": "新建文件夹",
+    "Folder name": "文件夹名称",
+    "Rename": "重命名",
+    "New name": "新名称",
+    "Delete the folder \"{name}\"? This cannot be undone.": "删除文件夹“{name}”？此操作无法撤销。",
+    "Delete the note \"{name}\"? This cannot be undone.": "删除笔记“{name}”？此操作无法撤销。",
+    "Delete the file \"{name}\"? This cannot be undone.": "删除文件“{name}”？此操作无法撤销。",
+    "Delete": "删除",
+    "Cancel": "取消",
+    "Done": "完成"
+  },
+  "doc": {
+    "no such file: {path}": "文件不存在：{path}",
+    "Pick a note on the left, or create a new one.": "在左侧选择一篇笔记，或新建一篇。"
+  },
+  "errors": {
+    "The folder is open read-only": "文件夹以只读方式打开",
+    "This browser cannot write files": "此浏览器无法写入文件",
+    "\"{name}\" already exists": "“{name}”已存在",
+    "File not found: {path}": "未找到文件：{path}"
+  },
+  "palette": {
+    "Red": "红色",
+    "Orange": "橙色",
+    "Green": "绿色",
+    "Blue": "蓝色",
+    "Violet": "紫色",
+    "Grey": "灰色",
+    "Text colour": "文字颜色",
+    "Background": "背景",
+    "Clear formatting": "清除格式"
+  },
+  "settings": {
+    "System": "跟随系统",
+    "Centred column": "居中栏",
+    "Full width": "全宽",
+    "Reset zoom (⌘0)": "重置缩放 (⌘0)",
+    "Zoom": "缩放",
+    "Zoom out (⌘−)": "缩小 (⌘−)",
+    "Zoom in (⌘+)": "放大 (⌘+)",
+    "Settings": "设置",
+    "Language": "语言",
+    "Theme": "主题",
+    "Text width": "文本宽度",
+    "Show the note name as a title": "将笔记名称显示为标题",
+    "Light": "浅色",
+    "Dark": "深色"
+  },
+  "app": {
+    "Notes editor": "笔记编辑器"
+  },
+  "sidebar": {
+    "Notes": "笔记",
+    "Open another folder": "打开其他文件夹",
+    "New note": "新建笔记",
+    "New folder": "新建文件夹",
+    "Filter by name": "按名称筛选",
+    "Filter files": "筛选文件",
+    "Expand all folders": "展开所有文件夹",
+    "Collapse all folders": "折叠所有文件夹",
+    "File tree": "文件树",
+    "File panel width": "文件面板宽度"
+  },
+  "toolbar": {
+    "Read": "阅读",
+    "Edit": "编辑",
+    "File panel (⌘\\)": "文件面板 (⌘\\)",
+    "Mode": "模式",
+    "Save (⌘S)": "保存 (⌘S)",
+    "Heading 1 (⌘⌥1)": "标题 1 (⌘⌥1)",
+    "Heading 2 (⌘⌥2)": "标题 2 (⌘⌥2)",
+    "Heading 3 (⌘⌥3)": "标题 3 (⌘⌥3)",
+    "Plain text (⌘⌥0)": "正文 (⌘⌥0)",
+    "Bold (⌘B)": "粗体 (⌘B)",
+    "Italic (⌘I)": "斜体 (⌘I)",
+    "Strikethrough": "删除线",
+    "Monospace (⌘⇧C)": "等宽 (⌘⇧C)",
+    "Highlight (⌘⇧H)": "高亮 (⌘⇧H)",
+    "Text and background colour": "文字和背景颜色",
+    "Link (⌘K)": "链接 (⌘K)",
+    "Link to a note (⌘⇧K)": "链接到笔记 (⌘⇧K)",
+    "Bulleted list": "项目符号列表",
+    "Numbered list": "编号列表",
+    "Task list": "任务列表",
+    "Quote": "引用",
+    "Code block": "代码块",
+    "Table": "表格",
+    "Divider": "分隔线",
+    "More formatting": "更多格式",
+    "Search (⌘F)": "搜索 (⌘F)",
+    "Settings": "设置"
+  },
+  "find": {
+    "Find in note": "在笔记中查找",
+    "Find": "查找",
+    "Previous (⇧Enter)": "上一个 (⇧Enter)",
+    "Next (Enter)": "下一个 (Enter)",
+    "Close (Esc)": "关闭 (Esc)"
+  }
+}

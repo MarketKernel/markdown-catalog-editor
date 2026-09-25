@@ -13,6 +13,7 @@
 import type { MarkdownIt } from 'markdown-it';
 import { sourceOffsetFor, splitBlocks, type Block, type BlockKind } from './blocks';
 import * as fmt from './format';
+import { t } from './i18n';
 import * as grid from './table';
 
 export type Mode = 'read' | 'edit';
@@ -269,7 +270,7 @@ export class Editor {
     area.value = block.text;
     area.rows = 1;
     area.spellcheck = true;
-    area.setAttribute('aria-label', 'Block source text');
+    area.setAttribute('aria-label', t('editor', 'Block source text'));
     area.addEventListener('beforeinput', this.onBeforeInput);
     area.addEventListener('input', this.onInput);
     area.addEventListener('keydown', this.onKeyDown);
@@ -1324,16 +1325,32 @@ function decorateTable(el: HTMLElement): void {
       cell.dataset['col'] = String(col);
     });
   });
-  frame.append(
-    tableTool('add-row', 'Add a row'),
-    tableTool('add-col', 'Add a column'),
-    tableTool('drop-row', 'Delete this empty row'),
-    tableTool('drop-col', 'Delete this empty column'),
-  );
+  frame.append(tableTool('add-row'), tableTool('add-col'), tableTool('drop-row'), tableTool('drop-col'));
 }
 
-function tableTool(action: string, label: string): HTMLButtonElement {
+type TableTool = 'add-row' | 'add-col' | 'drop-row' | 'drop-col';
+
+function tableToolLabel(action: TableTool): string {
+  return {
+    'add-row': t('editor', 'Add a row'),
+    'add-col': t('editor', 'Add a column'),
+    'drop-row': t('editor', 'Delete this empty row'),
+    'drop-col': t('editor', 'Delete this empty column'),
+  }[action];
+}
+
+/** Puts the table controls already on the page into the current language. */
+export function translateTableTools(root: ParentNode): void {
+  for (const button of Array.from(root.querySelectorAll<HTMLButtonElement>('.table-tool'))) {
+    const label = tableToolLabel(button.dataset['table'] as TableTool);
+    button.title = label;
+    button.setAttribute('aria-label', label);
+  }
+}
+
+function tableTool(action: TableTool): HTMLButtonElement {
   const button = document.createElement('button');
+  const label = tableToolLabel(action);
   button.type = 'button';
   button.className = `table-tool table-tool--${action}`;
   button.dataset['table'] = action;

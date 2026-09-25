@@ -1,0 +1,158 @@
+{
+  "editor": {
+    "Block source text": "Quelltext des Blocks",
+    "Add a row": "Zeile hinzufügen",
+    "Add a column": "Spalte hinzufügen",
+    "Delete this empty row": "Diese leere Zeile löschen",
+    "Delete this empty column": "Diese leere Spalte löschen"
+  },
+  "tree": {
+    "Delete": "Löschen",
+    "Nothing found": "Nichts gefunden",
+    "The folder is empty": "Der Ordner ist leer",
+    "New note": "Neue Notiz",
+    "New folder": "Neuer Ordner",
+    "Rename": "Umbenennen",
+    "Copy path": "Pfad kopieren"
+  },
+  "status": {
+    "{count} words": {
+      "one": "{count} Wort",
+      "other": "{count} Wörter"
+    },
+    "read-only": "schreibgeschützt",
+    "unsaved": "nicht gespeichert",
+    "saved": "gespeichert",
+    "{count} characters": {
+      "one": "{count} Zeichen",
+      "other": "{count} Zeichen"
+    }
+  },
+  "toast": {
+    "Path copied: {path}": "Pfad kopiert: {path}",
+    "No .md files in this folder — create the first note": "Keine .md-Dateien in diesem Ordner — erstellen Sie die erste Notiz",
+    "No .md files in this folder": "Keine .md-Dateien in diesem Ordner",
+    "Read-only access: saving will offer to download the file": "Nur Lesezugriff: Beim Speichern wird angeboten, die Datei herunterzuladen",
+    "Not found: {target}": "Nicht gefunden: {target}",
+    "Note \"{target}\" not found": "Notiz „{target}“ nicht gefunden",
+    "Could not read {path}": "{path} konnte nicht gelesen werden",
+    "Could not save: {reason}": "Speichern fehlgeschlagen: {reason}",
+    "The note was renamed, its images were not: {reason}": "Die Notiz wurde umbenannt, ihre Bilder nicht: {reason}"
+  },
+  "gate": {
+    "Drag a folder, not a single file": "Ziehen Sie einen Ordner, keine einzelne Datei",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "Dieser Browser kann keine Dateien auf die Festplatte schreiben: Der Ordner wird schreibgeschützt geöffnet, und beim Speichern wird angeboten, die geänderte Datei herunterzuladen. Volle Bearbeitung funktioniert in Chrome, Edge und Arc.",
+    "local editor · one file": "lokaler Editor · eine Datei",
+    "Open a folder": "Öffnen Sie einen Ordner",
+    "of notes": "mit Notizen",
+    "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "Wählen Sie einen Ordner mit {ext}-Dateien. Nichts wird irgendwohin gesendet: Die Dateien werden direkt auf Ihrer eigenen Festplatte gelesen und gespeichert.",
+    "Open folder": "Ordner öffnen",
+    "or drag a folder here": "oder ziehen Sie einen Ordner hierher"
+  },
+  "dialog": {
+    "Note not found": "Notiz nicht gefunden",
+    "Create \"{name}\"?": "„{name}“ erstellen?",
+    "Create": "Erstellen",
+    "New note": "Neue Notiz",
+    "File name": "Dateiname",
+    "Untitled": "Unbenannt",
+    "New folder": "Neuer Ordner",
+    "Folder name": "Ordnername",
+    "Rename": "Umbenennen",
+    "New name": "Neuer Name",
+    "Delete the folder \"{name}\"? This cannot be undone.": "Den Ordner „{name}“ löschen? Dies kann nicht rückgängig gemacht werden.",
+    "Delete the note \"{name}\"? This cannot be undone.": "Die Notiz „{name}“ löschen? Dies kann nicht rückgängig gemacht werden.",
+    "Delete the file \"{name}\"? This cannot be undone.": "Die Datei „{name}“ löschen? Dies kann nicht rückgängig gemacht werden.",
+    "Delete": "Löschen",
+    "Cancel": "Abbrechen",
+    "Done": "Fertig"
+  },
+  "doc": {
+    "no such file: {path}": "Datei existiert nicht: {path}",
+    "Pick a note on the left, or create a new one.": "Wählen Sie links eine Notiz aus oder erstellen Sie eine neue."
+  },
+  "errors": {
+    "The folder is open read-only": "Der Ordner ist schreibgeschützt geöffnet",
+    "This browser cannot write files": "Dieser Browser kann keine Dateien schreiben",
+    "\"{name}\" already exists": "„{name}“ existiert bereits",
+    "File not found: {path}": "Datei nicht gefunden: {path}"
+  },
+  "palette": {
+    "Red": "Rot",
+    "Orange": "Orange",
+    "Green": "Grün",
+    "Blue": "Blau",
+    "Violet": "Violett",
+    "Grey": "Grau",
+    "Text colour": "Textfarbe",
+    "Background": "Hintergrund",
+    "Clear formatting": "Formatierung entfernen"
+  },
+  "settings": {
+    "System": "System",
+    "Centred column": "Zentrierte Spalte",
+    "Full width": "Volle Breite",
+    "Reset zoom (⌘0)": "Zoom zurücksetzen (⌘0)",
+    "Zoom": "Zoom",
+    "Zoom out (⌘−)": "Verkleinern (⌘−)",
+    "Zoom in (⌘+)": "Vergrößern (⌘+)",
+    "Settings": "Einstellungen",
+    "Language": "Sprache",
+    "Theme": "Design",
+    "Text width": "Textbreite",
+    "Show the note name as a title": "Notiznamen als Titel anzeigen",
+    "Light": "Hell",
+    "Dark": "Dunkel"
+  },
+  "app": {
+    "Notes editor": "Notizeditor"
+  },
+  "sidebar": {
+    "Notes": "Notizen",
+    "Open another folder": "Anderen Ordner öffnen",
+    "New note": "Neue Notiz",
+    "New folder": "Neuer Ordner",
+    "Filter by name": "Nach Name filtern",
+    "Filter files": "Dateien filtern",
+    "Expand all folders": "Alle Ordner aufklappen",
+    "Collapse all folders": "Alle Ordner zuklappen",
+    "File tree": "Dateibaum",
+    "File panel width": "Breite der Dateileiste"
+  },
+  "toolbar": {
+    "Read": "Lesen",
+    "Edit": "Bearbeiten",
+    "File panel (⌘\\)": "Dateileiste (⌘\\)",
+    "Mode": "Modus",
+    "Save (⌘S)": "Speichern (⌘S)",
+    "Heading 1 (⌘⌥1)": "Überschrift 1 (⌘⌥1)",
+    "Heading 2 (⌘⌥2)": "Überschrift 2 (⌘⌥2)",
+    "Heading 3 (⌘⌥3)": "Überschrift 3 (⌘⌥3)",
+    "Plain text (⌘⌥0)": "Normaler Text (⌘⌥0)",
+    "Bold (⌘B)": "Fett (⌘B)",
+    "Italic (⌘I)": "Kursiv (⌘I)",
+    "Strikethrough": "Durchgestrichen",
+    "Monospace (⌘⇧C)": "Festbreitenschrift (⌘⇧C)",
+    "Highlight (⌘⇧H)": "Hervorheben (⌘⇧H)",
+    "Text and background colour": "Text- und Hintergrundfarbe",
+    "Link (⌘K)": "Link (⌘K)",
+    "Link to a note (⌘⇧K)": "Link zu einer Notiz (⌘⇧K)",
+    "Bulleted list": "Aufzählung",
+    "Numbered list": "Nummerierte Liste",
+    "Task list": "Aufgabenliste",
+    "Quote": "Zitat",
+    "Code block": "Codeblock",
+    "Table": "Tabelle",
+    "Divider": "Trennlinie",
+    "More formatting": "Weitere Formatierung",
+    "Search (⌘F)": "Suchen (⌘F)",
+    "Settings": "Einstellungen"
+  },
+  "find": {
+    "Find in note": "In Notiz suchen",
+    "Find": "Suchen",
+    "Previous (⇧Enter)": "Vorheriges (⇧Enter)",
+    "Next (Enter)": "Nächstes (Enter)",
+    "Close (Esc)": "Schließen (Esc)"
+  }
+}

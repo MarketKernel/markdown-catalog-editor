@@ -1,0 +1,162 @@
+{
+  "editor": {
+    "Block source text": "Исходный текст блока",
+    "Add a row": "Добавить строку",
+    "Add a column": "Добавить столбец",
+    "Delete this empty row": "Удалить эту пустую строку",
+    "Delete this empty column": "Удалить этот пустой столбец"
+  },
+  "tree": {
+    "Delete": "Удалить",
+    "Nothing found": "Ничего не найдено",
+    "The folder is empty": "Папка пуста",
+    "New note": "Новая заметка",
+    "New folder": "Новая папка",
+    "Rename": "Переименовать",
+    "Copy path": "Копировать путь"
+  },
+  "status": {
+    "{count} words": {
+      "one": "{count} слово",
+      "few": "{count} слова",
+      "many": "{count} слов",
+      "other": "{count} слова"
+    },
+    "read-only": "только чтение",
+    "unsaved": "не сохранено",
+    "saved": "сохранено",
+    "{count} characters": {
+      "one": "{count} символ",
+      "few": "{count} символа",
+      "many": "{count} символов",
+      "other": "{count} символа"
+    }
+  },
+  "toast": {
+    "Path copied: {path}": "Путь скопирован: {path}",
+    "No .md files in this folder — create the first note": "В этой папке нет файлов .md — создайте первую заметку",
+    "No .md files in this folder": "В этой папке нет файлов .md",
+    "Read-only access: saving will offer to download the file": "Доступ только для чтения: при сохранении будет предложено скачать файл",
+    "Not found: {target}": "Не найдено: {target}",
+    "Note \"{target}\" not found": "Заметка «{target}» не найдена",
+    "Could not read {path}": "Не удалось прочитать {path}",
+    "Could not save: {reason}": "Не удалось сохранить: {reason}",
+    "The note was renamed, its images were not: {reason}": "Заметка переименована, но её изображения — нет: {reason}"
+  },
+  "gate": {
+    "Drag a folder, not a single file": "Перетащите папку, а не отдельный файл",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "Этот браузер не умеет записывать файлы на диск: папка откроется только для чтения, а при сохранении будет предложено скачать изменённый файл. Полноценное редактирование работает в Chrome, Edge и Arc.",
+    "local editor · one file": "локальный редактор · один файл",
+    "Open a folder": "Откройте папку",
+    "of notes": "с заметками",
+    "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "Выберите папку с файлами {ext}. Ничего никуда не отправляется: файлы читаются и сохраняются прямо на вашем диске.",
+    "Open folder": "Открыть папку",
+    "or drag a folder here": "или перетащите папку сюда"
+  },
+  "dialog": {
+    "Note not found": "Заметка не найдена",
+    "Create \"{name}\"?": "Создать «{name}»?",
+    "Create": "Создать",
+    "New note": "Новая заметка",
+    "File name": "Имя файла",
+    "Untitled": "Без названия",
+    "New folder": "Новая папка",
+    "Folder name": "Имя папки",
+    "Rename": "Переименовать",
+    "New name": "Новое имя",
+    "Delete the folder \"{name}\"? This cannot be undone.": "Удалить папку «{name}»? Это действие нельзя отменить.",
+    "Delete the note \"{name}\"? This cannot be undone.": "Удалить заметку «{name}»? Это действие нельзя отменить.",
+    "Delete the file \"{name}\"? This cannot be undone.": "Удалить файл «{name}»? Это действие нельзя отменить.",
+    "Delete": "Удалить",
+    "Cancel": "Отмена",
+    "Done": "Готово"
+  },
+  "doc": {
+    "no such file: {path}": "файл не найден: {path}",
+    "Pick a note on the left, or create a new one.": "Выберите заметку слева или создайте новую."
+  },
+  "errors": {
+    "The folder is open read-only": "Папка открыта только для чтения",
+    "This browser cannot write files": "Этот браузер не умеет записывать файлы",
+    "\"{name}\" already exists": "«{name}» уже существует",
+    "File not found: {path}": "Файл не найден: {path}"
+  },
+  "palette": {
+    "Red": "Красный",
+    "Orange": "Оранжевый",
+    "Green": "Зелёный",
+    "Blue": "Синий",
+    "Violet": "Фиолетовый",
+    "Grey": "Серый",
+    "Text colour": "Цвет текста",
+    "Background": "Фон",
+    "Clear formatting": "Очистить форматирование"
+  },
+  "settings": {
+    "System": "Как в системе",
+    "Centred column": "Колонка по центру",
+    "Full width": "Во всю ширину",
+    "Reset zoom (⌘0)": "Сбросить масштаб (⌘0)",
+    "Zoom": "Масштаб",
+    "Zoom out (⌘−)": "Уменьшить (⌘−)",
+    "Zoom in (⌘+)": "Увеличить (⌘+)",
+    "Settings": "Настройки",
+    "Language": "Язык",
+    "Theme": "Тема",
+    "Text width": "Ширина текста",
+    "Show the note name as a title": "Показывать имя заметки как заголовок",
+    "Light": "Светлая",
+    "Dark": "Тёмная"
+  },
+  "app": {
+    "Notes editor": "Редактор заметок"
+  },
+  "sidebar": {
+    "Notes": "Заметки",
+    "Open another folder": "Открыть другую папку",
+    "New note": "Новая заметка",
+    "New folder": "Новая папка",
+    "Filter by name": "Фильтр по имени",
+    "Filter files": "Фильтр файлов",
+    "Expand all folders": "Развернуть все папки",
+    "Collapse all folders": "Свернуть все папки",
+    "File tree": "Дерево файлов",
+    "File panel width": "Ширина панели файлов"
+  },
+  "toolbar": {
+    "Read": "Чтение",
+    "Edit": "Правка",
+    "File panel (⌘\\)": "Панель файлов (⌘\\)",
+    "Mode": "Режим",
+    "Save (⌘S)": "Сохранить (⌘S)",
+    "Heading 1 (⌘⌥1)": "Заголовок 1 (⌘⌥1)",
+    "Heading 2 (⌘⌥2)": "Заголовок 2 (⌘⌥2)",
+    "Heading 3 (⌘⌥3)": "Заголовок 3 (⌘⌥3)",
+    "Plain text (⌘⌥0)": "Обычный текст (⌘⌥0)",
+    "Bold (⌘B)": "Жирный (⌘B)",
+    "Italic (⌘I)": "Курсив (⌘I)",
+    "Strikethrough": "Зачёркнутый",
+    "Monospace (⌘⇧C)": "Моноширинный (⌘⇧C)",
+    "Highlight (⌘⇧H)": "Маркер (⌘⇧H)",
+    "Text and background colour": "Цвет текста и фона",
+    "Link (⌘K)": "Ссылка (⌘K)",
+    "Link to a note (⌘⇧K)": "Ссылка на заметку (⌘⇧K)",
+    "Bulleted list": "Маркированный список",
+    "Numbered list": "Нумерованный список",
+    "Task list": "Список задач",
+    "Quote": "Цитата",
+    "Code block": "Блок кода",
+    "Table": "Таблица",
+    "Divider": "Разделитель",
+    "More formatting": "Ещё форматирование",
+    "Search (⌘F)": "Поиск (⌘F)",
+    "Settings": "Настройки"
+  },
+  "find": {
+    "Find in note": "Найти в заметке",
+    "Find": "Найти",
+    "Previous (⇧Enter)": "Предыдущее (⇧Enter)",
+    "Next (Enter)": "Следующее (Enter)",
+    "Close (Esc)": "Закрыть (Esc)"
+  }
+}

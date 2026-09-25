@@ -1,0 +1,156 @@
+{
+  "editor": {
+    "Block source text": "ブロックのソーステキスト",
+    "Add a row": "行を追加",
+    "Add a column": "列を追加",
+    "Delete this empty row": "この空の行を削除",
+    "Delete this empty column": "この空の列を削除"
+  },
+  "tree": {
+    "Delete": "削除",
+    "Nothing found": "見つかりません",
+    "The folder is empty": "フォルダは空です",
+    "New note": "新規ノート",
+    "New folder": "新規フォルダ",
+    "Rename": "名前を変更",
+    "Copy path": "パスをコピー"
+  },
+  "status": {
+    "{count} words": {
+      "other": "{count} 語"
+    },
+    "read-only": "読み取り専用",
+    "unsaved": "未保存",
+    "saved": "保存済み",
+    "{count} characters": {
+      "other": "{count} 文字"
+    }
+  },
+  "toast": {
+    "Path copied: {path}": "パスをコピーしました：{path}",
+    "No .md files in this folder — create the first note": "このフォルダには .md ファイルがありません — 最初のノートを作成しましょう",
+    "No .md files in this folder": "このフォルダには .md ファイルがありません",
+    "Read-only access: saving will offer to download the file": "読み取り専用アクセス：保存時にはファイルのダウンロードを提案します",
+    "Not found: {target}": "見つかりません：{target}",
+    "Note \"{target}\" not found": "ノート「{target}」が見つかりません",
+    "Could not read {path}": "{path} を読み込めませんでした",
+    "Could not save: {reason}": "保存できませんでした：{reason}",
+    "The note was renamed, its images were not: {reason}": "ノートの名前は変更されましたが、画像の名前は変更されませんでした：{reason}"
+  },
+  "gate": {
+    "Drag a folder, not a single file": "単一のファイルではなく、フォルダをドラッグしてください",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "このブラウザはディスクにファイルを書き込めません。フォルダは読み取り専用で開かれ、保存時には変更したファイルのダウンロードを提案します。すべての編集機能は Chrome、Edge、Arc で利用できます。",
+    "local editor · one file": "ローカルエディタ · 単一ファイル",
+    "Open a folder": "ノートの",
+    "of notes": "フォルダを開く",
+    "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "{ext} ファイルを含むフォルダを選択してください。データはどこにも送信されません。ファイルはお使いのディスク上で直接読み込み・保存されます。",
+    "Open folder": "フォルダを開く",
+    "or drag a folder here": "またはフォルダをここにドラッグ"
+  },
+  "dialog": {
+    "Note not found": "ノートが見つかりません",
+    "Create \"{name}\"?": "「{name}」を作成しますか？",
+    "Create": "作成",
+    "New note": "新規ノート",
+    "File name": "ファイル名",
+    "Untitled": "無題",
+    "New folder": "新規フォルダ",
+    "Folder name": "フォルダ名",
+    "Rename": "名前を変更",
+    "New name": "新しい名前",
+    "Delete the folder \"{name}\"? This cannot be undone.": "フォルダ「{name}」を削除しますか？この操作は取り消せません。",
+    "Delete the note \"{name}\"? This cannot be undone.": "ノート「{name}」を削除しますか？この操作は取り消せません。",
+    "Delete the file \"{name}\"? This cannot be undone.": "ファイル「{name}」を削除しますか？この操作は取り消せません。",
+    "Delete": "削除",
+    "Cancel": "キャンセル",
+    "Done": "完了"
+  },
+  "doc": {
+    "no such file: {path}": "ファイルがありません：{path}",
+    "Pick a note on the left, or create a new one.": "左側でノートを選択するか、新しいノートを作成してください。"
+  },
+  "errors": {
+    "The folder is open read-only": "フォルダは読み取り専用で開かれています",
+    "This browser cannot write files": "このブラウザはファイルを書き込めません",
+    "\"{name}\" already exists": "「{name}」はすでに存在します",
+    "File not found: {path}": "ファイルが見つかりません：{path}"
+  },
+  "palette": {
+    "Red": "赤",
+    "Orange": "オレンジ",
+    "Green": "緑",
+    "Blue": "青",
+    "Violet": "紫",
+    "Grey": "グレー",
+    "Text colour": "文字色",
+    "Background": "背景",
+    "Clear formatting": "書式をクリア"
+  },
+  "settings": {
+    "System": "システム",
+    "Centred column": "中央寄せ",
+    "Full width": "全幅",
+    "Reset zoom (⌘0)": "ズームをリセット (⌘0)",
+    "Zoom": "ズーム",
+    "Zoom out (⌘−)": "縮小 (⌘−)",
+    "Zoom in (⌘+)": "拡大 (⌘+)",
+    "Settings": "設定",
+    "Language": "言語",
+    "Theme": "テーマ",
+    "Text width": "テキストの幅",
+    "Show the note name as a title": "ノート名をタイトルとして表示",
+    "Light": "ライト",
+    "Dark": "ダーク"
+  },
+  "app": {
+    "Notes editor": "ノートエディタ"
+  },
+  "sidebar": {
+    "Notes": "ノート",
+    "Open another folder": "別のフォルダを開く",
+    "New note": "新規ノート",
+    "New folder": "新規フォルダ",
+    "Filter by name": "名前で絞り込み",
+    "Filter files": "ファイルを絞り込み",
+    "Expand all folders": "すべてのフォルダを展開",
+    "Collapse all folders": "すべてのフォルダを折りたたむ",
+    "File tree": "ファイルツリー",
+    "File panel width": "ファイルパネルの幅"
+  },
+  "toolbar": {
+    "Read": "閲覧",
+    "Edit": "編集",
+    "File panel (⌘\\)": "ファイルパネル (⌘\\)",
+    "Mode": "モード",
+    "Save (⌘S)": "保存 (⌘S)",
+    "Heading 1 (⌘⌥1)": "見出し 1 (⌘⌥1)",
+    "Heading 2 (⌘⌥2)": "見出し 2 (⌘⌥2)",
+    "Heading 3 (⌘⌥3)": "見出し 3 (⌘⌥3)",
+    "Plain text (⌘⌥0)": "本文 (⌘⌥0)",
+    "Bold (⌘B)": "太字 (⌘B)",
+    "Italic (⌘I)": "斜体 (⌘I)",
+    "Strikethrough": "取り消し線",
+    "Monospace (⌘⇧C)": "等幅 (⌘⇧C)",
+    "Highlight (⌘⇧H)": "ハイライト (⌘⇧H)",
+    "Text and background colour": "文字色と背景色",
+    "Link (⌘K)": "リンク (⌘K)",
+    "Link to a note (⌘⇧K)": "ノートへのリンク (⌘⇧K)",
+    "Bulleted list": "箇条書きリスト",
+    "Numbered list": "番号付きリスト",
+    "Task list": "タスクリスト",
+    "Quote": "引用",
+    "Code block": "コードブロック",
+    "Table": "表",
+    "Divider": "区切り線",
+    "More formatting": "その他の書式",
+    "Search (⌘F)": "検索 (⌘F)",
+    "Settings": "設定"
+  },
+  "find": {
+    "Find in note": "ノート内を検索",
+    "Find": "検索",
+    "Previous (⇧Enter)": "前へ (⇧Enter)",
+    "Next (Enter)": "次へ (Enter)",
+    "Close (Esc)": "閉じる (Esc)"
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "editor": {
+    "Block source text": "블록 원본 텍스트",
+    "Add a row": "행 추가",
+    "Add a column": "열 추가",
+    "Delete this empty row": "이 빈 행 삭제",
+    "Delete this empty column": "이 빈 열 삭제"
+  },
+  "tree": {
+    "Delete": "삭제",
+    "Nothing found": "검색 결과 없음",
+    "The folder is empty": "폴더가 비어 있습니다",
+    "New note": "새 노트",
+    "New folder": "새 폴더",
+    "Rename": "이름 변경",
+    "Copy path": "경로 복사"
+  },
+  "status": {
+    "{count} words": {
+      "other": "{count}단어"
+    },
+    "read-only": "읽기 전용",
+    "unsaved": "저장 안 됨",
+    "saved": "저장됨",
+    "{count} characters": {
+      "other": "{count}자"
+    }
+  },
+  "toast": {
+    "Path copied: {path}": "경로 복사됨: {path}",
+    "No .md files in this folder — create the first note": "이 폴더에 .md 파일이 없습니다 — 첫 노트를 만들어 보세요",
+    "No .md files in this folder": "이 폴더에 .md 파일이 없습니다",
+    "Read-only access: saving will offer to download the file": "읽기 전용 액세스: 저장하면 파일을 다운로드하도록 제안합니다",
+    "Not found: {target}": "찾을 수 없음: {target}",
+    "Note \"{target}\" not found": "\"{target}\" 노트를 찾을 수 없습니다",
+    "Could not read {path}": "{path}을(를) 읽을 수 없습니다",
+    "Could not save: {reason}": "저장할 수 없습니다: {reason}",
+    "The note was renamed, its images were not: {reason}": "노트 이름은 변경되었지만 이미지 이름은 변경되지 않았습니다: {reason}"
+  },
+  "gate": {
+    "Drag a folder, not a single file": "파일 하나가 아니라 폴더를 드래그하세요",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "이 브라우저는 디스크에 파일을 쓸 수 없습니다. 폴더는 읽기 전용으로 열리며, 저장하면 수정된 파일을 다운로드하도록 제안합니다. 전체 편집 기능은 Chrome, Edge, Arc에서 사용할 수 있습니다.",
+    "local editor · one file": "로컬 편집기 · 단일 파일",
+    "Open a folder": "노트가 담긴",
+    "of notes": "폴더 열기",
+    "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "{ext} 파일이 있는 폴더를 선택하세요. 어떤 데이터도 전송되지 않으며, 파일은 사용자의 디스크에서 직접 읽고 저장됩니다.",
+    "Open folder": "폴더 열기",
+    "or drag a folder here": "또는 폴더를 여기로 드래그하세요"
+  },
+  "dialog": {
+    "Note not found": "노트를 찾을 수 없음",
+    "Create \"{name}\"?": "\"{name}\"을(를) 만들까요?",
+    "Create": "만들기",
+    "New note": "새 노트",
+    "File name": "파일 이름",
+    "Untitled": "제목 없음",
+    "New folder": "새 폴더",
+    "Folder name": "폴더 이름",
+    "Rename": "이름 변경",
+    "New name": "새 이름",
+    "Delete the folder \"{name}\"? This cannot be undone.": "\"{name}\" 폴더를 삭제할까요? 이 작업은 되돌릴 수 없습니다.",
+    "Delete the note \"{name}\"? This cannot be undone.": "\"{name}\" 노트를 삭제할까요? 이 작업은 되돌릴 수 없습니다.",
+    "Delete the file \"{name}\"? This cannot be undone.": "\"{name}\" 파일을 삭제할까요? 이 작업은 되돌릴 수 없습니다.",
+    "Delete": "삭제",
+    "Cancel": "취소",
+    "Done": "완료"
+  },
+  "doc": {
+    "no such file: {path}": "파일 없음: {path}",
+    "Pick a note on the left, or create a new one.": "왼쪽에서 노트를 선택하거나 새 노트를 만드세요."
+  },
+  "errors": {
+    "The folder is open read-only": "폴더가 읽기 전용으로 열려 있습니다",
+    "This browser cannot write files": "이 브라우저는 파일을 쓸 수 없습니다",
+    "\"{name}\" already exists": "\"{name}\"이(가) 이미 있습니다",
+    "File not found: {path}": "파일을 찾을 수 없음: {path}"
+  },
+  "palette": {
+    "Red": "빨간색",
+    "Orange": "주황색",
+    "Green": "초록색",
+    "Blue": "파란색",
+    "Violet": "보라색",
+    "Grey": "회색",
+    "Text colour": "텍스트 색상",
+    "Background": "배경",
+    "Clear formatting": "서식 지우기"
+  },
+  "settings": {
+    "System": "시스템",
+    "Centred column": "가운데 열",
+    "Full width": "전체 너비",
+    "Reset zoom (⌘0)": "확대/축소 재설정 (⌘0)",
+    "Zoom": "확대/축소",
+    "Zoom out (⌘−)": "축소 (⌘−)",
+    "Zoom in (⌘+)": "확대 (⌘+)",
+    "Settings": "설정",
+    "Language": "언어",
+    "Theme": "테마",
+    "Text width": "텍스트 너비",
+    "Show the note name as a title": "노트 이름을 제목으로 표시",
+    "Light": "라이트",
+    "Dark": "다크"
+  },
+  "app": {
+    "Notes editor": "노트 편집기"
+  },
+  "sidebar": {
+    "Notes": "노트",
+    "Open another folder": "다른 폴더 열기",
+    "New note": "새 노트",
+    "New folder": "새 폴더",
+    "Filter by name": "이름으로 필터링",
+    "Filter files": "파일 필터링",
+    "Expand all folders": "모든 폴더 펼치기",
+    "Collapse all folders": "모든 폴더 접기",
+    "File tree": "파일 트리",
+    "File panel width": "파일 패널 너비"
+  },
+  "toolbar": {
+    "Read": "읽기",
+    "Edit": "편집",
+    "File panel (⌘\\)": "파일 패널 (⌘\\)",
+    "Mode": "모드",
+    "Save (⌘S)": "저장 (⌘S)",
+    "Heading 1 (⌘⌥1)": "제목 1 (⌘⌥1)",
+    "Heading 2 (⌘⌥2)": "제목 2 (⌘⌥2)",
+    "Heading 3 (⌘⌥3)": "제목 3 (⌘⌥3)",
+    "Plain text (⌘⌥0)": "일반 텍스트 (⌘⌥0)",
+    "Bold (⌘B)": "굵게 (⌘B)",
+    "Italic (⌘I)": "기울임꼴 (⌘I)",
+    "Strikethrough": "취소선",
+    "Monospace (⌘⇧C)": "고정폭 (⌘⇧C)",
+    "Highlight (⌘⇧H)": "강조 표시 (⌘⇧H)",
+    "Text and background colour": "텍스트 및 배경 색상",
+    "Link (⌘K)": "링크 (⌘K)",
+    "Link to a note (⌘⇧K)": "노트에 링크 (⌘⇧K)",
+    "Bulleted list": "글머리 기호 목록",
+    "Numbered list": "번호 매기기 목록",
+    "Task list": "작업 목록",
+    "Quote": "인용",
+    "Code block": "코드 블록",
+    "Table": "표",
+    "Divider": "구분선",
+    "More formatting": "서식 더 보기",
+    "Search (⌘F)": "검색 (⌘F)",
+    "Settings": "설정"
+  },
+  "find": {
+    "Find in note": "노트에서 찾기",
+    "Find": "찾기",
+    "Previous (⇧Enter)": "이전 (⇧Enter)",
+    "Next (Enter)": "다음 (Enter)",
+    "Close (Esc)": "닫기 (Esc)"
+  }
+}

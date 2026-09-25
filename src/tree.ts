@@ -1,6 +1,7 @@
 /** The folder tree in the left panel: navigation plus file and folder actions. */
 
 import { ASSETS_DIR, baseOf, dirOf, isNote, type TreeEntry } from './vault';
+import { t } from './i18n';
 import { menu, type MenuItem } from './ui';
 
 export interface TreeHost {
@@ -100,14 +101,14 @@ export class FileTree {
     }
   }
 
-  private render(): void {
+  render(): void {
     const visible = this.filter ? filterTree(this.entries, this.filter) : this.entries;
     this.root.replaceChildren(this.buildList(visible, 0));
     this.counter.textContent = String(countNotes(this.entries));
     if (visible.length === 0) {
       const empty = document.createElement('p');
       empty.className = 'tree-empty';
-      empty.textContent = this.filter ? 'Nothing found' : 'The folder is empty';
+      empty.textContent = this.filter ? t('tree', 'Nothing found') : t('tree', 'The folder is empty');
       this.root.append(empty);
     }
   }
@@ -122,7 +123,7 @@ export class FileTree {
       const row = document.createElement('div');
       row.className = `tree-item tree-item--${entry.kind}`;
       if (entry.path === this.active) row.classList.add('tree-item--active');
-      row.style.paddingLeft = `${8 + depth * 14}px`;
+      row.style.paddingInlineStart = `${8 + depth * 14}px`;
       row.dataset['path'] = entry.path;
       row.dataset['kind'] = entry.kind;
       row.title = entry.path;
@@ -167,14 +168,14 @@ export class FileTree {
     const dir = !entry ? '' : entry.kind === 'dir' ? entry.path : dirOf(entry.path);
 
     const items: MenuItem[] = [
-      { label: 'New note', action: () => this.host.onCreateFile(dir) },
-      { label: 'New folder', action: () => this.host.onCreateDir(dir) },
+      { label: t('tree', 'New note'), action: () => this.host.onCreateFile(dir) },
+      { label: t('tree', 'New folder'), action: () => this.host.onCreateDir(dir) },
     ];
     if (entry) {
       items.push(
-        { label: 'Rename', action: () => this.host.onRename(entry) },
-        { label: 'Copy path', action: () => this.host.onReveal(entry.path) },
-        { label: 'Delete', action: () => this.host.onDelete(entry), danger: true },
+        { label: t('tree', 'Rename'), action: () => this.host.onRename(entry) },
+        { label: t('tree', 'Copy path'), action: () => this.host.onReveal(entry.path) },
+        { label: t('tree', 'Delete'), action: () => this.host.onDelete(entry), danger: true },
       );
     }
     menu(event.clientX, event.clientY, items);

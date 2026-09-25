@@ -12,15 +12,15 @@
 <section id="gate" class="gate">
   <div class="gate-inner">
     <img class="gate-logo" src="__ICON__" alt="">
-    <p class="eyebrow">local editor · one file</p>
-    <h1>Open a folder<br><em>of notes</em></h1>
-    <p class="gate-copy">
-      Pick a folder with <code>.md</code> files. Nothing is sent anywhere:
+    <p class="eyebrow" data-i18n="gate">local editor · one file</p>
+    <h1><span data-i18n="gate">Open a folder</span><br><em data-i18n="gate">of notes</em></h1>
+    <p class="gate-copy" data-i18n="gate">
+      Pick a folder with <code data-slot="ext">.md</code> files. Nothing is sent anywhere:
       files are read and saved straight on your own disk.
     </p>
     <p id="browser-note" class="gate-note" hidden></p>
-    <button id="open-folder" class="button button--primary" type="button">Open folder <span>&rarr;</span></button>
-    <p class="gate-hint">or drag a folder here</p>
+    <button id="open-folder" class="button button--primary" type="button"><span data-i18n="gate">Open folder</span> <span class="arrow">&rarr;</span></button>
+    <p class="gate-hint" data-i18n="gate">or drag a folder here</p>
     <input id="folder-picker" type="file" webkitdirectory multiple hidden>
     <p id="gate-error" class="gate-error" aria-live="polite"></p>
   </div>
@@ -29,119 +29,109 @@
 <div id="app" class="app" hidden>
   <aside class="sidebar">
     <div class="sidebar-top">
-      <button id="vault-name" class="vault" type="button" title="Open another folder">
+      <button id="vault-name" class="vault" type="button" title="Open another folder" data-i18n-attr="sidebar">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
         <span id="vault-label">Notes</span>
       </button>
       <div class="sidebar-actions">
-        <button id="new-note" class="icon-button" type="button" title="New note">
+        <button id="new-note" class="icon-button" type="button" title="New note" data-i18n-attr="sidebar">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>
         </button>
-        <button id="new-folder" class="icon-button" type="button" title="New folder">
+        <button id="new-folder" class="icon-button" type="button" title="New folder" data-i18n-attr="sidebar">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 11v6M9 14h6"/></svg>
         </button>
       </div>
     </div>
     <div class="sidebar-search">
-      <input id="tree-filter" type="search" placeholder="Filter by name" aria-label="Filter files" autocomplete="off">
+      <input id="tree-filter" type="search" placeholder="Filter by name" aria-label="Filter files" data-i18n-attr="sidebar" autocomplete="off">
     </div>
     <div class="sidebar-heading">
-      <span>Notes</span><span id="note-count" class="count"></span>
+      <span data-i18n="sidebar">Notes</span><span id="note-count" class="count"></span>
       <div class="tree-tools">
-        <button id="expand-all" class="tree-tool" type="button" title="Expand all folders">
+        <button id="expand-all" class="tree-tool" type="button" title="Expand all folders" data-i18n-attr="sidebar">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 9 4-4 4 4M8 15l4 4 4-4"/></svg>
         </button>
-        <button id="collapse-all" class="tree-tool" type="button" title="Collapse all folders">
+        <button id="collapse-all" class="tree-tool" type="button" title="Collapse all folders" data-i18n-attr="sidebar">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 4 4 4-4M8 19l4-4 4 4"/></svg>
         </button>
       </div>
     </div>
-    <nav id="tree" class="tree" aria-label="File tree"></nav>
+    <nav id="tree" class="tree" aria-label="File tree" data-i18n-attr="sidebar"></nav>
   </aside>
 
   <div id="sidebar-resizer" class="resizer" role="separator" aria-orientation="vertical"
-       aria-label="File panel width" tabindex="0"></div>
+       aria-label="File panel width" data-i18n-attr="sidebar" tabindex="0"></div>
 
   <main class="workspace">
     <header id="toolbar" class="toolbar">
       <div class="toolbar-group">
-        <button id="toggle-sidebar" class="icon-button" type="button" title="File panel (⌘\)">
+        <button id="toggle-sidebar" class="icon-button" type="button" title="File panel (⌘\)" data-i18n-attr="toolbar">
           <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/></svg>
         </button>
-        <div class="segmented" role="group" aria-label="Mode">
-          <button class="seg" type="button" data-mode="read">Read</button>
-          <button class="seg" type="button" data-mode="edit">Edit</button>
+        <div class="segmented" role="group" aria-label="Mode" data-i18n-attr="toolbar">
+          <button class="seg" type="button" data-mode="read" data-i18n="toolbar">Read</button>
+          <button class="seg" type="button" data-mode="edit" data-i18n="toolbar">Edit</button>
         </div>
-        <button id="save" class="icon-button" type="button" title="Save (⌘S)">
+        <button id="save" class="icon-button" type="button" title="Save (⌘S)" data-i18n-attr="toolbar">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h11l4 4v12a0 0 0 0 1 0 0H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/><path d="M8 4v5h7M8 20v-6h8v6"/></svg>
         </button>
       </div>
 
       <div id="format" class="toolbar-group toolbar-group--format">
-        <button class="tool" type="button" data-heading="1" title="Heading 1 (⌘⌥1)">H1</button>
-        <button class="tool" type="button" data-heading="2" title="Heading 2 (⌘⌥2)">H2</button>
-        <button class="tool" type="button" data-heading="3" title="Heading 3 (⌘⌥3)">H3</button>
-        <button class="tool" type="button" data-heading="0" title="Plain text (⌘⌥0)">¶</button>
+        <button class="tool" type="button" data-heading="1" title="Heading 1 (⌘⌥1)" data-i18n-attr="toolbar">H1</button>
+        <button class="tool" type="button" data-heading="2" title="Heading 2 (⌘⌥2)" data-i18n-attr="toolbar">H2</button>
+        <button class="tool" type="button" data-heading="3" title="Heading 3 (⌘⌥3)" data-i18n-attr="toolbar">H3</button>
+        <button class="tool" type="button" data-heading="0" title="Plain text (⌘⌥0)" data-i18n-attr="toolbar">¶</button>
         <span class="tool-sep"></span>
-        <button class="tool tool--bold" type="button" data-action="bold" title="Bold (⌘B)">B</button>
-        <button class="tool tool--italic" type="button" data-action="italic" title="Italic (⌘I)">I</button>
-        <button class="tool tool--strike" type="button" data-action="strike" title="Strikethrough">S</button>
-        <button class="tool tool--mono" type="button" data-action="code" title="Monospace (⌘⇧C)">&lt;&gt;</button>
-        <button class="tool tool--mark" type="button" data-action="mark" title="Highlight (⌘⇧H)">H</button>
-        <button id="color" class="tool tool--color" type="button" title="Text and background colour" aria-haspopup="true">
+        <button class="tool tool--bold" type="button" data-action="bold" title="Bold (⌘B)" data-i18n-attr="toolbar">B</button>
+        <button class="tool tool--italic" type="button" data-action="italic" title="Italic (⌘I)" data-i18n-attr="toolbar">I</button>
+        <button class="tool tool--strike" type="button" data-action="strike" title="Strikethrough" data-i18n-attr="toolbar">S</button>
+        <button class="tool tool--mono" type="button" data-action="code" title="Monospace (⌘⇧C)" data-i18n-attr="toolbar">&lt;&gt;</button>
+        <button class="tool tool--mark" type="button" data-action="mark" title="Highlight (⌘⇧H)" data-i18n-attr="toolbar">H</button>
+        <button id="color" class="tool tool--color" type="button" title="Text and background colour" data-i18n-attr="toolbar" aria-haspopup="true">
           <span class="color-swatch"></span>A
         </button>
         <span class="tool-sep"></span>
-        <button class="tool" type="button" data-action="link" title="Link (⌘K)">⧉</button>
-        <button class="tool" type="button" data-action="wikilink" title="Link to a note ⌘⇧K">[[ ]]</button>
+        <button class="tool" type="button" data-action="link" title="Link (⌘K)" data-i18n-attr="toolbar">⧉</button>
+        <button class="tool" type="button" data-action="wikilink" title="Link to a note (⌘⇧K)" data-i18n-attr="toolbar">[[ ]]</button>
         <span class="tool-sep"></span>
-        <button class="tool" type="button" data-action="bullet" title="Bulleted list">•—</button>
-        <button class="tool" type="button" data-action="ordered" title="Numbered list">1.</button>
-        <button class="tool" type="button" data-action="task" title="Task list">☑</button>
-        <button class="tool" type="button" data-action="quote" title="Quote">❝</button>
-        <button class="tool" type="button" data-action="codeblock" title="Code block">▤</button>
-        <button class="tool" type="button" data-action="table" title="Table">⊞</button>
-        <button class="tool" type="button" data-action="rule" title="Divider">—</button>
+        <button class="tool" type="button" data-action="bullet" title="Bulleted list" data-i18n-attr="toolbar">•—</button>
+        <button class="tool" type="button" data-action="ordered" title="Numbered list" data-i18n-attr="toolbar">1.</button>
+        <button class="tool" type="button" data-action="task" title="Task list" data-i18n-attr="toolbar">☑</button>
+        <button class="tool" type="button" data-action="quote" title="Quote" data-i18n-attr="toolbar">❝</button>
+        <button class="tool" type="button" data-action="codeblock" title="Code block" data-i18n-attr="toolbar">▤</button>
+        <button class="tool" type="button" data-action="table" title="Table" data-i18n-attr="toolbar">⊞</button>
+        <button class="tool" type="button" data-action="rule" title="Divider" data-i18n-attr="toolbar">—</button>
       </div>
-      <button id="format-more" class="tool tool--more" type="button" title="More formatting"
+      <button id="format-more" class="tool tool--more" type="button" title="More formatting" data-i18n-attr="toolbar"
               aria-haspopup="true" aria-expanded="false" hidden>»</button>
 
       <div class="toolbar-group toolbar-group--right">
-        <button id="find" class="icon-button" type="button" title="Search (⌘F)">
+        <button id="find" class="icon-button" type="button" title="Search (⌘F)" data-i18n-attr="toolbar">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
         </button>
-        <button id="toggle-title" class="icon-button" type="button" title="Note title: shown" aria-pressed="true">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14M12 5v9M6 19h12"/></svg>
-        </button>
-        <button id="full-width" class="icon-button" type="button" title="Text: centred column" aria-pressed="false">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5v14M21 5v14M7.5 12h9M10 9.5 7.5 12l2.5 2.5M14 9.5l2.5 2.5-2.5 2.5"/></svg>
-        </button>
-        <div class="zoom" role="group" aria-label="Zoom">
-          <button id="zoom-out" class="icon-button" type="button" title="Zoom out (⌘−)">−</button>
-          <button id="zoom-reset" class="zoom-value" type="button" title="Reset zoom (⌘0)">100%</button>
-          <button id="zoom-in" class="icon-button" type="button" title="Zoom in (⌘+)">+</button>
-        </div>
-        <button id="theme" class="icon-button" type="button" title="Theme">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/></svg>
+        <button id="settings" class="icon-button" type="button" title="Settings" data-i18n-attr="toolbar"
+                aria-haspopup="true" aria-expanded="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
         </button>
       </div>
     </header>
 
     <div id="findbar" class="findbar" hidden>
-      <input id="find-input" type="search" placeholder="Find in note" aria-label="Find" autocomplete="off">
+      <input id="find-input" type="search" placeholder="Find in note" aria-label="Find" data-i18n-attr="find" autocomplete="off">
       <span id="find-count" class="find-count">0 / 0</span>
-      <button id="find-prev" class="icon-button" type="button" title="Previous (⇧Enter)">↑</button>
-      <button id="find-next" class="icon-button" type="button" title="Next (Enter)">↓</button>
+      <button id="find-prev" class="icon-button" type="button" title="Previous (⇧Enter)" data-i18n-attr="find">↑</button>
+      <button id="find-next" class="icon-button" type="button" title="Next (Enter)" data-i18n-attr="find">↓</button>
       <label class="find-case"><input id="find-case" type="checkbox"> Aa</label>
-      <button id="find-close" class="icon-button" type="button" title="Close (Esc)">✕</button>
+      <button id="find-close" class="icon-button" type="button" title="Close (Esc)" data-i18n-attr="find">✕</button>
     </div>
 
-    <div id="scroller" class="scroller" tabindex="0">
+    <div id="scroller" class="scroller" dir="ltr" tabindex="0">
       <h1 id="inline-title" class="inline-title" hidden></h1>
       <div id="doc" class="doc"></div>
       <figure id="viewer" class="viewer" hidden></figure>
       <div id="placeholder" class="placeholder">
-        <p>Pick a note on the left, or create a new one.</p>
+        <p data-i18n="doc">Pick a note on the left, or create a new one.</p>
       </div>
     </div>
 
@@ -155,7 +145,7 @@
 </div>
 
 <div id="palette" class="palette" hidden></div>
-<div id="format-menu" class="format-menu" role="group" aria-label="More formatting" hidden></div>
+<div id="format-menu" class="format-menu" role="group" aria-label="More formatting" data-i18n-attr="toolbar" hidden></div>
 
 <script>/*__APP__*/</script>
 </body>

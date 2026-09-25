@@ -1,0 +1,156 @@
+{
+  "editor": {
+    "Block source text": "Teks sumber blok",
+    "Add a row": "Tambah baris",
+    "Add a column": "Tambah kolom",
+    "Delete this empty row": "Hapus baris kosong ini",
+    "Delete this empty column": "Hapus kolom kosong ini"
+  },
+  "tree": {
+    "Delete": "Hapus",
+    "Nothing found": "Tidak ada yang ditemukan",
+    "The folder is empty": "Folder ini kosong",
+    "New note": "Catatan baru",
+    "New folder": "Folder baru",
+    "Rename": "Ganti nama",
+    "Copy path": "Salin jalur"
+  },
+  "status": {
+    "{count} words": {
+      "other": "{count} kata"
+    },
+    "read-only": "hanya-baca",
+    "unsaved": "belum disimpan",
+    "saved": "tersimpan",
+    "{count} characters": {
+      "other": "{count} karakter"
+    }
+  },
+  "toast": {
+    "Path copied: {path}": "Jalur disalin: {path}",
+    "No .md files in this folder — create the first note": "Tidak ada file .md di folder ini — buat catatan pertama",
+    "No .md files in this folder": "Tidak ada file .md di folder ini",
+    "Read-only access: saving will offer to download the file": "Akses hanya-baca: saat menyimpan, file akan ditawarkan untuk diunduh",
+    "Not found: {target}": "Tidak ditemukan: {target}",
+    "Note \"{target}\" not found": "Catatan \"{target}\" tidak ditemukan",
+    "Could not read {path}": "Tidak dapat membaca {path}",
+    "Could not save: {reason}": "Tidak dapat menyimpan: {reason}",
+    "The note was renamed, its images were not: {reason}": "Catatan sudah diganti namanya, tetapi gambarnya tidak: {reason}"
+  },
+  "gate": {
+    "Drag a folder, not a single file": "Seret folder, bukan satu file",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "Browser ini tidak dapat menulis file ke disk: folder akan dibuka dalam mode hanya-baca, dan saat menyimpan, file yang diubah akan ditawarkan untuk diunduh. Pengeditan penuh tersedia di Chrome, Edge, dan Arc.",
+    "local editor · one file": "editor lokal · satu file",
+    "Open a folder": "Buka folder",
+    "of notes": "catatan",
+    "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "Pilih folder berisi file {ext}. Tidak ada yang dikirim ke mana pun: file dibaca dan disimpan langsung di disk Anda sendiri.",
+    "Open folder": "Buka folder",
+    "or drag a folder here": "atau seret folder ke sini"
+  },
+  "dialog": {
+    "Note not found": "Catatan tidak ditemukan",
+    "Create \"{name}\"?": "Buat \"{name}\"?",
+    "Create": "Buat",
+    "New note": "Catatan baru",
+    "File name": "Nama file",
+    "Untitled": "Tanpa judul",
+    "New folder": "Folder baru",
+    "Folder name": "Nama folder",
+    "Rename": "Ganti nama",
+    "New name": "Nama baru",
+    "Delete the folder \"{name}\"? This cannot be undone.": "Hapus folder \"{name}\"? Tindakan ini tidak dapat dibatalkan.",
+    "Delete the note \"{name}\"? This cannot be undone.": "Hapus catatan \"{name}\"? Tindakan ini tidak dapat dibatalkan.",
+    "Delete the file \"{name}\"? This cannot be undone.": "Hapus file \"{name}\"? Tindakan ini tidak dapat dibatalkan.",
+    "Delete": "Hapus",
+    "Cancel": "Batal",
+    "Done": "Selesai"
+  },
+  "doc": {
+    "no such file: {path}": "file tidak ada: {path}",
+    "Pick a note on the left, or create a new one.": "Pilih catatan di sebelah kiri, atau buat yang baru."
+  },
+  "errors": {
+    "The folder is open read-only": "Folder dibuka dalam mode hanya-baca",
+    "This browser cannot write files": "Browser ini tidak dapat menulis file",
+    "\"{name}\" already exists": "\"{name}\" sudah ada",
+    "File not found: {path}": "File tidak ditemukan: {path}"
+  },
+  "palette": {
+    "Red": "Merah",
+    "Orange": "Oranye",
+    "Green": "Hijau",
+    "Blue": "Biru",
+    "Violet": "Ungu",
+    "Grey": "Abu-abu",
+    "Text colour": "Warna teks",
+    "Background": "Latar belakang",
+    "Clear formatting": "Hapus format"
+  },
+  "settings": {
+    "System": "Sistem",
+    "Centred column": "Kolom tengah",
+    "Full width": "Lebar penuh",
+    "Reset zoom (⌘0)": "Atur ulang zoom (⌘0)",
+    "Zoom": "Zoom",
+    "Zoom out (⌘−)": "Perkecil (⌘−)",
+    "Zoom in (⌘+)": "Perbesar (⌘+)",
+    "Settings": "Pengaturan",
+    "Language": "Bahasa",
+    "Theme": "Tema",
+    "Text width": "Lebar teks",
+    "Show the note name as a title": "Tampilkan nama catatan sebagai judul",
+    "Light": "Terang",
+    "Dark": "Gelap"
+  },
+  "app": {
+    "Notes editor": "Editor catatan"
+  },
+  "sidebar": {
+    "Notes": "Catatan",
+    "Open another folder": "Buka folder lain",
+    "New note": "Catatan baru",
+    "New folder": "Folder baru",
+    "Filter by name": "Filter menurut nama",
+    "Filter files": "Filter file",
+    "Expand all folders": "Bentangkan semua folder",
+    "Collapse all folders": "Ciutkan semua folder",
+    "File tree": "Pohon file",
+    "File panel width": "Lebar panel file"
+  },
+  "toolbar": {
+    "Read": "Baca",
+    "Edit": "Edit",
+    "File panel (⌘\\)": "Panel file (⌘\\)",
+    "Mode": "Mode",
+    "Save (⌘S)": "Simpan (⌘S)",
+    "Heading 1 (⌘⌥1)": "Judul 1 (⌘⌥1)",
+    "Heading 2 (⌘⌥2)": "Judul 2 (⌘⌥2)",
+    "Heading 3 (⌘⌥3)": "Judul 3 (⌘⌥3)",
+    "Plain text (⌘⌥0)": "Teks biasa (⌘⌥0)",
+    "Bold (⌘B)": "Tebal (⌘B)",
+    "Italic (⌘I)": "Miring (⌘I)",
+    "Strikethrough": "Coret",
+    "Monospace (⌘⇧C)": "Monospace (⌘⇧C)",
+    "Highlight (⌘⇧H)": "Sorot (⌘⇧H)",
+    "Text and background colour": "Warna teks dan latar belakang",
+    "Link (⌘K)": "Tautan (⌘K)",
+    "Link to a note (⌘⇧K)": "Tautan ke catatan (⌘⇧K)",
+    "Bulleted list": "Daftar berpoin",
+    "Numbered list": "Daftar bernomor",
+    "Task list": "Daftar tugas",
+    "Quote": "Kutipan",
+    "Code block": "Blok kode",
+    "Table": "Tabel",
+    "Divider": "Pemisah",
+    "More formatting": "Format lainnya",
+    "Search (⌘F)": "Cari (⌘F)",
+    "Settings": "Pengaturan"
+  },
+  "find": {
+    "Find in note": "Cari di catatan",
+    "Find": "Cari",
+    "Previous (⇧Enter)": "Sebelumnya (⇧Enter)",
+    "Next (Enter)": "Berikutnya (Enter)",
+    "Close (Esc)": "Tutup (Esc)"
+  }
+}

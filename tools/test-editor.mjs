@@ -370,10 +370,43 @@ await scenario('Intro\n', async (b) => {
   await b.type('s');
   await b.press('Escape');
   eq('a different first heading brings it back', await title(b), 'Note');
-  await b.click('#toggle-title', 'start');
-  eq('the toolbar button hides the title', await title(b), null);
-  await b.click('#toggle-title', 'start');
+  await b.click('#settings', 'start');
+  await b.click('#setting-inline-title', 'start');
+  eq('the settings checkbox hides the title', await title(b), null);
+  await b.click('#setting-inline-title', 'start');
   eq('and shows it again', await title(b), 'Note');
+  await b.press('Escape');
+  eq('Escape closes the settings', await b.evaluate(`document.querySelector('.popover') === null`), true);
+});
+
+await scenario('Text\n', async (b) => {
+  await b.click('#settings', 'start');
+  await b.evaluate(`(() => {
+    const select = document.querySelector('.popover .settings-select');
+    select.value = 'ru';
+    select.dispatchEvent(new Event('change'));
+  })()`);
+  eq('the interface switches language', await b.evaluate(`[
+    document.documentElement.lang,
+    document.querySelector('.seg[data-mode=read]').textContent,
+    document.getElementById('find').title,
+    document.querySelector('.popover .settings-title')?.textContent,
+  ]`), ['ru', 'Чтение', 'Поиск (⌘F)', 'Настройки']);
+  await b.evaluate(`(() => {
+    const select = document.querySelector('.popover .settings-select');
+    select.value = 'ar';
+    select.dispatchEvent(new Event('change'));
+  })()`);
+  eq('arabic mirrors the chrome, not the note', await b.evaluate(`[
+    document.documentElement.dir,
+    getComputedStyle(document.getElementById('doc')).direction,
+  ]`), ['rtl', 'ltr']);
+  await b.evaluate(`(() => {
+    const select = document.querySelector('.popover .settings-select');
+    select.value = 'en';
+    select.dispatchEvent(new Event('change'));
+  })()`);
+  eq('and back to english', await b.evaluate(`[document.documentElement.dir, document.querySelector('.seg[data-mode=edit]').textContent]`), ['ltr', 'Edit']);
 });
 
 await scenario('---\ntags: [a]\n---\n\n# **Note**\n\nText\n', async (b) => {

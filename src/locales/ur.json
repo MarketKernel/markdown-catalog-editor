@@ -1,0 +1,158 @@
+{
+  "editor": {
+    "Block source text": "بلاک کا ماخذ متن",
+    "Add a row": "قطار شامل کریں",
+    "Add a column": "کالم شامل کریں",
+    "Delete this empty row": "یہ خالی قطار حذف کریں",
+    "Delete this empty column": "یہ خالی کالم حذف کریں"
+  },
+  "tree": {
+    "Delete": "حذف کریں",
+    "Nothing found": "کچھ نہیں ملا",
+    "The folder is empty": "فولڈر خالی ہے",
+    "New note": "نیا نوٹ",
+    "New folder": "نیا فولڈر",
+    "Rename": "نام تبدیل کریں",
+    "Copy path": "پاتھ کاپی کریں"
+  },
+  "status": {
+    "{count} words": {
+      "one": "{count} لفظ",
+      "other": "{count} الفاظ"
+    },
+    "read-only": "صرف پڑھنے کے لیے",
+    "unsaved": "غیر محفوظ",
+    "saved": "محفوظ",
+    "{count} characters": {
+      "one": "{count} حرف",
+      "other": "{count} حروف"
+    }
+  },
+  "toast": {
+    "Path copied: {path}": "پاتھ کاپی ہو گیا: {path}",
+    "No .md files in this folder — create the first note": "اس فولڈر میں کوئی .md فائل نہیں — پہلا نوٹ بنائیں",
+    "No .md files in this folder": "اس فولڈر میں کوئی .md فائل نہیں",
+    "Read-only access: saving will offer to download the file": "صرف پڑھنے کی رسائی: محفوظ کرتے وقت فائل ڈاؤن لوڈ کرنے کی پیشکش کی جائے گی",
+    "Not found: {target}": "نہیں ملا: {target}",
+    "Note \"{target}\" not found": "نوٹ \"{target}\" نہیں ملا",
+    "Could not read {path}": "{path} پڑھا نہیں جا سکا",
+    "Could not save: {reason}": "محفوظ نہیں ہو سکا: {reason}",
+    "The note was renamed, its images were not: {reason}": "نوٹ کا نام تبدیل ہو گیا، لیکن اس کی تصاویر کا نہیں: {reason}"
+  },
+  "gate": {
+    "Drag a folder, not a single file": "کوئی فولڈر گھسیٹیں، اکیلی فائل نہیں",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "یہ براؤزر ڈسک پر فائلیں نہیں لکھ سکتا: فولڈر صرف پڑھنے کے لیے کھلے گا، اور محفوظ کرتے وقت ترمیم شدہ فائل ڈاؤن لوڈ کرنے کی پیشکش کی جائے گی۔ مکمل ترمیم Chrome، Edge اور Arc میں کام کرتی ہے۔",
+    "local editor · one file": "مقامی ایڈیٹر · ایک فائل",
+    "Open a folder": "اپنے نوٹس کا",
+    "of notes": "فولڈر کھولیں",
+    "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "{ext} فائلوں والا فولڈر منتخب کریں۔ کچھ بھی کہیں نہیں بھیجا جاتا: فائلیں براہ راست آپ کی اپنی ڈسک پر پڑھی اور محفوظ کی جاتی ہیں۔",
+    "Open folder": "فولڈر کھولیں",
+    "or drag a folder here": "یا کوئی فولڈر یہاں گھسیٹیں"
+  },
+  "dialog": {
+    "Note not found": "نوٹ نہیں ملا",
+    "Create \"{name}\"?": "\"{name}\" بنائیں؟",
+    "Create": "بنائیں",
+    "New note": "نیا نوٹ",
+    "File name": "فائل کا نام",
+    "Untitled": "بے عنوان",
+    "New folder": "نیا فولڈر",
+    "Folder name": "فولڈر کا نام",
+    "Rename": "نام تبدیل کریں",
+    "New name": "نیا نام",
+    "Delete the folder \"{name}\"? This cannot be undone.": "فولڈر \"{name}\" حذف کریں؟ اسے واپس نہیں کیا جا سکتا۔",
+    "Delete the note \"{name}\"? This cannot be undone.": "نوٹ \"{name}\" حذف کریں؟ اسے واپس نہیں کیا جا سکتا۔",
+    "Delete the file \"{name}\"? This cannot be undone.": "فائل \"{name}\" حذف کریں؟ اسے واپس نہیں کیا جا سکتا۔",
+    "Delete": "حذف کریں",
+    "Cancel": "منسوخ کریں",
+    "Done": "ہو گیا"
+  },
+  "doc": {
+    "no such file: {path}": "ایسی کوئی فائل نہیں: {path}",
+    "Pick a note on the left, or create a new one.": "سائیڈبار سے کوئی نوٹ منتخب کریں، یا نیا بنائیں۔"
+  },
+  "errors": {
+    "The folder is open read-only": "فولڈر صرف پڑھنے کے لیے کھلا ہے",
+    "This browser cannot write files": "یہ براؤزر فائلیں نہیں لکھ سکتا",
+    "\"{name}\" already exists": "\"{name}\" پہلے سے موجود ہے",
+    "File not found: {path}": "فائل نہیں ملی: {path}"
+  },
+  "palette": {
+    "Red": "سرخ",
+    "Orange": "نارنجی",
+    "Green": "سبز",
+    "Blue": "نیلا",
+    "Violet": "بنفشی",
+    "Grey": "سرمئی",
+    "Text colour": "متن کا رنگ",
+    "Background": "پس منظر",
+    "Clear formatting": "فارمیٹنگ صاف کریں"
+  },
+  "settings": {
+    "System": "سسٹم",
+    "Centred column": "درمیانی کالم",
+    "Full width": "پوری چوڑائی",
+    "Reset zoom (⌘0)": "زوم ری سیٹ کریں (⌘0)",
+    "Zoom": "زوم",
+    "Zoom out (⌘−)": "زوم آؤٹ (⌘−)",
+    "Zoom in (⌘+)": "زوم اِن (⌘+)",
+    "Settings": "ترتیبات",
+    "Language": "زبان",
+    "Theme": "تھیم",
+    "Text width": "متن کی چوڑائی",
+    "Show the note name as a title": "نوٹ کا نام عنوان کے طور پر دکھائیں",
+    "Light": "روشن",
+    "Dark": "تاریک"
+  },
+  "app": {
+    "Notes editor": "نوٹس ایڈیٹر"
+  },
+  "sidebar": {
+    "Notes": "نوٹس",
+    "Open another folder": "دوسرا فولڈر کھولیں",
+    "New note": "نیا نوٹ",
+    "New folder": "نیا فولڈر",
+    "Filter by name": "نام سے فلٹر کریں",
+    "Filter files": "فائلیں فلٹر کریں",
+    "Expand all folders": "تمام فولڈر پھیلائیں",
+    "Collapse all folders": "تمام فولڈر سمیٹیں",
+    "File tree": "فائل ٹری",
+    "File panel width": "فائل پینل کی چوڑائی"
+  },
+  "toolbar": {
+    "Read": "پڑھیں",
+    "Edit": "ترمیم کریں",
+    "File panel (⌘\\)": "فائل پینل (⌘\\)",
+    "Mode": "موڈ",
+    "Save (⌘S)": "محفوظ کریں (⌘S)",
+    "Heading 1 (⌘⌥1)": "سرخی 1 (⌘⌥1)",
+    "Heading 2 (⌘⌥2)": "سرخی 2 (⌘⌥2)",
+    "Heading 3 (⌘⌥3)": "سرخی 3 (⌘⌥3)",
+    "Plain text (⌘⌥0)": "سادہ متن (⌘⌥0)",
+    "Bold (⌘B)": "بولڈ (⌘B)",
+    "Italic (⌘I)": "ترچھا (⌘I)",
+    "Strikethrough": "کٹا ہوا متن",
+    "Monospace (⌘⇧C)": "مونو اسپیس (⌘⇧C)",
+    "Highlight (⌘⇧H)": "نمایاں کریں (⌘⇧H)",
+    "Text and background colour": "متن اور پس منظر کا رنگ",
+    "Link (⌘K)": "لنک (⌘K)",
+    "Link to a note (⌘⇧K)": "نوٹ کا لنک (⌘⇧K)",
+    "Bulleted list": "بلٹ فہرست",
+    "Numbered list": "نمبر والی فہرست",
+    "Task list": "کاموں کی فہرست",
+    "Quote": "اقتباس",
+    "Code block": "کوڈ بلاک",
+    "Table": "جدول",
+    "Divider": "فاصل لکیر",
+    "More formatting": "مزید فارمیٹنگ",
+    "Search (⌘F)": "تلاش (⌘F)",
+    "Settings": "ترتیبات"
+  },
+  "find": {
+    "Find in note": "نوٹ میں تلاش کریں",
+    "Find": "تلاش کریں",
+    "Previous (⇧Enter)": "پچھلا (⇧Enter)",
+    "Next (Enter)": "اگلا (Enter)",
+    "Close (Esc)": "بند کریں (Esc)"
+  }
+}

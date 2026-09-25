@@ -1,0 +1,158 @@
+{
+  "editor": {
+    "Block source text": "Blok kaynak metni",
+    "Add a row": "Satır ekle",
+    "Add a column": "Sütun ekle",
+    "Delete this empty row": "Bu boş satırı sil",
+    "Delete this empty column": "Bu boş sütunu sil"
+  },
+  "tree": {
+    "Delete": "Sil",
+    "Nothing found": "Hiçbir şey bulunamadı",
+    "The folder is empty": "Klasör boş",
+    "New note": "Yeni not",
+    "New folder": "Yeni klasör",
+    "Rename": "Yeniden adlandır",
+    "Copy path": "Yolu kopyala"
+  },
+  "status": {
+    "{count} words": {
+      "one": "{count} kelime",
+      "other": "{count} kelime"
+    },
+    "read-only": "salt okunur",
+    "unsaved": "kaydedilmedi",
+    "saved": "kaydedildi",
+    "{count} characters": {
+      "one": "{count} karakter",
+      "other": "{count} karakter"
+    }
+  },
+  "toast": {
+    "Path copied: {path}": "Yol kopyalandı: {path}",
+    "No .md files in this folder — create the first note": "Bu klasörde .md dosyası yok — ilk notu oluşturun",
+    "No .md files in this folder": "Bu klasörde .md dosyası yok",
+    "Read-only access: saving will offer to download the file": "Salt okunur erişim: kaydederken dosyayı indirmeniz önerilecek",
+    "Not found: {target}": "Bulunamadı: {target}",
+    "Note \"{target}\" not found": "“{target}” notu bulunamadı",
+    "Could not read {path}": "{path} okunamadı",
+    "Could not save: {reason}": "Kaydedilemedi: {reason}",
+    "The note was renamed, its images were not: {reason}": "Notun adı değiştirildi, ancak görsellerininki değiştirilemedi: {reason}"
+  },
+  "gate": {
+    "Drag a folder, not a single file": "Tek bir dosya değil, bir klasör sürükleyin",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "Bu tarayıcı diske dosya yazamaz: klasör salt okunur olarak açılacak ve kaydederken değiştirilen dosyayı indirmeniz önerilecek. Tam düzenleme Chrome, Edge ve Arc’ta çalışır.",
+    "local editor · one file": "yerel düzenleyici · tek dosya",
+    "Open a folder": "Not klasörünüzü",
+    "of notes": "açın",
+    "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "{ext} dosyaları içeren bir klasör seçin. Hiçbir şey hiçbir yere gönderilmez: dosyalar doğrudan kendi diskinizde okunur ve kaydedilir.",
+    "Open folder": "Klasör aç",
+    "or drag a folder here": "veya bir klasörü buraya sürükleyin"
+  },
+  "dialog": {
+    "Note not found": "Not bulunamadı",
+    "Create \"{name}\"?": "“{name}” oluşturulsun mu?",
+    "Create": "Oluştur",
+    "New note": "Yeni not",
+    "File name": "Dosya adı",
+    "Untitled": "Adsız",
+    "New folder": "Yeni klasör",
+    "Folder name": "Klasör adı",
+    "Rename": "Yeniden adlandır",
+    "New name": "Yeni ad",
+    "Delete the folder \"{name}\"? This cannot be undone.": "“{name}” klasörü silinsin mi? Bu işlem geri alınamaz.",
+    "Delete the note \"{name}\"? This cannot be undone.": "“{name}” notu silinsin mi? Bu işlem geri alınamaz.",
+    "Delete the file \"{name}\"? This cannot be undone.": "“{name}” dosyası silinsin mi? Bu işlem geri alınamaz.",
+    "Delete": "Sil",
+    "Cancel": "İptal",
+    "Done": "Bitti"
+  },
+  "doc": {
+    "no such file: {path}": "böyle bir dosya yok: {path}",
+    "Pick a note on the left, or create a new one.": "Soldan bir not seçin veya yeni bir not oluşturun."
+  },
+  "errors": {
+    "The folder is open read-only": "Klasör salt okunur olarak açık",
+    "This browser cannot write files": "Bu tarayıcı dosya yazamaz",
+    "\"{name}\" already exists": "“{name}” zaten var",
+    "File not found: {path}": "Dosya bulunamadı: {path}"
+  },
+  "palette": {
+    "Red": "Kırmızı",
+    "Orange": "Turuncu",
+    "Green": "Yeşil",
+    "Blue": "Mavi",
+    "Violet": "Mor",
+    "Grey": "Gri",
+    "Text colour": "Metin rengi",
+    "Background": "Arka plan",
+    "Clear formatting": "Biçimlendirmeyi temizle"
+  },
+  "settings": {
+    "System": "Sistem",
+    "Centred column": "Ortalanmış sütun",
+    "Full width": "Tam genişlik",
+    "Reset zoom (⌘0)": "Yakınlaştırmayı sıfırla (⌘0)",
+    "Zoom": "Yakınlaştırma",
+    "Zoom out (⌘−)": "Uzaklaştır (⌘−)",
+    "Zoom in (⌘+)": "Yakınlaştır (⌘+)",
+    "Settings": "Ayarlar",
+    "Language": "Dil",
+    "Theme": "Tema",
+    "Text width": "Metin genişliği",
+    "Show the note name as a title": "Not adını başlık olarak göster",
+    "Light": "Açık",
+    "Dark": "Koyu"
+  },
+  "app": {
+    "Notes editor": "Not düzenleyici"
+  },
+  "sidebar": {
+    "Notes": "Notlar",
+    "Open another folder": "Başka bir klasör aç",
+    "New note": "Yeni not",
+    "New folder": "Yeni klasör",
+    "Filter by name": "Ada göre filtrele",
+    "Filter files": "Dosyaları filtrele",
+    "Expand all folders": "Tüm klasörleri genişlet",
+    "Collapse all folders": "Tüm klasörleri daralt",
+    "File tree": "Dosya ağacı",
+    "File panel width": "Dosya paneli genişliği"
+  },
+  "toolbar": {
+    "Read": "Okuma",
+    "Edit": "Düzenleme",
+    "File panel (⌘\\)": "Dosya paneli (⌘\\)",
+    "Mode": "Mod",
+    "Save (⌘S)": "Kaydet (⌘S)",
+    "Heading 1 (⌘⌥1)": "Başlık 1 (⌘⌥1)",
+    "Heading 2 (⌘⌥2)": "Başlık 2 (⌘⌥2)",
+    "Heading 3 (⌘⌥3)": "Başlık 3 (⌘⌥3)",
+    "Plain text (⌘⌥0)": "Düz metin (⌘⌥0)",
+    "Bold (⌘B)": "Kalın (⌘B)",
+    "Italic (⌘I)": "İtalik (⌘I)",
+    "Strikethrough": "Üstü çizili",
+    "Monospace (⌘⇧C)": "Eş aralıklı (⌘⇧C)",
+    "Highlight (⌘⇧H)": "Vurgula (⌘⇧H)",
+    "Text and background colour": "Metin ve arka plan rengi",
+    "Link (⌘K)": "Bağlantı (⌘K)",
+    "Link to a note (⌘⇧K)": "Nota bağlantı (⌘⇧K)",
+    "Bulleted list": "Madde işaretli liste",
+    "Numbered list": "Numaralı liste",
+    "Task list": "Görev listesi",
+    "Quote": "Alıntı",
+    "Code block": "Kod bloğu",
+    "Table": "Tablo",
+    "Divider": "Ayırıcı",
+    "More formatting": "Diğer biçimlendirme",
+    "Search (⌘F)": "Ara (⌘F)",
+    "Settings": "Ayarlar"
+  },
+  "find": {
+    "Find in note": "Notta bul",
+    "Find": "Bul",
+    "Previous (⇧Enter)": "Önceki (⇧Enter)",
+    "Next (Enter)": "Sonraki (Enter)",
+    "Close (Esc)": "Kapat (Esc)"
+  }
+}
