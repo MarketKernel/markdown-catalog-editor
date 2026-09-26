@@ -4,6 +4,8 @@ A Markdown editor for a local folder of notes — in the spirit of Obsidian, but
 contained in one standalone HTML file. No network is used: files are read from and saved to
 disk directly.
 
+![The editor with a folder of notes open: the file tree and tags on the left, a note in edit mode on the right](docs/macaed.jpg)
+
 ```
 ┌──────────────────────────────────────────────┐
 │ Toolbar                                      │
@@ -241,7 +243,7 @@ src/locales/        one dictionary per language
 src/ui.ts           dialogs, context menu, popover, notifications
 tools/              tests: block model, formatting, tags, dictionaries, the editor in headless Chrome
 vendor/icon.svg     the icon
-docs/               working notes (not under git)
+docs/               the README screenshot; working notes (not under git)
 build/macaed.html   the build output
 ```
 
