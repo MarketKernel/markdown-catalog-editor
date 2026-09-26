@@ -4,9 +4,13 @@
  * Styles, markdown-it, highlight.js, the icon and the compiled TypeScript are
  * all inlined, so the result opens from a file:// URL with no network access
  * and no sibling files.
+ *
+ * Beside it goes build/pages/: the same page as an installable PWA for GitHub
+ * Pages — a manifest, icons and a service worker that keeps it offline.
  */
 import { build } from 'esbuild';
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { copyFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -68,6 +72,57 @@ function assertSelfContained(html) {
   }
 }
 
+const PWA_ICONS = ['icon.svg', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png', 'apple-touch-icon.png'];
+
+/**
+ * build/pages/: the page plus what makes it installable. Every path is
+ * relative, so it works under a project site's /<repo>/ prefix.
+ */
+async function buildPages(html) {
+  const dir = at('build', 'pages');
+  const head = [
+    '<link rel="manifest" href="manifest.webmanifest">',
+    '<link rel="apple-touch-icon" href="apple-touch-icon.png">',
+    '<meta name="theme-color" content="#fbfbfa" media="(prefers-color-scheme: light)">',
+    '<meta name="theme-color" content="#17181c" media="(prefers-color-scheme: dark)">',
+    '<meta name="apple-mobile-web-app-capable" content="yes">',
+    "<script>if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register('sw.js'));</script>",
+  ].join('\n');
+  const page = html.replace('</head>', () => `${head}\n</head>`);
+  const version = createHash('sha256').update(page).digest('hex').slice(0, 12);
+
+  const manifest = {
+    name: 'Markdown Catalog Editor',
+    short_name: 'Notes',
+    description: 'A Markdown editor for a local folder of notes',
+    id: './',
+    start_url: './',
+    scope: './',
+    display: 'standalone',
+    background_color: '#fbfbfa',
+    theme_color: '#6c4ee6',
+    icons: [
+      { src: 'icon.svg', sizes: 'any', type: 'image/svg+xml' },
+      { src: 'icon-192.png', sizes: '192x192', type: 'image/png' },
+      { src: 'icon-512.png', sizes: '512x512', type: 'image/png' },
+      { src: 'icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+    ],
+  };
+
+  await rm(dir, { recursive: true, force: true });
+  await mkdir(dir, { recursive: true });
+  const worker = (await readFile(at('src/sw.js'), 'utf8')).replaceAll('__VERSION__', version);
+  await Promise.all([
+    writeFile(join(dir, 'index.html'), page, 'utf8'),
+    writeFile(join(dir, 'sw.js'), worker, 'utf8'),
+    writeFile(join(dir, 'manifest.webmanifest'), `${JSON.stringify(manifest, null, 2)}\n`, 'utf8'),
+    // Without it Pages runs the files through Jekyll, which is only wasted time here.
+    writeFile(join(dir, '.nojekyll'), '', 'utf8'),
+    ...PWA_ICONS.map((name) => copyFile(at('vendor', name), join(dir, name))),
+  ]);
+  console.log(`build/pages/ — PWA for GitHub Pages (cache ${version})`);
+}
+
 async function buildOnce() {
   const [template, styles, icon, appJs] = await Promise.all([
     readFile(at('src/template.html'), 'utf8'),
@@ -94,6 +149,7 @@ async function buildOnce() {
     `build/macaed.html — ${kb(Buffer.byteLength(html, 'utf8'))} KB ` +
       `(code ${kb(appJs.length)} KB, styles ${kb(styles.length)} KB)`,
   );
+  await buildPages(html);
 }
 
 await buildOnce();

@@ -344,6 +344,22 @@ the styles and the icon (a data URI), into `src/template.html`; the export's tem
 stylesheet are bundled as strings. The result is `build/macaed.html`, around 500 KB. The
 build fails if even one external reference is left in it.
 
+The same run writes `build/pages/`: that page as an installable PWA — `index.html` with a
+manifest link and a service worker registration, `manifest.webmanifest`, the icons and
+`sw.js`, which caches the page so it opens offline. `build/macaed.html` itself stays a single
+file with no external references.
+
+## GitHub Pages
+
+`.github/workflows/pages.yml` builds and tests every push to `main` and deploys
+`build/pages/` to GitHub Pages (Settings → Pages → Source: GitHub Actions), at
+<https://marketkernel.github.io/markdown-catalog-editor/>. In Chrome, Edge and Arc the
+install button in the address bar turns it into a separate app window; on iOS it is Share →
+Add to Home Screen. Folders open the same way as in the single file.
+
+Each deploy changes the cache name in `sw.js`, so the browser picks up the new version
+by itself; an open window switches to it on its next reload.
+
 ## Layout
 
 ```
@@ -367,9 +383,11 @@ src/i18n.ts         t()/tn(), the language list and flags, translating the page'
 src/locales/        one dictionary per language
 src/ui.ts           dialogs, context menu, popover, notifications
 tools/              tests: block model, formatting, tags, the export, dictionaries, the editor in headless Chrome
-vendor/icon.svg     the icon
+src/sw.js           the service worker of the Pages build
+vendor/             the icon, and its PNG sizes for the PWA
 docs/               the README screenshot; working notes (not under git)
 build/macaed.html   the build output
+build/pages/        the PWA for GitHub Pages
 ```
 
 ## Limitations
