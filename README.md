@@ -4,6 +4,9 @@ A Markdown editor for a local folder of notes — in the spirit of Obsidian, but
 contained in one standalone HTML file. No network is used: files are read from and saved to
 disk directly.
 
+**[Online demo](https://marketkernel.github.io/markdown-catalog-editor/)** — the same editor,
+installable as an app and working offline. Your notes stay on your disk there too.
+
 ![The editor with a folder of notes open: the file tree and tags on the left, a note in edit mode on the right](docs/macaed.jpg)
 
 ```
