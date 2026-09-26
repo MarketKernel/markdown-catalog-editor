@@ -560,7 +560,8 @@ await scenario('Text\n', async (b) => {
 
 /**
  * A writable folder in memory behind `showDirectoryPicker`, so the page opens
- * it as it would a real one. `window.__fs` maps each path to its text.
+ * it as it would a real one. `window.__fs` maps each path to its text, or to
+ * a Blob for a file written from one.
  */
 const memoryFolder = (files) => `(() => {
   const fs = window.__fs = new Map(Object.entries(${JSON.stringify(files)}));
@@ -570,16 +571,16 @@ const memoryFolder = (files) => `(() => {
     name: path.split('/').pop(),
     async getFile() { return new File([fs.get(path)], path.split('/').pop()); },
     async createWritable() {
-      let text = '';
+      const parts = [];
       return {
-        async write(data) { text += typeof data === 'string' ? data : await data.text(); },
-        async close() { fs.set(path, text); },
+        async write(data) { parts.push(data); },
+        async close() { fs.set(path, parts.every((part) => typeof part === 'string') ? parts.join('') : new Blob(parts)); },
       };
     },
   });
   const dir = (path) => ({
     kind: 'directory',
-    name: path || 'Vault',
+    name: path ? path.split('/').pop() : 'Vault',
     async *values() {
       const seen = new Set();
       for (const key of fs.keys()) {
@@ -685,6 +686,157 @@ await scenario('Note\n', async (b) => {
   await b.drag('#tags-resizer', -2000);
   eq('dragging up gives back no more than the section had', await b.evaluate(height), before);
   eq('which clears the cap', await b.evaluate(`document.getElementById('tags').style.getPropertyValue('--tags-height')`), '');
+});
+
+/** Pastes a PNG named `name` into the focused element, with `text` beside it; true when the editor took it. */
+const pasteImage = (b, name, text = '') => b.evaluate(`(() => {
+  const bytes = Uint8Array.from(atob(${JSON.stringify(PIXEL.toString('base64'))}), (c) => c.charCodeAt(0));
+  const data = new DataTransfer();
+  data.items.add(new File([bytes], ${JSON.stringify(name)}, { type: 'image/png' }));
+  if (${JSON.stringify(text)}) data.setData('text/plain', ${JSON.stringify(text)});
+  const event = new ClipboardEvent('paste', { clipboardData: data, bubbles: true, cancelable: true });
+  document.activeElement.dispatchEvent(event);
+  return event.defaultPrevented;
+})()`);
+
+await scenario('Note\n', async (b) => {
+  await b.evaluate(memoryFolder({ 'Note.md': 'Intro\n', 'assets/Note/image-1.png': 'taken' }));
+  await b.evaluate(`document.getElementById('vault-name').click()`);
+  await b.sleep(300);
+  const stored = (path) => b.evaluate(`(() => { const v = window.__fs.get(${JSON.stringify(path)}); return v === undefined ? null : v instanceof Blob ? v.size : v; })()`);
+  const saved = async () => {
+    await b.press('s', 4);
+    await b.sleep(100);
+    return stored('Note.md');
+  };
+
+  await b.click('#doc > .block--paragraph');
+  await b.press('Enter');
+  eq('a pasted image is taken over from the text', await pasteImage(b, 'image.png'), true);
+  await b.sleep(200);
+  eq('and saved in the note\'s assets under the next free name', await stored('assets/Note/image-2.png'), PIXEL.length);
+  eq('its embed goes in at the caret', await b.view(), ['block--paragraph:Intro', '[![[image-2.png]]|]']);
+  eq('and into the note', await saved(), 'Intro\n\n![[image-2.png]]\n');
+  await b.press('Escape');
+  await b.sleep(200);
+  eq('the picture shows once the block closes', await b.evaluate(`document.querySelector('img.embed')?.naturalWidth`), 1);
+
+  await b.click('#doc > .block--paragraph');
+  eq('cells copied from a spreadsheet paste as their text, not their picture', await pasteImage(b, 'image.png', 'a\tb'), false);
+  eq('a file copied in the file manager brings its name as text, and is still a picture', await pasteImage(b, 'dot.png', 'dot.png'), true);
+  await b.sleep(200);
+  eq('it keeps its own name', await stored('assets/Note/dot.png'), PIXEL.length);
+  eq('and nothing is saved for the spreadsheet', await stored('assets/Note/image-3.png'), null);
+
+  // The toolbar button opens the file picker and leaves the block open.
+  await b.evaluate(`document.getElementById('image-picker').click = () => { window.__picking = true; }`);
+  await b.evaluate(`document.getElementById('image').click()`);
+  eq('the image button opens the file picker', await b.evaluate(`[window.__picking, document.activeElement.tagName]`), [true, 'TEXTAREA']);
+
+  await b.press('Escape');
+  await b.evaluate(`(() => {
+    const bytes = Uint8Array.from(atob(${JSON.stringify(PIXEL.toString('base64'))}), (c) => c.charCodeAt(0));
+    const data = new DataTransfer();
+    data.items.add(new File([bytes], 'My [pic].png', { type: 'image/png' }));
+    data.items.add(new File(['x'], 'photo.heic', { type: 'image/heic' }));
+    const input = document.getElementById('image-picker');
+    input.files = data.files;
+    input.dispatchEvent(new Event('change'));
+  })()`);
+  await b.sleep(300);
+  eq('a picked file loses the characters that would break its embed', await stored('assets/Note/My -pic-.png'), PIXEL.length);
+  eq('a file the editor cannot show is refused', await b.evaluate(`document.querySelector('.toast')?.textContent`), 'Not an image the editor can show: photo.heic');
+  eq('with no block open, the embed gets a block of its own at the end', (await b.view()).at(-1), '[![[My -pic-.png]]|]');
+  eq('which the note keeps', await saved(), 'Intro![[dot.png]]\n\n![[image-2.png]]\n\n![[My -pic-.png]]\n');
+  await b.press('Escape');
+  await b.click('.tree-item[data-path="assets"]', 'start');
+  eq('the tree shows the new files', await b.evaluate(`[...document.querySelectorAll('.tree-item[data-path^="assets/Note/"]')].map((n) => n.dataset.path)`),
+    ['assets/Note/dot.png', 'assets/Note/image-1.png', 'assets/Note/image-2.png', 'assets/Note/My -pic-.png']);
+});
+
+await scenario('Text\n', async (b) => {
+  await b.evaluate(memoryFolder({ 'Note.md': '| A |\n| --- |\n| b |\n' }));
+  await b.evaluate(`document.getElementById('vault-name').click()`);
+  await b.sleep(300);
+  await b.click('#doc td');
+  eq('an image pasted into a table cell', await pasteImage(b, 'image.png'), true);
+  await b.sleep(200);
+  eq('lands in the cell', await cellState(b), { textarea: false, cell: [1, 0, 'b![[image-1.png]]'], focused: true });
+});
+
+/**
+ * Drops files on the element `target` (a JS expression) at its start, its end
+ * or below it, the way a click lands there. A `.png` name is a picture.
+ */
+const dropFiles = (b, target, where, names) => b.evaluate(`(() => {
+  const r = (${target}).getBoundingClientRect();
+  const x = ${JSON.stringify(where)} === 'end' ? r.right - 2 : r.left + 2;
+  const y = ${JSON.stringify(where)} === 'below' ? r.bottom + 30 : r.top + Math.min(r.height / 2, 10);
+  const bytes = Uint8Array.from(atob(${JSON.stringify(PIXEL.toString('base64'))}), (c) => c.charCodeAt(0));
+  const data = new DataTransfer();
+  for (const name of ${JSON.stringify(names)}) {
+    data.items.add(name.endsWith('.png') ? new File([bytes], name, { type: 'image/png' }) : new File(['text'], name));
+  }
+  document.elementFromPoint(x, y).dispatchEvent(new DragEvent('drop', { dataTransfer: data, clientX: x, clientY: y, bubbles: true, cancelable: true }));
+})()`);
+
+await scenario('Text\n', async (b) => {
+  await b.evaluate(memoryFolder({ 'Note.md': 'One\n\nTwo\n\n| A |\n| --- |\n| b |\n\nEnd\n' }));
+  await b.evaluate(`document.getElementById('vault-name').click()`);
+  await b.sleep(300);
+  const note = async () => {
+    await b.press('s', 4);
+    await b.sleep(100);
+    return b.evaluate(`window.__fs.get('Note.md')`);
+  };
+  const paragraph = (n) => `document.querySelectorAll('#doc > .block--paragraph')[${n}]`;
+  const mode = `document.querySelector('.seg--on')?.dataset.mode`;
+
+  await dropFiles(b, paragraph(1), 'end', ['image.png']);
+  await b.sleep(200);
+  eq('a picture dropped on a block goes in where it lands', (await b.view()).slice(0, 2), ['block--paragraph:One', '[Two![[image-1.png]]|]']);
+  eq('and is saved beside the note', await b.evaluate(`window.__fs.get('assets/Note/image-1.png') instanceof Blob`), true);
+
+  await dropFiles(b, `document.querySelector('#doc textarea')`, 'start', ['image.png']);
+  await b.sleep(200);
+  eq('dropped on the open block, at the point in its text', (await b.view())[1], '[![[image-2.png]]|Two![[image-1.png]]]');
+
+  await dropFiles(b, `document.querySelector('#doc td')`, 'end', ['image.png']);
+  await b.sleep(200);
+  eq('dropped on a table cell, into that cell', await cellState(b), { textarea: false, cell: [1, 0, 'b![[image-3.png]]'], focused: true });
+
+  await b.evaluate(`document.querySelector('.seg[data-mode=read]').click()`);
+  await dropFiles(b, `document.querySelector('#doc > .block:last-child')`, 'below', ['image.png']);
+  await b.sleep(200);
+  eq('below the text, at the end of the last block', (await b.view()).at(-1), '[End![[image-4.png]]|]');
+  eq('a drop in read mode switches to editing', await b.evaluate(mode), 'edit');
+
+  await b.evaluate(`document.querySelector('.seg[data-mode=read]').click()`);
+  await dropFiles(b, `document.getElementById('tree')`, 'start', ['image.png', 'notes.md']);
+  await b.sleep(300);
+  eq('off the note, in a block of its own at the end', (await b.view()).at(-1), '[![[image-5.png]]|]');
+  eq('a file that is no picture is left out', await b.evaluate(`document.querySelector('.toast')?.textContent`), 'Not an image the editor can show: notes.md');
+
+  await dropFiles(b, paragraph(0), 'end', ['other.md']);
+  await b.sleep(200);
+  eq('a drop with no picture is still a folder to open', await b.evaluate(`document.querySelector('.toast')?.textContent`), 'Drag a folder, not a single file');
+  eq('the note has every picture, and only those', await note(),
+    'One\n\n![[image-2.png]]Two![[image-1.png]]\n\n| A |\n| --- |\n| b![[image-3.png]] |\n\nEnd![[image-4.png]]\n\n![[image-5.png]]\n');
+});
+
+await scenario('Text\n', async (b) => {
+  await dropFiles(b, `document.querySelector('#doc > .block--paragraph')`, 'end', ['image.png']);
+  await b.sleep(100);
+  eq('a read-only folder refuses a dropped picture', await b.evaluate(`document.querySelector('.toast')?.textContent`), 'The folder is open read-only');
+  eq('and leaves the note alone', await b.text(), 'Text\n');
+});
+
+await scenario('Text\n', async (b) => {
+  await b.click('#doc > .block--paragraph');
+  eq('a read-only folder takes the pasted image too', await pasteImage(b, 'image.png'), true);
+  await b.sleep(100);
+  eq('and says why it cannot keep it', await b.evaluate(`document.querySelector('.toast')?.textContent`), 'The folder is open read-only');
+  eq('the text stays as it was', await b.text(), 'Text\n');
 });
 
 console.log(`${passed} browser checks passed${failed ? `, ${failed} failed` : ''}`);

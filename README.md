@@ -155,6 +155,17 @@ list `.meta.json` among its files to have the tags show.
   folder (`![[image-1.png|300]]` sets the width). `assets` folders start collapsed in the
   tree, and renaming a note renames its image folder too. A picture clicked in the tree
   opens as a picture, not as text.
+- **Adding images**: the picture button on the toolbar picks image files; an image pasted
+  with `⌘V` — a screenshot, a picture copied in the browser, a file copied in the file
+  manager — goes in the same way. Either is saved into the note's `assets/<note name>/` and
+  embedded at the caret, or at the end of the note when no block is open. Images dragged
+  onto the note go in where they are dropped: at that point in a block or a table cell, and
+  beside the text or between two blocks, at the end of the block above; a drop in read mode
+  switches to editing, and one off the note adds the images at the end. A drop with a folder
+  in it still opens the folder. A pasted
+  screenshot is named `image-1.png`, `image-2.png` and on; a picked file keeps its own name,
+  with a number added when it is taken. Cells copied from a spreadsheet paste as text, not
+  as the picture that comes with them. Only a folder opened for writing takes new images.
 - **Tags**: nested tags on notes, a tag tree and a page per tag, kept apart from the notes
   in `.meta.json` — see "[Tags](#tags)".
 - **Settings** (the gear at the top right, next to search): interface language, theme

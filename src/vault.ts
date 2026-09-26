@@ -29,6 +29,8 @@ export interface Vault {
   /** Images and other binaries; null when the vault has no such file. */
   readBlob(path: string): Promise<Blob | null>;
   writeText(path: string, text: string): Promise<void>;
+  /** Images and other binaries; the folders on the way are created. */
+  writeBlob(path: string, blob: Blob): Promise<void>;
   createFile(dir: string, name: string): Promise<string>;
   createDir(dir: string, name: string): Promise<string>;
   rename(path: string, kind: EntryKind, name: string): Promise<string>;
@@ -148,10 +150,18 @@ export class DirectoryVault implements Vault {
   }
 
   async writeText(path: string, text: string): Promise<void> {
+    await this.write(path, text);
+  }
+
+  async writeBlob(path: string, blob: Blob): Promise<void> {
+    await this.write(path, blob);
+  }
+
+  private async write(path: string, data: string | Blob): Promise<void> {
     const handle = await this.fileHandle(path, true);
     if (!handle.createWritable) throw new Error(t('errors', 'This browser cannot write files'));
     const stream = await handle.createWritable();
-    await stream.write(text);
+    await stream.write(data);
     await stream.close();
   }
 
@@ -321,6 +331,10 @@ export class FileListVault implements Vault {
   }
 
   async writeText(): Promise<void> {
+    throw new Error(t('errors', 'The folder is open read-only'));
+  }
+
+  async writeBlob(): Promise<void> {
     throw new Error(t('errors', 'The folder is open read-only'));
   }
 

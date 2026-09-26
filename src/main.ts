@@ -103,6 +103,9 @@ const editor = new Editor(doc, scroller, md, {
   onAsset: (image) => {
     void resolveAsset(image);
   },
+  onImages: (files) => {
+    void addImages(files);
+  },
   onStatus: (status) => {
     lastStatus = status;
     renderCount();
@@ -207,6 +210,7 @@ document.addEventListener('dragleave', (event) => {
 document.addEventListener('drop', (event) => {
   event.preventDefault();
   gate.classList.remove('gate--drop');
+  if (dropImages(event)) return;
   void acceptDrop(event).catch(showGateError);
 });
 
@@ -389,6 +393,102 @@ function closeImage(): void {
   viewer.replaceChildren();
   doc.hidden = false;
 }
+
+/* ------------------------------------------------------------------ *
+ * Adding images
+ * ------------------------------------------------------------------ */
+
+/** The image types an `![[embed]]` shows, and the extension each is saved with. */
+const IMAGE_TYPES: Record<string, string> = {
+  'image/png': 'png',
+  'image/jpeg': 'jpg',
+  'image/gif': 'gif',
+  'image/webp': 'webp',
+  'image/svg+xml': 'svg',
+  'image/avif': 'avif',
+  'image/bmp': 'bmp',
+  'image/x-icon': 'ico',
+  'image/vnd.microsoft.icon': 'ico',
+};
+const IMAGE_EXTENSIONS = new Set([...Object.values(IMAGE_TYPES), 'jpeg']);
+
+function imageExtension(file: File): string | null {
+  const own = /\.(\w+)$/.exec(file.name)?.[1]?.toLowerCase();
+  if (own && IMAGE_EXTENSIONS.has(own)) return own;
+  return IMAGE_TYPES[file.type] ?? null;
+}
+
+/**
+ * A name no file in the assets folder has yet: the image's own, or `image-1.png`
+ * and on for a pasted one, which the browser always calls `image.png`. The
+ * characters that would break the `![[embed]]` become dashes.
+ */
+async function freeImageName(target: Vault, dir: string, file: File, ext: string): Promise<string> {
+  const stem = stripExtension(file.name).replace(/[[\]|#^\\/:*?"<>\u0000-\u001f]+/g, '-').trim() || 'image';
+  for (let n = stem === 'image' ? 1 : 0; ; n += 1) {
+    const name = n ? `${stem}-${n}.${ext}` : `${stem}.${ext}`;
+    if (!(await target.readBlob(join(dir, name)))) return name;
+  }
+}
+
+/** Saves images into the note's assets folder and embeds them at the caret as `![[image.png]]`. */
+async function addImages(files: File[]): Promise<void> {
+  const target = vault;
+  const note = currentPath;
+  if (!target || !note) return;
+  if (!target.writable) return void toast(t('errors', 'The folder is open read-only'), 'error');
+  const dir = assetsDirOf(note);
+  const names: string[] = [];
+  for (const file of files) {
+    const ext = imageExtension(file);
+    if (!ext) {
+      toast(t('toast', 'Not an image the editor can show: {name}', { name: file.name }), 'error');
+      continue;
+    }
+    try {
+      const name = await freeImageName(target, dir, file, ext);
+      await target.writeBlob(join(dir, name), file);
+      names.push(name);
+    } catch (error) {
+      toast(t('toast', 'Could not add the image: {reason}', { reason: error instanceof Error ? error.message : String(error) }), 'error');
+    }
+  }
+  if (names.length === 0 || vault !== target) return;
+  if (currentPath === note) editor.insertText(names.map((name) => `![[${name}]]`).join('\n'));
+  await refreshTree();
+}
+
+/**
+ * Pictures dropped on an open note go into it where they land. A drop with a
+ * folder in it, or with no picture, is still a folder to open.
+ */
+function dropImages(event: DragEvent): boolean {
+  const transfer = event.dataTransfer;
+  if (!transfer || !gate.hidden || !currentPath) return false;
+  if (Array.from(transfer.items).some((item) => item.webkitGetAsEntry?.()?.isDirectory)) return false;
+  const files = Array.from(transfer.files);
+  if (!files.some((file) => imageExtension(file))) return false;
+  if (vault?.writable) {
+    editor.dropCaret(scroller.contains(event.target as Node) ? event : null);
+    setMode('edit');
+  }
+  void addImages(files);
+  return true;
+}
+
+const imagePicker = el<HTMLInputElement>('image-picker');
+
+function pickImages(): void {
+  if (!vault?.writable) return void toast(t('errors', 'The folder is open read-only'), 'error');
+  imagePicker.click();
+}
+
+imagePicker.addEventListener('change', () => {
+  const files = Array.from(imagePicker.files ?? []);
+  // Cleared, so that picking the same file again is a change too.
+  imagePicker.value = '';
+  if (files.length) void addImages(files);
+});
 
 /* ------------------------------------------------------------------ *
  * Tags
@@ -781,6 +881,10 @@ for (const host of [format, formatMenu]) {
     if (!button) return;
     if (host === formatMenu) closeFormatMenu();
     if (editor.getMode() !== 'edit') setMode('edit');
+    if (button.id === 'image') {
+      pickImages();
+      return;
+    }
     const heading = button.dataset['heading'];
     if (heading !== undefined) {
       editor.heading(Number(heading));

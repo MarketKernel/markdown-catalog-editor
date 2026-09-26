@@ -43,6 +43,8 @@ export interface EditorHost {
   onOpenWiki(target: string): void;
   /** An image inside the vault: `data-asset` is a relative `src`, `data-embed` an `![[embed]]`. */
   onAsset(image: HTMLImageElement): void;
+  /** Images pasted into a block or a cell; the host saves them and calls `insertText`. */
+  onImages(files: File[]): void;
   onStatus(status: EditorStatus): void;
 }
 
@@ -50,6 +52,12 @@ export interface EditorStatus {
   words: number;
   chars: number;
 }
+
+/** A place on screen, in viewport coordinates. */
+type Point = Pick<MouseEvent, 'clientX' | 'clientY'>;
+
+/** Where a drop lands: an offset into the text, or a spot in a table cell. */
+type Place = number | { index: number; row: number; col: number; caret: number | 'end' };
 
 /** A table cell open for typing. */
 interface OpenCell {
@@ -274,6 +282,7 @@ export class Editor {
     area.addEventListener('beforeinput', this.onBeforeInput);
     area.addEventListener('input', this.onInput);
     area.addEventListener('keydown', this.onKeyDown);
+    area.addEventListener('paste', this.onPaste);
     area.addEventListener('blur', this.onBlur);
     this.area = area;
     this.activeHead = firstLine(block.text);
@@ -364,7 +373,7 @@ export class Editor {
   };
 
   /** Maps the click to the matching place in the Markdown source. */
-  private caretFromPoint(holder: HTMLElement, event: MouseEvent): number {
+  private caretFromPoint(holder: HTMLElement, event: Point): number {
     const block = this.blocks[Number(holder.dataset['index'] ?? '0')];
     if (!block) return 0;
     const point = caretRangeAt(event.clientX, event.clientY);
@@ -479,6 +488,13 @@ export class Editor {
     area.className = classFor('block source', kind, level, 'source', block.joined);
     autosize(area);
   }
+
+  private readonly onPaste = (event: ClipboardEvent): void => {
+    const images = pastedImages(event.clipboardData);
+    if (images.length === 0) return;
+    event.preventDefault();
+    this.host.onImages(images);
+  };
 
   private readonly onBlur = (): void => {
     // Losing focus to the toolbar must not close the block; those controls
@@ -742,6 +758,12 @@ export class Editor {
 
   /** Pasted text goes in as plain text; its line breaks stay, as `<br>` in the file. */
   private readonly onCellPaste = (event: ClipboardEvent): void => {
+    const images = pastedImages(event.clipboardData);
+    if (images.length) {
+      event.preventDefault();
+      this.host.onImages(images);
+      return;
+    }
     const text = event.clipboardData?.getData('text/plain');
     if (text === undefined) return;
     event.preventDefault();
@@ -1113,6 +1135,85 @@ export class Editor {
     this.apply(fmt.colorize(this.selection(), style));
   }
 
+  /** Puts text at the caret: into the open block or cell, else into a block of its own at the end of the note. */
+  insertText(text: string): void {
+    this.pushUndo();
+    if (this.cell) {
+      this.insertInCell(text);
+      return;
+    }
+    if (this.area) {
+      this.insert(text);
+      return;
+    }
+    const gap = !this.text.trim() || this.text.endsWith('\n\n') ? '' : this.text.endsWith('\n') ? '\n' : '\n\n';
+    this.text += `${gap}${text}\n`;
+    this.resplit();
+    if (this.mode === 'edit') this.focusAt(this.text.length - 1);
+    else this.render();
+    this.changed();
+  }
+
+  /**
+   * Opens the note for editing with the caret where a drop lands: at the
+   * pointer in the block or table cell under it, and beside the text or
+   * between two blocks, at the end of the block above. A drop off the note
+   * (`null`) leaves an open block as it is.
+   */
+  dropCaret(point: Point | null): void {
+    if (!point && this.mode === 'edit') return;
+    const place = point ? this.placeAt(point.clientX, point.clientY) : null;
+    this.mode = 'edit';
+    if (place === null) {
+      // `insertText` then gives the drop a block of its own at the end.
+      this.deactivate();
+    } else if (typeof place === 'number') {
+      this.focusAt(place);
+    } else {
+      if (this.active !== null) this.deactivate();
+      this.openCell(place.index, place.row, place.col, place.caret);
+    }
+  }
+
+  private placeAt(x: number, y: number): Place | null {
+    let index = -1;
+    let box: DOMRect | null = null;
+    for (let at = 0; at < this.nodes.length; at += 1) {
+      const node = this.nodes[at]!;
+      // Free blank lines are hidden in read mode.
+      if (!node.offsetParent) continue;
+      const rect = node.getBoundingClientRect();
+      if (rect.top > y) break;
+      index = at;
+      box = rect;
+    }
+    if (index < 0 || !box) return this.blocks.length ? 0 : null;
+    const block = this.blocks[index]!;
+    if (y > box.bottom) {
+      // Text glued onto a table would become one of its rows.
+      if (block.kind !== 'table') return this.endOf(index);
+      return index < this.blocks.length - 1 ? this.startOf(index + 1) : null;
+    }
+    const node = this.nodes[index]!;
+    const point = { clientX: Math.min(Math.max(x, box.left + 1), box.right - 1), clientY: y };
+    const caret = caretRangeAt(point.clientX, point.clientY);
+    if (!caret || !node.contains(caret.node)) return this.endOf(index);
+    // The open block: the caret position comes as an offset into its value.
+    if (node === this.area) return this.startOf(index) + caret.offset;
+    const cell = (caret.node instanceof Element ? caret.node : caret.node.parentElement)?.closest<HTMLElement>('th, td');
+    if (block.kind === 'table' && cell && node.contains(cell)) {
+      const row = Number(cell.dataset['row']);
+      const col = Number(cell.dataset['col']);
+      if (cell !== this.cell?.el) return { index, row, col, caret: cellCaretFromPoint(cell, grid.cellValue(block.text, row, col), point) };
+      // The open cell shows its own text, so the characters before the point are the offset.
+      const before = document.createRange();
+      before.setStart(cell, 0);
+      before.setEnd(caret.node, caret.offset);
+      return { index, row, col, caret: before.toString().length };
+    }
+    return this.startOf(index) + this.caretFromPoint(node, point);
+  }
+
   private selection(): fmt.Selection {
     const area = this.area!;
     return { value: area.value, start: area.selectionStart, end: area.selectionEnd };
@@ -1426,7 +1527,7 @@ function setTextSelection(el: HTMLElement, start: number, end: number): void {
 }
 
 /** Maps a click inside a rendered cell to the same place in the cell's text. */
-function cellCaretFromPoint(cell: HTMLElement, value: string, event: MouseEvent): number | 'end' {
+function cellCaretFromPoint(cell: HTMLElement, value: string, event: Point): number | 'end' {
   const point = caretRangeAt(event.clientX, event.clientY);
   if (!point || !cell.contains(point.node)) return 'end';
   try {
@@ -1444,6 +1545,20 @@ function cellCaretFromPoint(cell: HTMLElement, value: string, event: MouseEvent)
 function classFor(base: string, kind: BlockKind, level: number, prefix = 'block', joined = false): string {
   const name = `${base} ${prefix}--${kind}${joined ? ' block--joined' : ''}`;
   return kind === 'heading' ? `${name} ${prefix}--h${level}` : name;
+}
+
+/**
+ * The images on the clipboard, unless it holds text as well: cells copied from
+ * a spreadsheet come with a picture of themselves, and the text is what was
+ * meant. A file copied in the file manager brings its name as the text, and is
+ * still taken as the file.
+ */
+function pastedImages(data: DataTransfer | null): File[] {
+  const images = Array.from(data?.files ?? []).filter((file) => file.type.startsWith('image/'));
+  if (images.length === 0) return [];
+  const names = new Set(images.map((file) => file.name));
+  const lines = (data?.getData('text/plain') ?? '').split(/\r\n?|\n/).map((line) => line.trim()).filter(Boolean);
+  return lines.every((line) => names.has(line)) ? images : [];
 }
 
 function firstLine(text: string): string {

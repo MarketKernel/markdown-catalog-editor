@@ -451,6 +451,8 @@ body.sidebar-hidden .resizer { display: none; }
 .tool--mono { font-family: var(--mono); font-size: 16px; }
 .tool--mark { background-image: linear-gradient(transparent 62%, var(--mark-bg) 62%); }
 .tool--color { display: inline-flex; align-items: center; gap: 6px; }
+.tool--image { display: inline-flex; align-items: center; justify-content: center; }
+.tool--image svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .color-swatch {
   width: 16px;
   height: 16px;

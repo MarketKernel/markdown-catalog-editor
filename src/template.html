@@ -103,6 +103,9 @@
         <span class="tool-sep"></span>
         <button class="tool" type="button" data-action="link" title="Link (⌘K)" data-i18n-attr="toolbar">⧉</button>
         <button class="tool" type="button" data-action="wikilink" title="Link to a note (⌘⇧K)" data-i18n-attr="toolbar">[[ ]]</button>
+        <button id="image" class="tool tool--image" type="button" title="Image — or paste one (⌘V)" data-i18n-attr="toolbar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="m21 16-5-5-9 9"/></svg>
+        </button>
         <span class="tool-sep"></span>
         <button class="tool" type="button" data-action="bullet" title="Bulleted list" data-i18n-attr="toolbar">•—</button>
         <button class="tool" type="button" data-action="ordered" title="Numbered list" data-i18n-attr="toolbar">1.</button>
@@ -157,6 +160,7 @@
 
 <div id="palette" class="palette" hidden></div>
 <div id="format-menu" class="format-menu" role="group" aria-label="More formatting" data-i18n-attr="toolbar" hidden></div>
+<input id="image-picker" type="file" accept=".png,.jpg,.jpeg,.gif,.webp,.svg,.avif,.bmp,.ico" multiple hidden>
 
 <script>/*__APP__*/</script>
 </body>
