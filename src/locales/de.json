@@ -37,7 +37,9 @@
     "Note \"{target}\" not found": "Notiz „{target}“ nicht gefunden",
     "Could not read {path}": "{path} konnte nicht gelesen werden",
     "Could not save: {reason}": "Speichern fehlgeschlagen: {reason}",
-    "The note was renamed, its images were not: {reason}": "Die Notiz wurde umbenannt, ihre Bilder nicht: {reason}"
+    "The note was renamed, its images were not: {reason}": "Die Notiz wurde umbenannt, ihre Bilder nicht: {reason}",
+    "Could not read {name}, so tags cannot be changed: {reason}": "{name} konnte nicht gelesen werden, Tags lassen sich daher nicht ändern: {reason}",
+    "Could not save the tags: {reason}": "Die Tags konnten nicht gespeichert werden: {reason}"
   },
   "gate": {
     "Drag a folder, not a single file": "Ziehen Sie einen Ordner, keine einzelne Datei",
@@ -117,7 +119,10 @@
     "Expand all folders": "Alle Ordner aufklappen",
     "Collapse all folders": "Alle Ordner zuklappen",
     "File tree": "Dateibaum",
-    "File panel width": "Breite der Dateileiste"
+    "File panel width": "Breite der Dateileiste",
+    "Tags": "Tags",
+    "Tag tree": "Tag-Baum",
+    "Tag panel height": "Höhe des Tag-Bereichs"
   },
   "toolbar": {
     "Read": "Lesen",
@@ -154,5 +159,16 @@
     "Previous (⇧Enter)": "Vorheriges (⇧Enter)",
     "Next (Enter)": "Nächstes (Enter)",
     "Close (Esc)": "Schließen (Esc)"
+  },
+  "tags": {
+    "No tags yet": "Noch keine Tags",
+    "Remove the tag": "Tag entfernen",
+    "Add a tag": "Tag hinzufügen",
+    "New tag": "Neuer Tag",
+    "{count} notes": {
+      "one": "{count} Notiz",
+      "other": "{count} Notizen"
+    },
+    "No notes with this tag": "Keine Notizen mit diesem Tag"
   }
 }

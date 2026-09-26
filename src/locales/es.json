@@ -39,7 +39,9 @@
     "Note \"{target}\" not found": "No se ha encontrado la nota «{target}»",
     "Could not read {path}": "No se pudo leer {path}",
     "Could not save: {reason}": "No se pudo guardar: {reason}",
-    "The note was renamed, its images were not: {reason}": "Se cambió el nombre de la nota, pero no el de sus imágenes: {reason}"
+    "The note was renamed, its images were not: {reason}": "Se cambió el nombre de la nota, pero no el de sus imágenes: {reason}",
+    "Could not read {name}, so tags cannot be changed: {reason}": "No se ha podido leer {name}, así que las etiquetas no se pueden cambiar: {reason}",
+    "Could not save the tags: {reason}": "No se han podido guardar las etiquetas: {reason}"
   },
   "gate": {
     "Drag a folder, not a single file": "Arrastra una carpeta, no un archivo suelto",
@@ -119,7 +121,10 @@
     "Expand all folders": "Expandir todas las carpetas",
     "Collapse all folders": "Contraer todas las carpetas",
     "File tree": "Árbol de archivos",
-    "File panel width": "Ancho del panel de archivos"
+    "File panel width": "Ancho del panel de archivos",
+    "Tags": "Etiquetas",
+    "Tag tree": "Árbol de etiquetas",
+    "Tag panel height": "Altura del panel de etiquetas"
   },
   "toolbar": {
     "Read": "Lectura",
@@ -156,5 +161,17 @@
     "Previous (⇧Enter)": "Anterior (⇧Enter)",
     "Next (Enter)": "Siguiente (Enter)",
     "Close (Esc)": "Cerrar (Esc)"
+  },
+  "tags": {
+    "No tags yet": "Aún no hay etiquetas",
+    "Remove the tag": "Quitar la etiqueta",
+    "Add a tag": "Añadir una etiqueta",
+    "New tag": "Etiqueta nueva",
+    "{count} notes": {
+      "one": "{count} nota",
+      "many": "{count} de notas",
+      "other": "{count} notas"
+    },
+    "No notes with this tag": "No hay notas con esta etiqueta"
   }
 }

@@ -57,6 +57,15 @@
       </div>
     </div>
     <nav id="tree" class="tree" aria-label="File tree" data-i18n-attr="sidebar"></nav>
+    <section id="tags" class="tags">
+      <div id="tags-resizer" class="tags-resizer" role="separator" aria-orientation="horizontal"
+           aria-label="Tag panel height" data-i18n-attr="sidebar" tabindex="0"></div>
+      <button id="tags-toggle" class="sidebar-heading tags-heading" type="button" aria-expanded="true" aria-controls="tag-tree">
+        <span class="tags-caret" aria-hidden="true">▾</span>
+        <span data-i18n="sidebar">Tags</span><span id="tag-count" class="count"></span>
+      </button>
+      <nav id="tag-tree" class="tree tag-tree" aria-label="Tag tree" data-i18n-attr="sidebar"></nav>
+    </section>
   </aside>
 
   <div id="sidebar-resizer" class="resizer" role="separator" aria-orientation="vertical"
@@ -128,8 +137,10 @@
 
     <div id="scroller" class="scroller" dir="ltr" tabindex="0">
       <h1 id="inline-title" class="inline-title" hidden></h1>
+      <div id="note-tags" class="note-tags" hidden></div>
       <div id="doc" class="doc"></div>
       <figure id="viewer" class="viewer" hidden></figure>
+      <section id="tag-page" class="tag-page" hidden></section>
       <div id="placeholder" class="placeholder">
         <p data-i18n="doc">Pick a note on the left, or create a new one.</p>
       </div>

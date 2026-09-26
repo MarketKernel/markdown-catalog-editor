@@ -39,7 +39,9 @@
     "Note \"{target}\" not found": "Nota «{target}» non trovata",
     "Could not read {path}": "Impossibile leggere {path}",
     "Could not save: {reason}": "Impossibile salvare: {reason}",
-    "The note was renamed, its images were not: {reason}": "La nota è stata rinominata, le sue immagini no: {reason}"
+    "The note was renamed, its images were not: {reason}": "La nota è stata rinominata, le sue immagini no: {reason}",
+    "Could not read {name}, so tags cannot be changed: {reason}": "Impossibile leggere {name}, quindi i tag non si possono modificare: {reason}",
+    "Could not save the tags: {reason}": "Impossibile salvare i tag: {reason}"
   },
   "gate": {
     "Drag a folder, not a single file": "Trascina una cartella, non un singolo file",
@@ -119,7 +121,10 @@
     "Expand all folders": "Espandi tutte le cartelle",
     "Collapse all folders": "Comprimi tutte le cartelle",
     "File tree": "Albero dei file",
-    "File panel width": "Larghezza del pannello dei file"
+    "File panel width": "Larghezza del pannello dei file",
+    "Tags": "Tag",
+    "Tag tree": "Albero dei tag",
+    "Tag panel height": "Altezza del pannello dei tag"
   },
   "toolbar": {
     "Read": "Lettura",
@@ -156,5 +161,17 @@
     "Previous (⇧Enter)": "Precedente (⇧Enter)",
     "Next (Enter)": "Successivo (Enter)",
     "Close (Esc)": "Chiudi (Esc)"
+  },
+  "tags": {
+    "No tags yet": "Ancora nessun tag",
+    "Remove the tag": "Rimuovi il tag",
+    "Add a tag": "Aggiungi un tag",
+    "New tag": "Nuovo tag",
+    "{count} notes": {
+      "one": "{count} nota",
+      "many": "{count} note",
+      "other": "{count} note"
+    },
+    "No notes with this tag": "Nessuna nota con questo tag"
   }
 }

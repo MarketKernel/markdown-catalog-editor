@@ -41,7 +41,9 @@
     "Note \"{target}\" not found": "Нотатку «{target}» не знайдено",
     "Could not read {path}": "Не вдалося прочитати {path}",
     "Could not save: {reason}": "Не вдалося зберегти: {reason}",
-    "The note was renamed, its images were not: {reason}": "Нотатку перейменовано, але її зображення — ні: {reason}"
+    "The note was renamed, its images were not: {reason}": "Нотатку перейменовано, але її зображення — ні: {reason}",
+    "Could not read {name}, so tags cannot be changed: {reason}": "Не вдалося прочитати {name}, тому теги не можна змінити: {reason}",
+    "Could not save the tags: {reason}": "Не вдалося зберегти теги: {reason}"
   },
   "gate": {
     "Drag a folder, not a single file": "Перетягніть папку, а не окремий файл",
@@ -121,7 +123,10 @@
     "Expand all folders": "Розгорнути всі папки",
     "Collapse all folders": "Згорнути всі папки",
     "File tree": "Дерево файлів",
-    "File panel width": "Ширина панелі файлів"
+    "File panel width": "Ширина панелі файлів",
+    "Tags": "Теги",
+    "Tag tree": "Дерево тегів",
+    "Tag panel height": "Висота панелі тегів"
   },
   "toolbar": {
     "Read": "Читання",
@@ -158,5 +163,18 @@
     "Previous (⇧Enter)": "Попереднє (⇧Enter)",
     "Next (Enter)": "Наступне (Enter)",
     "Close (Esc)": "Закрити (Esc)"
+  },
+  "tags": {
+    "No tags yet": "Тегів поки немає",
+    "Remove the tag": "Прибрати тег",
+    "Add a tag": "Додати тег",
+    "New tag": "Новий тег",
+    "{count} notes": {
+      "one": "{count} нотатка",
+      "few": "{count} нотатки",
+      "many": "{count} нотаток",
+      "other": "{count} нотатки"
+    },
+    "No notes with this tag": "Немає нотаток із цим тегом"
   }
 }

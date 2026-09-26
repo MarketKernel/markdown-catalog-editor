@@ -35,7 +35,9 @@
     "Note \"{target}\" not found": "未找到笔记“{target}”",
     "Could not read {path}": "无法读取 {path}",
     "Could not save: {reason}": "无法保存：{reason}",
-    "The note was renamed, its images were not: {reason}": "笔记已重命名，但其图片未重命名：{reason}"
+    "The note was renamed, its images were not: {reason}": "笔记已重命名，但其图片未重命名：{reason}",
+    "Could not read {name}, so tags cannot be changed: {reason}": "无法读取 {name}，因此无法更改标签：{reason}",
+    "Could not save the tags: {reason}": "无法保存标签：{reason}"
   },
   "gate": {
     "Drag a folder, not a single file": "请拖入文件夹，而不是单个文件",
@@ -115,7 +117,10 @@
     "Expand all folders": "展开所有文件夹",
     "Collapse all folders": "折叠所有文件夹",
     "File tree": "文件树",
-    "File panel width": "文件面板宽度"
+    "File panel width": "文件面板宽度",
+    "Tags": "标签",
+    "Tag tree": "标签树",
+    "Tag panel height": "标签面板高度"
   },
   "toolbar": {
     "Read": "阅读",
@@ -152,5 +157,15 @@
     "Previous (⇧Enter)": "上一个 (⇧Enter)",
     "Next (Enter)": "下一个 (Enter)",
     "Close (Esc)": "关闭 (Esc)"
+  },
+  "tags": {
+    "No tags yet": "还没有标签",
+    "Remove the tag": "移除标签",
+    "Add a tag": "添加标签",
+    "New tag": "新标签",
+    "{count} notes": {
+      "other": "{count} 篇笔记"
+    },
+    "No notes with this tag": "没有带此标签的笔记"
   }
 }

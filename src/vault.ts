@@ -38,6 +38,8 @@ export interface Vault {
 export const NOTE_EXTENSIONS = ['.md', '.markdown', '.mdown', '.mkd', '.txt'];
 /** Each folder keeps its notes' images in `assets/<note name>/`. */
 export const ASSETS_DIR = 'assets';
+/** The catalog's tags and other data, one file at the root (see meta.ts); never shown in the tree. */
+export const META_FILE = '.meta.json';
 const ASSET_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.avif', '.bmp', '.ico', '.pdf'];
 const MAX_DEPTH = 12;
 const MAX_ENTRIES = 40000;
@@ -277,7 +279,7 @@ export class FileListVault implements Vault {
       // Drop the picked folder's own name so paths match what the tree shows.
       const path = parts.length > 1 ? parts.slice(1).join('/') : relative;
       if (path.split('/').some((part, index, all) => index < all.length - 1 && skipDir(part))) continue;
-      if (!isNote(file.name) && !isAsset(file.name)) continue;
+      if (!isNote(file.name) && !isAsset(file.name) && path !== META_FILE) continue;
       this.files.set(path, file);
     }
     this.name = root || 'Notes';
@@ -302,6 +304,7 @@ export class FileListVault implements Vault {
     };
 
     for (const path of this.files.keys()) {
+      if (path === META_FILE) continue;
       ensureDir(dirOf(path)).push({ kind: 'file', name: baseOf(path), path });
     }
     return sortEntries(rootEntries);

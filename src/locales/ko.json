@@ -35,7 +35,9 @@
     "Note \"{target}\" not found": "\"{target}\" 노트를 찾을 수 없습니다",
     "Could not read {path}": "{path}을(를) 읽을 수 없습니다",
     "Could not save: {reason}": "저장할 수 없습니다: {reason}",
-    "The note was renamed, its images were not: {reason}": "노트 이름은 변경되었지만 이미지 이름은 변경되지 않았습니다: {reason}"
+    "The note was renamed, its images were not: {reason}": "노트 이름은 변경되었지만 이미지 이름은 변경되지 않았습니다: {reason}",
+    "Could not read {name}, so tags cannot be changed: {reason}": "{name}을(를) 읽을 수 없어 태그를 변경할 수 없습니다: {reason}",
+    "Could not save the tags: {reason}": "태그를 저장할 수 없습니다: {reason}"
   },
   "gate": {
     "Drag a folder, not a single file": "파일 하나가 아니라 폴더를 드래그하세요",
@@ -115,7 +117,10 @@
     "Expand all folders": "모든 폴더 펼치기",
     "Collapse all folders": "모든 폴더 접기",
     "File tree": "파일 트리",
-    "File panel width": "파일 패널 너비"
+    "File panel width": "파일 패널 너비",
+    "Tags": "태그",
+    "Tag tree": "태그 트리",
+    "Tag panel height": "태그 패널 높이"
   },
   "toolbar": {
     "Read": "읽기",
@@ -152,5 +157,15 @@
     "Previous (⇧Enter)": "이전 (⇧Enter)",
     "Next (Enter)": "다음 (Enter)",
     "Close (Esc)": "닫기 (Esc)"
+  },
+  "tags": {
+    "No tags yet": "아직 태그가 없습니다",
+    "Remove the tag": "태그 제거",
+    "Add a tag": "태그 추가",
+    "New tag": "새 태그",
+    "{count} notes": {
+      "other": "노트 {count}개"
+    },
+    "No notes with this tag": "이 태그가 붙은 노트가 없습니다"
   }
 }

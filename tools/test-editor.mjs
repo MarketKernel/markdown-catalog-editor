@@ -164,7 +164,17 @@ async function launch(note, files = {}) {
     server.close();
     await rm(profile, { recursive: true, force: true }).catch(() => undefined);
   };
-  return { evaluate, press, type, click, text, view, sleep, close };
+  /** Presses at the middle of `selector`, moves by `dy` pixels and lets go. */
+  const drag = async (selector, dy) => {
+    const [x, y] = await evaluate(`(() => { const r = document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; })()`);
+    await send('Input.dispatchMouseEvent', { type: 'mousePressed', x, y, button: 'left', buttons: 1, clickCount: 1 });
+    for (let step = 1; step <= 4; step += 1) {
+      await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x, y: y + (dy * step) / 4, button: 'left', buttons: 1 });
+    }
+    await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x, y: y + dy, button: 'left', buttons: 0, clickCount: 1 });
+    await sleep(60);
+  };
+  return { evaluate, press, type, click, drag, text, view, sleep, close };
 }
 
 /* ------------------------------------------------------------------ *
@@ -546,6 +556,135 @@ await scenario('Text\n', async (b) => {
   await b.type('Name');
   await b.press('Escape');
   eq('and the header takes the typing', await b.text(), 'Text\n\n| Name | Column |\n| --- | --- |\n|  |  |\n');
+});
+
+/**
+ * A writable folder in memory behind `showDirectoryPicker`, so the page opens
+ * it as it would a real one. `window.__fs` maps each path to its text.
+ */
+const memoryFolder = (files) => `(() => {
+  const fs = window.__fs = new Map(Object.entries(${JSON.stringify(files)}));
+  const join = (dir, name) => (dir ? dir + '/' + name : name);
+  const file = (path) => ({
+    kind: 'file',
+    name: path.split('/').pop(),
+    async getFile() { return new File([fs.get(path)], path.split('/').pop()); },
+    async createWritable() {
+      let text = '';
+      return {
+        async write(data) { text += typeof data === 'string' ? data : await data.text(); },
+        async close() { fs.set(path, text); },
+      };
+    },
+  });
+  const dir = (path) => ({
+    kind: 'directory',
+    name: path || 'Vault',
+    async *values() {
+      const seen = new Set();
+      for (const key of fs.keys()) {
+        if (path && !key.startsWith(path + '/')) continue;
+        const [head, ...rest] = (path ? key.slice(path.length + 1) : key).split('/');
+        if (seen.has(head)) continue;
+        seen.add(head);
+        yield rest.length ? dir(join(path, head)) : file(join(path, head));
+      }
+    },
+    async getFileHandle(name, options) {
+      const target = join(path, name);
+      if (!fs.has(target)) {
+        if (!options?.create) throw new DOMException('missing', 'NotFoundError');
+        fs.set(target, '');
+      }
+      return file(target);
+    },
+    async getDirectoryHandle(name) { return dir(join(path, name)); },
+    async removeEntry(name) {
+      const target = join(path, name);
+      for (const key of [...fs.keys()]) if (key === target || key.startsWith(target + '/')) fs.delete(key);
+    },
+    async queryPermission() { return 'granted'; },
+    async requestPermission() { return 'granted'; },
+  });
+  window.showDirectoryPicker = async () => dir('');
+})()`;
+
+await scenario('Note\n', async (b) => {
+  await b.evaluate(memoryFolder({
+    'A.md': '# A\n\nText\n',
+    'sub/B.md': 'B text\n',
+    '.meta.json': JSON.stringify({ notes: { 'A.md': { tags: ['work/alpha'] }, 'sub/B.md': { tags: ['idea'] }, 'gone.md': { tags: ['stale'] } } }),
+  }));
+  await b.evaluate(`document.getElementById('vault-name').click()`);
+  await b.sleep(300);
+  const clickRow = (selector, text) => b.evaluate(`[...document.querySelectorAll(${JSON.stringify(selector)})].find((n) => n.textContent.includes(${JSON.stringify(text)})).click()`);
+  const files = `[...document.querySelectorAll('#tree .tree-label')].map((n) => n.textContent)`;
+  const tags = `[...document.querySelectorAll('#tag-tree .tree-item')].map((n) => n.textContent)`;
+  const bar = `[...document.querySelectorAll('#note-tags > *')].map((n) => n.className === 'tag-add' ? '+' : n.querySelector('.tag-chip-label').textContent)`;
+  const stored = async () => JSON.parse(await b.evaluate(`window.__fs.get('.meta.json')`)).notes;
+
+  eq('.meta.json stays out of the file tree', await b.evaluate(files), ['sub', 'B', 'A']);
+  eq('the tag tree nests, and leaves out notes that are gone', await b.evaluate(tags), ['#idea1', '▾work1', '#alpha1']);
+
+  await clickRow('#tree .tree-item', 'A');
+  eq('the note shows its tags and a +', await b.evaluate(bar), ['#work/alpha', '+']);
+  await b.evaluate(`document.querySelector('#note-tags .tag-add').click()`);
+  eq('the + turns into a field', await b.evaluate(`document.activeElement.className`), 'tag-input');
+  await b.type('#Idea');
+  await b.press('Enter');
+  await b.sleep(100);
+  eq('the tag takes the known spelling, the + moves after it', await b.evaluate(bar), ['#work/alpha', '#idea', '+']);
+  eq('and lands in .meta.json', (await stored())['A.md'], { tags: ['work/alpha', 'idea'] });
+  eq('the tag tree counts it', await b.evaluate(tags), ['#idea2', '▾work1', '#alpha1']);
+  eq('entries of missing notes are kept in the file', (await stored())['gone.md'], { tags: ['stale'] });
+
+  await b.evaluate(`document.querySelector('#note-tags .tag-add').click()`);
+  await b.press('Escape');
+  eq('Escape leaves the tags as they were', await b.evaluate(bar), ['#work/alpha', '#idea', '+']);
+
+  await clickRow('#tag-tree .tree-item', 'idea');
+  const page = `[...document.querySelectorAll('#tag-page .tag-note-open')].map((n) => n.textContent)`;
+  eq('a tag opens the list of its notes', await b.evaluate(page), ['A', 'Bsub']);
+  eq('in place of the note', await b.evaluate(`[document.getElementById('doc').hidden, document.getElementById('note-tags').hidden, document.getElementById('status-state').textContent]`), [true, true, 'read-only']);
+  eq('with nothing to format', await b.evaluate(`getComputedStyle(document.getElementById('format')).pointerEvents`), 'none');
+
+  await clickRow('#tag-tree .tree-item', 'work');
+  eq('a parent tag lists the notes of the tags under it', await b.evaluate(page), ['A']);
+  await b.evaluate(`document.querySelector('#tag-tree .tree-mark--toggle').click()`);
+  eq('its arrow folds it', await b.evaluate(tags), ['#idea2', '▸work1']);
+
+  await clickRow('#tag-page .tag-chip-label', '#work/alpha');
+  eq('a chip on the list opens its own tag', await b.evaluate(`document.getElementById('status-path').textContent`), '#work/alpha');
+  await clickRow('#tag-tree .tree-item', 'idea');
+  await clickRow('#tag-page .tag-note-open', 'B');
+  eq('a note opens from the list', await b.evaluate(`[document.getElementById('tag-page').hidden, document.getElementById('status-path').textContent]`), [true, 'sub/B.md']);
+  await b.evaluate(`document.querySelector('#note-tags .tag-remove').click()`);
+  await b.sleep(100);
+  eq('× removes a tag', await b.evaluate(bar), ['+']);
+  eq('a note without tags leaves the file', Object.keys(await stored()), ['A.md', 'gone.md']);
+
+  // Renaming a folder carries its notes' tags along.
+  await b.evaluate(`document.querySelector('#note-tags .tag-add').click()`);
+  await b.type('later');
+  await b.press('Enter');
+  await b.sleep(100);
+  await b.evaluate(`document.querySelector('#tree .tree-item[data-path="sub"]').dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, clientX: 50, clientY: 50 }))`);
+  await clickRow('.context-item', 'Rename');
+  await b.evaluate(`(() => { const input = document.querySelector('.dialog-input'); input.value = 'moved'; input.form.requestSubmit(); })()`);
+  await b.sleep(300);
+  eq('a renamed folder keeps its notes\' tags', (await stored())['moved/B.md'], { tags: ['later'] });
+  eq('the old path is gone', (await stored())['sub/B.md'], undefined);
+  eq('the open note still shows them', await b.evaluate(bar), ['#later', '+']);
+
+  const height = `document.getElementById('tags').offsetHeight`;
+  const before = await b.evaluate(height);
+  await b.drag('#tags-resizer', 50);
+  const lowered = await b.evaluate(height);
+  eq('dragging the rule down lowers the tag section', Math.abs(lowered - Math.max(72, before - 50)) <= 1, true);
+  eq('and the height is remembered', await b.evaluate(`JSON.parse(localStorage.getItem('markdown-catalog-editor')).tagsHeight`), lowered);
+  await b.drag('#tags-resizer', -2000);
+  eq('dragging up gives back no more than the section had', await b.evaluate(height), before);
+  eq('which clears the cap', await b.evaluate(`document.getElementById('tags').style.getPropertyValue('--tags-height')`), '');
 });
 
 console.log(`${passed} browser checks passed${failed ? `, ${failed} failed` : ''}`);

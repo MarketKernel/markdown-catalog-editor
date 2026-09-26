@@ -37,7 +37,9 @@
     "Note \"{target}\" not found": "“{target}” notu bulunamadı",
     "Could not read {path}": "{path} okunamadı",
     "Could not save: {reason}": "Kaydedilemedi: {reason}",
-    "The note was renamed, its images were not: {reason}": "Notun adı değiştirildi, ancak görsellerininki değiştirilemedi: {reason}"
+    "The note was renamed, its images were not: {reason}": "Notun adı değiştirildi, ancak görsellerininki değiştirilemedi: {reason}",
+    "Could not read {name}, so tags cannot be changed: {reason}": "{name} okunamadı, bu yüzden etiketler değiştirilemez: {reason}",
+    "Could not save the tags: {reason}": "Etiketler kaydedilemedi: {reason}"
   },
   "gate": {
     "Drag a folder, not a single file": "Tek bir dosya değil, bir klasör sürükleyin",
@@ -117,7 +119,10 @@
     "Expand all folders": "Tüm klasörleri genişlet",
     "Collapse all folders": "Tüm klasörleri daralt",
     "File tree": "Dosya ağacı",
-    "File panel width": "Dosya paneli genişliği"
+    "File panel width": "Dosya paneli genişliği",
+    "Tags": "Etiketler",
+    "Tag tree": "Etiket ağacı",
+    "Tag panel height": "Etiket panelinin yüksekliği"
   },
   "toolbar": {
     "Read": "Okuma",
@@ -154,5 +159,16 @@
     "Previous (⇧Enter)": "Önceki (⇧Enter)",
     "Next (Enter)": "Sonraki (Enter)",
     "Close (Esc)": "Kapat (Esc)"
+  },
+  "tags": {
+    "No tags yet": "Henüz etiket yok",
+    "Remove the tag": "Etiketi kaldır",
+    "Add a tag": "Etiket ekle",
+    "New tag": "Yeni etiket",
+    "{count} notes": {
+      "one": "{count} not",
+      "other": "{count} not"
+    },
+    "No notes with this tag": "Bu etiketle not yok"
   }
 }

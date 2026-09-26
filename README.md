@@ -8,9 +8,11 @@ disk directly.
 ┌──────────────────────────────────────────────┐
 │ Toolbar                                      │
 ├────────────┬─────────────────────────────────┤
-│ File and   │ Document                        │
-│ folder     │ (read / edit)                   │
-│ tree       │                                 │
+│ File and   │ #tags +                         │
+│ folder     │ Document                        │
+│ tree       │ (read / edit)                   │
+├╌╌╌╌╌╌╌╌╌╌╌╌┤                                 │
+│ Tags       │                                 │
 └────────────┴─────────────────────────────────┘
 ```
 
@@ -78,6 +80,65 @@ the file; the rest of the table keeps its padding and alignment.
 
 Adding or deleting rewrites the table in the plain `| a | b |` form.
 
+## Tags
+
+Tags group notes across folders. They are not written into the notes: the Markdown stays
+exactly as it was, and all tags of the folder live in one file beside the notes.
+
+- **On a note**: the tags sit under the title as `#tag` chips, followed by a **+**. The
+  **+** turns into a field; Enter adds the tag, and the **+** reappears after it. Tags
+  already used in the folder are suggested as you type. Esc cancels; leaving the field
+  with text in it adds the tag too. **×** on a chip removes the tag, and a click on the
+  chip opens the tag's page. Tags can be changed in both read and edit mode.
+- **Spelling**: a leading `#` is dropped and spaces inside a tag become dashes, so
+  `#to do` is stored as `to-do`. A tag that differs from an existing one only in case takes
+  the existing spelling — `Idea` and `idea` never become two tags. A note cannot carry the
+  same tag twice.
+- **Nesting**: `/` nests tags. `work/alpha` and `work/beta` sit under `work` in the tag
+  tree, and a note tagged `work/alpha` is counted under `work` as well.
+- **The tag tree**: the section at the bottom of the file panel, set apart from the file
+  tree. Each tag shows how many notes carry it or a tag nested under it; the arrow of a
+  parent tag folds its children, and the heading folds the whole section. The name filter
+  above the file tree filters the tags too. The section takes up to 42 % of the panel and
+  scrolls inside; dragging the line above it makes it lower (never taller), a double click
+  on the line gives the room back, and with the line focused ↑ and ↓ do the same. The
+  height is remembered.
+- **A tag's page**: clicking a tag in the tree, or a chip, shows the notes carrying it — a
+  parent tag lists the notes of every tag under it too. Each row gives the note's name, its
+  folder and all its tags; a click on the name opens the note, a click on a tag opens that
+  tag. The page is read-only: there is nothing to edit on it, and the formatting toolbar
+  is switched off. For a nested tag the parents in its title link to their own pages.
+- **Renaming and deleting**: tags follow a note, or every note in a folder, when it is
+  renamed or deleted from the file panel. A note moved or deleted outside the editor keeps
+  its entry in the file, but the entry is not shown or counted while the note is missing.
+- **Read-only folders** (Safari, Firefox): the tags are shown, but the **+** and **×** are
+  not.
+
+### `.meta.json`
+
+The file sits at the root of the opened folder and is created with the first tag. It is
+never shown in the file tree.
+
+```json
+{
+  "notes": {
+    "Ideas.md": { "tags": ["idea", "work/alpha"] },
+    "Projects/Roadmap.md": { "tags": ["work/alpha", "planning"] }
+  }
+}
+```
+
+The keys are note paths relative to the root, as the tree shows them; the tags keep the
+order they were added in. The file is written with the notes sorted by path and two-space
+indentation, so it reads well in a diff, and notes with no tags left are dropped from it.
+Fields the editor does not know — at the top or inside a note's entry — are kept when it
+writes the file back, so other tools can store their own data in it. If the file is not a
+valid JSON object, the editor says so, shows no tags and never writes over it; tags cannot
+be changed until the file is fixed and the folder opened again.
+
+When the folder is served over HTTP with an `index.json` (see "[How to use](#how-to-use)"),
+list `.meta.json` among its files to have the tags show.
+
 ## Features
 
 - **File tree**: collapsible folders, filtering by name, creating, renaming and deleting
@@ -92,6 +153,8 @@ Adding or deleting rewrites the table in the plain `| a | b |` form.
   folder (`![[image-1.png|300]]` sets the width). `assets` folders start collapsed in the
   tree, and renaming a note renames its image folder too. A picture clicked in the tree
   opens as a picture, not as text.
+- **Tags**: nested tags on notes, a tag tree and a page per tag, kept apart from the notes
+  in `.meta.json` — see "[Tags](#tags)".
 - **Settings** (the gear at the top right, next to search): interface language, theme
   (system, light, dark), zoom 50–200 %, text width (a centred column or the full pane) and
   whether the note name is shown as a title.
@@ -100,7 +163,8 @@ Adding or deleting rewrites the table in the plain `| a | b |` form.
   Українська. By default the interface follows the browser's language. In Arabic and Urdu the
   chrome is mirrored right to left; the note itself keeps its own direction.
 - Autosave one second after an edit, undo and redo, search within the note.
-- The language, theme, zoom, text width, panel width and last opened note are remembered.
+- The language, theme, zoom, text width, panel width, tag panel height and last opened note
+  are remembered.
 
 ## Keyboard shortcuts
 
@@ -147,7 +211,7 @@ npm install
 npm run build      # -> build/macaed.html
 npm run watch      # rebuild on changes in src/
 npm run typecheck  # tsc --noEmit
-npm test           # the block model, formatting, Markdown syntax and the dictionaries
+npm test           # the block model, formatting, Markdown syntax, tags and the dictionaries
 npm run test:browser  # the built editor in headless Chrome
 npm run i18n       # strings each dictionary lacks or no longer needs
 ```
@@ -169,11 +233,13 @@ src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
 src/markdown.ts     markdown-it: ==highlight==, [[wiki links]], ![[embeds]], tasks, code highlighting
 src/tree.ts         folder and file tree
+src/meta.ts         .meta.json: tags per note, the tag tree, renames and deletes
+src/tags.ts         the tag tree, the tags under a note's title, a tag's page
 src/settings.ts     localStorage: language, theme, zoom, panel width, last note
 src/i18n.ts         t()/tn(), the language list and flags, translating the page's markup
 src/locales/        one dictionary per language
 src/ui.ts           dialogs, context menu, popover, notifications
-tools/              tests: block model, formatting, dictionaries, the editor in headless Chrome
+tools/              tests: block model, formatting, tags, dictionaries, the editor in headless Chrome
 vendor/icon.svg     the icon
 docs/               working notes (not under git)
 build/macaed.html   the build output

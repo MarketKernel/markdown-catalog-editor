@@ -41,7 +41,9 @@
     "Note \"{target}\" not found": "Заметка «{target}» не найдена",
     "Could not read {path}": "Не удалось прочитать {path}",
     "Could not save: {reason}": "Не удалось сохранить: {reason}",
-    "The note was renamed, its images were not: {reason}": "Заметка переименована, но её изображения — нет: {reason}"
+    "The note was renamed, its images were not: {reason}": "Заметка переименована, но её изображения — нет: {reason}",
+    "Could not read {name}, so tags cannot be changed: {reason}": "Не удалось прочитать {name}, поэтому теги нельзя изменить: {reason}",
+    "Could not save the tags: {reason}": "Не удалось сохранить теги: {reason}"
   },
   "gate": {
     "Drag a folder, not a single file": "Перетащите папку, а не отдельный файл",
@@ -121,7 +123,10 @@
     "Expand all folders": "Развернуть все папки",
     "Collapse all folders": "Свернуть все папки",
     "File tree": "Дерево файлов",
-    "File panel width": "Ширина панели файлов"
+    "File panel width": "Ширина панели файлов",
+    "Tags": "Теги",
+    "Tag tree": "Дерево тегов",
+    "Tag panel height": "Высота панели тегов"
   },
   "toolbar": {
     "Read": "Чтение",
@@ -158,5 +163,18 @@
     "Previous (⇧Enter)": "Предыдущее (⇧Enter)",
     "Next (Enter)": "Следующее (Enter)",
     "Close (Esc)": "Закрыть (Esc)"
+  },
+  "tags": {
+    "No tags yet": "Тегов пока нет",
+    "Remove the tag": "Убрать тег",
+    "Add a tag": "Добавить тег",
+    "New tag": "Новый тег",
+    "{count} notes": {
+      "one": "{count} заметка",
+      "few": "{count} заметки",
+      "many": "{count} заметок",
+      "other": "{count} заметки"
+    },
+    "No notes with this tag": "Нет заметок с этим тегом"
   }
 }

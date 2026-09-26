@@ -21,6 +21,12 @@ export interface Settings {
   collapsed: string[];
   /** `assets` folders the user opened; they are collapsed otherwise. */
   expanded: string[];
+  /** The tag section at the bottom of the file panel is unfolded. */
+  tagsOpen: boolean;
+  /** Parent tags folded in the tag tree. */
+  collapsedTags: string[];
+  /** The tag section's height cap in pixels, set by dragging; null → as tall as the panel allows. */
+  tagsHeight: number | null;
 }
 
 const KEY = 'markdown-catalog-editor';
@@ -41,6 +47,9 @@ const DEFAULTS: Settings = {
   lastPath: null,
   collapsed: [],
   expanded: [],
+  tagsOpen: true,
+  collapsedTags: [],
+  tagsHeight: null,
 };
 
 export function loadSettings(): Settings {
@@ -56,6 +65,8 @@ export function loadSettings(): Settings {
       sidebar: Math.min(560, Math.max(160, Number(stored.sidebar ?? DEFAULTS.sidebar))),
       collapsed: Array.isArray(stored.collapsed) ? stored.collapsed : [],
       expanded: Array.isArray(stored.expanded) ? stored.expanded : [],
+      collapsedTags: Array.isArray(stored.collapsedTags) ? stored.collapsedTags : [],
+      tagsHeight: Number.isFinite(stored.tagsHeight) ? Number(stored.tagsHeight) : null,
     };
   } catch {
     return { ...DEFAULTS };

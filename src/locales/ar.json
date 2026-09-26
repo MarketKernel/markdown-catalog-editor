@@ -45,7 +45,9 @@
     "Note \"{target}\" not found": "الملاحظة «{target}» غير موجودة",
     "Could not read {path}": "تعذّرت قراءة {path}",
     "Could not save: {reason}": "تعذّر الحفظ: {reason}",
-    "The note was renamed, its images were not: {reason}": "أُعيدت تسمية الملاحظة، لكن لم تُعَد تسمية صورها: {reason}"
+    "The note was renamed, its images were not: {reason}": "أُعيدت تسمية الملاحظة، لكن لم تُعَد تسمية صورها: {reason}",
+    "Could not read {name}, so tags cannot be changed: {reason}": "تعذّرت قراءة {name}، لذا لا يمكن تغيير الوسوم: {reason}",
+    "Could not save the tags: {reason}": "تعذّر حفظ الوسوم: {reason}"
   },
   "gate": {
     "Drag a folder, not a single file": "اسحب مجلدًا، لا ملفًا واحدًا",
@@ -125,7 +127,10 @@
     "Expand all folders": "توسيع كل المجلدات",
     "Collapse all folders": "طي كل المجلدات",
     "File tree": "شجرة الملفات",
-    "File panel width": "عرض لوحة الملفات"
+    "File panel width": "عرض لوحة الملفات",
+    "Tags": "الوسوم",
+    "Tag tree": "شجرة الوسوم",
+    "Tag panel height": "ارتفاع لوحة الوسوم"
   },
   "toolbar": {
     "Read": "قراءة",
@@ -162,5 +167,20 @@
     "Previous (⇧Enter)": "السابق (⇧Enter)",
     "Next (Enter)": "التالي (Enter)",
     "Close (Esc)": "إغلاق (Esc)"
+  },
+  "tags": {
+    "No tags yet": "لا توجد وسوم بعد",
+    "Remove the tag": "إزالة الوسم",
+    "Add a tag": "إضافة وسم",
+    "New tag": "وسم جديد",
+    "{count} notes": {
+      "zero": "{count} ملاحظة",
+      "one": "ملاحظة واحدة",
+      "two": "ملاحظتان",
+      "few": "{count} ملاحظات",
+      "many": "{count} ملاحظة",
+      "other": "{count} ملاحظة"
+    },
+    "No notes with this tag": "لا توجد ملاحظات بهذا الوسم"
   }
 }

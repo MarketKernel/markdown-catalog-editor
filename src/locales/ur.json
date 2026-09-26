@@ -37,7 +37,9 @@
     "Note \"{target}\" not found": "نوٹ \"{target}\" نہیں ملا",
     "Could not read {path}": "{path} پڑھا نہیں جا سکا",
     "Could not save: {reason}": "محفوظ نہیں ہو سکا: {reason}",
-    "The note was renamed, its images were not: {reason}": "نوٹ کا نام تبدیل ہو گیا، لیکن اس کی تصاویر کا نہیں: {reason}"
+    "The note was renamed, its images were not: {reason}": "نوٹ کا نام تبدیل ہو گیا، لیکن اس کی تصاویر کا نہیں: {reason}",
+    "Could not read {name}, so tags cannot be changed: {reason}": "{name} پڑھا نہیں جا سکا، اس لیے ٹیگ تبدیل نہیں ہو سکتے: {reason}",
+    "Could not save the tags: {reason}": "ٹیگ محفوظ نہیں ہو سکے: {reason}"
   },
   "gate": {
     "Drag a folder, not a single file": "کوئی فولڈر گھسیٹیں، اکیلی فائل نہیں",
@@ -117,7 +119,10 @@
     "Expand all folders": "تمام فولڈر پھیلائیں",
     "Collapse all folders": "تمام فولڈر سمیٹیں",
     "File tree": "فائل ٹری",
-    "File panel width": "فائل پینل کی چوڑائی"
+    "File panel width": "فائل پینل کی چوڑائی",
+    "Tags": "ٹیگ",
+    "Tag tree": "ٹیگ ٹری",
+    "Tag panel height": "ٹیگ پینل کی اونچائی"
   },
   "toolbar": {
     "Read": "پڑھیں",
@@ -154,5 +159,16 @@
     "Previous (⇧Enter)": "پچھلا (⇧Enter)",
     "Next (Enter)": "اگلا (Enter)",
     "Close (Esc)": "بند کریں (Esc)"
+  },
+  "tags": {
+    "No tags yet": "ابھی کوئی ٹیگ نہیں",
+    "Remove the tag": "ٹیگ ہٹائیں",
+    "Add a tag": "ٹیگ شامل کریں",
+    "New tag": "نیا ٹیگ",
+    "{count} notes": {
+      "one": "{count} نوٹ",
+      "other": "{count} نوٹس"
+    },
+    "No notes with this tag": "اس ٹیگ کے ساتھ کوئی نوٹ نہیں"
   }
 }

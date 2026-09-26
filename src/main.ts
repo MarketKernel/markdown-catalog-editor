@@ -6,6 +6,7 @@
 import { Editor, translateTableTools, type EditorStatus, type FormatAction, type Mode } from './editor';
 import { FLAGS, isRightToLeft, LANGUAGES, setLanguage, t, tn, translatePage, type Language } from './i18n';
 import { createMarkdown } from './markdown';
+import { Meta } from './meta';
 import {
   applyFullWidth,
   applySidebar,
@@ -19,12 +20,14 @@ import {
   type Settings,
   type Theme,
 } from './settings';
+import { renderTagBar, renderTagPage, TagTree } from './tags';
 import { FileTree, stripExtension } from './tree';
 import { ask, confirmAsk, h, popover, toast } from './ui';
 import {
   ASSETS_DIR,
   DirectoryVault,
   FileListVault,
+  META_FILE,
   NOTE_EXTENSIONS,
   baseOf,
   dirOf,
@@ -53,7 +56,9 @@ const app = el('app');
 const scroller = el<HTMLDivElement>('scroller');
 const doc = el('doc');
 const inlineTitle = el('inline-title');
+const noteTags = el('note-tags');
 const viewer = el('viewer');
+const tagPage = el('tag-page');
 const placeholder = el('placeholder');
 const statusPath = el('status-path');
 const statusState = el('status-state');
@@ -63,12 +68,19 @@ let vault: Vault | null = null;
 let currentPath: string | null = null;
 /** An image opened from the tree; it replaces the note, so `currentPath` is null meanwhile. */
 let viewedPath: string | null = null;
+/** A tag's page opened from the tag tree; like an image, it stands in for the note. */
+let viewedTag: string | null = null;
 let dirty = false;
 /** Bumped on every edit, so a save knows whether the text moved on while it was writing. */
 let revision = 0;
 let saveTimer = 0;
 let lastStatus: EditorStatus | null = null;
 const assets = new Map<string, string>();
+let meta = Meta.empty();
+/** False when `.meta.json` could not be parsed: the tags are shown, never written over it. */
+let metaWritable = true;
+/** Writes of `.meta.json` one after another, so an older one never lands last. */
+let metaSaving: Promise<void> = Promise.resolve();
 
 /* ------------------------------------------------------------------ *
  * Editor
@@ -112,6 +124,9 @@ const tree = new FileTree(el('tree'), el('note-count'), {
 tree.setCollapsed(settings.collapsed);
 tree.setExpanded(settings.expanded);
 
+const tagTree = new TagTree(el('tag-tree'), el('tag-count'), (tag) => void openTag(tag));
+tagTree.setCollapsed(settings.collapsedTags);
+
 /* ------------------------------------------------------------------ *
  * Opening a folder
  * ------------------------------------------------------------------ */
@@ -123,12 +138,15 @@ async function useVault(next: Vault): Promise<void> {
   vault = next;
   currentPath = null;
   closeImage();
+  closeTag();
   dirty = false;
   for (const url of assets.values()) URL.revokeObjectURL(url);
   assets.clear();
 
   const entries = await next.scan();
+  await loadMeta(next);
   tree.setEntries(entries);
+  renderTags();
   el('vault-label').textContent = next.name;
   gate.hidden = true;
   app.hidden = false;
@@ -223,9 +241,11 @@ async function openNote(path: string): Promise<void> {
     const text = await vault.readText(path);
     currentPath = path;
     closeImage();
+    closeTag();
     editor.load(text);
     dirty = false;
     tree.setActive(path);
+    renderNoteTags();
     settings.lastPath = path;
     persist();
     renderDocumentTitle();
@@ -349,6 +369,7 @@ async function openImage(path: string): Promise<void> {
   viewer.replaceChildren(media, caption);
 
   currentPath = null;
+  closeTag();
   viewedPath = path;
   dirty = false;
   editor.load('');
@@ -356,6 +377,7 @@ async function openImage(path: string): Promise<void> {
   placeholder.hidden = true;
   viewer.hidden = false;
   tree.setActive(path);
+  renderNoteTags();
   renderDocumentTitle();
   renderState();
   renderTitle();
@@ -367,6 +389,180 @@ function closeImage(): void {
   viewer.replaceChildren();
   doc.hidden = false;
 }
+
+/* ------------------------------------------------------------------ *
+ * Tags
+ * ------------------------------------------------------------------ */
+
+/** Reads `.meta.json`; a folder without one simply has no tags yet. */
+async function loadMeta(next: Vault): Promise<void> {
+  meta = Meta.empty();
+  metaWritable = true;
+  let text: string;
+  try {
+    text = await next.readText(META_FILE);
+  } catch {
+    return;
+  }
+  try {
+    meta = Meta.parse(text);
+  } catch (error) {
+    metaWritable = false;
+    toast(t('toast', 'Could not read {name}, so tags cannot be changed: {reason}', { name: META_FILE, reason: error instanceof Error ? error.message : String(error) }), 'error');
+  }
+}
+
+function saveMeta(): void {
+  const target = vault;
+  if (!target?.writable || !metaWritable) return;
+  const text = meta.serialize();
+  metaSaving = metaSaving
+    .then(() => target.writeText(META_FILE, text))
+    .catch((error: unknown) => {
+      toast(t('toast', 'Could not save the tags: {reason}', { reason: error instanceof Error ? error.message : String(error) }), 'error');
+    });
+}
+
+function canTag(): boolean {
+  return Boolean(vault?.writable) && metaWritable;
+}
+
+/** Tags of notes that are gone from the folder stay in the file but are not shown. */
+function noteExists(): (path: string) => boolean {
+  const known = new Set(tree.notes().map((note) => note.path));
+  return (path) => known.has(path);
+}
+
+function renderTags(): void {
+  tagTree.setNodes(meta.tree(noteExists()));
+  renderNoteTags();
+  renderTagView();
+}
+
+function renderNoteTags(): void {
+  const path = currentPath;
+  if (!path) {
+    noteTags.hidden = true;
+    noteTags.replaceChildren();
+    return;
+  }
+  renderTagBar(noteTags, {
+    tags: meta.tagsOf(path),
+    editable: canTag(),
+    suggestions: meta.allTags(),
+    onOpen: (tag) => void openTag(tag),
+    onAdd: (tag) => {
+      if (meta.addTag(path, tag)) saveMeta();
+      renderTags();
+    },
+    onRemove: (tag) => {
+      if (meta.removeTag(path, tag)) saveMeta();
+      renderTags();
+    },
+  });
+}
+
+/** Shows the notes with a tag in place of the note — a list to read, not a text to edit. */
+async function openTag(tag: string): Promise<void> {
+  if (!vault) return;
+  await flushSave();
+  currentPath = null;
+  closeImage();
+  viewedTag = tag;
+  dirty = false;
+  editor.load('');
+  doc.hidden = true;
+  placeholder.hidden = true;
+  tagPage.hidden = false;
+  renderTagView();
+  tree.setActive(null);
+  tagTree.setActive(tag);
+  renderNoteTags();
+  renderDocumentTitle();
+  renderState();
+  renderTitle();
+}
+
+function closeTag(): void {
+  if (viewedTag === null) return;
+  viewedTag = null;
+  tagPage.hidden = true;
+  tagPage.replaceChildren();
+  doc.hidden = false;
+  tagTree.setActive(null);
+}
+
+function renderTagView(): void {
+  if (viewedTag === null) return;
+  renderTagPage(tagPage, {
+    tag: viewedTag,
+    notes: meta.notesWith(viewedTag, noteExists()).map((path) => ({
+      path,
+      name: stripExtension(baseOf(path)),
+      dir: dirOf(path),
+      tags: meta.tagsOf(path),
+    })),
+    onOpenNote: (path) => void openNote(path),
+    onOpenTag: (tag) => void openTag(tag),
+  });
+}
+
+const tagsSection = el('tags');
+const tagsToggle = el('tags-toggle');
+
+function applyTagsOpen(): void {
+  tagsSection.classList.toggle('tags--closed', !settings.tagsOpen);
+  tagsToggle.setAttribute('aria-expanded', String(settings.tagsOpen));
+}
+
+/** Below this the section would show little more than its heading. */
+const TAGS_MIN_HEIGHT = 72;
+/** The share of the panel the section may take — the same 42 % as `.tags` in the styles. */
+const TAGS_MAX_SHARE = 0.42;
+const tagsResizer = el('tags-resizer');
+
+function applyTagsHeight(): void {
+  if (settings.tagsHeight === null) tagsSection.style.removeProperty('--tags-height');
+  else tagsSection.style.setProperty('--tags-height', `${settings.tagsHeight}px`);
+}
+
+/** Only lowers the cap: anything at or above the 42 % limit just clears it. */
+function setTagsHeight(height: number): void {
+  const panel = tagsSection.parentElement?.clientHeight ?? window.innerHeight;
+  const limit = panel * TAGS_MAX_SHARE;
+  settings.tagsHeight = height >= limit ? null : Math.round(Math.max(TAGS_MIN_HEIGHT, height));
+  applyTagsHeight();
+  persist();
+}
+
+tagsResizer.addEventListener('pointerdown', (event) => {
+  event.preventDefault();
+  tagsResizer.setPointerCapture(event.pointerId);
+  tagsResizer.classList.add('tags-resizer--active');
+  const bottom = tagsSection.getBoundingClientRect().bottom;
+  const move = (moveEvent: PointerEvent): void => setTagsHeight(bottom - moveEvent.clientY);
+  const stop = (): void => {
+    tagsResizer.classList.remove('tags-resizer--active');
+    tagsResizer.removeEventListener('pointermove', move);
+    tagsResizer.removeEventListener('pointerup', stop);
+  };
+  tagsResizer.addEventListener('pointermove', move);
+  tagsResizer.addEventListener('pointerup', stop);
+});
+// A double click gives the section back all the room it may take.
+tagsResizer.addEventListener('dblclick', () => setTagsHeight(Infinity));
+tagsResizer.addEventListener('keydown', (event) => {
+  if (event.key !== 'ArrowUp' && event.key !== 'ArrowDown') return;
+  event.preventDefault();
+  setTagsHeight(tagsSection.offsetHeight + (event.key === 'ArrowUp' ? 16 : -16));
+});
+
+tagsToggle.addEventListener('click', () => {
+  settings.tagsOpen = !settings.tagsOpen;
+  applyTagsOpen();
+applyTagsHeight();
+  persist();
+});
 
 /* ------------------------------------------------------------------ *
  * Saving
@@ -429,6 +625,7 @@ async function refreshTree(): Promise<void> {
   if (!vault) return;
   tree.setEntries(await vault.scan());
   tree.setActive(currentPath);
+  renderTags();
 }
 
 function withExtension(name: string): string {
@@ -471,6 +668,7 @@ async function renameEntry(entry: TreeEntry): Promise<void> {
   try {
     await flushSave();
     const next = await vault.rename(entry.path, entry.kind, entry.kind === 'file' ? withExtension(name) : name);
+    if (meta.move(entry.path, next)) saveMeta();
     // A note's images follow it, or its `![[embeds]]` would all break.
     const images = entry.kind === 'file' && isNote(entry.name) ? tree.find(assetsDirOf(entry.path)) : null;
     if (images?.kind === 'dir') {
@@ -512,6 +710,7 @@ async function deleteEntry(entry: TreeEntry): Promise<void> {
   if (!ok) return;
   try {
     await vault.remove(entry.path, entry.kind);
+    if (meta.remove(entry.path)) saveMeta();
     const inside = (path: string | null): boolean => path === entry.path || Boolean(path?.startsWith(`${entry.path}/`));
     if (inside(currentPath) || inside(viewedPath)) {
       currentPath = null;
@@ -542,7 +741,9 @@ el('collapse-all').addEventListener('click', () => {
 });
 
 el<HTMLInputElement>('tree-filter').addEventListener('input', (event) => {
-  tree.setFilter((event.target as HTMLInputElement).value);
+  const query = (event.target as HTMLInputElement).value;
+  tree.setFilter(query);
+  tagTree.setFilter(query);
 });
 
 /* ------------------------------------------------------------------ *
@@ -887,6 +1088,7 @@ function setLanguageChoice(choice: Settings['language']): void {
   persist();
   applyLanguage();
   tree.render();
+  renderTags();
   renderState();
   renderCount();
   renderDocumentTitle();
@@ -966,7 +1168,13 @@ function renderTitle(): void {
 }
 
 function renderDocumentTitle(): void {
-  const name = currentPath ? stripExtension(baseOf(currentPath)) : viewedPath ? baseOf(viewedPath) : null;
+  const name = currentPath
+    ? stripExtension(baseOf(currentPath))
+    : viewedPath
+      ? baseOf(viewedPath)
+      : viewedTag !== null
+        ? `#${viewedTag}`
+        : null;
   document.title = name ? `${name} — ${t('app', 'Notes editor')}` : t('app', 'Notes editor');
 }
 
@@ -1005,11 +1213,13 @@ resizer.addEventListener('keydown', (event) => {
  * ------------------------------------------------------------------ */
 
 function renderState(): void {
-  statusPath.textContent = currentPath ?? viewedPath ?? '—';
+  statusPath.textContent = currentPath ?? viewedPath ?? (viewedTag !== null ? `#${viewedTag}` : '—');
   if (!vault) statusState.textContent = '';
-  else if (!vault.writable) statusState.textContent = t('status', 'read-only');
+  else if (!vault.writable || viewedTag !== null) statusState.textContent = t('status', 'read-only');
   else statusState.textContent = dirty ? t('status', 'unsaved') : t('status', 'saved');
   statusState.classList.toggle('status-state--dirty', dirty && Boolean(vault?.writable));
+  // Without a note — a picture, a tag's page — there is nothing to format.
+  document.body.classList.toggle('no-note', !currentPath);
 }
 
 function renderCount(): void {
@@ -1022,6 +1232,7 @@ function renderCount(): void {
 function persist(): void {
   settings.collapsed = tree.getCollapsed();
   settings.expanded = tree.getExpanded();
+  settings.collapsedTags = tagTree.getCollapsed();
   saveSettings(settings);
 }
 
@@ -1081,6 +1292,7 @@ applyTheme(settings.theme);
 applyZoom(settings.zoom);
 applyFullWidth(settings.fullWidth);
 applySidebar(settings.sidebar, settings.sidebarHidden);
+applyTagsOpen();
 editor.setMode(settings.mode);
 syncModeButtons();
 renderState();

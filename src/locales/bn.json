@@ -37,7 +37,9 @@
     "Note \"{target}\" not found": "“{target}” নোটটি পাওয়া যায়নি",
     "Could not read {path}": "{path} পড়া যায়নি",
     "Could not save: {reason}": "সংরক্ষণ করা যায়নি: {reason}",
-    "The note was renamed, its images were not: {reason}": "নোটের নাম বদলানো হয়েছে, কিন্তু এর ছবিগুলোর নয়: {reason}"
+    "The note was renamed, its images were not: {reason}": "নোটের নাম বদলানো হয়েছে, কিন্তু এর ছবিগুলোর নয়: {reason}",
+    "Could not read {name}, so tags cannot be changed: {reason}": "{name} পড়া যায়নি, তাই ট্যাগ বদলানো যাবে না: {reason}",
+    "Could not save the tags: {reason}": "ট্যাগ সংরক্ষণ করা যায়নি: {reason}"
   },
   "gate": {
     "Drag a folder, not a single file": "একটি ফোল্ডার টেনে আনুন, একক ফাইল নয়",
@@ -117,7 +119,10 @@
     "Expand all folders": "সব ফোল্ডার প্রসারিত করুন",
     "Collapse all folders": "সব ফোল্ডার সংকুচিত করুন",
     "File tree": "ফাইল ট্রি",
-    "File panel width": "ফাইল প্যানেলের প্রস্থ"
+    "File panel width": "ফাইল প্যানেলের প্রস্থ",
+    "Tags": "ট্যাগ",
+    "Tag tree": "ট্যাগের তালিকা",
+    "Tag panel height": "ট্যাগ প্যানেলের উচ্চতা"
   },
   "toolbar": {
     "Read": "পড়া",
@@ -154,5 +159,16 @@
     "Previous (⇧Enter)": "আগেরটি (⇧Enter)",
     "Next (Enter)": "পরেরটি (Enter)",
     "Close (Esc)": "বন্ধ করুন (Esc)"
+  },
+  "tags": {
+    "No tags yet": "এখনও কোনো ট্যাগ নেই",
+    "Remove the tag": "ট্যাগ সরান",
+    "Add a tag": "ট্যাগ যোগ করুন",
+    "New tag": "নতুন ট্যাগ",
+    "{count} notes": {
+      "one": "{count}টি নোট",
+      "other": "{count}টি নোট"
+    },
+    "No notes with this tag": "এই ট্যাগে কোনো নোট নেই"
   }
 }

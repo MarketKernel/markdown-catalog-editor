@@ -35,7 +35,9 @@
     "Note \"{target}\" not found": "ノート「{target}」が見つかりません",
     "Could not read {path}": "{path} を読み込めませんでした",
     "Could not save: {reason}": "保存できませんでした：{reason}",
-    "The note was renamed, its images were not: {reason}": "ノートの名前は変更されましたが、画像の名前は変更されませんでした：{reason}"
+    "The note was renamed, its images were not: {reason}": "ノートの名前は変更されましたが、画像の名前は変更されませんでした：{reason}",
+    "Could not read {name}, so tags cannot be changed: {reason}": "{name} を読み込めないため、タグを変更できません: {reason}",
+    "Could not save the tags: {reason}": "タグを保存できませんでした: {reason}"
   },
   "gate": {
     "Drag a folder, not a single file": "単一のファイルではなく、フォルダをドラッグしてください",
@@ -115,7 +117,10 @@
     "Expand all folders": "すべてのフォルダを展開",
     "Collapse all folders": "すべてのフォルダを折りたたむ",
     "File tree": "ファイルツリー",
-    "File panel width": "ファイルパネルの幅"
+    "File panel width": "ファイルパネルの幅",
+    "Tags": "タグ",
+    "Tag tree": "タグツリー",
+    "Tag panel height": "タグパネルの高さ"
   },
   "toolbar": {
     "Read": "閲覧",
@@ -152,5 +157,15 @@
     "Previous (⇧Enter)": "前へ (⇧Enter)",
     "Next (Enter)": "次へ (Enter)",
     "Close (Esc)": "閉じる (Esc)"
+  },
+  "tags": {
+    "No tags yet": "タグはまだありません",
+    "Remove the tag": "タグを削除",
+    "Add a tag": "タグを追加",
+    "New tag": "新しいタグ",
+    "{count} notes": {
+      "other": "{count} 件のノート"
+    },
+    "No notes with this tag": "このタグのノートはありません"
   }
 }

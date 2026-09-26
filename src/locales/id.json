@@ -35,7 +35,9 @@
     "Note \"{target}\" not found": "Catatan \"{target}\" tidak ditemukan",
     "Could not read {path}": "Tidak dapat membaca {path}",
     "Could not save: {reason}": "Tidak dapat menyimpan: {reason}",
-    "The note was renamed, its images were not: {reason}": "Catatan sudah diganti namanya, tetapi gambarnya tidak: {reason}"
+    "The note was renamed, its images were not: {reason}": "Catatan sudah diganti namanya, tetapi gambarnya tidak: {reason}",
+    "Could not read {name}, so tags cannot be changed: {reason}": "Tidak dapat membaca {name}, jadi tag tidak dapat diubah: {reason}",
+    "Could not save the tags: {reason}": "Tidak dapat menyimpan tag: {reason}"
   },
   "gate": {
     "Drag a folder, not a single file": "Seret folder, bukan satu file",
@@ -115,7 +117,10 @@
     "Expand all folders": "Bentangkan semua folder",
     "Collapse all folders": "Ciutkan semua folder",
     "File tree": "Pohon file",
-    "File panel width": "Lebar panel file"
+    "File panel width": "Lebar panel file",
+    "Tags": "Tag",
+    "Tag tree": "Pohon tag",
+    "Tag panel height": "Tinggi panel tag"
   },
   "toolbar": {
     "Read": "Baca",
@@ -152,5 +157,15 @@
     "Previous (⇧Enter)": "Sebelumnya (⇧Enter)",
     "Next (Enter)": "Berikutnya (Enter)",
     "Close (Esc)": "Tutup (Esc)"
+  },
+  "tags": {
+    "No tags yet": "Belum ada tag",
+    "Remove the tag": "Hapus tag",
+    "Add a tag": "Tambah tag",
+    "New tag": "Tag baru",
+    "{count} notes": {
+      "other": "{count} catatan"
+    },
+    "No notes with this tag": "Tidak ada catatan dengan tag ini"
   }
 }

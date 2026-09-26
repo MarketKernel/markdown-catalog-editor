@@ -326,6 +326,69 @@ body.sidebar-hidden .resizer { display: none; }
 .tree-item--dir .tree-mark { font-size: 22px; color: var(--muted); }
 .tree-label { overflow: hidden; text-overflow: ellipsis; }
 .tree-empty { color: var(--faint); padding: 10px 14px; margin: 0; }
+.tree-count {
+  margin-inline-start: auto;
+  padding-inline-start: 8px;
+  color: var(--faint);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The tag tree: pinned to the bottom of the panel, set apart by a rule and a
+   shade, with a scroll of its own so a long file tree never pushes it away. */
+.tags {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 0 1 auto;
+  /* Dragging the rule above only ever lowers the cap, never lifts it past 42 %. */
+  max-height: min(42%, var(--tags-height, 100%));
+  min-height: 0;
+  border-top: 1px solid var(--edge);
+  background: var(--panel-2);
+  box-shadow: 0 -6px 12px -10px rgba(0, 0, 0, 0.18);
+}
+.tags-heading {
+  width: 100%;
+  flex: none;
+  padding-block: 9px 6px;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  text-align: start;
+}
+.tags-heading:hover { color: var(--text); }
+.tags-caret {
+  display: inline-block;
+  width: 12px;
+  font-size: 13px;
+  line-height: 1;
+  transition: transform 0.12s;
+}
+.tags--closed .tags-caret { transform: rotate(-90deg); }
+[dir='rtl'] .tags--closed .tags-caret { transform: rotate(90deg); }
+.tags--closed .tag-tree,
+.tags--closed .tags-resizer { display: none; }
+/* A grip over the section's top edge: taller than the rule, so it is easy to catch. */
+.tags-resizer {
+  position: absolute;
+  inset-inline: 0;
+  top: -4px;
+  height: 7px;
+  z-index: 1;
+  cursor: row-resize;
+}
+.tags-resizer:hover, .tags-resizer:focus-visible, .tags-resizer--active {
+  background: linear-gradient(transparent 3px, var(--accent-soft) 3px, var(--accent-soft) 5px, transparent 5px);
+  outline: none;
+}
+.tag-tree { flex: 0 1 auto; padding-bottom: 10px; }
+.tag-tree .tree-item:hover { background: var(--edge-soft); }
+.tag-tree .tree-item--active { background: var(--accent-bg); }
+.tree-item--tag .tree-mark { font-size: 12px; }
+.tree-mark--toggle { font-size: 22px !important; color: var(--muted); }
 
 /* ------------------------------------------------------------------ *
  * Toolbar
@@ -419,6 +482,8 @@ body.sidebar-hidden .resizer { display: none; }
 
 body:not(.mode-edit) .toolbar-group--format,
 body:not(.mode-edit) .tool--more { opacity: 0.45; }
+body.no-note .toolbar-group--format,
+body.no-note .tool--more { opacity: 0.45; pointer-events: none; }
 
 .zoom {
   display: inline-flex;
@@ -506,6 +571,136 @@ body.doc-full .doc { max-width: none; margin: 0; }
   word-wrap: break-word;
 }
 body.doc-full .inline-title { max-width: none; margin-left: 0; margin-right: 0; }
+
+/* A note's tags, between its title and its text, in the same column. */
+.note-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  max-width: calc(16px * var(--zoom) * 44);
+  margin: calc(16px * var(--zoom) * -0.4) auto calc(16px * var(--zoom) * 1.2);
+  font-size: calc(13.5px * var(--zoom));
+}
+body.doc-full .note-tags { max-width: none; margin-left: 0; margin-right: 0; }
+.inline-title[hidden] + .note-tags { margin-top: 0; }
+.tag-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  line-height: 1.6;
+}
+.tag-chip-label {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  padding: 0 0.7em;
+  cursor: pointer;
+}
+.tag-chip:hover { background: var(--accent-soft); }
+.tag-chip:has(.tag-remove) .tag-chip-label { padding-inline-end: 0.2em; }
+.tag-remove {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  padding: 0 0.55em 0 0.15em;
+  cursor: pointer;
+  opacity: 0.35;
+  transition: opacity 0.12s;
+}
+.tag-chip:hover .tag-remove, .tag-remove:focus-visible { opacity: 0.75; }
+.tag-remove:hover { opacity: 1; color: var(--danger); }
+.tag-add {
+  width: 1.7em;
+  height: 1.7em;
+  border: 1px dashed var(--edge);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--faint);
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+}
+.tag-add:hover { border-color: var(--accent); color: var(--accent); }
+/* Suggestions show as the tag is typed; Chrome's dropdown arrow would only crowd the field. */
+.tag-input::-webkit-calendar-picker-indicator { display: none !important; }
+.tag-input {
+  width: 12em;
+  border: 1px solid var(--accent);
+  border-radius: 999px;
+  background: var(--bg);
+  padding: 0.05em 0.7em;
+  font: inherit;
+  line-height: 1.5;
+  outline: none;
+}
+
+/* A tag's page: the notes carrying it, to read and open. */
+.tag-page {
+  max-width: calc(16px * var(--zoom) * 44);
+  margin: 0 auto;
+  font-size: calc(16px * var(--zoom));
+}
+body.doc-full .tag-page { max-width: none; margin: 0; }
+.tag-page-title {
+  margin: 0;
+  font-size: 1.85em;
+  line-height: 1.28;
+  font-weight: 700;
+  letter-spacing: -0.012em;
+  color: var(--accent);
+  word-wrap: break-word;
+}
+.tag-page-parent {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  color: var(--muted);
+  cursor: pointer;
+}
+.tag-page-parent:hover { color: var(--accent); }
+.tag-page-sep { margin: 0 0.25em; color: var(--faint); font-weight: 400; }
+.tag-page-count { margin: 0.3em 0 1.3em; color: var(--faint); font-size: 0.85em; }
+.tag-page-empty { color: var(--faint); }
+.tag-notes { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--edge-soft); }
+.tag-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35em 1em;
+  padding: 0.6em 0;
+  border-bottom: 1px solid var(--edge-soft);
+}
+.tag-note-open {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6em;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+}
+.tag-note-name { font-weight: 600; }
+.tag-note-open:hover .tag-note-name { color: var(--accent); }
+.tag-note-dir { color: var(--faint); font-size: 0.85em; }
+.tag-note-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-inline-start: auto;
+  font-size: 0.8em;
+}
+.tag-note-tags .tag-chip { background: transparent; color: var(--muted); }
+.tag-note-tags .tag-chip:hover { background: var(--accent-bg); color: var(--accent); }
+.tag-note-tags .tag-chip--current { background: var(--accent-bg); color: var(--accent); }
 
 /* The two faces of a block share every metric that could shift the text. */
 .block {

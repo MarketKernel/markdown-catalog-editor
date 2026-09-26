@@ -39,7 +39,9 @@
     "Note \"{target}\" not found": "Note « {target} » introuvable",
     "Could not read {path}": "Impossible de lire {path}",
     "Could not save: {reason}": "Impossible d’enregistrer : {reason}",
-    "The note was renamed, its images were not: {reason}": "La note a été renommée, mais pas ses images : {reason}"
+    "The note was renamed, its images were not: {reason}": "La note a été renommée, mais pas ses images : {reason}",
+    "Could not read {name}, so tags cannot be changed: {reason}": "Impossible de lire {name} : les étiquettes ne peuvent pas être modifiées. {reason}",
+    "Could not save the tags: {reason}": "Impossible d’enregistrer les étiquettes : {reason}"
   },
   "gate": {
     "Drag a folder, not a single file": "Faites glisser un dossier, pas un fichier isolé",
@@ -119,7 +121,10 @@
     "Expand all folders": "Déplier tous les dossiers",
     "Collapse all folders": "Replier tous les dossiers",
     "File tree": "Arborescence des fichiers",
-    "File panel width": "Largeur du panneau des fichiers"
+    "File panel width": "Largeur du panneau des fichiers",
+    "Tags": "Étiquettes",
+    "Tag tree": "Arborescence des étiquettes",
+    "Tag panel height": "Hauteur du panneau des étiquettes"
   },
   "toolbar": {
     "Read": "Lecture",
@@ -156,5 +161,17 @@
     "Previous (⇧Enter)": "Précédent (⇧Enter)",
     "Next (Enter)": "Suivant (Enter)",
     "Close (Esc)": "Fermer (Esc)"
+  },
+  "tags": {
+    "No tags yet": "Aucune étiquette pour l’instant",
+    "Remove the tag": "Retirer l’étiquette",
+    "Add a tag": "Ajouter une étiquette",
+    "New tag": "Nouvelle étiquette",
+    "{count} notes": {
+      "one": "{count} note",
+      "many": "{count} de notes",
+      "other": "{count} notes"
+    },
+    "No notes with this tag": "Aucune note avec cette étiquette"
   }
 }

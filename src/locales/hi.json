@@ -37,7 +37,9 @@
     "Note \"{target}\" not found": "नोट “{target}” नहीं मिला",
     "Could not read {path}": "{path} पढ़ा नहीं जा सका",
     "Could not save: {reason}": "सहेजा नहीं जा सका: {reason}",
-    "The note was renamed, its images were not: {reason}": "नोट का नाम बदल गया, पर उसकी छवियों का नहीं: {reason}"
+    "The note was renamed, its images were not: {reason}": "नोट का नाम बदल गया, पर उसकी छवियों का नहीं: {reason}",
+    "Could not read {name}, so tags cannot be changed: {reason}": "{name} पढ़ा नहीं जा सका, इसलिए टैग बदले नहीं जा सकते: {reason}",
+    "Could not save the tags: {reason}": "टैग सहेजे नहीं जा सके: {reason}"
   },
   "gate": {
     "Drag a folder, not a single file": "फ़ोल्डर खींचें, कोई अकेली फ़ाइल नहीं",
@@ -117,7 +119,10 @@
     "Expand all folders": "सभी फ़ोल्डर फैलाएँ",
     "Collapse all folders": "सभी फ़ोल्डर समेटें",
     "File tree": "फ़ाइल ट्री",
-    "File panel width": "फ़ाइल पैनल की चौड़ाई"
+    "File panel width": "फ़ाइल पैनल की चौड़ाई",
+    "Tags": "टैग",
+    "Tag tree": "टैग ट्री",
+    "Tag panel height": "टैग पैनल की ऊँचाई"
   },
   "toolbar": {
     "Read": "पढ़ें",
@@ -154,5 +159,16 @@
     "Previous (⇧Enter)": "पिछला (⇧Enter)",
     "Next (Enter)": "अगला (Enter)",
     "Close (Esc)": "बंद करें (Esc)"
+  },
+  "tags": {
+    "No tags yet": "अभी कोई टैग नहीं",
+    "Remove the tag": "टैग हटाएँ",
+    "Add a tag": "टैग जोड़ें",
+    "New tag": "नया टैग",
+    "{count} notes": {
+      "one": "{count} नोट",
+      "other": "{count} नोट"
+    },
+    "No notes with this tag": "इस टैग वाला कोई नोट नहीं"
   }
 }
