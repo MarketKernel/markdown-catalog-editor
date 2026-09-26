@@ -13,7 +13,8 @@
     "New note": "Nueva nota",
     "New folder": "Nueva carpeta",
     "Rename": "Cambiar nombre",
-    "Copy path": "Copiar ruta"
+    "Copy path": "Copiar ruta",
+    "Export to HTML…": "Exportar a HTML…"
   },
   "status": {
     "{count} words": {
@@ -43,7 +44,15 @@
     "Could not save: {reason}": "No se pudo guardar: {reason}",
     "The note was renamed, its images were not: {reason}": "Se cambió el nombre de la nota, pero no el de sus imágenes: {reason}",
     "Could not read {name}, so tags cannot be changed: {reason}": "No se ha podido leer {name}, así que las etiquetas no se pueden cambiar: {reason}",
-    "Could not save the tags: {reason}": "No se han podido guardar las etiquetas: {reason}"
+    "Could not save the tags: {reason}": "No se han podido guardar las etiquetas: {reason}",
+    "Nothing to export: no notes here": "Nada que exportar: aquí no hay notas",
+    "{count} pages exported to {folder}": {
+      "many": "{count} páginas exportadas a {folder}",
+      "one": "{count} página exportada a {folder}",
+      "other": "{count} páginas exportadas a {folder}"
+    },
+    "Export stopped: {folder} is incomplete": "Exportación detenida: {folder} está incompleta",
+    "Export stopped": "Exportación detenida"
   },
   "gate": {
     "Drag a folder, not a single file": "Arrastra una carpeta, no un archivo suelto",
@@ -156,7 +165,8 @@
     "Divider": "Separador",
     "More formatting": "Más formatos",
     "Search (⌘F)": "Buscar (⌘F)",
-    "Settings": "Ajustes"
+    "Settings": "Ajustes",
+    "Export to HTML": "Exportar a HTML"
   },
   "find": {
     "Find in note": "Buscar en la nota",
@@ -176,5 +186,44 @@
       "other": "{count} notas"
     },
     "No notes with this tag": "No hay notas con esta etiqueta"
+  },
+  "export": {
+    "Export to HTML": "Exportar a HTML",
+    "Everything in {name}": "Todo en {name}",
+    "The folder {name}": "La carpeta {name}",
+    "Folder": "Carpeta",
+    "Export tags: a page per tag and an index of tags": "Exportar etiquetas: una página por etiqueta y un índice de etiquetas",
+    "There are no tags to export": "No hay etiquetas que exportar",
+    "Template": "Plantilla",
+    "Reset to default": "Restablecer la predeterminada",
+    "Give the folder a name": "Ponga un nombre a la carpeta",
+    "The template must contain {list}": "La plantilla debe contener {list}",
+    "Export": "Exportar",
+    "Exporting…": "Exportando…",
+    "Required placeholders: {list}.": "Marcadores obligatorios: {list}.",
+    "Also available: {list}.": "También disponibles: {list}.",
+    "Reading the notes": "Leyendo las notas",
+    "Writing the pages": "Escribiendo las páginas",
+    "Copying images and files": "Copiando imágenes y archivos",
+    "Stop": "Detener",
+    "Stopping…": "Deteniendo…",
+    "The text width and the note name above each note follow the editor settings.": "El ancho del texto y el nombre sobre cada nota siguen los ajustes del editor.",
+    "Create a static site": "Crear un sitio estático",
+    "A page per note, with search and a navigation that remembers its folders.": "Una página por nota, con búsqueda y una navegación que recuerda sus carpetas.",
+    "Writing the page": "Escribiendo la página",
+    "Could not write {path}: {reason}": "No se pudo escribir {path}: {reason}",
+    "{count} files did not reach the disk, {path} among them": {
+      "many": "{count} archivos no llegaron al disco, entre ellos {path}",
+      "one": "{count} archivo no llegó al disco, entre ellos {path}",
+      "other": "{count} archivos no llegaron al disco, entre ellos {path}"
+    },
+    "One file with every note, shown one at a time from a table of contents, with search; the images in assets.": "Un archivo con todas las notas, mostradas de una en una desde un índice, con búsqueda; las imágenes en assets."
+  },
+  "site": {
+    "Search the notes": "Buscar en las notas",
+    "Switch to the dark theme": "Cambiar al tema oscuro",
+    "Switch to the light theme": "Cambiar al tema claro",
+    "Previous note": "Nota anterior",
+    "Next note": "Nota siguiente"
   }
 }

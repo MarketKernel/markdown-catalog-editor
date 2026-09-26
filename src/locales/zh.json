@@ -13,7 +13,8 @@
     "New note": "新建笔记",
     "New folder": "新建文件夹",
     "Rename": "重命名",
-    "Copy path": "复制路径"
+    "Copy path": "复制路径",
+    "Export to HTML…": "导出为 HTML…"
   },
   "status": {
     "{count} words": {
@@ -39,7 +40,13 @@
     "Could not save: {reason}": "无法保存：{reason}",
     "The note was renamed, its images were not: {reason}": "笔记已重命名，但其图片未重命名：{reason}",
     "Could not read {name}, so tags cannot be changed: {reason}": "无法读取 {name}，因此无法更改标签：{reason}",
-    "Could not save the tags: {reason}": "无法保存标签：{reason}"
+    "Could not save the tags: {reason}": "无法保存标签：{reason}",
+    "Nothing to export: no notes here": "没有可导出的内容：这里没有笔记",
+    "{count} pages exported to {folder}": {
+      "other": "已将 {count} 个页面导出到 {folder}"
+    },
+    "Export stopped: {folder} is incomplete": "导出已停止：{folder} 不完整",
+    "Export stopped": "导出已停止"
   },
   "gate": {
     "Drag a folder, not a single file": "请拖入文件夹，而不是单个文件",
@@ -152,7 +159,8 @@
     "Divider": "分隔线",
     "More formatting": "更多格式",
     "Search (⌘F)": "搜索 (⌘F)",
-    "Settings": "设置"
+    "Settings": "设置",
+    "Export to HTML": "导出为 HTML"
   },
   "find": {
     "Find in note": "在笔记中查找",
@@ -170,5 +178,42 @@
       "other": "{count} 篇笔记"
     },
     "No notes with this tag": "没有带此标签的笔记"
+  },
+  "export": {
+    "Export to HTML": "导出为 HTML",
+    "Everything in {name}": "{name} 中的全部内容",
+    "The folder {name}": "文件夹 {name}",
+    "Folder": "文件夹",
+    "Export tags: a page per tag and an index of tags": "导出标签：每个标签一页，并附标签索引",
+    "There are no tags to export": "没有可导出的标签",
+    "Template": "模板",
+    "Reset to default": "恢复默认",
+    "Give the folder a name": "请为文件夹命名",
+    "The template must contain {list}": "模板必须包含 {list}",
+    "Export": "导出",
+    "Exporting…": "正在导出…",
+    "Required placeholders: {list}.": "必需的占位符：{list}。",
+    "Also available: {list}.": "还可使用：{list}。",
+    "Reading the notes": "正在读取笔记",
+    "Writing the pages": "正在写入页面",
+    "Copying images and files": "正在复制图片和文件",
+    "Stop": "停止",
+    "Stopping…": "正在停止…",
+    "The text width and the note name above each note follow the editor settings.": "文本宽度和每条笔记上方的名称沿用编辑器的设置。",
+    "Create a static site": "生成静态网站",
+    "A page per note, with search and a navigation that remembers its folders.": "每条笔记一个页面，带搜索，导航会记住文件夹的展开状态。",
+    "Writing the page": "正在写入页面",
+    "Could not write {path}: {reason}": "无法写入 {path}：{reason}",
+    "{count} files did not reach the disk, {path} among them": {
+      "other": "有 {count} 个文件没有写到磁盘上，其中包括 {path}"
+    },
+    "One file with every note, shown one at a time from a table of contents, with search; the images in assets.": "一个文件包含所有笔记，从目录中逐条显示，带搜索；图片放在 assets 中。"
+  },
+  "site": {
+    "Search the notes": "搜索笔记",
+    "Switch to the dark theme": "切换到深色主题",
+    "Switch to the light theme": "切换到浅色主题",
+    "Previous note": "上一条笔记",
+    "Next note": "下一条笔记"
   }
 }

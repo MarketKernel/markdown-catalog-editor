@@ -13,7 +13,8 @@
     "New note": "새 노트",
     "New folder": "새 폴더",
     "Rename": "이름 변경",
-    "Copy path": "경로 복사"
+    "Copy path": "경로 복사",
+    "Export to HTML…": "HTML로 내보내기…"
   },
   "status": {
     "{count} words": {
@@ -39,7 +40,13 @@
     "Could not save: {reason}": "저장할 수 없습니다: {reason}",
     "The note was renamed, its images were not: {reason}": "노트 이름은 변경되었지만 이미지 이름은 변경되지 않았습니다: {reason}",
     "Could not read {name}, so tags cannot be changed: {reason}": "{name}을(를) 읽을 수 없어 태그를 변경할 수 없습니다: {reason}",
-    "Could not save the tags: {reason}": "태그를 저장할 수 없습니다: {reason}"
+    "Could not save the tags: {reason}": "태그를 저장할 수 없습니다: {reason}",
+    "Nothing to export: no notes here": "내보낼 것이 없습니다: 여기에는 노트가 없습니다",
+    "{count} pages exported to {folder}": {
+      "other": "{count}개 페이지를 {folder}에 내보냈습니다"
+    },
+    "Export stopped: {folder} is incomplete": "내보내기 중지됨: {folder}이(가) 완전하지 않습니다",
+    "Export stopped": "내보내기 중지됨"
   },
   "gate": {
     "Drag a folder, not a single file": "파일 하나가 아니라 폴더를 드래그하세요",
@@ -152,7 +159,8 @@
     "Divider": "구분선",
     "More formatting": "서식 더 보기",
     "Search (⌘F)": "검색 (⌘F)",
-    "Settings": "설정"
+    "Settings": "설정",
+    "Export to HTML": "HTML로 내보내기"
   },
   "find": {
     "Find in note": "노트에서 찾기",
@@ -170,5 +178,42 @@
       "other": "노트 {count}개"
     },
     "No notes with this tag": "이 태그가 붙은 노트가 없습니다"
+  },
+  "export": {
+    "Export to HTML": "HTML로 내보내기",
+    "Everything in {name}": "{name}의 모든 내용",
+    "The folder {name}": "{name} 폴더",
+    "Folder": "폴더",
+    "Export tags: a page per tag and an index of tags": "태그 내보내기: 태그마다 한 페이지와 태그 색인",
+    "There are no tags to export": "내보낼 태그가 없습니다",
+    "Template": "템플릿",
+    "Reset to default": "기본값으로 되돌리기",
+    "Give the folder a name": "폴더 이름을 입력하세요",
+    "The template must contain {list}": "템플릿에 {list}이(가) 있어야 합니다",
+    "Export": "내보내기",
+    "Exporting…": "내보내는 중…",
+    "Required placeholders: {list}.": "필수 자리표시자: {list}.",
+    "Also available: {list}.": "추가로 사용 가능: {list}.",
+    "Reading the notes": "노트 읽는 중",
+    "Writing the pages": "페이지 쓰는 중",
+    "Copying images and files": "이미지와 파일 복사 중",
+    "Stop": "중지",
+    "Stopping…": "중지하는 중…",
+    "The text width and the note name above each note follow the editor settings.": "본문 너비와 각 노트 위의 이름은 편집기 설정을 따릅니다.",
+    "Create a static site": "정적 사이트 만들기",
+    "A page per note, with search and a navigation that remembers its folders.": "노트마다 한 페이지, 검색과 폴더 상태를 기억하는 탐색이 있습니다.",
+    "Writing the page": "페이지 쓰는 중",
+    "Could not write {path}: {reason}": "{path}을(를) 쓸 수 없습니다: {reason}",
+    "{count} files did not reach the disk, {path} among them": {
+      "other": "파일 {count}개가 디스크에 기록되지 않았습니다. {path} 포함"
+    },
+    "One file with every note, shown one at a time from a table of contents, with search; the images in assets.": "모든 노트를 한 파일에 담고, 목차에서 하나씩 보여 주며 검색을 붙입니다. 이미지는 assets에 들어갑니다."
+  },
+  "site": {
+    "Search the notes": "노트 검색",
+    "Switch to the dark theme": "어두운 테마로 전환",
+    "Switch to the light theme": "밝은 테마로 전환",
+    "Previous note": "이전 노트",
+    "Next note": "다음 노트"
   }
 }

@@ -108,6 +108,7 @@ button, input, textarea, select {
 }
 .button--primary:hover { filter: brightness(1.08); }
 .button--ghost { background: transparent; }
+.button:disabled { opacity: 0.6; cursor: default; filter: none; }
 .button--danger {
   background: var(--danger);
   border-color: var(--danger);
@@ -130,6 +131,7 @@ button, input, textarea, select {
   font-size: 20px;
 }
 .icon-button:hover { background: var(--panel-2); color: var(--text); }
+.icon-button:disabled { opacity: 0.4; cursor: default; background: transparent; color: var(--muted); }
 .icon-button[aria-pressed='true'] { background: var(--accent-bg); color: var(--accent); }
 .icon-button svg {
   width: 25px;
@@ -1059,6 +1061,71 @@ details.callout[open] > summary.callout-title::after { transform: rotate(45deg);
 }
 .dialog-input:focus { border-color: var(--accent); }
 .dialog-row { display: flex; justify-content: flex-end; gap: 8px; }
+.dialog--wide { width: min(640px, calc(100vw - 32px)); }
+.dialog-hint { margin: 8px 0 0; color: var(--faint); font-size: 12px; line-height: 1.5; }
+.dialog-error { margin: 6px 0 0; min-height: 1.4em; color: var(--danger); font-size: 13px; }
+.dialog-error:empty { margin: 0; min-height: 0; }
+.button--small { padding: 4px 10px; font-size: 13px; border-radius: 7px; }
+
+.export-folder-row { display: flex; align-items: center; margin-top: 6px; }
+.export-folder-prefix {
+  padding: 8px 4px 8px 10px;
+  border: 1px solid var(--edge);
+  border-right: 0;
+  border-radius: 8px 0 0 8px;
+  background: var(--panel-2);
+  color: var(--faint);
+  font-family: var(--mono);
+  font-size: 13px;
+}
+.export-folder-row .export-folder { margin: 0; border-radius: 0 8px 8px 0; font-family: var(--mono); font-size: 13px; }
+.export-check { padding: 0 0 12px; align-items: flex-start; }
+.export-check input { margin-top: 2px; }
+.export-check-hint { display: block; color: var(--faint); font-size: 12px; line-height: 1.45; margin-top: 2px; }
+.export-template-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.export-template-head .dialog-label { margin: 0; }
+.export-template {
+  display: block;
+  width: 100%;
+  margin: 6px 0 0;
+  border: 1px solid var(--edge);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: var(--panel);
+  font-family: var(--mono);
+  font-size: 12px;
+  line-height: 1.5;
+  resize: vertical;
+  outline: none;
+  tab-size: 2;
+  white-space: pre;
+}
+.export-template:focus { border-color: var(--accent); }
+.export-template:disabled, .export-folder:disabled { opacity: 0.6; }
+.export-progress { margin: 14px 0 0; }
+.export-progress-text {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.export-progress-count { font-variant-numeric: tabular-nums; color: var(--faint); }
+.export-progress progress {
+  display: block;
+  width: 100%;
+  height: 6px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--panel-2);
+  overflow: hidden;
+  appearance: none;
+}
+.export-progress progress::-webkit-progress-bar { background: var(--panel-2); border-radius: 999px; }
+.export-progress progress::-webkit-progress-value { background: var(--accent); border-radius: 999px; transition: width 0.15s; }
+.export-progress progress::-moz-progress-bar { background: var(--accent); border-radius: 999px; }
+.dialog--wide .dialog-row { margin-top: 16px; }
 
 .context-menu {
   position: fixed;
@@ -1081,6 +1148,7 @@ details.callout[open] > summary.callout-title::after { transform: rotate(45deg);
   cursor: pointer;
 }
 .context-item:hover { background: var(--panel-2); }
+.context-item:disabled { opacity: 0.45; cursor: default; background: transparent; }
 .context-item--danger { color: var(--danger); }
 
 .palette {

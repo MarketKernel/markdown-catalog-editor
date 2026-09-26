@@ -3,7 +3,10 @@
  * them — language, theme, zoom, panel width, search, settings and the toolbar.
  */
 
+import { leadingHeading, titleKey } from './blocks';
 import { Editor, translateTableTools, type EditorStatus, type FormatAction, type Mode } from './editor';
+import { DEFAULT_TEMPLATE, SiteBuilder, type SiteNote } from './export';
+import { exportDialog, type ExportChoice } from './export-ui';
 import { FLAGS, isRightToLeft, LANGUAGES, setLanguage, t, tn, translatePage, type Language } from './i18n';
 import { createMarkdown } from './markdown';
 import { Meta } from './meta';
@@ -24,11 +27,12 @@ import { renderTagBar, renderTagPage, TagTree } from './tags';
 import { FileTree, stripExtension } from './tree';
 import { ask, confirmAsk, h, popover, toast } from './ui';
 import {
-  ASSETS_DIR,
   DirectoryVault,
   FileListVault,
   META_FILE,
   NOTE_EXTENSIONS,
+  OUTPUT_DIR,
+  assetsDirOf,
   baseOf,
   dirOf,
   ensureWritable,
@@ -36,6 +40,7 @@ import {
   handleFromDataTransfer,
   isNote,
   join,
+  resolvePath,
   type TreeEntry,
   type Vault,
 } from './vault';
@@ -122,6 +127,8 @@ const tree = new FileTree(el('tree'), el('note-count'), {
     void navigator.clipboard?.writeText(path).catch(() => undefined);
     toast(t('toast', 'Path copied: {path}', { path }));
   },
+  onExport: (dir) => void exportHtml(dir),
+  canExport: () => !exporting,
   canEdit: () => Boolean(vault?.writable),
 });
 tree.setCollapsed(settings.collapsed);
@@ -261,18 +268,6 @@ async function openNote(path: string): Promise<void> {
   }
 }
 
-/** A relative link inside a note, resolved against the note's own folder. */
-function resolvePath(from: string, href: string): string {
-  if (href.startsWith('/')) return href.slice(1);
-  const parts = dirOf(from).split('/').filter(Boolean);
-  for (const piece of href.split('/')) {
-    if (piece === '.' || piece === '') continue;
-    if (piece === '..') parts.pop();
-    else parts.push(piece);
-  }
-  return parts.join('/');
-}
-
 async function openRelative(href: string): Promise<void> {
   if (!currentPath) return;
   const target = resolvePath(currentPath, href.split('#')[0] ?? href);
@@ -313,11 +308,6 @@ function safeDecode(uri: string): string {
   } catch {
     return uri;
   }
-}
-
-/** Where a note keeps its embedded images: `dir/page.md` → `dir/assets/page`. */
-function assetsDirOf(notePath: string): string {
-  return join(join(dirOf(notePath), ASSETS_DIR), stripExtension(baseOf(notePath)));
 }
 
 /** A blob URL for a vault file, kept for as long as the vault is open. */
@@ -716,6 +706,196 @@ window.addEventListener('beforeunload', (event) => {
   event.preventDefault();
   event.returnValue = '';
 });
+
+/* ------------------------------------------------------------------ *
+ * Export to HTML
+ * ------------------------------------------------------------------ */
+
+/** Files read or written at once: the File System Access API is slow one by one. */
+const EXPORT_PARALLEL = 6;
+const exportButton = el<HTMLButtonElement>('export');
+/** One export at a time: the button and the menu item are off while it runs. */
+let exporting = false;
+
+function setExporting(on: boolean): void {
+  exporting = on;
+  exportButton.disabled = on;
+}
+
+/**
+ * Runs `work` on everything `next` hands out, `EXPORT_PARALLEL` at a time,
+ * until it runs dry or `signal` is aborted. `next` is called between awaits,
+ * so a generator behind it never runs twice at once.
+ */
+async function inParallel<T>(next: () => T | undefined, work: (item: T) => Promise<void>, signal: AbortSignal): Promise<void> {
+  const worker = async (): Promise<void> => {
+    while (!signal.aborted) {
+      const item = next();
+      if (item === undefined) return;
+      await work(item);
+    }
+  };
+  await Promise.all(Array.from({ length: EXPORT_PARALLEL }, worker));
+}
+
+/** Hands out the items of an array one by one. */
+function feed<T>(items: readonly T[]): () => T | undefined {
+  let at = 0;
+  return () => (at < items.length ? items[at++] : undefined);
+}
+
+/**
+ * The whole vault, or one folder of it, as a static site under
+ * `output/<folder>/` at the vault root — see export.ts.
+ */
+async function exportHtml(dir: string): Promise<void> {
+  const target = vault;
+  if (!target || exporting) return;
+  if (!target.writable) return void toast(t('errors', 'The folder is open read-only'), 'error');
+  await flushSave();
+
+  const notePaths: string[] = [];
+  const assetPaths: string[] = [];
+  const walk = (entries: readonly TreeEntry[]): void => {
+    for (const entry of entries) {
+      if (entry.kind === 'dir') walk(entry.children ?? []);
+      else if (isNote(entry.name)) notePaths.push(entry.path);
+      else assetPaths.push(entry.path);
+    }
+  };
+  walk(dir ? tree.find(dir)?.children ?? [] : tree.getEntries());
+  if (notePaths.length === 0) return void toast(t('toast', 'Nothing to export: no notes here'), 'error');
+
+  const name = dir ? baseOf(dir) : target.name;
+  const strip = (path: string): string => (dir ? path.slice(dir.length + 1) : path);
+  exportDialog(
+    {
+      scope: dir ? t('export', 'The folder {name}', { name: dir }) : t('export', 'Everything in {name}', { name: target.name }),
+      hasTags: notePaths.some((path) => meta.tagsOf(path).length > 0),
+      template: settings.exportTemplate ?? DEFAULT_TEMPLATE,
+      includeTags: settings.exportTags,
+      site: settings.exportSite,
+    },
+    async (choice, { report, signal }) => {
+      settings.exportTemplate = choice.template === DEFAULT_TEMPLATE ? null : choice.template;
+      settings.exportTags = choice.includeTags;
+      settings.exportSite = choice.site;
+      persist();
+      setExporting(true);
+      try {
+        await writeSite(target, choice, { name, notePaths, assetPaths, strip, report, signal });
+      } finally {
+        setExporting(false);
+      }
+    },
+  );
+}
+
+interface SiteJob {
+  name: string;
+  notePaths: readonly string[];
+  assetPaths: readonly string[];
+  /** A vault path → the path inside the exported folder. */
+  strip(path: string): string;
+  report(step: string, done: number, total: number): void;
+  signal: AbortSignal;
+}
+
+async function writeSite(target: Vault, choice: ExportChoice, job: SiteJob): Promise<void> {
+  const { report, signal } = job;
+  const out = join(OUTPUT_DIR, choice.folder);
+  const writer = target.writer();
+  /** Every file written, as a vault path — read back at the end to be sure it is there. */
+  const written: string[] = [];
+  const write = async (path: string, data: string | Blob): Promise<void> => {
+    const at = join(out, path);
+    try {
+      await writer.write(at, data);
+    } catch (error) {
+      throw new Error(t('export', 'Could not write {path}: {reason}', { path: at, reason: error instanceof Error ? error.message : String(error) }));
+    }
+    written.push(at);
+  };
+  const assets = job.assetPaths.map(job.strip);
+  let assetTarget = (path: string): string => path;
+
+  // The notes first: the pages link to one another, so all of them are needed before any is made.
+  const reading = t('export', 'Reading the notes');
+  const notes: SiteNote[] = [];
+  report(reading, 0, job.notePaths.length);
+  await inParallel(feed(job.notePaths), async (path) => {
+    // The open note as it is on screen, in case a save is still on its way.
+    const text = path === currentPath ? editor.getText() : await target.readText(path);
+    notes.push({ path: job.strip(path), text, tags: choice.includeTags ? meta.tagsOf(path) : [] });
+    report(reading, notes.length, job.notePaths.length);
+  }, signal);
+
+  if (!signal.aborted) {
+    const site = new SiteBuilder({
+      md,
+      name: job.name,
+      // Read in parallel, they came back in any order; the site wants them in tree order.
+      notes: sortNotes(notes, job.notePaths.map(job.strip)),
+      template: choice.template,
+      includeTags: choice.includeTags,
+      titles: settings.inlineTitle,
+      fullWidth: settings.fullWidth,
+      singlePage: !choice.site,
+      assets,
+    });
+    assetTarget = (path) => site.assetPath(path);
+    const writing = choice.site ? t('export', 'Writing the pages') : t('export', 'Writing the page');
+    const steps = site.files();
+    const total = site.count;
+    let done = 0;
+    report(writing, 0, total);
+    await inParallel(() => {
+      const next = steps.next();
+      return next.done ? undefined : { file: next.value };
+    }, async ({ file }) => {
+      if (file) {
+        await write(file.path, file.data);
+      } else {
+        // A note put on the single page: nothing to write yet, but the bar moves and the page repaints.
+        await new Promise((resolve) => window.setTimeout(resolve));
+      }
+      report(writing, ++done, total);
+    }, signal);
+  }
+
+  if (!signal.aborted && job.assetPaths.length) {
+    const copying = t('export', 'Copying images and files');
+    let done = 0;
+    report(copying, 0, job.assetPaths.length);
+    await inParallel(feed(job.assetPaths), async (path) => {
+      const data = await target.readBlob(path);
+      if (data) await write(assetTarget(job.strip(path)), data);
+      report(copying, ++done, job.assetPaths.length);
+    }, signal);
+  }
+
+  if (signal.aborted) {
+    toast(written.length ? t('toast', 'Export stopped: {folder} is incomplete', { folder: out }) : t('toast', 'Export stopped'), 'error');
+    return;
+  }
+
+  // What the disk has, not what the writes said: a folder that ends up empty is an error to see.
+  const present = new Set(await writer.list(out));
+  const missing = written.filter((path) => !present.has(path));
+  if (missing.length) {
+    throw new Error(tn('export', '{count} file did not reach the disk, {path} among them', '{count} files did not reach the disk, {path} among them', missing.length, { path: missing[0]! }));
+  }
+  const count = choice.site ? job.notePaths.length : 1;
+  toast(tn('toast', '{count} page exported to {folder}', '{count} pages exported to {folder}', count, { folder: out }));
+}
+
+/** `notes` in the order of `paths`. */
+function sortNotes(notes: readonly SiteNote[], paths: readonly string[]): SiteNote[] {
+  const order = new Map(paths.map((path, index) => [path, index]));
+  return notes.slice().sort((a, b) => (order.get(a.path) ?? 0) - (order.get(b.path) ?? 0));
+}
+
+exportButton.addEventListener('click', () => void exportHtml(''));
 
 /* ------------------------------------------------------------------ *
  * Tree actions
@@ -1236,28 +1416,6 @@ function setZoom(zoom: number): void {
 
 /** Enough of the note to get past any front matter to its first line of text. */
 const TITLE_HEAD = 8192;
-
-/** Compares titles the way a reader would: no emphasis marks, case or spacing. */
-function titleKey(text: string): string {
-  return text.replace(/\[\[|\]\]|[*_`~=]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
-}
-
-/** The text of an H1 the note opens with (after front matter and blank lines), if it does. */
-function leadingHeading(head: string): string | null {
-  const lines = head.split('\n');
-  let at = 0;
-  if ((lines[0] ?? '').trim() === '---') {
-    const close = lines.findIndex((line, index) => index > 0 && (line.trim() === '---' || line.trim() === '...'));
-    if (close < 0) return null;
-    at = close + 1;
-  }
-  while (at < lines.length && lines[at]!.trim() === '') at += 1;
-  const line = lines[at] ?? '';
-  const atx = /^ {0,3}#[ \t]+(.*?)(?:[ \t]+#+)?[ \t]*$/.exec(line);
-  if (atx) return atx[1]!;
-  if (line.trim() && /^ {0,3}=+[ \t]*$/.test(lines[at + 1] ?? '')) return line;
-  return null;
-}
 
 /** Shows the file name above the note, unless it is switched off or the note already opens with it. */
 function renderTitle(): void {

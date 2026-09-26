@@ -13,7 +13,8 @@
     "New note": "نیا نوٹ",
     "New folder": "نیا فولڈر",
     "Rename": "نام تبدیل کریں",
-    "Copy path": "پاتھ کاپی کریں"
+    "Copy path": "پاتھ کاپی کریں",
+    "Export to HTML…": "HTML میں برآمد کریں…"
   },
   "status": {
     "{count} words": {
@@ -41,7 +42,14 @@
     "Could not save: {reason}": "محفوظ نہیں ہو سکا: {reason}",
     "The note was renamed, its images were not: {reason}": "نوٹ کا نام تبدیل ہو گیا، لیکن اس کی تصاویر کا نہیں: {reason}",
     "Could not read {name}, so tags cannot be changed: {reason}": "{name} پڑھا نہیں جا سکا، اس لیے ٹیگ تبدیل نہیں ہو سکتے: {reason}",
-    "Could not save the tags: {reason}": "ٹیگ محفوظ نہیں ہو سکے: {reason}"
+    "Could not save the tags: {reason}": "ٹیگ محفوظ نہیں ہو سکے: {reason}",
+    "Nothing to export: no notes here": "برآمد کرنے کو کچھ نہیں: یہاں کوئی نوٹ نہیں",
+    "{count} pages exported to {folder}": {
+      "one": "{count} صفحہ {folder} میں برآمد ہوا",
+      "other": "{count} صفحات {folder} میں برآمد ہوئے"
+    },
+    "Export stopped: {folder} is incomplete": "برآمد روک دی گئی: {folder} نامکمل ہے",
+    "Export stopped": "برآمد روک دی گئی"
   },
   "gate": {
     "Drag a folder, not a single file": "کوئی فولڈر گھسیٹیں، اکیلی فائل نہیں",
@@ -154,7 +162,8 @@
     "Divider": "فاصل لکیر",
     "More formatting": "مزید فارمیٹنگ",
     "Search (⌘F)": "تلاش (⌘F)",
-    "Settings": "ترتیبات"
+    "Settings": "ترتیبات",
+    "Export to HTML": "HTML میں برآمد کریں"
   },
   "find": {
     "Find in note": "نوٹ میں تلاش کریں",
@@ -173,5 +182,43 @@
       "other": "{count} نوٹس"
     },
     "No notes with this tag": "اس ٹیگ کے ساتھ کوئی نوٹ نہیں"
+  },
+  "export": {
+    "Export to HTML": "HTML میں برآمد کریں",
+    "Everything in {name}": "{name} کا سارا مواد",
+    "The folder {name}": "فولڈر {name}",
+    "Folder": "فولڈر",
+    "Export tags: a page per tag and an index of tags": "ٹیگ برآمد کریں: ہر ٹیگ کا ایک صفحہ اور ٹیگوں کا اشاریہ",
+    "There are no tags to export": "برآمد کرنے کے لیے کوئی ٹیگ نہیں",
+    "Template": "ٹیمپلیٹ",
+    "Reset to default": "طے شدہ پر واپس لائیں",
+    "Give the folder a name": "فولڈر کا نام لکھیں",
+    "The template must contain {list}": "ٹیمپلیٹ میں {list} ہونا ضروری ہے",
+    "Export": "برآمد کریں",
+    "Exporting…": "برآمد ہو رہا ہے…",
+    "Required placeholders: {list}.": "لازمی پلیس ہولڈر: {list}۔",
+    "Also available: {list}.": "یہ بھی دستیاب ہیں: {list}۔",
+    "Reading the notes": "نوٹ پڑھے جا رہے ہیں",
+    "Writing the pages": "صفحات لکھے جا رہے ہیں",
+    "Copying images and files": "تصاویر اور فائلیں نقل ہو رہی ہیں",
+    "Stop": "روکیں",
+    "Stopping…": "روکا جا رہا ہے…",
+    "The text width and the note name above each note follow the editor settings.": "متن کی چوڑائی اور ہر نوٹ کے اوپر کا نام ایڈیٹر کی ترتیبات کے مطابق ہوتے ہیں۔",
+    "Create a static site": "اسٹیٹک سائٹ بنائیں",
+    "A page per note, with search and a navigation that remembers its folders.": "ہر نوٹ کا ایک صفحہ، تلاش کے ساتھ، اور نیویگیشن جو فولڈرز یاد رکھتی ہے۔",
+    "Writing the page": "صفحہ لکھا جا رہا ہے",
+    "Could not write {path}: {reason}": "{path} لکھا نہیں جا سکا: {reason}",
+    "{count} files did not reach the disk, {path} among them": {
+      "one": "{count} فائل ڈسک تک نہیں پہنچی، ان میں {path}",
+      "other": "{count} فائلیں ڈسک تک نہیں پہنچیں، ان میں {path}"
+    },
+    "One file with every note, shown one at a time from a table of contents, with search; the images in assets.": "سب نوٹ ایک فائل میں، فہرستِ مضامین سے ایک ایک کر کے دکھائے جاتے ہیں، تلاش کے ساتھ؛ تصاویر assets میں۔"
+  },
+  "site": {
+    "Search the notes": "نوٹس میں تلاش کریں",
+    "Switch to the dark theme": "گہری تھیم پر جائیں",
+    "Switch to the light theme": "ہلکی تھیم پر جائیں",
+    "Previous note": "پچھلا نوٹ",
+    "Next note": "اگلا نوٹ"
   }
 }

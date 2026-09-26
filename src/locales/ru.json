@@ -13,7 +13,8 @@
     "New note": "Новая заметка",
     "New folder": "Новая папка",
     "Rename": "Переименовать",
-    "Copy path": "Копировать путь"
+    "Copy path": "Копировать путь",
+    "Export to HTML…": "Экспорт в HTML…"
   },
   "status": {
     "{count} words": {
@@ -45,7 +46,16 @@
     "Could not save: {reason}": "Не удалось сохранить: {reason}",
     "The note was renamed, its images were not: {reason}": "Заметка переименована, но её изображения — нет: {reason}",
     "Could not read {name}, so tags cannot be changed: {reason}": "Не удалось прочитать {name}, поэтому теги нельзя изменить: {reason}",
-    "Could not save the tags: {reason}": "Не удалось сохранить теги: {reason}"
+    "Could not save the tags: {reason}": "Не удалось сохранить теги: {reason}",
+    "Nothing to export: no notes here": "Экспортировать нечего: здесь нет заметок",
+    "{count} pages exported to {folder}": {
+      "few": "{count} страницы экспортированы в {folder}",
+      "many": "{count} страниц экспортировано в {folder}",
+      "one": "{count} страница экспортирована в {folder}",
+      "other": "{count} страницы экспортировано в {folder}"
+    },
+    "Export stopped: {folder} is incomplete": "Экспорт остановлен: папка {folder} заполнена не полностью",
+    "Export stopped": "Экспорт остановлен"
   },
   "gate": {
     "Drag a folder, not a single file": "Перетащите папку, а не отдельный файл",
@@ -158,7 +168,8 @@
     "Divider": "Разделитель",
     "More formatting": "Ещё форматирование",
     "Search (⌘F)": "Поиск (⌘F)",
-    "Settings": "Настройки"
+    "Settings": "Настройки",
+    "Export to HTML": "Экспорт в HTML"
   },
   "find": {
     "Find in note": "Найти в заметке",
@@ -179,5 +190,45 @@
       "other": "{count} заметки"
     },
     "No notes with this tag": "Нет заметок с этим тегом"
+  },
+  "export": {
+    "Export to HTML": "Экспорт в HTML",
+    "Everything in {name}": "Всё из папки {name}",
+    "The folder {name}": "Папка {name}",
+    "Folder": "Папка",
+    "Export tags: a page per tag and an index of tags": "Экспортировать теги: страница на каждый тег и указатель тегов",
+    "There are no tags to export": "Тегов для экспорта нет",
+    "Template": "Шаблон",
+    "Reset to default": "Вернуть стандартный",
+    "Give the folder a name": "Укажите имя папки",
+    "The template must contain {list}": "В шаблоне должны быть {list}",
+    "Export": "Экспортировать",
+    "Exporting…": "Экспорт…",
+    "Required placeholders: {list}.": "Обязательные подстановки: {list}.",
+    "Also available: {list}.": "Также доступны: {list}.",
+    "Reading the notes": "Чтение заметок",
+    "Writing the pages": "Запись страниц",
+    "Copying images and files": "Копирование изображений и файлов",
+    "Stop": "Остановить",
+    "Stopping…": "Остановка…",
+    "The text width and the note name above each note follow the editor settings.": "Ширина текста и имя заметки над ней берутся из настроек редактора.",
+    "Create a static site": "Создать статический сайт",
+    "A page per note, with search and a navigation that remembers its folders.": "Страница на каждую заметку, с поиском и навигацией, которая запоминает папки.",
+    "Writing the page": "Запись страницы",
+    "Could not write {path}: {reason}": "Не удалось записать {path}: {reason}",
+    "{count} files did not reach the disk, {path} among them": {
+      "few": "{count} файла не попали на диск, среди них {path}",
+      "many": "{count} файлов не попали на диск, среди них {path}",
+      "one": "{count} файл не попал на диск, среди них {path}",
+      "other": "{count} файла не попали на диск, среди них {path}"
+    },
+    "One file with every note, shown one at a time from a table of contents, with search; the images in assets.": "Один файл со всеми заметками, показывает по одной из оглавления, с поиском; изображения в assets."
+  },
+  "site": {
+    "Search the notes": "Поиск по заметкам",
+    "Switch to the dark theme": "Включить тёмную тему",
+    "Switch to the light theme": "Включить светлую тему",
+    "Previous note": "Предыдущая заметка",
+    "Next note": "Следующая заметка"
   }
 }

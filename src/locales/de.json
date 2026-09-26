@@ -13,7 +13,8 @@
     "New note": "Neue Notiz",
     "New folder": "Neuer Ordner",
     "Rename": "Umbenennen",
-    "Copy path": "Pfad kopieren"
+    "Copy path": "Pfad kopieren",
+    "Export to HTML…": "Als HTML exportieren…"
   },
   "status": {
     "{count} words": {
@@ -41,7 +42,14 @@
     "Could not save: {reason}": "Speichern fehlgeschlagen: {reason}",
     "The note was renamed, its images were not: {reason}": "Die Notiz wurde umbenannt, ihre Bilder nicht: {reason}",
     "Could not read {name}, so tags cannot be changed: {reason}": "{name} konnte nicht gelesen werden, Tags lassen sich daher nicht ändern: {reason}",
-    "Could not save the tags: {reason}": "Die Tags konnten nicht gespeichert werden: {reason}"
+    "Could not save the tags: {reason}": "Die Tags konnten nicht gespeichert werden: {reason}",
+    "Nothing to export: no notes here": "Nichts zu exportieren: hier gibt es keine Notizen",
+    "{count} pages exported to {folder}": {
+      "one": "{count} Seite nach {folder} exportiert",
+      "other": "{count} Seiten nach {folder} exportiert"
+    },
+    "Export stopped: {folder} is incomplete": "Export angehalten: {folder} ist unvollständig",
+    "Export stopped": "Export angehalten"
   },
   "gate": {
     "Drag a folder, not a single file": "Ziehen Sie einen Ordner, keine einzelne Datei",
@@ -154,7 +162,8 @@
     "Divider": "Trennlinie",
     "More formatting": "Weitere Formatierung",
     "Search (⌘F)": "Suchen (⌘F)",
-    "Settings": "Einstellungen"
+    "Settings": "Einstellungen",
+    "Export to HTML": "Als HTML exportieren"
   },
   "find": {
     "Find in note": "In Notiz suchen",
@@ -173,5 +182,43 @@
       "other": "{count} Notizen"
     },
     "No notes with this tag": "Keine Notizen mit diesem Tag"
+  },
+  "export": {
+    "Export to HTML": "Als HTML exportieren",
+    "Everything in {name}": "Alles in {name}",
+    "The folder {name}": "Der Ordner {name}",
+    "Folder": "Ordner",
+    "Export tags: a page per tag and an index of tags": "Tags exportieren: eine Seite je Tag und ein Tag-Verzeichnis",
+    "There are no tags to export": "Es gibt keine Tags zu exportieren",
+    "Template": "Vorlage",
+    "Reset to default": "Standard wiederherstellen",
+    "Give the folder a name": "Geben Sie dem Ordner einen Namen",
+    "The template must contain {list}": "Die Vorlage muss {list} enthalten",
+    "Export": "Exportieren",
+    "Exporting…": "Wird exportiert…",
+    "Required placeholders: {list}.": "Erforderliche Platzhalter: {list}.",
+    "Also available: {list}.": "Außerdem verfügbar: {list}.",
+    "Reading the notes": "Notizen werden gelesen",
+    "Writing the pages": "Seiten werden geschrieben",
+    "Copying images and files": "Bilder und Dateien werden kopiert",
+    "Stop": "Anhalten",
+    "Stopping…": "Wird angehalten…",
+    "The text width and the note name above each note follow the editor settings.": "Textbreite und der Notizname über jeder Notiz folgen den Einstellungen des Editors.",
+    "Create a static site": "Statische Website erstellen",
+    "A page per note, with search and a navigation that remembers its folders.": "Eine Seite je Notiz, mit Suche und einer Navigation, die sich ihre Ordner merkt.",
+    "Writing the page": "Seite wird geschrieben",
+    "Could not write {path}: {reason}": "{path} konnte nicht geschrieben werden: {reason}",
+    "{count} files did not reach the disk, {path} among them": {
+      "one": "{count} Datei ist nicht auf der Festplatte angekommen, darunter {path}",
+      "other": "{count} Dateien sind nicht auf der Festplatte angekommen, darunter {path}"
+    },
+    "One file with every note, shown one at a time from a table of contents, with search; the images in assets.": "Eine Datei mit allen Notizen, einzeln aus dem Inhaltsverzeichnis gezeigt, mit Suche; die Bilder in assets."
+  },
+  "site": {
+    "Search the notes": "Notizen durchsuchen",
+    "Switch to the dark theme": "Zum dunklen Design wechseln",
+    "Switch to the light theme": "Zum hellen Design wechseln",
+    "Previous note": "Vorherige Notiz",
+    "Next note": "Nächste Notiz"
   }
 }

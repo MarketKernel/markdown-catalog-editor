@@ -46,8 +46,53 @@ function languageName(tag: string): string {
   return LANGUAGE_NAMES[tag.toLowerCase()] ?? hljs.getLanguage(tag)?.name ?? tag;
 }
 
-const EXTERNAL =/^[a-z][a-z0-9+.-]*:|^\/\//i;
+export const EXTERNAL = /^[a-z][a-z0-9+.-]*:|^\/\//i;
 const IMAGE = /\.(png|jpe?g|gif|webp|svg|avif|bmp|ico)$/i;
+
+/**
+ * Rendering for a static site (see export.ts): links point at files instead of
+ * being tagged for the app to open, and headings get ids for `#anchors`.
+ * Passed as `env.export` to `md.render`.
+ */
+export interface ExportLinks {
+  /** A link relative to the note, `#hash` included → the href to write. */
+  link(href: string): string;
+  /** A `[[wiki]]` target → the href of that note's page, or null when there is none. */
+  wiki(target: string): string | null;
+  /** `![[image.png]]` → the src of the image in the note's assets folder. */
+  embed(name: string): string;
+  /** Put before every heading id, so notes sharing one page never share an id. */
+  prefix?: string;
+  /** Heading levels moved down: 1 makes `#` an `<h2>`, under the note's own title. */
+  shift?: number;
+}
+
+interface Env {
+  [key: string | symbol]: unknown;
+  export?: ExportLinks;
+  /** Heading ids already used on the page, each with how often. */
+  slugs?: Map<string, number>;
+}
+
+/** `Hello, World!` → `hello-world`: letters and digits of any script, dashes between. */
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s_-]+/gu, '')
+    .trim()
+    .replace(/[\s_-]+/g, '-');
+}
+
+/** The plain words of inline tokens: for a heading id or a page description. */
+export function plainText(tokens: readonly Token[]): string {
+  let out = '';
+  for (const token of tokens) {
+    if (token.type === 'text' || token.type === 'code_inline' || token.type === 'wikilink' || token.type === 'embed') out += token.content;
+    else if (token.type === 'softbreak' || token.type === 'hardbreak') out += ' ';
+    else if (token.type === 'image') out += plainText(token.children ?? []);
+  }
+  return out;
+}
 
 export function createMarkdown(): MarkdownIt {
   const md = new MarkdownItFactory({
@@ -77,46 +122,84 @@ export function createMarkdown(): MarkdownIt {
 
   md.renderer.rules['mark_open'] = () => '<mark>';
   md.renderer.rules['mark_close'] = () => '</mark>';
-  md.renderer.rules['wikilink'] = (tokens, index) => {
+  md.renderer.rules['wikilink'] = (tokens, index, _options, env: Env | undefined) => {
     const token = tokens[index]!;
     const target = String(token.attrGet('target') ?? '');
-    return `<a class="wikilink" href="#" data-wiki="${md.utils.escapeHtml(target)}">${md.utils.escapeHtml(token.content)}</a>`;
+    const label = md.utils.escapeHtml(token.content);
+    if (env?.export) {
+      const href = env.export.wiki(target);
+      if (href === null) return `<span class="wikilink wikilink--missing">${label}</span>`;
+      return `<a class="wikilink" href="${md.utils.escapeHtml(href)}">${label}</a>`;
+    }
+    return `<a class="wikilink" href="#" data-wiki="${md.utils.escapeHtml(target)}">${label}</a>`;
   };
 
   // `![[image.png]]` lives in the note's own assets folder; the app knows where that is.
-  md.renderer.rules['embed'] = (tokens, index) => {
+  md.renderer.rules['embed'] = (tokens, index, _options, env: Env | undefined) => {
     const token = tokens[index]!;
-    const name = md.utils.escapeHtml(String(token.attrGet('target') ?? ''));
+    const target = String(token.attrGet('target') ?? '');
+    const name = md.utils.escapeHtml(target);
     const width = token.attrGet('width');
     const size = width ? ` width="${width}"` : '';
-    return `<img class="embed" src="" alt="${md.utils.escapeHtml(token.content)}" data-embed="${name}"${size}>`;
+    const alt = md.utils.escapeHtml(token.content);
+    if (env?.export) return `<img class="embed" src="${md.utils.escapeHtml(env.export.embed(target))}" alt="${alt}"${size}>`;
+    return `<img class="embed" src="" alt="${alt}" data-embed="${name}"${size}>`;
   };
 
   // Images inside the vault are resolved to blob URLs after the HTML lands in the DOM.
-  md.renderer.rules['image'] = (tokens, index, options, _env, self) => {
+  md.renderer.rules['image'] = (tokens, index, options, env: Env | undefined, self) => {
     const token = tokens[index]!;
     const src = String(token.attrGet('src') ?? '');
-    token.attrSet('alt', self.renderInlineAsText(token.children ?? [], options, _env));
+    token.attrSet('alt', self.renderInlineAsText(token.children ?? [], options, env));
     if (!EXTERNAL.test(src) && !src.startsWith('data:')) {
-      token.attrSet('data-asset', src);
-      token.attrSet('src', '');
+      if (env?.export) token.attrSet('src', env.export.link(src));
+      else {
+        token.attrSet('data-asset', src);
+        token.attrSet('src', '');
+      }
     }
     return self.renderToken(tokens, index, options);
   };
 
   const renderLink = md.renderer.rules['link_open'];
-  md.renderer.rules['link_open'] = (tokens, index, options, env, self) => {
+  md.renderer.rules['link_open'] = (tokens, index, options, env: Env | undefined, self) => {
     const token = tokens[index]!;
     const href = String(token.attrGet('href') ?? '');
     if (EXTERNAL.test(href)) {
       token.attrSet('target', '_blank');
       token.attrSet('rel', 'noreferrer noopener');
+    } else if (href && env?.export) {
+      // `#anchors` too: on a single page each note's headings carry the note's prefix.
+      token.attrSet('href', env.export.link(href));
     } else if (href && !href.startsWith('#')) {
       token.attrSet('data-note', safeDecode(href));
     }
     return renderLink
       ? renderLink(tokens, index, options, env, self)
       : self.renderToken(tokens, index, options);
+  };
+
+  // On a static page a heading carries an id, so `[link](note.md#section)` lands on it.
+  md.renderer.rules['heading_open'] = (tokens, index, options, env: Env | undefined, self) => {
+    const open = tokens[index]!;
+    const inline = tokens[index + 1];
+    if (env?.export && inline?.type === 'inline') {
+      const slug = slugify(plainText(inline.children ?? []));
+      if (slug) {
+        env.slugs ??= new Map();
+        const seen = env.slugs.get(slug) ?? 0;
+        env.slugs.set(slug, seen + 1);
+        open.attrSet('id', `${env.export.prefix ?? ''}${seen ? `${slug}-${seen + 1}` : slug}`);
+      }
+      const shift = env.export.shift ?? 0;
+      const close = tokens[index + 2];
+      if (shift && close?.type === 'heading_close') {
+        const tag = `h${Math.min(6, Number(open.tag.slice(1)) + shift)}`;
+        open.tag = tag;
+        close.tag = tag;
+      }
+    }
+    return self.renderToken(tokens, index, options);
   };
 
   // A fenced block names its language in the corner; the label is CSS, so copying the code skips it.
@@ -136,9 +219,10 @@ export function createMarkdown(): MarkdownIt {
   md.renderer.rules['callout_title_close'] = (tokens, index) => `</span></${tokens[index]!.tag}>\n`;
 
   // A checkbox carries its line within the block, so a click can flip the source.
-  md.renderer.rules['checkbox'] = (tokens, index) => {
+  md.renderer.rules['checkbox'] = (tokens, index, _options, env: Env | undefined) => {
     const token = tokens[index]!;
     const checked = token.attrGet('checked') ? ' checked' : '';
+    if (env?.export) return `<input class="task" type="checkbox" disabled${checked}>`;
     const line = token.attrGet('line') ?? '0';
     return `<input class="task" type="checkbox" data-task-line="${line}"${checked}>`;
   };

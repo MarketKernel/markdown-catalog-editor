@@ -22,6 +22,8 @@ async function bundleApp() {
   const result = await build({
     entryPoints: [at('src/main.ts')],
     bundle: true,
+    // The export's page template and stylesheet ride along as strings.
+    loader: { '.html': 'text', '.css': 'text' },
     format: 'iife',
     target: ['es2022'],
     platform: 'browser',
@@ -36,11 +38,28 @@ async function bundleApp() {
   return output.text;
 }
 
+/**
+ * Inside an inline <script>, `<!--` followed by `<script` — with no `-->`
+ * between — puts the HTML parser in its "double escaped" state: the closing
+ * </script> no longer ends the script, and the page runs none of it.
+ */
+function assertScriptCloses(code) {
+  for (let at = code.indexOf('<!--'); at >= 0; at = code.indexOf('<!--', at + 4)) {
+    const close = code.indexOf('-->', at + 4);
+    const script = code.slice(at + 4).search(/<script/i);
+    if (script >= 0 && (close < 0 || at + 4 + script < close)) {
+      throw new Error(`"<!--" followed by "<script" in the bundle would break the page: …${code.slice(Math.max(0, at - 40), at + 40)}…`);
+    }
+  }
+}
+
 /** The whole point of the build: nothing may be fetched at runtime. */
 function assertSelfContained(html) {
   const offenders = [
-    [/<script[^>]+\ssrc=/i, '<script src=…>'],
-    [/<link[^>]+href=["'](?!data:)/i, '<link href=…>'],
+    // The export writes its own `<link href="${root}style.css">` and `<script src="${root}site.js">`
+    // into the pages it makes; inside the bundle their quotes may come escaped.
+    [/<script[^>]+\ssrc=(?!\\?["']?(?:\{\{|\$\{))/i, '<script src=…>'],
+    [/<link[^>]+href=(?!\\?["']?(?:data:|\{\{|\$\{))/i, '<link href=…>'],
     [/@import\s+(url\()?["']?(?!data:)/i, '@import'],
     [/url\(\s*["']?https?:/i, 'url(http…)'],
   ];
@@ -60,6 +79,7 @@ async function buildOnce() {
   const svg = icon.replace(/<\?xml[\s\S]*?\?>/, '').trim();
   const iconUri = `data:image/svg+xml;base64,${Buffer.from(svg, 'utf8').toString('base64')}`;
 
+  assertScriptCloses(guard(appJs));
   const html = template
     .replace('/*__STYLES__*/', () => styles)
     .replace('/*__APP__*/', () => guard(appJs))

@@ -13,7 +13,8 @@
     "New note": "Catatan baru",
     "New folder": "Folder baru",
     "Rename": "Ganti nama",
-    "Copy path": "Salin jalur"
+    "Copy path": "Salin jalur",
+    "Export to HTML…": "Ekspor ke HTML…"
   },
   "status": {
     "{count} words": {
@@ -39,7 +40,13 @@
     "Could not save: {reason}": "Tidak dapat menyimpan: {reason}",
     "The note was renamed, its images were not: {reason}": "Catatan sudah diganti namanya, tetapi gambarnya tidak: {reason}",
     "Could not read {name}, so tags cannot be changed: {reason}": "Tidak dapat membaca {name}, jadi tag tidak dapat diubah: {reason}",
-    "Could not save the tags: {reason}": "Tidak dapat menyimpan tag: {reason}"
+    "Could not save the tags: {reason}": "Tidak dapat menyimpan tag: {reason}",
+    "Nothing to export: no notes here": "Tidak ada yang diekspor: tidak ada catatan di sini",
+    "{count} pages exported to {folder}": {
+      "other": "{count} halaman diekspor ke {folder}"
+    },
+    "Export stopped: {folder} is incomplete": "Ekspor dihentikan: {folder} belum lengkap",
+    "Export stopped": "Ekspor dihentikan"
   },
   "gate": {
     "Drag a folder, not a single file": "Seret folder, bukan satu file",
@@ -152,7 +159,8 @@
     "Divider": "Pemisah",
     "More formatting": "Format lainnya",
     "Search (⌘F)": "Cari (⌘F)",
-    "Settings": "Pengaturan"
+    "Settings": "Pengaturan",
+    "Export to HTML": "Ekspor ke HTML"
   },
   "find": {
     "Find in note": "Cari di catatan",
@@ -170,5 +178,42 @@
       "other": "{count} catatan"
     },
     "No notes with this tag": "Tidak ada catatan dengan tag ini"
+  },
+  "export": {
+    "Export to HTML": "Ekspor ke HTML",
+    "Everything in {name}": "Semua isi {name}",
+    "The folder {name}": "Folder {name}",
+    "Folder": "Folder",
+    "Export tags: a page per tag and an index of tags": "Ekspor tag: satu halaman per tag dan indeks tag",
+    "There are no tags to export": "Tidak ada tag untuk diekspor",
+    "Template": "Templat",
+    "Reset to default": "Kembalikan ke bawaan",
+    "Give the folder a name": "Beri nama folder",
+    "The template must contain {list}": "Templat harus memuat {list}",
+    "Export": "Ekspor",
+    "Exporting…": "Mengekspor…",
+    "Required placeholders: {list}.": "Placeholder wajib: {list}.",
+    "Also available: {list}.": "Juga tersedia: {list}.",
+    "Reading the notes": "Membaca catatan",
+    "Writing the pages": "Menulis halaman",
+    "Copying images and files": "Menyalin gambar dan file",
+    "Stop": "Hentikan",
+    "Stopping…": "Menghentikan…",
+    "The text width and the note name above each note follow the editor settings.": "Lebar teks dan nama di atas setiap catatan mengikuti pengaturan editor.",
+    "Create a static site": "Buat situs statis",
+    "A page per note, with search and a navigation that remembers its folders.": "Satu halaman per catatan, dengan pencarian dan navigasi yang mengingat foldernya.",
+    "Writing the page": "Menulis halaman",
+    "Could not write {path}: {reason}": "Tidak dapat menulis {path}: {reason}",
+    "{count} files did not reach the disk, {path} among them": {
+      "other": "{count} file tidak sampai ke disk, termasuk {path}"
+    },
+    "One file with every note, shown one at a time from a table of contents, with search; the images in assets.": "Satu file berisi semua catatan, ditampilkan satu per satu dari daftar isi, dengan pencarian; gambar di assets."
+  },
+  "site": {
+    "Search the notes": "Cari di catatan",
+    "Switch to the dark theme": "Beralih ke tema gelap",
+    "Switch to the light theme": "Beralih ke tema terang",
+    "Previous note": "Catatan sebelumnya",
+    "Next note": "Catatan berikutnya"
   }
 }

@@ -193,13 +193,39 @@ function levelOf(token: Token): number {
 }
 
 /** A leading `---` fence: YAML metadata, shown as-is rather than as a stray rule. */
-function frontMatterEnd(lines: string[]): number {
+export function frontMatterEnd(lines: string[]): number {
   if ((lines[0] ?? '').trim() !== '---') return 0;
   for (let index = 1; index < Math.min(lines.length, 200); index += 1) {
     const line = (lines[index] ?? '').trim();
     if (line === '---' || line === '...') return index + 1;
   }
   return 0;
+}
+
+/* ------------------------------------------------------------------ *
+ * The title
+ * ------------------------------------------------------------------ */
+
+/** Compares titles the way a reader would: no emphasis marks, case or spacing. */
+export function titleKey(text: string): string {
+  return text.replace(/\[\[|\]\]|[*_`~=]/g, '').replace(/\s+/g, ' ').trim().toLowerCase();
+}
+
+/** The text of an H1 the note opens with (after front matter and blank lines), if it does. */
+export function leadingHeading(head: string): string | null {
+  const lines = head.split('\n');
+  let at = 0;
+  if ((lines[0] ?? '').trim() === '---') {
+    const close = lines.findIndex((line, index) => index > 0 && (line.trim() === '---' || line.trim() === '...'));
+    if (close < 0) return null;
+    at = close + 1;
+  }
+  while (at < lines.length && lines[at]!.trim() === '') at += 1;
+  const line = lines[at] ?? '';
+  const atx = /^ {0,3}#[ \t]+(.*?)(?:[ \t]+#+)?[ \t]*$/.exec(line);
+  if (atx) return atx[1]!;
+  if (line.trim() && /^ {0,3}=+[ \t]*$/.test(lines[at + 1] ?? '')) return line;
+  return null;
 }
 
 /* ------------------------------------------------------------------ *

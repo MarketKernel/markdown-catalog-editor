@@ -13,7 +13,8 @@
     "New note": "ملاحظة جديدة",
     "New folder": "مجلد جديد",
     "Rename": "إعادة تسمية",
-    "Copy path": "نسخ المسار"
+    "Copy path": "نسخ المسار",
+    "Export to HTML…": "تصدير إلى HTML…"
   },
   "status": {
     "{count} words": {
@@ -49,7 +50,18 @@
     "Could not save: {reason}": "تعذّر الحفظ: {reason}",
     "The note was renamed, its images were not: {reason}": "أُعيدت تسمية الملاحظة، لكن لم تُعَد تسمية صورها: {reason}",
     "Could not read {name}, so tags cannot be changed: {reason}": "تعذّرت قراءة {name}، لذا لا يمكن تغيير الوسوم: {reason}",
-    "Could not save the tags: {reason}": "تعذّر حفظ الوسوم: {reason}"
+    "Could not save the tags: {reason}": "تعذّر حفظ الوسوم: {reason}",
+    "Nothing to export: no notes here": "لا شيء للتصدير: لا توجد ملاحظات هنا",
+    "{count} pages exported to {folder}": {
+      "few": "صُدِّرت {count} صفحات إلى {folder}",
+      "many": "صُدِّرت {count} صفحة إلى {folder}",
+      "one": "صُدِّرت صفحة واحدة إلى {folder}",
+      "two": "صُدِّرت صفحتان إلى {folder}",
+      "zero": "لم تُصدَّر أي صفحة إلى {folder}",
+      "other": "صُدِّرت {count} صفحة إلى {folder}"
+    },
+    "Export stopped: {folder} is incomplete": "توقف التصدير: {folder} غير مكتمل",
+    "Export stopped": "توقف التصدير"
   },
   "gate": {
     "Drag a folder, not a single file": "اسحب مجلدًا، لا ملفًا واحدًا",
@@ -162,7 +174,8 @@
     "Divider": "فاصل",
     "More formatting": "مزيد من التنسيق",
     "Search (⌘F)": "بحث (⌘F)",
-    "Settings": "الإعدادات"
+    "Settings": "الإعدادات",
+    "Export to HTML": "تصدير إلى HTML"
   },
   "find": {
     "Find in note": "البحث في الملاحظة",
@@ -185,5 +198,47 @@
       "other": "{count} ملاحظة"
     },
     "No notes with this tag": "لا توجد ملاحظات بهذا الوسم"
+  },
+  "export": {
+    "Export to HTML": "تصدير إلى HTML",
+    "Everything in {name}": "كل ما في {name}",
+    "The folder {name}": "المجلد {name}",
+    "Folder": "المجلد",
+    "Export tags: a page per tag and an index of tags": "تصدير الوسوم: صفحة لكل وسم وفهرس للوسوم",
+    "There are no tags to export": "لا توجد وسوم للتصدير",
+    "Template": "القالب",
+    "Reset to default": "استعادة الافتراضي",
+    "Give the folder a name": "أدخل اسمًا للمجلد",
+    "The template must contain {list}": "يجب أن يحتوي القالب على {list}",
+    "Export": "تصدير",
+    "Exporting…": "جارٍ التصدير…",
+    "Required placeholders: {list}.": "العناصر النائبة المطلوبة: {list}.",
+    "Also available: {list}.": "متاح أيضًا: {list}.",
+    "Reading the notes": "جارٍ قراءة الملاحظات",
+    "Writing the pages": "جارٍ كتابة الصفحات",
+    "Copying images and files": "جارٍ نسخ الصور والملفات",
+    "Stop": "إيقاف",
+    "Stopping…": "جارٍ الإيقاف…",
+    "The text width and the note name above each note follow the editor settings.": "عرض النص والاسم فوق كل ملاحظة يتبعان إعدادات المحرر.",
+    "Create a static site": "إنشاء موقع ثابت",
+    "A page per note, with search and a navigation that remembers its folders.": "صفحة لكل ملاحظة، مع بحث وتنقل يتذكر حالة المجلدات.",
+    "Writing the page": "جارٍ كتابة الصفحة",
+    "Could not write {path}: {reason}": "تعذّرت كتابة {path}: {reason}",
+    "{count} files did not reach the disk, {path} among them": {
+      "few": "لم تصل {count} ملفات إلى القرص، منها {path}",
+      "many": "لم يصل {count} ملفًا إلى القرص، منها {path}",
+      "one": "لم يصل ملف واحد إلى القرص: {path}",
+      "two": "لم يصل ملفان إلى القرص، منهما {path}",
+      "zero": "لم يصل أي ملف إلى القرص، ومنها {path}",
+      "other": "لم يصل {count} ملف إلى القرص، منها {path}"
+    },
+    "One file with every note, shown one at a time from a table of contents, with search; the images in assets.": "ملف واحد بكل الملاحظات، تُعرض واحدة تلو الأخرى من فهرس المحتويات، مع بحث؛ والصور في assets."
+  },
+  "site": {
+    "Search the notes": "البحث في الملاحظات",
+    "Switch to the dark theme": "التبديل إلى السمة الداكنة",
+    "Switch to the light theme": "التبديل إلى السمة الفاتحة",
+    "Previous note": "الملاحظة السابقة",
+    "Next note": "الملاحظة التالية"
   }
 }

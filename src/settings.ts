@@ -27,6 +27,12 @@ export interface Settings {
   collapsedTags: string[];
   /** The tag section's height cap in pixels, set by dragging; null → as tall as the panel allows. */
   tagsHeight: number | null;
+  /** The HTML export's page template as the user changed it; null → the built-in one. */
+  exportTemplate: string | null;
+  /** The HTML export takes the tags along. */
+  exportTags: boolean;
+  /** The HTML export makes a site, a page per note; false → one page with every note. */
+  exportSite: boolean;
 }
 
 const KEY = 'markdown-catalog-editor';
@@ -50,6 +56,9 @@ const DEFAULTS: Settings = {
   tagsOpen: true,
   collapsedTags: [],
   tagsHeight: null,
+  exportTemplate: null,
+  exportTags: true,
+  exportSite: true,
 };
 
 export function loadSettings(): Settings {
@@ -67,6 +76,7 @@ export function loadSettings(): Settings {
       expanded: Array.isArray(stored.expanded) ? stored.expanded : [],
       collapsedTags: Array.isArray(stored.collapsedTags) ? stored.collapsedTags : [],
       tagsHeight: Number.isFinite(stored.tagsHeight) ? Number(stored.tagsHeight) : null,
+      exportTemplate: typeof stored.exportTemplate === 'string' && stored.exportTemplate.trim() ? stored.exportTemplate : null,
     };
   } catch {
     return { ...DEFAULTS };

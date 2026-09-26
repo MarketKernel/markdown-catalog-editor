@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="{{lang}}" data-width="{{width}}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{title}} — {{site}}</title>
+<meta name="description" content="{{description}}">
+{{styles}}
+{{script}}
+</head>
+<body>
+<div class="site">
+  <aside class="sidebar">
+    <div class="sidebar-top">
+      <a class="site-name" href="{{root}}index.html">{{site}}</a>
+      {{theme}}
+    </div>
+    {{navigation}}
+    {{tags}}
+  </aside>
+  <main class="page">
+    <article class="doc">
+      {{heading}}
+      {{pagetags}}
+      {{content}}
+    </article>
+  </main>
+</div>
+</body>
+</html>

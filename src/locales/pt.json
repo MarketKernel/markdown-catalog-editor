@@ -13,7 +13,8 @@
     "New note": "Nova nota",
     "New folder": "Nova pasta",
     "Rename": "Renomear",
-    "Copy path": "Copiar caminho"
+    "Copy path": "Copiar caminho",
+    "Export to HTML…": "Exportar para HTML…"
   },
   "status": {
     "{count} words": {
@@ -43,7 +44,15 @@
     "Could not save: {reason}": "Não foi possível salvar: {reason}",
     "The note was renamed, its images were not: {reason}": "A nota foi renomeada, mas suas imagens não: {reason}",
     "Could not read {name}, so tags cannot be changed: {reason}": "Não foi possível ler {name}, por isso as etiquetas não podem ser alteradas: {reason}",
-    "Could not save the tags: {reason}": "Não foi possível salvar as etiquetas: {reason}"
+    "Could not save the tags: {reason}": "Não foi possível salvar as etiquetas: {reason}",
+    "Nothing to export: no notes here": "Nada para exportar: não há notas aqui",
+    "{count} pages exported to {folder}": {
+      "many": "{count} páginas exportadas para {folder}",
+      "one": "{count} página exportada para {folder}",
+      "other": "{count} páginas exportadas para {folder}"
+    },
+    "Export stopped: {folder} is incomplete": "Exportação interrompida: {folder} está incompleta",
+    "Export stopped": "Exportação interrompida"
   },
   "gate": {
     "Drag a folder, not a single file": "Arraste uma pasta, não um arquivo avulso",
@@ -156,7 +165,8 @@
     "Divider": "Divisor",
     "More formatting": "Mais formatação",
     "Search (⌘F)": "Pesquisar (⌘F)",
-    "Settings": "Configurações"
+    "Settings": "Configurações",
+    "Export to HTML": "Exportar para HTML"
   },
   "find": {
     "Find in note": "Localizar na nota",
@@ -176,5 +186,44 @@
       "other": "{count} notas"
     },
     "No notes with this tag": "Nenhuma nota com esta etiqueta"
+  },
+  "export": {
+    "Export to HTML": "Exportar para HTML",
+    "Everything in {name}": "Tudo em {name}",
+    "The folder {name}": "A pasta {name}",
+    "Folder": "Pasta",
+    "Export tags: a page per tag and an index of tags": "Exportar tags: uma página por tag e um índice de tags",
+    "There are no tags to export": "Não há tags para exportar",
+    "Template": "Modelo",
+    "Reset to default": "Restaurar o padrão",
+    "Give the folder a name": "Dê um nome à pasta",
+    "The template must contain {list}": "O modelo precisa conter {list}",
+    "Export": "Exportar",
+    "Exporting…": "Exportando…",
+    "Required placeholders: {list}.": "Marcadores obrigatórios: {list}.",
+    "Also available: {list}.": "Também disponíveis: {list}.",
+    "Reading the notes": "Lendo as notas",
+    "Writing the pages": "Escrevendo as páginas",
+    "Copying images and files": "Copiando imagens e arquivos",
+    "Stop": "Parar",
+    "Stopping…": "Parando…",
+    "The text width and the note name above each note follow the editor settings.": "A largura do texto e o nome acima de cada nota seguem as configurações do editor.",
+    "Create a static site": "Criar um site estático",
+    "A page per note, with search and a navigation that remembers its folders.": "Uma página por nota, com busca e uma navegação que lembra as pastas.",
+    "Writing the page": "Escrevendo a página",
+    "Could not write {path}: {reason}": "Não foi possível gravar {path}: {reason}",
+    "{count} files did not reach the disk, {path} among them": {
+      "many": "{count} arquivos não chegaram ao disco, entre eles {path}",
+      "one": "{count} arquivo não chegou ao disco, entre eles {path}",
+      "other": "{count} arquivos não chegaram ao disco, entre eles {path}"
+    },
+    "One file with every note, shown one at a time from a table of contents, with search; the images in assets.": "Um arquivo com todas as notas, mostradas uma de cada vez a partir de um sumário, com busca; as imagens em assets."
+  },
+  "site": {
+    "Search the notes": "Pesquisar nas notas",
+    "Switch to the dark theme": "Mudar para o tema escuro",
+    "Switch to the light theme": "Mudar para o tema claro",
+    "Previous note": "Nota anterior",
+    "Next note": "Próxima nota"
   }
 }

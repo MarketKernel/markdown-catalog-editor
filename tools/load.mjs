@@ -19,6 +19,7 @@ export async function load(...modules) {
       loader: 'ts',
     },
     bundle: true,
+    loader: { '.html': 'text', '.css': 'text' },
     format: 'cjs',
     platform: 'node',
     target: 'node20',

@@ -76,6 +76,38 @@ function dialog(options: DialogOptions): Promise<string | null> {
   });
 }
 
+/**
+ * Shows `box` over the page until Escape, a click outside it or the returned
+ * function closes it. While `locked` says so, Escape and the outside click do
+ * nothing — for a dialog busy with work it must see through.
+ */
+export function openModal(box: HTMLElement, locked: () => boolean = () => false): () => void {
+  const host = shell();
+  host.hidden = false;
+  host.replaceChildren(box);
+  let open = true;
+  const close = (): void => {
+    if (!open) return;
+    open = false;
+    host.hidden = true;
+    host.replaceChildren();
+    document.removeEventListener('keydown', onKey, true);
+    host.removeEventListener('mousedown', onDown);
+  };
+  const onKey = (event: KeyboardEvent): void => {
+    if (event.key !== 'Escape') return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (!locked()) close();
+  };
+  const onDown = (event: MouseEvent): void => {
+    if (event.target === host && !locked()) close();
+  };
+  document.addEventListener('keydown', onKey, true);
+  host.addEventListener('mousedown', onDown);
+  return close;
+}
+
 export function ask(title: string, label: string, value = ''): Promise<string | null> {
   return dialog({ title, label, value, confirm: t('dialog', 'Done') });
 }
@@ -88,6 +120,8 @@ export interface MenuItem {
   label: string;
   action: () => void;
   danger?: boolean;
+  /** Shown but greyed out, as an action that cannot run right now. */
+  disabled?: boolean;
 }
 
 export function menu(x: number, y: number, items: MenuItem[]): void {
@@ -99,6 +133,7 @@ export function menu(x: number, y: number, items: MenuItem[]): void {
     button.type = 'button';
     button.className = item.danger ? 'context-item context-item--danger' : 'context-item';
     button.textContent = item.label;
+    button.disabled = Boolean(item.disabled);
     button.addEventListener('click', () => {
       list.remove();
       item.action();

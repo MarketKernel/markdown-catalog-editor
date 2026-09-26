@@ -13,7 +13,8 @@
     "New note": "Yeni not",
     "New folder": "Yeni klasör",
     "Rename": "Yeniden adlandır",
-    "Copy path": "Yolu kopyala"
+    "Copy path": "Yolu kopyala",
+    "Export to HTML…": "HTML'ye dışa aktar…"
   },
   "status": {
     "{count} words": {
@@ -41,7 +42,14 @@
     "Could not save: {reason}": "Kaydedilemedi: {reason}",
     "The note was renamed, its images were not: {reason}": "Notun adı değiştirildi, ancak görsellerininki değiştirilemedi: {reason}",
     "Could not read {name}, so tags cannot be changed: {reason}": "{name} okunamadı, bu yüzden etiketler değiştirilemez: {reason}",
-    "Could not save the tags: {reason}": "Etiketler kaydedilemedi: {reason}"
+    "Could not save the tags: {reason}": "Etiketler kaydedilemedi: {reason}",
+    "Nothing to export: no notes here": "Dışa aktarılacak bir şey yok: burada not yok",
+    "{count} pages exported to {folder}": {
+      "one": "{count} sayfa {folder} klasörüne aktarıldı",
+      "other": "{count} sayfa {folder} klasörüne aktarıldı"
+    },
+    "Export stopped: {folder} is incomplete": "Dışa aktarma durduruldu: {folder} eksik",
+    "Export stopped": "Dışa aktarma durduruldu"
   },
   "gate": {
     "Drag a folder, not a single file": "Tek bir dosya değil, bir klasör sürükleyin",
@@ -154,7 +162,8 @@
     "Divider": "Ayırıcı",
     "More formatting": "Diğer biçimlendirme",
     "Search (⌘F)": "Ara (⌘F)",
-    "Settings": "Ayarlar"
+    "Settings": "Ayarlar",
+    "Export to HTML": "HTML'ye dışa aktar"
   },
   "find": {
     "Find in note": "Notta bul",
@@ -173,5 +182,43 @@
       "other": "{count} not"
     },
     "No notes with this tag": "Bu etiketle not yok"
+  },
+  "export": {
+    "Export to HTML": "HTML'ye dışa aktar",
+    "Everything in {name}": "{name} içindeki her şey",
+    "The folder {name}": "{name} klasörü",
+    "Folder": "Klasör",
+    "Export tags: a page per tag and an index of tags": "Etiketleri dışa aktar: her etiket için bir sayfa ve bir etiket dizini",
+    "There are no tags to export": "Dışa aktarılacak etiket yok",
+    "Template": "Şablon",
+    "Reset to default": "Varsayılana dön",
+    "Give the folder a name": "Klasöre bir ad verin",
+    "The template must contain {list}": "Şablonda {list} bulunmalı",
+    "Export": "Dışa aktar",
+    "Exporting…": "Dışa aktarılıyor…",
+    "Required placeholders: {list}.": "Zorunlu yer tutucular: {list}.",
+    "Also available: {list}.": "Ayrıca kullanılabilir: {list}.",
+    "Reading the notes": "Notlar okunuyor",
+    "Writing the pages": "Sayfalar yazılıyor",
+    "Copying images and files": "Görseller ve dosyalar kopyalanıyor",
+    "Stop": "Durdur",
+    "Stopping…": "Durduruluyor…",
+    "The text width and the note name above each note follow the editor settings.": "Metin genişliği ve her notun üstündeki ad düzenleyici ayarlarını izler.",
+    "Create a static site": "Statik site oluştur",
+    "A page per note, with search and a navigation that remembers its folders.": "Her not için bir sayfa; arama ve klasörlerini hatırlayan bir gezinme.",
+    "Writing the page": "Sayfa yazılıyor",
+    "Could not write {path}: {reason}": "{path} yazılamadı: {reason}",
+    "{count} files did not reach the disk, {path} among them": {
+      "one": "{count} dosya diske ulaşmadı, aralarında {path}",
+      "other": "{count} dosya diske ulaşmadı, aralarında {path}"
+    },
+    "One file with every note, shown one at a time from a table of contents, with search; the images in assets.": "Tüm notları içeren tek dosya; içindekiler tablosundan tek tek gösterilir, arama ile; görseller assets içinde."
+  },
+  "site": {
+    "Search the notes": "Notlarda ara",
+    "Switch to the dark theme": "Koyu temaya geç",
+    "Switch to the light theme": "Açık temaya geç",
+    "Previous note": "Önceki not",
+    "Next note": "Sonraki not"
   }
 }

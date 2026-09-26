@@ -35,6 +35,19 @@ export interface Vault {
   createDir(dir: string, name: string): Promise<string>;
   rename(path: string, kind: EntryKind, name: string): Promise<string>;
   remove(path: string, kind: EntryKind): Promise<void>;
+  /** Many files at once, for the export; throws on a read-only vault. */
+  writer(): VaultWriter;
+}
+
+/**
+ * Writes many files at once. Each folder on the way is created exactly once,
+ * however many writes wait for it: two writes racing to create the same new
+ * folder is what a disk folder in Chrome does not always survive.
+ */
+export interface VaultWriter {
+  write(path: string, data: string | Blob): Promise<void>;
+  /** Every file under `dir`, as paths relative to the vault root — to check what was written. */
+  list(dir: string): Promise<string[]>;
 }
 
 export const NOTE_EXTENSIONS = ['.md', '.markdown', '.mdown', '.mkd', '.txt'];
@@ -42,6 +55,8 @@ export const NOTE_EXTENSIONS = ['.md', '.markdown', '.mdown', '.mkd', '.txt'];
 export const ASSETS_DIR = 'assets';
 /** The catalog's tags and other data, one file at the root (see meta.ts); never shown in the tree. */
 export const META_FILE = '.meta.json';
+/** Where the HTML export goes, a folder per run at the root (see export.ts); never shown in the tree. */
+export const OUTPUT_DIR = 'output';
 const ASSET_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg', '.avif', '.bmp', '.ico', '.pdf'];
 const MAX_DEPTH = 12;
 const MAX_ENTRIES = 40000;
@@ -56,9 +71,9 @@ function isAsset(name: string): boolean {
   return ASSET_EXTENSIONS.some((ext) => lower.endsWith(ext));
 }
 
-/** Dot-folders and dependency dumps would bury the tree in noise. */
-function skipDir(name: string): boolean {
-  return name.startsWith('.') || name === 'node_modules';
+/** Dot-folders and dependency dumps would bury the tree in noise; so would the exported sites. */
+function skipDir(name: string, atRoot = false): boolean {
+  return name.startsWith('.') || name === 'node_modules' || (atRoot && name === OUTPUT_DIR);
 }
 
 export function dirOf(path: string): string {
@@ -73,6 +88,29 @@ export function baseOf(path: string): string {
 
 export function join(dir: string, name: string): string {
   return dir ? `${dir}/${name}` : name;
+}
+
+/** `note.md` → `note`; a name without an extension stays as it is. */
+export function stripExtension(name: string): string {
+  const cut = name.lastIndexOf('.');
+  return cut > 0 ? name.slice(0, cut) : name;
+}
+
+/** A relative link inside a note, resolved against the note's own folder. */
+export function resolvePath(from: string, href: string): string {
+  if (href.startsWith('/')) return href.slice(1);
+  const parts = dirOf(from).split('/').filter(Boolean);
+  for (const piece of href.split('/')) {
+    if (piece === '.' || piece === '') continue;
+    if (piece === '..') parts.pop();
+    else parts.push(piece);
+  }
+  return parts.join('/');
+}
+
+/** Where a note keeps its embedded images: `dir/page.md` → `dir/assets/page`. */
+export function assetsDirOf(notePath: string): string {
+  return join(join(dirOf(notePath), ASSETS_DIR), stripExtension(baseOf(notePath)));
 }
 
 /** Sorts folders before files, then by name the way a file manager would. */
@@ -209,6 +247,46 @@ export class DirectoryVault implements Vault {
     await parent.removeEntry(baseOf(path), { recursive: kind === 'dir' });
   }
 
+  writer(): VaultWriter {
+    const dirs = new Map<string, Promise<DirHandleLike>>([['', Promise.resolve(this.root)]]);
+    const dir = (path: string): Promise<DirHandleLike> => {
+      let found = dirs.get(path);
+      if (!found) {
+        found = dir(dirOf(path)).then((parent) => parent.getDirectoryHandle(baseOf(path), { create: true }));
+        // A failed folder is tried again by the next write, not remembered as failed.
+        found.catch(() => dirs.delete(path));
+        dirs.set(path, found);
+      }
+      return found;
+    };
+    return {
+      write: async (path, data) => {
+        const parent = await dir(dirOf(path));
+        const handle = await parent.getFileHandle(baseOf(path), { create: true });
+        if (!handle.createWritable) throw new Error(t('errors', 'This browser cannot write files'));
+        const stream = await handle.createWritable();
+        await stream.write(data);
+        await stream.close();
+      },
+      list: async (path) => {
+        const out: string[] = [];
+        const walk = async (handle: DirHandleLike, prefix: string): Promise<void> => {
+          for await (const child of handle.values()) {
+            const at = join(prefix, child.name);
+            if (child.kind === 'directory') await walk(child, at);
+            else out.push(at);
+          }
+        };
+        try {
+          await walk(await this.dirHandle(splitPath(path)), path);
+        } catch {
+          /* no such folder: nothing was written */
+        }
+        return out;
+      },
+    };
+  }
+
   private async fileHandle(path: string, create = false): Promise<FileHandleLike> {
     const parts = splitPath(path);
     const name = parts.pop();
@@ -261,7 +339,7 @@ async function walkHandle(
     if (counter.left-- <= 0) break;
     const path = join(prefix, child.name);
     if (child.kind === 'directory') {
-      if (skipDir(child.name) || depth >= MAX_DEPTH) continue;
+      if (skipDir(child.name, depth === 0) || depth >= MAX_DEPTH) continue;
       const children = await walkHandle(child, path, depth + 1, counter);
       entries.push({ kind: 'dir', name: child.name, path, children });
     } else if (isNote(child.name) || isAsset(child.name)) {
@@ -288,7 +366,7 @@ export class FileListVault implements Vault {
       if (!root && parts.length > 1) root = parts[0] ?? '';
       // Drop the picked folder's own name so paths match what the tree shows.
       const path = parts.length > 1 ? parts.slice(1).join('/') : relative;
-      if (path.split('/').some((part, index, all) => index < all.length - 1 && skipDir(part))) continue;
+      if (path.split('/').some((part, index, all) => index < all.length - 1 && skipDir(part, index === 0))) continue;
       if (!isNote(file.name) && !isAsset(file.name) && path !== META_FILE) continue;
       this.files.set(path, file);
     }
@@ -353,6 +431,10 @@ export class FileListVault implements Vault {
   async remove(): Promise<void> {
     throw new Error(t('errors', 'The folder is open read-only'));
   }
+
+  writer(): VaultWriter {
+    throw new Error(t('errors', 'The folder is open read-only'));
+  }
 }
 
 /** Legacy drag-and-drop tree (`webkitGetAsEntry`) flattened into a file list. */
@@ -367,7 +449,7 @@ export async function filesFromEntry(entry: FileSystemEntry): Promise<File[]> {
       out.push(file);
       return;
     }
-    if (depth >= MAX_DEPTH || (depth > 0 && skipDir(item.name))) return;
+    if (depth >= MAX_DEPTH || (depth > 0 && skipDir(item.name, depth === 1))) return;
     const reader = (item as FileSystemDirectoryEntry).createReader();
     for (;;) {
       const batch = await new Promise<FileSystemEntry[]>((resolve, reject) =>

@@ -12,7 +12,7 @@
     "build": "node build.mjs",
     "watch": "node build.mjs --watch",
     "typecheck": "tsc --noEmit",
-    "test": "node tools/test-blocks.mjs && node tools/test-format.mjs && node tools/test-table.mjs && node tools/test-markdown.mjs && node tools/test-meta.mjs && node tools/test-i18n.mjs",
+    "test": "node tools/test-blocks.mjs && node tools/test-format.mjs && node tools/test-table.mjs && node tools/test-markdown.mjs && node tools/test-meta.mjs && node tools/test-export.mjs && node tools/test-i18n.mjs",
     "test:browser": "node --experimental-websocket tools/test-editor.mjs",
     "i18n": "node tools/i18n.mjs"
   },

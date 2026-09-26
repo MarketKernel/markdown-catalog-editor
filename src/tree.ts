@@ -1,6 +1,8 @@
 /** The folder tree in the left panel: navigation plus file and folder actions. */
 
-import { ASSETS_DIR, baseOf, dirOf, isNote, type TreeEntry } from './vault';
+import { ASSETS_DIR, baseOf, dirOf, isNote, stripExtension, type TreeEntry } from './vault';
+
+export { stripExtension };
 import { t } from './i18n';
 import { menu, type MenuItem } from './ui';
 
@@ -11,6 +13,10 @@ export interface TreeHost {
   onRename(entry: TreeEntry): void;
   onDelete(entry: TreeEntry): void;
   onReveal(path: string): void;
+  /** Export a folder ('' for the whole vault) as a static HTML site. */
+  onExport(dir: string): void;
+  /** False while an export is running: a second one waits for it. */
+  canExport(): boolean;
   /** False → the vault is read-only and the editing actions stay hidden. */
   canEdit(): boolean;
 }
@@ -35,6 +41,10 @@ export class FileTree {
   setEntries(entries: TreeEntry[]): void {
     this.entries = entries;
     this.render();
+  }
+
+  getEntries(): TreeEntry[] {
+    return this.entries;
   }
 
   setCollapsed(paths: readonly string[]): void {
@@ -161,23 +171,26 @@ export class FileTree {
   };
 
   private readonly onContextMenu = (event: MouseEvent): void => {
-    if (!this.host.canEdit()) return;
     event.preventDefault();
     const row = (event.target as HTMLElement | null)?.closest<HTMLElement>('.tree-item');
     const entry = row ? this.find(row.dataset['path'] ?? '') : null;
     const dir = !entry ? '' : entry.kind === 'dir' ? entry.path : dirOf(entry.path);
+    const editable = this.host.canEdit();
 
-    const items: MenuItem[] = [
-      { label: t('tree', 'New note'), action: () => this.host.onCreateFile(dir) },
-      { label: t('tree', 'New folder'), action: () => this.host.onCreateDir(dir) },
-    ];
-    if (entry) {
+    const items: MenuItem[] = [];
+    if (editable) {
       items.push(
-        { label: t('tree', 'Rename'), action: () => this.host.onRename(entry) },
-        { label: t('tree', 'Copy path'), action: () => this.host.onReveal(entry.path) },
-        { label: t('tree', 'Delete'), action: () => this.host.onDelete(entry), danger: true },
+        { label: t('tree', 'New note'), action: () => this.host.onCreateFile(dir) },
+        { label: t('tree', 'New folder'), action: () => this.host.onCreateDir(dir) },
       );
+      if (entry) items.push({ label: t('tree', 'Rename'), action: () => this.host.onRename(entry) });
     }
+    if (entry) items.push({ label: t('tree', 'Copy path'), action: () => this.host.onReveal(entry.path) });
+    // A folder, or the empty space below the tree for the whole vault.
+    if (!entry || entry.kind === 'dir') {
+      items.push({ label: t('tree', 'Export to HTML…'), action: () => this.host.onExport(dir), disabled: !this.host.canExport() });
+    }
+    if (editable && entry) items.push({ label: t('tree', 'Delete'), action: () => this.host.onDelete(entry), danger: true });
     menu(event.clientX, event.clientY, items);
   };
 
@@ -209,11 +222,6 @@ export class FileTree {
 
 function isAssets(path: string): boolean {
   return baseOf(path) === ASSETS_DIR;
-}
-
-export function stripExtension(name: string): string {
-  const cut = name.lastIndexOf('.');
-  return cut > 0 ? name.slice(0, cut) : name;
 }
 
 function dirPaths(entries: readonly TreeEntry[]): string[] {

@@ -13,7 +13,8 @@
     "New note": "নতুন নোট",
     "New folder": "নতুন ফোল্ডার",
     "Rename": "নাম বদলান",
-    "Copy path": "পাথ কপি করুন"
+    "Copy path": "পাথ কপি করুন",
+    "Export to HTML…": "HTML-এ রপ্তানি করুন…"
   },
   "status": {
     "{count} words": {
@@ -41,7 +42,14 @@
     "Could not save: {reason}": "সংরক্ষণ করা যায়নি: {reason}",
     "The note was renamed, its images were not: {reason}": "নোটের নাম বদলানো হয়েছে, কিন্তু এর ছবিগুলোর নয়: {reason}",
     "Could not read {name}, so tags cannot be changed: {reason}": "{name} পড়া যায়নি, তাই ট্যাগ বদলানো যাবে না: {reason}",
-    "Could not save the tags: {reason}": "ট্যাগ সংরক্ষণ করা যায়নি: {reason}"
+    "Could not save the tags: {reason}": "ট্যাগ সংরক্ষণ করা যায়নি: {reason}",
+    "Nothing to export: no notes here": "রপ্তানি করার কিছু নেই: এখানে কোনো নোট নেই",
+    "{count} pages exported to {folder}": {
+      "one": "{count}টি পৃষ্ঠা {folder}-এ রপ্তানি হয়েছে",
+      "other": "{count}টি পৃষ্ঠা {folder}-এ রপ্তানি হয়েছে"
+    },
+    "Export stopped: {folder} is incomplete": "রপ্তানি থামানো হয়েছে: {folder} অসম্পূর্ণ",
+    "Export stopped": "রপ্তানি থামানো হয়েছে"
   },
   "gate": {
     "Drag a folder, not a single file": "একটি ফোল্ডার টেনে আনুন, একক ফাইল নয়",
@@ -154,7 +162,8 @@
     "Divider": "বিভাজক",
     "More formatting": "আরও ফরম্যাটিং",
     "Search (⌘F)": "অনুসন্ধান (⌘F)",
-    "Settings": "সেটিংস"
+    "Settings": "সেটিংস",
+    "Export to HTML": "HTML-এ রপ্তানি করুন"
   },
   "find": {
     "Find in note": "নোটে খুঁজুন",
@@ -173,5 +182,43 @@
       "other": "{count}টি নোট"
     },
     "No notes with this tag": "এই ট্যাগে কোনো নোট নেই"
+  },
+  "export": {
+    "Export to HTML": "HTML-এ রপ্তানি করুন",
+    "Everything in {name}": "{name}-এর সবকিছু",
+    "The folder {name}": "ফোল্ডার {name}",
+    "Folder": "ফোল্ডার",
+    "Export tags: a page per tag and an index of tags": "ট্যাগ রপ্তানি করুন: প্রতিটি ট্যাগের একটি পৃষ্ঠা ও ট্যাগের সূচি",
+    "There are no tags to export": "রপ্তানি করার মতো কোনো ট্যাগ নেই",
+    "Template": "টেমপ্লেট",
+    "Reset to default": "ডিফল্টে ফিরিয়ে আনুন",
+    "Give the folder a name": "ফোল্ডারের একটি নাম দিন",
+    "The template must contain {list}": "টেমপ্লেটে {list} থাকতে হবে",
+    "Export": "রপ্তানি করুন",
+    "Exporting…": "রপ্তানি হচ্ছে…",
+    "Required placeholders: {list}.": "আবশ্যক প্লেসহোল্ডার: {list}।",
+    "Also available: {list}.": "আরও পাওয়া যায়: {list}।",
+    "Reading the notes": "নোট পড়া হচ্ছে",
+    "Writing the pages": "পৃষ্ঠা লেখা হচ্ছে",
+    "Copying images and files": "ছবি ও ফাইল কপি হচ্ছে",
+    "Stop": "থামান",
+    "Stopping…": "থামানো হচ্ছে…",
+    "The text width and the note name above each note follow the editor settings.": "লেখার প্রস্থ ও প্রতিটি নোটের ওপরের নাম এডিটরের সেটিংস মেনে চলে।",
+    "Create a static site": "স্ট্যাটিক সাইট তৈরি করুন",
+    "A page per note, with search and a navigation that remembers its folders.": "প্রতিটি নোটের একটি পৃষ্ঠা, অনুসন্ধানসহ, আর নেভিগেশন ফোল্ডারের অবস্থা মনে রাখে।",
+    "Writing the page": "পৃষ্ঠা লেখা হচ্ছে",
+    "Could not write {path}: {reason}": "{path} লেখা যায়নি: {reason}",
+    "{count} files did not reach the disk, {path} among them": {
+      "one": "{count}টি ফাইল ডিস্কে পৌঁছায়নি, তার মধ্যে {path}",
+      "other": "{count}টি ফাইল ডিস্কে পৌঁছায়নি, তার মধ্যে {path}"
+    },
+    "One file with every note, shown one at a time from a table of contents, with search; the images in assets.": "সব নোট একটি ফাইলে, সূচিপত্র থেকে একটি একটি করে দেখায়, অনুসন্ধানসহ; ছবি assets-এ।"
+  },
+  "site": {
+    "Search the notes": "নোটে খুঁজুন",
+    "Switch to the dark theme": "গাঢ় থিমে যান",
+    "Switch to the light theme": "হালকা থিমে যান",
+    "Previous note": "আগের নোট",
+    "Next note": "পরের নোট"
   }
 }

@@ -1,0 +1,636 @@
+/* The exported site — the editor's read view without the editor. Without a
+   script folders fold with <details> and the theme follows the system; with
+   site.js the theme button sets <html data-theme>. */
+
+:root {
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+  --sidebar: 270px;
+
+  --bg: #fbfbfa;
+  --panel: #f2f2ef;
+  --panel-2: #e9e9e5;
+  --edge: #e0e0da;
+  --edge-soft: #ebebe6;
+  --text: #24242b;
+  --muted: #76767f;
+  --faint: #9a9aa2;
+  --accent: #6c4ee6;
+  --accent-soft: #ded5ff;
+  --accent-bg: rgba(108, 78, 230, 0.07);
+  --danger: #c0392b;
+  --code-bg: #f0f0ec;
+  --mark-bg: #fff2a8;
+
+  --hl-keyword: #8250df;
+  --hl-string: #0a7d4e;
+  --hl-comment: #8b8b95;
+  --hl-number: #b4531a;
+  --hl-title: #1f5fd0;
+  --hl-attr: #9a4b12;
+  --hl-type: #0f7490;
+}
+
+/* Dark by the system's choice, unless the theme button asked for light… */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --bg: #17181c;
+    --panel: #1d1e23;
+    --panel-2: #24252b;
+    --edge: #2e3038;
+    --edge-soft: #26272d;
+    --text: #dedee6;
+    --muted: #9192a0;
+    --faint: #6e7080;
+    --accent: #a78bfa;
+    --accent-soft: #3c3169;
+    --accent-bg: rgba(167, 139, 250, 0.1);
+    --danger: #e06c5d;
+    --code-bg: #212229;
+    --mark-bg: #6b5a17;
+
+    --hl-keyword: #c8a6ff;
+    --hl-string: #7ddba3;
+    --hl-comment: #767889;
+    --hl-number: #f0a97f;
+    --hl-title: #7fb4ff;
+    --hl-attr: #f3bd7c;
+    --hl-type: #6fd3e0;
+  }
+}
+
+/* …or dark by the button, whatever the system says. */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #17181c;
+  --panel: #1d1e23;
+  --panel-2: #24252b;
+  --edge: #2e3038;
+  --edge-soft: #26272d;
+  --text: #dedee6;
+  --muted: #9192a0;
+  --faint: #6e7080;
+  --accent: #a78bfa;
+  --accent-soft: #3c3169;
+  --accent-bg: rgba(167, 139, 250, 0.1);
+  --danger: #e06c5d;
+  --code-bg: #212229;
+  --mark-bg: #6b5a17;
+
+  --hl-keyword: #c8a6ff;
+  --hl-string: #7ddba3;
+  --hl-comment: #767889;
+  --hl-number: #f0a97f;
+  --hl-title: #7fb4ff;
+  --hl-attr: #f3bd7c;
+  --hl-type: #6fd3e0;
+}
+:root[data-theme='light'] { color-scheme: light; }
+
+* { box-sizing: border-box; }
+
+/* The tree buttons wait for site.js; a layout rule must not show them early. */
+[hidden] { display: none !important; }
+
+html { color-scheme: light dark; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.68;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--accent); text-decoration: none; }
+::selection { background: var(--accent-soft); }
+
+/* ------------------------------------------------------------------ *
+ * Layout
+ * ------------------------------------------------------------------ */
+
+.site {
+  display: grid;
+  grid-template-columns: var(--sidebar) minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: auto;
+  padding: 16px 12px 24px;
+  background: var(--panel);
+  border-right: 1px solid var(--edge);
+  font-size: 14px;
+}
+
+/* The site's name, and the theme button beside it. */
+.sidebar-top { display: flex; align-items: center; gap: 6px; }
+.sidebar-top .site-name { flex: 1; min-width: 0; }
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  margin-bottom: 4px;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--faint);
+  cursor: pointer;
+}
+.theme-toggle:hover { background: var(--panel-2); color: var(--text); }
+.theme-toggle svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* The button shows where it leads: a moon while light, a sun while dark. */
+.theme-toggle .theme-sun { display: none; }
+:root[data-theme='dark'] .theme-toggle .theme-sun { display: inline; }
+:root[data-theme='dark'] .theme-toggle .theme-moon { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .theme-toggle .theme-sun { display: inline; }
+  :root:not([data-theme='light']) .theme-toggle .theme-moon { display: none; }
+}
+
+.site-name {
+  display: block;
+  padding: 6px 8px 10px;
+  color: var(--text);
+  font-weight: 600;
+  font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.site-name:hover { color: var(--accent); }
+
+.nav-heading {
+  margin: 14px 0 4px;
+  padding: 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.nav-heading a { color: inherit; }
+.nav-heading a:hover { color: var(--accent); }
+
+/* "Notes" and, once site.js runs, the expand/collapse-all buttons beside it. */
+.nav-head { display: flex; align-items: center; gap: 8px; margin: 14px 0 4px; }
+.nav-head .nav-heading { margin: 0; }
+.tree-tools { display: flex; gap: 2px; margin-left: auto; }
+.tree-tool {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--faint);
+  cursor: pointer;
+}
+.tree-tool:hover { background: var(--panel-2); color: var(--text); }
+.tree-tool svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* The search above the navigation: shown by site.js, its results in place of the tree. */
+.nav-search { margin: 4px 0 2px; }
+.nav-search input {
+  width: 100%;
+  border: 1px solid var(--edge);
+  background: var(--bg);
+  color: var(--text);
+  border-radius: 7px;
+  padding: 6px 9px;
+  font: inherit;
+  outline: none;
+}
+.nav-search input:focus { border-color: var(--accent); }
+.searching .nav > .nav-head,
+.searching .nav > .nav-list,
+.searching .tag-nav { display: none; }
+.search-results { list-style: none; margin: 8px 0 0; padding: 0; }
+.search-result {
+  display: block;
+  padding: 6px 8px;
+  border-radius: 6px;
+  color: var(--text);
+}
+.search-result:hover, .search-result:focus-visible { background: var(--panel-2); outline: none; }
+.search-title { display: block; font-weight: 600; }
+.search-dir { display: block; color: var(--faint); font-size: 12px; }
+.search-snippet {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  color: var(--muted);
+  font-size: 12.5px;
+  line-height: 1.45;
+}
+.search-results mark { background: var(--mark-bg); color: inherit; border-radius: 2px; padding: 0 1px; }
+.search-empty { padding: 6px 8px; color: var(--faint); }
+
+/* The handle on the navigation's edge, added by site.js. */
+.resizer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--sidebar) - 3px);
+  width: 7px;
+  z-index: 10;
+  cursor: col-resize;
+}
+.resizer:hover, .resizer:focus-visible, .resizer--active {
+  background: linear-gradient(to right, transparent 2px, var(--accent-soft) 2px, var(--accent-soft) 5px, transparent 5px);
+  outline: none;
+}
+
+.nav-list, .tag-list { list-style: none; margin: 0; padding: 0; }
+.nav-list .nav-list, .tag-list .tag-list { padding-left: 14px; }
+
+.nav-note a, .tag-item > a, .nav-dir summary {
+  display: block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.nav-note a:hover, .tag-item > a:hover, .nav-dir summary:hover { background: var(--panel-2); }
+.nav-note a[aria-current], .tag-item > a[aria-current] {
+  background: var(--accent-bg);
+  color: var(--accent);
+  font-weight: 550;
+}
+
+.nav-dir summary {
+  cursor: pointer;
+  color: var(--muted);
+  font-weight: 550;
+  list-style: none;
+}
+.nav-dir summary::-webkit-details-marker { display: none; }
+.nav-dir summary::before {
+  content: '';
+  display: inline-block;
+  width: 0.4em;
+  height: 0.4em;
+  margin: 0 0.6em 0.15em 0.15em;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(-45deg);
+}
+.nav-dir details[open] > summary::before { transform: rotate(45deg); }
+
+.tag-item { position: relative; }
+.tag-item > a { padding-right: 2.6em; }
+.tag-item > a::before { content: '#'; margin-right: 0.35em; color: var(--faint); font-size: 12px; }
+.tag-item > .tag-count {
+  position: absolute;
+  top: 4px;
+  right: 8px;
+  color: var(--faint);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.page { min-width: 0; padding: 22px 32px 120px; }
+
+.doc {
+  max-width: 44em;
+  margin: 0 auto;
+  word-wrap: break-word;
+}
+/* The editor's "Full width": the text takes the whole pane. */
+[data-width='full'] .doc { max-width: none; margin: 0; }
+
+/* The title sits at the very top: nothing above it, whatever tag the note's heading had. */
+.doc .page-title {
+  margin: 0 0 0.6em;
+  font-size: 1.85em;
+  line-height: 1.28;
+  font-weight: 700;
+  letter-spacing: -0.012em;
+}
+.page-title + .page-tags { margin-top: -0.3em; }
+.doc > :first-child { margin-top: 0; }
+
+/* ------------------------------------------------------------------ *
+ * Tags
+ * ------------------------------------------------------------------ */
+
+.page-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 1.4em;
+  font-size: 0.85em;
+}
+.tag {
+  display: inline-block;
+  padding: 0 0.7em;
+  border-radius: 999px;
+  background: var(--accent-bg);
+  color: var(--accent);
+  line-height: 1.6;
+}
+a.tag:hover { background: var(--accent-soft); }
+
+.tag-title { color: var(--accent); }
+.tag-parent { color: var(--muted); }
+.tag-parent:hover { color: var(--accent); }
+.tag-sep { margin: 0 0.25em; color: var(--faint); font-weight: 400; }
+.tag-count { color: var(--faint); font-size: 0.85em; }
+p.tag-count { margin: -0.4em 0 1.3em; }
+.tag-empty { color: var(--faint); }
+.tag-notes { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--edge-soft); }
+.tag-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35em 1em;
+  padding: 0.6em 0;
+  border-bottom: 1px solid var(--edge-soft);
+}
+.tag-note-link { display: flex; align-items: baseline; gap: 0.6em; min-width: 0; color: var(--text); }
+.tag-note-name { font-weight: 600; }
+.tag-note-link:hover .tag-note-name { color: var(--accent); }
+.tag-note-dir { color: var(--faint); font-size: 0.85em; }
+.tag-note .page-tags { margin: 0 0 0 auto; font-size: 0.8em; }
+.tag-note .tag { background: transparent; color: var(--muted); }
+.tag-note .tag:hover, .tag-note .tag--current { background: var(--accent-bg); color: var(--accent); }
+
+/* The front page and the index of tags: the same lists, at reading size. */
+.contents { margin-bottom: 1.5em; }
+.doc .contents .nav-list, .doc .contents .tag-list { padding-left: 0; }
+.doc .contents .nav-list .nav-list, .doc .contents .tag-list .tag-list { padding-left: 1.2em; }
+.doc .contents .nav-note a, .doc .contents .tag-item > a, .doc .contents .nav-dir summary {
+  display: inline-block;
+  padding: 3px 0;
+  border-bottom: 0;
+  white-space: normal;
+}
+.doc .contents .nav-note a:hover, .doc .contents .tag-item > a:hover, .doc .contents .nav-dir summary:hover { background: none; color: var(--accent); }
+.contents .tag-item > .tag-count { position: static; margin-left: 0.5em; vertical-align: 0.1em; }
+.contents-heading { font-size: 1.24em; margin: 0 0 0.4em; }
+.contents-heading a { color: inherit; }
+
+/* The single page: each note a section of its own. Where the browser has :has(),
+   one is shown at a time — the one the #anchor points at or into, the home
+   note when it points nowhere; elsewhere, and on paper, they run one after
+   another, set apart by a rule. */
+.note-section { scroll-margin-top: 16px; }
+.note-section + .note-section { margin-top: 2.4em; padding-top: 1.6em; border-top: 1px solid var(--edge); }
+.doc .note-title { margin: 0 0 0.5em; font-size: 1.85em; line-height: 1.28; font-weight: 700; letter-spacing: -0.012em; }
+.note-title + .page-tags { margin-top: -0.3em; }
+.note-section > :first-child { margin-top: 0; }
+@supports selector(:has(a)) {
+  .note-parts > .note-section { display: none; }
+  .note-parts > .note-section:target,
+  .note-parts > .note-section:has(:target),
+  .note-parts:not(:has(:target)) > .note-section--home { display: block; }
+  .note-parts > .note-section + .note-section { margin-top: 0; padding-top: 0; border-top: 0; }
+  /* The site's name, above every part: a quiet line rather than a title over each note. */
+  .doc > .page-title:has(+ .note-parts) {
+    margin-bottom: 1.1em;
+    font-size: 0.8em;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+}
+/* The way to the notes before and after this one. */
+.part-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 2.6em;
+  padding-top: 1em;
+  border-top: 1px solid var(--edge-soft);
+}
+.part-nav a {
+  display: flex;
+  flex-direction: column;
+  max-width: 48%;
+  padding: 0.4em 0.7em;
+  border-radius: 8px;
+  color: var(--text);
+}
+.part-nav a:hover { background: var(--panel); }
+.part-next { margin-left: auto; text-align: right; }
+.part-label { color: var(--faint); font-size: 0.78em; }
+.part-prev .part-label::before { content: '← '; }
+.part-next .part-label::after { content: ' →'; }
+.part-name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.note-section:target > .note-title { color: var(--accent); }
+.doc .tag-heading { font-size: 1.1em; margin: 1.4em 0 0.3em; color: var(--accent); }
+.doc .tag-heading + .tag-count { margin: 0 0 0.6em; }
+.doc h1[id], .doc h2[id], .doc h3[id], .doc h4[id], .doc h5[id], .doc h6[id] { scroll-margin-top: 16px; }
+
+/* ------------------------------------------------------------------ *
+ * The note
+ * ------------------------------------------------------------------ */
+
+.doc h1, .doc h2, .doc h3, .doc h4, .doc h5, .doc h6 { margin: 1.3em 0 0.5em; font-weight: 650; }
+.doc h1 { font-size: 1.85em; line-height: 1.28; letter-spacing: -0.012em; }
+.doc h2 { font-size: 1.48em; line-height: 1.32; letter-spacing: -0.008em; }
+.doc h3 { font-size: 1.24em; line-height: 1.4; }
+.doc h4 { font-size: 1.1em; line-height: 1.45; }
+.doc h5 { font-size: 1em; line-height: 1.55; }
+.doc h6 { font-size: 0.92em; line-height: 1.6; color: var(--muted); }
+.doc h1:target, .doc h2:target, .doc h3:target, .doc h4:target, .doc h5:target, .doc h6:target { color: var(--accent); }
+
+.doc p, .doc ul, .doc ol, .doc pre, .doc blockquote, .doc table, .doc hr, .doc .code-block { margin: 0 0 0.85em; }
+.doc p a, .doc li a, .doc td a, .doc th a, .doc blockquote a { border-bottom: 1px solid var(--accent-soft); }
+.doc a:hover { border-bottom-color: var(--accent); }
+.doc a.wikilink { border-bottom-style: dashed; }
+.wikilink--missing { color: var(--muted); border-bottom: 1px dashed var(--edge); }
+
+.doc strong { font-weight: 680; }
+.doc mark { background: var(--mark-bg); color: inherit; border-radius: 3px; padding: 0 2px; }
+.doc del { color: var(--muted); }
+
+.doc code {
+  font-family: var(--mono);
+  font-size: 0.88em;
+  background: var(--code-bg);
+  border-radius: 4px;
+  padding: 0.12em 0.36em;
+}
+.doc pre {
+  padding: 0.7em 0.9em;
+  background: var(--code-bg);
+  border-radius: 8px;
+  overflow-x: auto;
+  font-size: 0.88em;
+  line-height: 1.55;
+}
+.doc pre code { background: none; padding: 0; font-size: 1em; }
+.doc .code-block { position: relative; }
+.doc .code-block > pre { margin: 0; }
+.doc .code-block::before {
+  content: attr(data-lang);
+  position: absolute;
+  top: 0.45em;
+  right: 0.7em;
+  padding: 0 0.3em;
+  border-radius: 4px;
+  background: var(--code-bg);
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.72em;
+  line-height: 1.6;
+  user-select: none;
+}
+
+.doc blockquote {
+  padding: 0 0 0 1em;
+  border-left: 3px solid var(--accent-soft);
+  color: var(--muted);
+}
+.doc blockquote > :last-child { margin-bottom: 0; }
+
+.doc .callout {
+  --callout: 8, 109, 221;
+  padding: 0.5em 0.9em;
+  border-left: 3px solid rgb(var(--callout));
+  border-radius: 6px;
+  background: rgba(var(--callout), 0.08);
+  color: var(--text);
+}
+.doc .callout[data-callout='abstract'],
+.doc .callout[data-callout='tip'] { --callout: 0, 170, 168; }
+.doc .callout[data-callout='success'] { --callout: 8, 170, 78; }
+.doc .callout[data-callout='question'],
+.doc .callout[data-callout='warning'] { --callout: 226, 112, 0; }
+.doc .callout[data-callout='failure'],
+.doc .callout[data-callout='danger'],
+.doc .callout[data-callout='bug'] { --callout: 225, 52, 72; }
+.doc .callout[data-callout='example'] { --callout: 120, 82, 238; }
+.doc .callout[data-callout='quote'] { --callout: 150, 150, 158; }
+.callout-title {
+  display: flex;
+  align-items: center;
+  gap: 0.45em;
+  margin: 0;
+  font-weight: 650;
+  color: rgb(var(--callout));
+}
+.callout-title + * { margin-top: 0.2em; }
+.callout-icon {
+  width: 1.05em;
+  height: 1.05em;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+summary.callout-title { cursor: pointer; list-style: none; }
+summary.callout-title::-webkit-details-marker { display: none; }
+summary.callout-title::after {
+  content: '';
+  width: 0.45em;
+  height: 0.45em;
+  margin-left: 0.15em;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+}
+details.callout[open] > summary.callout-title::after { transform: rotate(45deg); }
+
+.doc ul, .doc ol { padding-left: 1.35em; }
+.doc li > ul, .doc li > ol, .doc li > p { margin: 0; }
+.doc li.task-item { list-style: none; }
+.doc input.task {
+  appearance: none;
+  width: 0.92em;
+  height: 0.92em;
+  margin: 0 0.45em 0 0;
+  vertical-align: -0.08em;
+  border: 1.5px solid var(--faint);
+  border-radius: 4px;
+  position: relative;
+}
+.doc input.task:checked { background: var(--accent); border-color: var(--accent); }
+.doc input.task:checked::after {
+  content: '';
+  position: absolute;
+  left: 30%;
+  top: 8%;
+  width: 26%;
+  height: 58%;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(42deg);
+}
+
+.doc table { border-collapse: collapse; width: 100%; font-size: 0.94em; }
+.doc th, .doc td { border: 1px solid var(--edge); padding: 0.4em 0.65em; text-align: left; vertical-align: top; }
+.doc th { background: var(--panel); font-weight: 600; }
+
+.doc hr { border: 0; height: 1px; background: var(--edge); margin: 1.5em 0; }
+.doc img { max-width: 100%; height: auto; border-radius: 8px; display: block; }
+
+.hljs-keyword, .hljs-selector-tag, .hljs-literal, .hljs-doctag { color: var(--hl-keyword); }
+.hljs-string, .hljs-addition, .hljs-regexp, .hljs-quote { color: var(--hl-string); }
+.hljs-comment, .hljs-deletion { color: var(--hl-comment); font-style: italic; }
+.hljs-number, .hljs-symbol, .hljs-bullet, .hljs-link { color: var(--hl-number); }
+.hljs-title, .hljs-name, .hljs-section, .hljs-selector-id { color: var(--hl-title); }
+.hljs-attr, .hljs-attribute, .hljs-variable, .hljs-template-variable { color: var(--hl-attr); }
+.hljs-type, .hljs-built_in, .hljs-class .hljs-title, .hljs-meta { color: var(--hl-type); }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: 700; }
+
+/* ------------------------------------------------------------------ *
+ * Small screens: the panel above the text
+ * ------------------------------------------------------------------ */
+
+@media (max-width: 760px) {
+  .site { grid-template-columns: minmax(0, 1fr); }
+  .sidebar {
+    position: static;
+    height: auto;
+    max-height: 50vh;
+    border-right: 0;
+    border-bottom: 1px solid var(--edge);
+  }
+  .page { padding: 24px 16px 80px; }
+  .resizer { display: none; }
+}
+
+@media print {
+  .sidebar, .resizer, .theme-toggle, .part-nav { display: none; }
+  .note-parts > .note-section { display: block !important; }
+  .site { display: block; }
+  .page { padding: 0; }
+}

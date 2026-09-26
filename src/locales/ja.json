@@ -13,7 +13,8 @@
     "New note": "新規ノート",
     "New folder": "新規フォルダ",
     "Rename": "名前を変更",
-    "Copy path": "パスをコピー"
+    "Copy path": "パスをコピー",
+    "Export to HTML…": "HTML に書き出す…"
   },
   "status": {
     "{count} words": {
@@ -39,7 +40,13 @@
     "Could not save: {reason}": "保存できませんでした：{reason}",
     "The note was renamed, its images were not: {reason}": "ノートの名前は変更されましたが、画像の名前は変更されませんでした：{reason}",
     "Could not read {name}, so tags cannot be changed: {reason}": "{name} を読み込めないため、タグを変更できません: {reason}",
-    "Could not save the tags: {reason}": "タグを保存できませんでした: {reason}"
+    "Could not save the tags: {reason}": "タグを保存できませんでした: {reason}",
+    "Nothing to export: no notes here": "書き出すものがありません: ここにノートはありません",
+    "{count} pages exported to {folder}": {
+      "other": "{count} ページを {folder} に書き出しました"
+    },
+    "Export stopped: {folder} is incomplete": "書き出しを中止しました: {folder} は不完全です",
+    "Export stopped": "書き出しを中止しました"
   },
   "gate": {
     "Drag a folder, not a single file": "単一のファイルではなく、フォルダをドラッグしてください",
@@ -152,7 +159,8 @@
     "Divider": "区切り線",
     "More formatting": "その他の書式",
     "Search (⌘F)": "検索 (⌘F)",
-    "Settings": "設定"
+    "Settings": "設定",
+    "Export to HTML": "HTML に書き出す"
   },
   "find": {
     "Find in note": "ノート内を検索",
@@ -170,5 +178,42 @@
       "other": "{count} 件のノート"
     },
     "No notes with this tag": "このタグのノートはありません"
+  },
+  "export": {
+    "Export to HTML": "HTML に書き出す",
+    "Everything in {name}": "{name} の全体",
+    "The folder {name}": "フォルダー {name}",
+    "Folder": "フォルダー",
+    "Export tags: a page per tag and an index of tags": "タグも書き出す: タグごとのページとタグの索引",
+    "There are no tags to export": "書き出すタグがありません",
+    "Template": "テンプレート",
+    "Reset to default": "既定に戻す",
+    "Give the folder a name": "フォルダー名を入力してください",
+    "The template must contain {list}": "テンプレートには {list} が必要です",
+    "Export": "書き出す",
+    "Exporting…": "書き出し中…",
+    "Required placeholders: {list}.": "必須のプレースホルダー: {list}",
+    "Also available: {list}.": "そのほか利用可能: {list}",
+    "Reading the notes": "ノートを読み込み中",
+    "Writing the pages": "ページを書き出し中",
+    "Copying images and files": "画像とファイルをコピー中",
+    "Stop": "中止",
+    "Stopping…": "中止しています…",
+    "The text width and the note name above each note follow the editor settings.": "本文の幅と各ノートの上の名前はエディターの設定に従います。",
+    "Create a static site": "静的サイトを作成",
+    "A page per note, with search and a navigation that remembers its folders.": "ノートごとに 1 ページ。検索付きで、ナビゲーションはフォルダーの開閉を覚えます。",
+    "Writing the page": "ページを書き出し中",
+    "Could not write {path}: {reason}": "{path} を書き込めませんでした: {reason}",
+    "{count} files did not reach the disk, {path} among them": {
+      "other": "{count} 個のファイルがディスクに届きませんでした（{path} など）"
+    },
+    "One file with every note, shown one at a time from a table of contents, with search; the images in assets.": "すべてのノートを 1 ファイルに。目次から 1 件ずつ表示し、検索付き。画像は assets に入ります。"
+  },
+  "site": {
+    "Search the notes": "ノートを検索",
+    "Switch to the dark theme": "ダークテーマに切り替える",
+    "Switch to the light theme": "ライトテーマに切り替える",
+    "Previous note": "前のノート",
+    "Next note": "次のノート"
   }
 }

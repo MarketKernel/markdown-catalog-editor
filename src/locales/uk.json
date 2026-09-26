@@ -13,7 +13,8 @@
     "New note": "Нова нотатка",
     "New folder": "Нова папка",
     "Rename": "Перейменувати",
-    "Copy path": "Копіювати шлях"
+    "Copy path": "Копіювати шлях",
+    "Export to HTML…": "Експорт у HTML…"
   },
   "status": {
     "{count} words": {
@@ -45,7 +46,16 @@
     "Could not save: {reason}": "Не вдалося зберегти: {reason}",
     "The note was renamed, its images were not: {reason}": "Нотатку перейменовано, але її зображення — ні: {reason}",
     "Could not read {name}, so tags cannot be changed: {reason}": "Не вдалося прочитати {name}, тому теги не можна змінити: {reason}",
-    "Could not save the tags: {reason}": "Не вдалося зберегти теги: {reason}"
+    "Could not save the tags: {reason}": "Не вдалося зберегти теги: {reason}",
+    "Nothing to export: no notes here": "Нема чого експортувати: тут немає нотаток",
+    "{count} pages exported to {folder}": {
+      "few": "{count} сторінки експортовано до {folder}",
+      "many": "{count} сторінок експортовано до {folder}",
+      "one": "{count} сторінку експортовано до {folder}",
+      "other": "{count} сторінки експортовано до {folder}"
+    },
+    "Export stopped: {folder} is incomplete": "Експорт зупинено: теку {folder} заповнено не повністю",
+    "Export stopped": "Експорт зупинено"
   },
   "gate": {
     "Drag a folder, not a single file": "Перетягніть папку, а не окремий файл",
@@ -158,7 +168,8 @@
     "Divider": "Роздільник",
     "More formatting": "Більше форматування",
     "Search (⌘F)": "Пошук (⌘F)",
-    "Settings": "Налаштування"
+    "Settings": "Налаштування",
+    "Export to HTML": "Експорт у HTML"
   },
   "find": {
     "Find in note": "Знайти в нотатці",
@@ -179,5 +190,45 @@
       "other": "{count} нотатки"
     },
     "No notes with this tag": "Немає нотаток із цим тегом"
+  },
+  "export": {
+    "Export to HTML": "Експорт у HTML",
+    "Everything in {name}": "Усе з теки {name}",
+    "The folder {name}": "Тека {name}",
+    "Folder": "Тека",
+    "Export tags: a page per tag and an index of tags": "Експортувати теги: сторінка на кожен тег і покажчик тегів",
+    "There are no tags to export": "Немає тегів для експорту",
+    "Template": "Шаблон",
+    "Reset to default": "Повернути стандартний",
+    "Give the folder a name": "Вкажіть назву теки",
+    "The template must contain {list}": "У шаблоні мають бути {list}",
+    "Export": "Експортувати",
+    "Exporting…": "Експорт…",
+    "Required placeholders: {list}.": "Обовʼязкові підстановки: {list}.",
+    "Also available: {list}.": "Також доступні: {list}.",
+    "Reading the notes": "Читання нотаток",
+    "Writing the pages": "Запис сторінок",
+    "Copying images and files": "Копіювання зображень і файлів",
+    "Stop": "Зупинити",
+    "Stopping…": "Зупинка…",
+    "The text width and the note name above each note follow the editor settings.": "Ширина тексту та назва нотатки над нею беруться з налаштувань редактора.",
+    "Create a static site": "Створити статичний сайт",
+    "A page per note, with search and a navigation that remembers its folders.": "Сторінка на кожну нотатку, з пошуком і навігацією, що памʼятає теки.",
+    "Writing the page": "Запис сторінки",
+    "Could not write {path}: {reason}": "Не вдалося записати {path}: {reason}",
+    "{count} files did not reach the disk, {path} among them": {
+      "few": "{count} файли не потрапили на диск, серед них {path}",
+      "many": "{count} файлів не потрапили на диск, серед них {path}",
+      "one": "{count} файл не потрапив на диск, серед них {path}",
+      "other": "{count} файлу не потрапили на диск, серед них {path}"
+    },
+    "One file with every note, shown one at a time from a table of contents, with search; the images in assets.": "Один файл з усіма нотатками, показує по одній зі змісту, з пошуком; зображення в assets."
+  },
+  "site": {
+    "Search the notes": "Пошук у нотатках",
+    "Switch to the dark theme": "Увімкнути темну тему",
+    "Switch to the light theme": "Увімкнути світлу тему",
+    "Previous note": "Попередня нотатка",
+    "Next note": "Наступна нотатка"
   }
 }

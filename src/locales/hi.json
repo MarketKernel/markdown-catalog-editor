@@ -13,7 +13,8 @@
     "New note": "नया नोट",
     "New folder": "नया फ़ोल्डर",
     "Rename": "नाम बदलें",
-    "Copy path": "पाथ कॉपी करें"
+    "Copy path": "पाथ कॉपी करें",
+    "Export to HTML…": "HTML में निर्यात करें…"
   },
   "status": {
     "{count} words": {
@@ -41,7 +42,14 @@
     "Could not save: {reason}": "सहेजा नहीं जा सका: {reason}",
     "The note was renamed, its images were not: {reason}": "नोट का नाम बदल गया, पर उसकी छवियों का नहीं: {reason}",
     "Could not read {name}, so tags cannot be changed: {reason}": "{name} पढ़ा नहीं जा सका, इसलिए टैग बदले नहीं जा सकते: {reason}",
-    "Could not save the tags: {reason}": "टैग सहेजे नहीं जा सके: {reason}"
+    "Could not save the tags: {reason}": "टैग सहेजे नहीं जा सके: {reason}",
+    "Nothing to export: no notes here": "निर्यात के लिए कुछ नहीं: यहाँ कोई नोट नहीं है",
+    "{count} pages exported to {folder}": {
+      "one": "{count} पृष्ठ {folder} में निर्यात किया गया",
+      "other": "{count} पृष्ठ {folder} में निर्यात किए गए"
+    },
+    "Export stopped: {folder} is incomplete": "निर्यात रोका गया: {folder} अधूरा है",
+    "Export stopped": "निर्यात रोका गया"
   },
   "gate": {
     "Drag a folder, not a single file": "फ़ोल्डर खींचें, कोई अकेली फ़ाइल नहीं",
@@ -154,7 +162,8 @@
     "Divider": "विभाजक",
     "More formatting": "और फ़ॉर्मेटिंग",
     "Search (⌘F)": "खोजें (⌘F)",
-    "Settings": "सेटिंग्स"
+    "Settings": "सेटिंग्स",
+    "Export to HTML": "HTML में निर्यात करें"
   },
   "find": {
     "Find in note": "नोट में खोजें",
@@ -173,5 +182,43 @@
       "other": "{count} नोट"
     },
     "No notes with this tag": "इस टैग वाला कोई नोट नहीं"
+  },
+  "export": {
+    "Export to HTML": "HTML में निर्यात करें",
+    "Everything in {name}": "{name} की सारी सामग्री",
+    "The folder {name}": "फ़ोल्डर {name}",
+    "Folder": "फ़ोल्डर",
+    "Export tags: a page per tag and an index of tags": "टैग निर्यात करें: हर टैग का एक पृष्ठ और टैग की अनुक्रमणिका",
+    "There are no tags to export": "निर्यात के लिए कोई टैग नहीं है",
+    "Template": "टेम्पलेट",
+    "Reset to default": "डिफ़ॉल्ट पर लौटाएँ",
+    "Give the folder a name": "फ़ोल्डर का नाम दें",
+    "The template must contain {list}": "टेम्पलेट में {list} होना चाहिए",
+    "Export": "निर्यात करें",
+    "Exporting…": "निर्यात हो रहा है…",
+    "Required placeholders: {list}.": "आवश्यक प्लेसहोल्डर: {list}।",
+    "Also available: {list}.": "ये भी उपलब्ध हैं: {list}।",
+    "Reading the notes": "नोट पढ़े जा रहे हैं",
+    "Writing the pages": "पृष्ठ लिखे जा रहे हैं",
+    "Copying images and files": "चित्र और फ़ाइलें कॉपी हो रही हैं",
+    "Stop": "रोकें",
+    "Stopping…": "रोका जा रहा है…",
+    "The text width and the note name above each note follow the editor settings.": "टेक्स्ट की चौड़ाई और हर नोट के ऊपर का नाम संपादक की सेटिंग के अनुसार होते हैं।",
+    "Create a static site": "स्टैटिक साइट बनाएँ",
+    "A page per note, with search and a navigation that remembers its folders.": "हर नोट का एक पृष्ठ, खोज के साथ, और नेविगेशन जो फ़ोल्डर याद रखता है।",
+    "Writing the page": "पृष्ठ लिखा जा रहा है",
+    "Could not write {path}: {reason}": "{path} नहीं लिखा जा सका: {reason}",
+    "{count} files did not reach the disk, {path} among them": {
+      "one": "{count} फ़ाइल डिस्क तक नहीं पहुँची, उनमें {path}",
+      "other": "{count} फ़ाइलें डिस्क तक नहीं पहुँचीं, उनमें {path}"
+    },
+    "One file with every note, shown one at a time from a table of contents, with search; the images in assets.": "सभी नोट एक फ़ाइल में, विषय-सूची से एक-एक करके दिखते हैं, खोज के साथ; चित्र assets में।"
+  },
+  "site": {
+    "Search the notes": "नोट में खोजें",
+    "Switch to the dark theme": "गहरी थीम पर जाएँ",
+    "Switch to the light theme": "हल्की थीम पर जाएँ",
+    "Previous note": "पिछला नोट",
+    "Next note": "अगला नोट"
   }
 }

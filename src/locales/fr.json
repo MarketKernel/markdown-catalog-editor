@@ -13,7 +13,8 @@
     "New note": "Nouvelle note",
     "New folder": "Nouveau dossier",
     "Rename": "Renommer",
-    "Copy path": "Copier le chemin"
+    "Copy path": "Copier le chemin",
+    "Export to HTML…": "Exporter en HTML…"
   },
   "status": {
     "{count} words": {
@@ -43,7 +44,15 @@
     "Could not save: {reason}": "Impossible d’enregistrer : {reason}",
     "The note was renamed, its images were not: {reason}": "La note a été renommée, mais pas ses images : {reason}",
     "Could not read {name}, so tags cannot be changed: {reason}": "Impossible de lire {name} : les étiquettes ne peuvent pas être modifiées. {reason}",
-    "Could not save the tags: {reason}": "Impossible d’enregistrer les étiquettes : {reason}"
+    "Could not save the tags: {reason}": "Impossible d’enregistrer les étiquettes : {reason}",
+    "Nothing to export: no notes here": "Rien à exporter : aucune note ici",
+    "{count} pages exported to {folder}": {
+      "many": "{count} pages exportées vers {folder}",
+      "one": "{count} page exportée vers {folder}",
+      "other": "{count} pages exportées vers {folder}"
+    },
+    "Export stopped: {folder} is incomplete": "Export arrêté : {folder} est incomplet",
+    "Export stopped": "Export arrêté"
   },
   "gate": {
     "Drag a folder, not a single file": "Faites glisser un dossier, pas un fichier isolé",
@@ -156,7 +165,8 @@
     "Divider": "Séparateur",
     "More formatting": "Plus de mises en forme",
     "Search (⌘F)": "Rechercher (⌘F)",
-    "Settings": "Paramètres"
+    "Settings": "Paramètres",
+    "Export to HTML": "Exporter en HTML"
   },
   "find": {
     "Find in note": "Rechercher dans la note",
@@ -176,5 +186,44 @@
       "other": "{count} notes"
     },
     "No notes with this tag": "Aucune note avec cette étiquette"
+  },
+  "export": {
+    "Export to HTML": "Exporter en HTML",
+    "Everything in {name}": "Tout le contenu de {name}",
+    "The folder {name}": "Le dossier {name}",
+    "Folder": "Dossier",
+    "Export tags: a page per tag and an index of tags": "Exporter les tags : une page par tag et un index des tags",
+    "There are no tags to export": "Aucun tag à exporter",
+    "Template": "Modèle",
+    "Reset to default": "Rétablir le modèle par défaut",
+    "Give the folder a name": "Donnez un nom au dossier",
+    "The template must contain {list}": "Le modèle doit contenir {list}",
+    "Export": "Exporter",
+    "Exporting…": "Export en cours…",
+    "Required placeholders: {list}.": "Champs obligatoires : {list}.",
+    "Also available: {list}.": "Également disponibles : {list}.",
+    "Reading the notes": "Lecture des notes",
+    "Writing the pages": "Écriture des pages",
+    "Copying images and files": "Copie des images et des fichiers",
+    "Stop": "Arrêter",
+    "Stopping…": "Arrêt…",
+    "The text width and the note name above each note follow the editor settings.": "La largeur du texte et le nom au-dessus de chaque note suivent les réglages de l’éditeur.",
+    "Create a static site": "Créer un site statique",
+    "A page per note, with search and a navigation that remembers its folders.": "Une page par note, avec recherche et une navigation qui se souvient de ses dossiers.",
+    "Writing the page": "Écriture de la page",
+    "Could not write {path}: {reason}": "Impossible d’écrire {path} : {reason}",
+    "{count} files did not reach the disk, {path} among them": {
+      "many": "{count} fichiers n’ont pas atteint le disque, dont {path}",
+      "one": "{count} fichier n’a pas atteint le disque, dont {path}",
+      "other": "{count} fichiers n’ont pas atteint le disque, dont {path}"
+    },
+    "One file with every note, shown one at a time from a table of contents, with search; the images in assets.": "Un fichier avec toutes les notes, affichées une à une depuis une table des matières, avec recherche ; les images dans assets."
+  },
+  "site": {
+    "Search the notes": "Rechercher dans les notes",
+    "Switch to the dark theme": "Passer au thème sombre",
+    "Switch to the light theme": "Passer au thème clair",
+    "Previous note": "Note précédente",
+    "Next note": "Note suivante"
   }
 }
