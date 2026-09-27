@@ -135,7 +135,10 @@
     "Show the note name as a title": "عرض اسم الملاحظة كعنوان",
     "Light": "فاتحة",
     "Dark": "داكنة",
-    "Close folder": "إغلاق المجلد"
+    "Close folder": "إغلاق المجلد",
+    "Images": "الصور",
+    "Images folder": "مجلد الصور",
+    "A subfolder named after the note": "مجلد فرعي باسم الملاحظة"
   },
   "app": {
     "Notes editor": "محرر الملاحظات"

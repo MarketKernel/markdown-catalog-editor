@@ -123,7 +123,10 @@
     "Show the note name as a title": "Notiznamen als Titel anzeigen",
     "Light": "Hell",
     "Dark": "Dunkel",
-    "Close folder": "Ordner schließen"
+    "Close folder": "Ordner schließen",
+    "Images": "Bilder",
+    "Images folder": "Bilderordner",
+    "A subfolder named after the note": "Ein Unterordner mit dem Namen der Notiz"
   },
   "app": {
     "Notes editor": "Notizeditor"

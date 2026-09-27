@@ -26,6 +26,8 @@ export class FileTree {
   private collapsed = new Set<string>();
   /** `assets` folders start closed, so the tree remembers the ones opened instead. */
   private expanded = new Set<string>();
+  /** The images folder's name from the settings, closed the same way as `assets`. */
+  private imagesName = ASSETS_DIR;
   private active: string | null = null;
   private filter = '';
 
@@ -63,12 +65,22 @@ export class FileTree {
     return Array.from(this.expanded);
   }
 
+  /** The images folder of the settings: `media/img` → folders named `img` start closed. */
+  setImagesFolder(folder: string): void {
+    this.imagesName = baseOf(folder);
+  }
+
+  private isAssets(path: string): boolean {
+    const name = baseOf(path);
+    return name === ASSETS_DIR || name === this.imagesName;
+  }
+
   private isOpen(path: string): boolean {
-    return isAssets(path) ? this.expanded.has(path) : !this.collapsed.has(path);
+    return this.isAssets(path) ? this.expanded.has(path) : !this.collapsed.has(path);
   }
 
   private setOpen(path: string, open: boolean): void {
-    if (isAssets(path)) {
+    if (this.isAssets(path)) {
       if (open) this.expanded.add(path);
       else this.expanded.delete(path);
     } else if (open) this.collapsed.delete(path);
@@ -77,7 +89,7 @@ export class FileTree {
 
   /** Closes every folder, `assets` ones included. */
   collapseAll(): void {
-    this.collapsed = new Set(dirPaths(this.entries).filter((path) => !isAssets(path)));
+    this.collapsed = new Set(dirPaths(this.entries).filter((path) => !this.isAssets(path)));
     this.expanded.clear();
     this.render();
   }
@@ -206,6 +218,19 @@ export class FileTree {
     return walk(this.entries);
   }
 
+  /** The first file of that name anywhere in the tree, for an embed that gives no folder. */
+  fileNamed(name: string): string | null {
+    const walk = (entries: readonly TreeEntry[]): string | null => {
+      for (const entry of entries) {
+        if (entry.kind === 'file' && entry.name === name) return entry.path;
+        const found = entry.children ? walk(entry.children) : null;
+        if (found) return found;
+      }
+      return null;
+    };
+    return walk(this.entries);
+  }
+
   /** All note paths in tree order — used by wiki links. */
   notes(): TreeEntry[] {
     const out: TreeEntry[] = [];
@@ -218,10 +243,6 @@ export class FileTree {
     walk(this.entries);
     return out;
   }
-}
-
-function isAssets(path: string): boolean {
-  return baseOf(path) === ASSETS_DIR;
 }
 
 function dirPaths(entries: readonly TreeEntry[]): string[] {

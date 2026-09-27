@@ -248,4 +248,13 @@ check('relative: from the root', E.relative('index.html', 'tags/index.html'), 't
 check('root of a nested page', E.rootOf('a/b/c.html'), '../../');
 check('slug', E.slugify('  Hello, Wörld — 2nd try! '), 'hello-wörld-2nd-try');
 
+const embeds = (notes, options = {}) => E.buildSite({
+  md, name: 'N', template: E.DEFAULT_TEMPLATE, includeTags: false, titles: true, fullWidth: false, singlePage: false, lang: 'en', notes, ...options,
+}).find((file) => file.path === 'docs/Page.html').data.match(/<img class="embed" src="([^"]*)"/g).map((img) => img.slice(24, -1));
+check('an embed with a path is from the note\'s folder', embeds([{ path: 'docs/Page.md', text: '![[assets/Page/a.png]]', tags: [] }]), ['assets/Page/a.png']);
+check('an old embed is found where the files are', embeds(
+  [{ path: 'docs/Page.md', text: '![[a.png]] ![[b.png]] ![[c.png]]', tags: [] }],
+  { assets: ['docs/assets/Page/a.png', 'docs/media/b.png', 'far/away/c.png'], images: { folder: 'media', perNote: false } },
+), ['assets/Page/a.png', 'media/b.png', '../far/away/c.png']);
+
 done('export');

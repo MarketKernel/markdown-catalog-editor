@@ -129,7 +129,10 @@
     "Show the note name as a title": "Показывать имя заметки как заголовок",
     "Light": "Светлая",
     "Dark": "Тёмная",
-    "Close folder": "Закрыть папку"
+    "Close folder": "Закрыть папку",
+    "Images": "Рисунки",
+    "Images folder": "Папка рисунков",
+    "A subfolder named after the note": "Подпапка с именем заметки"
   },
   "app": {
     "Notes editor": "Редактор заметок"

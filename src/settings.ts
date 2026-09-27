@@ -1,6 +1,7 @@
-/** Language, theme, zoom and panel state, remembered in localStorage between sessions. */
+/** Language, theme, zoom, images folder and panel state, remembered in localStorage between sessions. */
 
 import { detectLanguage, isLanguage, type Language } from './i18n';
+import { cleanImageFolder, DEFAULT_IMAGES, type ImageSettings } from './vault';
 
 export type Theme = 'system' | 'light' | 'dark';
 
@@ -33,6 +34,8 @@ export interface Settings {
   exportTags: boolean;
   /** The HTML export makes a site, a page per note; false → one page with every note. */
   exportSite: boolean;
+  /** Where images added to a note are saved. */
+  images: ImageSettings;
 }
 
 const KEY = 'markdown-catalog-editor';
@@ -59,6 +62,7 @@ const DEFAULTS: Settings = {
   exportTemplate: null,
   exportTags: true,
   exportSite: true,
+  images: DEFAULT_IMAGES,
 };
 
 export function loadSettings(): Settings {
@@ -77,6 +81,10 @@ export function loadSettings(): Settings {
       collapsedTags: Array.isArray(stored.collapsedTags) ? stored.collapsedTags : [],
       tagsHeight: Number.isFinite(stored.tagsHeight) ? Number(stored.tagsHeight) : null,
       exportTemplate: typeof stored.exportTemplate === 'string' && stored.exportTemplate.trim() ? stored.exportTemplate : null,
+      images: {
+        folder: cleanImageFolder(String(stored.images?.folder ?? '')),
+        perNote: stored.images?.perNote !== false,
+      },
     };
   } catch {
     return { ...DEFAULTS };

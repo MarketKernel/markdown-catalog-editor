@@ -129,7 +129,10 @@
     "Show the note name as a title": "Показувати назву нотатки як заголовок",
     "Light": "Світла",
     "Dark": "Темна",
-    "Close folder": "Закрити папку"
+    "Close folder": "Закрити папку",
+    "Images": "Зображення",
+    "Images folder": "Тека зображень",
+    "A subfolder named after the note": "Підтека з назвою нотатки"
   },
   "app": {
     "Notes editor": "Редактор нотаток"

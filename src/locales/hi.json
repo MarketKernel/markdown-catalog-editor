@@ -123,7 +123,10 @@
     "Show the note name as a title": "नोट का नाम शीर्षक के रूप में दिखाएँ",
     "Light": "हल्की",
     "Dark": "गहरी",
-    "Close folder": "फ़ोल्डर बंद करें"
+    "Close folder": "फ़ोल्डर बंद करें",
+    "Images": "चित्र",
+    "Images folder": "चित्रों का फ़ोल्डर",
+    "A subfolder named after the note": "नोट के नाम का एक सबफ़ोल्डर"
   },
   "app": {
     "Notes editor": "नोट्स एडिटर"

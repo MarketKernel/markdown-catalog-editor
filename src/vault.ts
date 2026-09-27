@@ -51,7 +51,7 @@ export interface VaultWriter {
 }
 
 export const NOTE_EXTENSIONS = ['.md', '.markdown', '.mdown', '.mkd', '.txt'];
-/** Each folder keeps its notes' images in `assets/<note name>/`. */
+/** The images folder beside a note, unless the settings name another (see ImageSettings). */
 export const ASSETS_DIR = 'assets';
 /** The catalog's tags and other data, one file at the root (see meta.ts); never shown in the tree. */
 export const META_FILE = '.meta.json';
@@ -108,9 +108,77 @@ export function resolvePath(from: string, href: string): string {
   return parts.join('/');
 }
 
-/** Where a note keeps its embedded images: `dir/page.md` → `dir/assets/page`. */
-export function assetsDirOf(notePath: string): string {
-  return join(join(dirOf(notePath), ASSETS_DIR), stripExtension(baseOf(notePath)));
+/** Where a note's new images go, as the settings have it. */
+export interface ImageSettings {
+  /** A folder beside the note: a name, or a path like `media/img`. */
+  folder: string;
+  /** Each note has a subfolder of its own in it, named after the note. */
+  perNote: boolean;
+}
+
+export const DEFAULT_IMAGES: ImageSettings = { folder: ASSETS_DIR, perNote: true };
+
+/**
+ * A folder as typed → a path inside the note's folder: no `..`, no empty
+ * steps, and no character that would break an `![[embed]]`; nothing → `assets`.
+ */
+export function cleanImageFolder(folder: string): string {
+  const parts = folder
+    .split(/[\\/]+/)
+    .map((part) => part.replace(/[[\]|#^:*?"<>\u0000-\u001f]+/g, '-').trim())
+    .filter((part) => part && part !== '.' && part !== '..');
+  return parts.join('/') || ASSETS_DIR;
+}
+
+/** Where a note's new images go: `dir/page.md` → `dir/assets/page`, or `dir/assets` without a folder per note. */
+export function imageDirOf(notePath: string, images: ImageSettings): string {
+  const dir = join(dirOf(notePath), images.folder);
+  return images.perNote ? join(dir, stripExtension(baseOf(notePath))) : dir;
+}
+
+/**
+ * The embed a note gets for an image of its own: the path from the note's
+ * folder, `assets/page/a.png`, which other editors follow too.
+ */
+export function embedTarget(notePath: string, imagePath: string): string {
+  const dir = dirOf(notePath);
+  return dir && imagePath.startsWith(`${dir}/`) ? imagePath.slice(dir.length + 1) : imagePath;
+}
+
+/**
+ * The files an `![[embed]]` in a note may mean, the likeliest first. A target
+ * with a folder in it is a path from the note's folder, as the editor writes
+ * it, or else from the root of the vault. A bare name is an older embed: it is
+ * looked for in the images folder, with and without the note's subfolder, in
+ * the `assets/<note>` the editor used before, beside the note and at the root.
+ */
+export function embedCandidates(notePath: string, target: string, images: ImageSettings): string[] {
+  if (target.includes('/')) return unique([resolvePath(notePath, target), resolvePath('', target)]);
+  const dir = dirOf(notePath);
+  const stem = stripExtension(baseOf(notePath));
+  const shared = join(dir, images.folder);
+  const own = join(shared, stem);
+  const folders = images.perNote ? [own, shared] : [shared, own];
+  folders.push(join(join(dir, ASSETS_DIR), stem), join(dir, ASSETS_DIR), dir, '');
+  return unique(folders.map((folder) => join(folder, target)));
+}
+
+/**
+ * The file an embed shows: the first place it may be that has it, or for a
+ * bare name any file so named, the way Obsidian finds one. Null → none has.
+ */
+export function findEmbed(
+  notePath: string,
+  target: string,
+  images: ImageSettings,
+  exists: (path: string) => boolean,
+  named: (name: string) => string | null,
+): string | null {
+  return embedCandidates(notePath, target, images).find(exists) ?? (target.includes('/') ? null : named(target));
+}
+
+function unique(paths: string[]): string[] {
+  return [...new Set(paths)];
 }
 
 /** Sorts folders before files, then by name the way a file manager would. */

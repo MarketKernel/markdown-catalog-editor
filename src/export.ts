@@ -31,7 +31,7 @@ import STYLES from './export.css';
 import { language, t, tn } from './i18n';
 import { EXTERNAL, plainText, slugify, type ExportLinks } from './markdown';
 import { Meta, type TagNode } from './meta';
-import { ASSETS_DIR, assetsDirOf, baseOf, dirOf, isNote, join, resolvePath, sortEntries, stripExtension, type TreeEntry } from './vault';
+import { ASSETS_DIR, baseOf, DEFAULT_IMAGES, dirOf, embedCandidates, findEmbed, isNote, join, resolvePath, sortEntries, stripExtension, type ImageSettings, type TreeEntry } from './vault';
 
 export { DEFAULT_TEMPLATE };
 
@@ -89,6 +89,8 @@ export interface SiteOptions {
   singlePage: boolean;
   /** The images and other files that go along, as paths like the notes'. */
   assets?: readonly string[];
+  /** Where the editor saves images, so that an `![[embed]]` is found where the editor finds it. */
+  images?: ImageSettings;
   /** The `lang` of the pages; the interface language by default. */
   lang?: string;
 }
@@ -188,6 +190,9 @@ export class SiteBuilder {
   private readonly tagNavCache = new Map<string, string>();
   /** An image's path in the folder → its path in the export. */
   private readonly assetPaths = new Map<string, string>();
+  /** The images and files that go along, and the first of each name, for the embeds to be found among. */
+  private readonly assetSet: ReadonlySet<string>;
+  private readonly assetsByName = new Map<string, string>();
   /**
    * The single page carries its stylesheet in `{{styles}}`. A template from
    * before that placeholder still links style.css, so then the file is written.
@@ -216,7 +221,16 @@ export class SiteBuilder {
     if (this.single) this.allocateAnchors();
     else this.allocatePages();
     if (options.includeTags) this.allocateTags();
+    this.assetSet = new Set(options.assets ?? []);
+    for (const path of this.assetSet) if (!this.assetsByName.has(baseOf(path))) this.assetsByName.set(baseOf(path), path);
     this.allocateAssets(options.assets ?? []);
+  }
+
+  /** The file an `![[embed]]` of a note shows; one found nowhere is expected where a new one would go. */
+  private embedPath(notePath: string, target: string): string {
+    const images = this.options.images ?? DEFAULT_IMAGES;
+    return findEmbed(notePath, target, images, (path) => this.assetSet.has(path), (name) => this.assetsByName.get(name) ?? null)
+      ?? embedCandidates(notePath, target, images)[0]!;
   }
 
   /** Where an image or file of the folder goes in the export; one it does not know stays put. */
@@ -694,7 +708,7 @@ export class SiteBuilder {
         if (href.startsWith('#')) return this.single ? own(safeDecodeComponent(href.slice(1))) : href;
         const hash = href.indexOf('#');
         const [file, anchor] = hash < 0 ? [href, ''] : [href.slice(0, hash), href.slice(hash + 1)];
-        const path = resolvePath(note.path, safeDecode(file));
+        const path = resolvePath(note.path, safeDecodeComponent(file));
         const found = this.pages.has(path) ? path : this.pages.has(`${path}.md`) ? `${path}.md` : null;
         if (found) return target(found, this.single ? safeDecodeComponent(anchor) : anchor);
         // An image or a file. A page in the note's own folder reaches it as the note did;
@@ -711,7 +725,7 @@ export class SiteBuilder {
         const found = this.byPath.get(wanted) ?? this.byName.get(wanted) ?? this.byStem.get(wanted);
         return found ? target(found, anchor) : null;
       },
-      embed: (name) => relative(at, this.assetPath(join(assetsDirOf(note.path), name))),
+      embed: (name) => relative(at, this.assetPath(this.embedPath(note.path, name))),
     };
   }
 }
@@ -778,14 +792,6 @@ function bodyOf(text: string): string {
   const lines = text.replace(/\r\n/g, '\n').split('\n');
   const skip = frontMatterEnd(lines);
   return skip > 0 ? lines.slice(skip).join('\n') : text;
-}
-
-function safeDecode(uri: string): string {
-  try {
-    return decodeURI(uri);
-  } catch {
-    return uri;
-  }
 }
 
 function safeDecodeComponent(text: string): string {

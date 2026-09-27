@@ -305,12 +305,52 @@ function embedRule(state: StateInline, silent: boolean): boolean {
     const option = bar < 0 ? '' : body.slice(bar + 1).trim();
     const width = /^\d+$/.test(option) ? option : null;
     const token = state.push('embed', 'img', 0);
-    token.content = width || !option ? target : option;
+    token.content = width || !option ? target.slice(target.lastIndexOf('/') + 1) : option;
     token.attrSet('target', target);
     if (width) token.attrSet('width', width);
   }
   state.pos = close + 2;
   return true;
+}
+
+/**
+ * The Markdown every editor shows, for an image at `path` from the note's
+ * folder: `![shot](assets/Note/my%20shot.png)`, the file's name as its text.
+ */
+export function imageMarkdown(path: string): string {
+  const name = path.slice(path.lastIndexOf('/') + 1);
+  const dot = name.lastIndexOf('.');
+  const alt = (dot > 0 ? name.slice(0, dot) : name).replace(/[[\]\\]/g, '\\$&');
+  return `![${alt}](${linkDestination(path)})`;
+}
+
+/**
+ * A path as a link's destination: what would end it or be read as something
+ * else — a space, a bracket, `%`, `#`, `?` — is %-escaped; letters of any
+ * script stay as they are, as Obsidian writes them.
+ */
+export function linkDestination(path: string): string {
+  return path.replace(/[\u0000-\u0020\u007f%()<>[\]\\^`{}|"#?]/g, (char) => `%${char.charCodeAt(0).toString(16).toUpperCase().padStart(2, '0')}`);
+}
+
+/**
+ * Moves the images that point into the folder `from` over to `to`, both paths
+ * from the note's folder: `assets/Old/a.png` → `assets/New/a.png` when a note
+ * and its images folder are renamed. Both `![alt](path)` and `![[path]]` move.
+ */
+export function retargetImages(text: string, from: string, to: string): string {
+  return text
+    .replace(/(!\[[^\]\n]*\]\()(<[^>\n]*>|[^)\s]+)/g, (whole, head: string, destination: string) => {
+      const angled = destination.startsWith('<');
+      const path = angled ? destination.slice(1, -1) : safeDecodeComponent(destination);
+      if (!path.startsWith(`${from}/`)) return whole;
+      const moved = to + path.slice(from.length);
+      return head + (angled ? `<${moved}>` : linkDestination(moved));
+    })
+    .replace(/!\[\[([^[\]|\n]+)((?:\|[^[\]\n]*)?)\]\]/g, (whole, target: string, rest: string) => {
+      const path = target.trim();
+      return path.startsWith(`${from}/`) ? `![[${to}${path.slice(from.length)}${rest}]]` : whole;
+    });
 }
 
 const CALLOUT = /^\[!([\w-]+)\]([+-]?)[ \t]*(.*)(?:\n|$)/;
@@ -430,5 +470,13 @@ function safeDecode(uri: string): string {
     return decodeURI(uri);
   } catch {
     return uri;
+  }
+}
+
+function safeDecodeComponent(text: string): string {
+  try {
+    return decodeURIComponent(text);
+  } catch {
+    return text;
   }
 }

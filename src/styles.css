@@ -1275,6 +1275,23 @@ details.callout[open] > summary.callout-title::after { transform: rotate(45deg);
   border-radius: 7px;
   padding: 5px 8px;
 }
+.settings-section {
+  margin: 8px 0 2px;
+  padding-top: 12px;
+  border-top: 1px solid var(--edge);
+  font-size: 13px;
+  font-weight: 600;
+}
+.settings-input {
+  width: 160px;
+  min-width: 0;
+  border: 1px solid var(--edge);
+  background: var(--panel);
+  color: inherit;
+  border-radius: 7px;
+  padding: 5px 8px;
+  font: inherit;
+}
 .settings .zoom .icon-button { width: 34px; height: 30px; font-size: 17px; }
 .settings .zoom-value { min-width: 58px; font-size: 14px; }
 

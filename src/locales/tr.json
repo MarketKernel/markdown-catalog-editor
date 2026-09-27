@@ -123,7 +123,10 @@
     "Show the note name as a title": "Not adını başlık olarak göster",
     "Light": "Açık",
     "Dark": "Koyu",
-    "Close folder": "Klasörü kapat"
+    "Close folder": "Klasörü kapat",
+    "Images": "Görseller",
+    "Images folder": "Görsel klasörü",
+    "A subfolder named after the note": "Notun adını taşıyan bir alt klasör"
   },
   "app": {
     "Notes editor": "Not düzenleyici"

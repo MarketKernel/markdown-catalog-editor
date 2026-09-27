@@ -8,7 +8,7 @@ import { Editor, translateTableTools, type EditorStatus, type FormatAction, type
 import { DEFAULT_TEMPLATE, SiteBuilder, type SiteNote } from './export';
 import { exportDialog, type ExportChoice } from './export-ui';
 import { FLAGS, isRightToLeft, LANGUAGES, setLanguage, t, tn, translatePage, type Language } from './i18n';
-import { createMarkdown } from './markdown';
+import { createMarkdown, imageMarkdown, retargetImages } from './markdown';
 import { Meta } from './meta';
 import { forgetFolder, isGranted, recentFolders, regainAccess, rememberFolder, rememberNote, type RecentFolder } from './recent';
 import {
@@ -33,12 +33,17 @@ import {
   META_FILE,
   NOTE_EXTENSIONS,
   OUTPUT_DIR,
-  assetsDirOf,
+  DEFAULT_IMAGES,
   baseOf,
+  cleanImageFolder,
   dirOf,
+  embedCandidates,
+  embedTarget,
   ensureWritable,
   filesFromEntry,
+  findEmbed,
   handleFromDataTransfer,
+  imageDirOf,
   isNote,
   join,
   resolvePath,
@@ -137,6 +142,7 @@ const tree = new FileTree(el('tree'), el('note-count'), {
 });
 tree.setCollapsed(settings.collapsed);
 tree.setExpanded(settings.expanded);
+tree.setImagesFolder(settings.images.folder);
 
 const tagTree = new TagTree(el('tag-tree'), el('tag-count'), (tag) => void openTag(tag));
 tagTree.setCollapsed(settings.collapsedTags);
@@ -413,9 +419,10 @@ async function openWiki(target: string): Promise<void> {
   await openNote(path);
 }
 
+/** An image's `src` → its path: every escape undone, `%23` and `%3F` included, as the editor writes `#` and `?`. */
 function safeDecode(uri: string): string {
   try {
-    return decodeURI(uri);
+    return decodeURIComponent(uri);
   } catch {
     return uri;
   }
@@ -438,7 +445,7 @@ async function resolveAsset(image: HTMLImageElement): Promise<void> {
   if (!vault || !currentPath) return;
   const embed = image.dataset['embed'];
   const path = embed !== undefined
-    ? join(assetsDirOf(currentPath), embed)
+    ? embedPath(currentPath, embed)
     : resolvePath(currentPath, safeDecode(image.dataset['asset'] ?? ''));
   const url = await assetUrl(path);
   if (!url) {
@@ -449,6 +456,16 @@ async function resolveAsset(image: HTMLImageElement): Promise<void> {
     return;
   }
   image.src = url;
+}
+
+/**
+ * The file an `![[embed]]` shows, looked up in the tree. One the tree does not
+ * have is expected at the first place it may be: an image just added, before
+ * the tree is read again, or a missing one, for the message to name.
+ */
+function embedPath(notePath: string, target: string): string {
+  return findEmbed(notePath, target, settings.images, (path) => tree.find(path)?.kind === 'file', (name) => tree.fileNamed(name))
+    ?? embedCandidates(notePath, target, settings.images)[0]!;
 }
 
 /** Shows a picture from the tree in place of the note — never as text in the editor. */
@@ -532,13 +549,17 @@ async function freeImageName(target: Vault, dir: string, file: File, ext: string
   }
 }
 
-/** Saves images into the note's assets folder and embeds them at the caret as `![[image.png]]`. */
+/**
+ * Saves images into the note's images folder and puts them in at the caret as
+ * plain Markdown with the path from the note's folder,
+ * `![image](assets/Note/image.png)`, which every editor shows.
+ */
 async function addImages(files: File[]): Promise<void> {
   const target = vault;
   const note = currentPath;
   if (!target || !note) return;
   if (!target.writable) return void toast(t('errors', 'The folder is open read-only'), 'error');
-  const dir = assetsDirOf(note);
+  const dir = imageDirOf(note, settings.images);
   const names: string[] = [];
   for (const file of files) {
     const ext = imageExtension(file);
@@ -549,13 +570,13 @@ async function addImages(files: File[]): Promise<void> {
     try {
       const name = await freeImageName(target, dir, file, ext);
       await target.writeBlob(join(dir, name), file);
-      names.push(name);
+      names.push(embedTarget(note, join(dir, name)));
     } catch (error) {
       toast(t('toast', 'Could not add the image: {reason}', { reason: error instanceof Error ? error.message : String(error) }), 'error');
     }
   }
   if (names.length === 0 || vault !== target) return;
-  if (currentPath === note) editor.insertText(names.map((name) => `![[${name}]]`).join('\n'));
+  if (currentPath === note) editor.insertText(names.map(imageMarkdown).join('\n'));
   await refreshTree();
 }
 
@@ -953,6 +974,7 @@ async function writeSite(target: Vault, choice: ExportChoice, job: SiteJob): Pro
       fullWidth: settings.fullWidth,
       singlePage: !choice.site,
       assets,
+      images: settings.images,
     });
     assetTarget = (path) => site.assetPath(path);
     const writing = choice.site ? t('export', 'Writing the pages') : t('export', 'Writing the page');
@@ -1052,6 +1074,38 @@ async function createFolder(dir: string): Promise<void> {
   }
 }
 
+/**
+ * A renamed note takes its images along, or its links to them would all break:
+ * its folder in the images folder and the `assets/<note>` of older notes are
+ * renamed too, and the images with a path follow them. Returns the note's new
+ * text, once saved; null → the text is as it was.
+ */
+async function moveImages(from: string, to: string): Promise<string | null> {
+  const target = vault;
+  const stem = stripExtension(baseOf(to));
+  if (!target || stem === stripExtension(baseOf(from))) return null;
+  const folders = new Set([imageDirOf(from, { ...settings.images, perNote: true }), imageDirOf(from, DEFAULT_IMAGES)]);
+  const before = from === currentPath ? editor.getText() : await target.readText(to);
+  let text = before;
+  for (const dir of folders) {
+    if (tree.find(dir)?.kind !== 'dir') continue;
+    try {
+      const moved = await target.rename(dir, 'dir', stem);
+      text = retargetImages(text, embedTarget(from, dir), embedTarget(to, moved));
+    } catch (error) {
+      toast(t('toast', 'The note was renamed, its images were not: {reason}', { reason: error instanceof Error ? error.message : String(error) }), 'error');
+    }
+  }
+  if (text === before) return null;
+  try {
+    await target.writeText(to, text);
+    return text;
+  } catch (error) {
+    toast(t('toast', 'Could not save: {reason}', { reason: error instanceof Error ? error.message : String(error) }), 'error');
+    return null;
+  }
+}
+
 async function renameEntry(entry: TreeEntry): Promise<void> {
   if (!vault?.writable) return;
   const name = await ask(t('dialog', 'Rename'), t('dialog', 'New name'), entry.name);
@@ -1060,20 +1114,14 @@ async function renameEntry(entry: TreeEntry): Promise<void> {
     await flushSave();
     const next = await vault.rename(entry.path, entry.kind, entry.kind === 'file' ? withExtension(name) : name);
     if (meta.move(entry.path, next)) saveMeta();
-    // A note's images follow it, or its `![[embeds]]` would all break.
-    const images = entry.kind === 'file' && isNote(entry.name) ? tree.find(assetsDirOf(entry.path)) : null;
-    if (images?.kind === 'dir') {
-      try {
-        await vault.rename(images.path, 'dir', stripExtension(baseOf(next)));
-      } catch (error) {
-        toast(t('toast', 'The note was renamed, its images were not: {reason}', { reason: error instanceof Error ? error.message : String(error) }), 'error');
-      }
-    }
+    const retargeted = entry.kind === 'file' && isNote(entry.name) ? await moveImages(entry.path, next) : null;
     if (currentPath === entry.path) currentPath = next;
     else if (currentPath?.startsWith(`${entry.path}/`)) currentPath = next + currentPath.slice(entry.path.length);
     if (viewedPath === entry.path) viewedPath = next;
     else if (viewedPath?.startsWith(`${entry.path}/`)) viewedPath = next + viewedPath.slice(entry.path.length);
     await refreshTree();
+    // Drawn once the note and the tree have their new paths, for its images to be found there.
+    if (retargeted !== null && currentPath === next) editor.load(retargeted);
     if (currentPath) {
       tree.setActive(currentPath);
       rememberPath(currentPath);
@@ -1375,7 +1423,7 @@ findInput.addEventListener('keydown', (event) => {
 });
 
 /* ------------------------------------------------------------------ *
- * Settings: language, theme, zoom, text width, note title
+ * Settings: language, theme, zoom, text width, note title, images
  * ------------------------------------------------------------------ */
 
 const settingsButton = el('settings');
@@ -1462,6 +1510,7 @@ function openSettings(): void {
     zoom,
     row(t('settings', 'Text width'), width),
     h('label', { class: 'settings-row settings-row--check' }, title, h('span', { text: t('settings', 'Show the note name as a title') })),
+    ...imageRows(),
     folderRow(),
   );
   settingsButton.setAttribute('aria-expanded', 'true');
@@ -1469,6 +1518,41 @@ function openSettings(): void {
     closeSettings = null;
     settingsButton.setAttribute('aria-expanded', 'false');
   });
+}
+
+/** Where added images are saved: the folder beside the note, and a subfolder per note in it or not. */
+function imageRows(): HTMLElement[] {
+  const folder = h('input', {
+    class: 'settings-input',
+    type: 'text',
+    spellcheck: 'false',
+    placeholder: DEFAULT_IMAGES.folder,
+    'aria-label': t('settings', 'Images folder'),
+  });
+  folder.value = settings.images.folder;
+  folder.addEventListener('change', () => {
+    setImages({ ...settings.images, folder: cleanImageFolder(folder.value) });
+    folder.value = settings.images.folder;
+  });
+
+  const perNote = h('input', { type: 'checkbox' });
+  perNote.checked = settings.images.perNote;
+  perNote.addEventListener('change', () => setImages({ ...settings.images, perNote: perNote.checked }));
+
+  return [
+    h('h4', { class: 'settings-section', text: t('settings', 'Images') }),
+    h('label', { class: 'settings-row' }, h('span', { text: t('settings', 'Images folder') }), folder),
+    h('label', { class: 'settings-row settings-row--check' }, perNote, h('span', { text: t('settings', 'A subfolder named after the note') })),
+  ];
+}
+
+function setImages(images: Settings['images']): void {
+  settings.images = images;
+  persist();
+  tree.setImagesFolder(images.folder);
+  tree.render();
+  // Older embeds, without a folder, are looked for by these settings: the note shows them again.
+  if (editor.getMode() === 'read') editor.refresh();
 }
 
 /** The open folder, and the way out of it to the list of recent ones. */

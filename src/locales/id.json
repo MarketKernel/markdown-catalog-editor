@@ -120,7 +120,10 @@
     "Show the note name as a title": "Tampilkan nama catatan sebagai judul",
     "Light": "Terang",
     "Dark": "Gelap",
-    "Close folder": "Tutup folder"
+    "Close folder": "Tutup folder",
+    "Images": "Gambar",
+    "Images folder": "Folder gambar",
+    "A subfolder named after the note": "Subfolder dengan nama catatan"
   },
   "app": {
     "Notes editor": "Editor catatan"

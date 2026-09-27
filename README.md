@@ -230,7 +230,8 @@ follows the system, and the site reads and links the same.
   export stays plain text. Task checkboxes are shown, not clickable. Front matter is left
   out.
 - **Images**: every picture and PDF in the folder is copied at the same path, so both
-  `![[image.png]]` and `![alt](path.png)` keep working.
+  `![[image.png]]` and `![alt](path.png)` keep working; an embed is found where the editor
+  finds it.
 - **Tags**: with the **Export tags** box on, each page shows its tags, the tag tree sits
   under the navigation, and a page per tag lists its notes — a parent tag the notes of
   every tag under it — plus an index of tags at `tags/index.html`. Only notes in the export
@@ -273,14 +274,21 @@ follows the system, and the site reads and links the same.
 - **Markup**: CommonMark plus tables, tasks with clickable checkboxes, `==highlight==`,
   `[[wiki links]]`, front matter, syntax highlighting for 19 languages, images from the
   folder.
-- **Images**: `![[image-1.png]]` shows `assets/<note name>/image-1.png` from the note's
-  folder (`![[image-1.png|300]]` sets the width). `assets` folders start collapsed in the
-  tree, and renaming a note renames its image folder too. A picture clicked in the tree
-  opens as a picture, not as text.
+- **Images**: `![alt](assets/Note/image-1.png)` shows an image by its path from the note's
+  folder. Obsidian's `![[assets/Note/image-1.png]]` works too, the path from the note's
+  folder or else from the root (`![[…|300]]` sets the width). An older
+  embed with a bare name, `![[image-1.png]]`, is looked for in the images folder of the
+  settings, with and without the note's subfolder, in `assets/<note name>/`, beside the
+  note, and then anywhere in the folder by its name, as Obsidian does. Images folders start
+  collapsed in the tree. Renaming a note renames its image folder too and changes the
+  note's links to its images, in either form, to the new path. A picture clicked in the tree opens as a picture, not as
+  text.
 - **Adding images**: the picture button on the toolbar picks image files; an image pasted
   with `⌘V` — a screenshot, a picture copied in the browser, a file copied in the file
-  manager — goes in the same way. Either is saved into the note's `assets/<note name>/` and
-  embedded at the caret, or at the end of the note when no block is open. Images dragged
+  manager — goes in the same way. Either is saved into the images folder beside the note,
+  `assets/<note name>/` by default, and put in as plain Markdown with its path,
+  `![image-1](assets/<note name>/image-1.png)`, which every editor shows (a space in the path
+  is written `%20`): at the caret, or at the end of the note when no block is open. Images dragged
   onto the note go in where they are dropped: at that point in a block or a table cell, and
   beside the text or between two blocks, at the end of the block above; a drop in read mode
   switches to editing, and one off the note adds the images at the end. A drop with a folder
@@ -293,8 +301,10 @@ follows the system, and the site reads and links the same.
 - **Export to HTML**: the folder, or one of its subfolders, as a static site with search,
   or as one page — see "[Export to HTML](#export-to-html)".
 - **Settings** (the gear at the top right, next to search): interface language, theme
-  (system, light, dark), zoom 50–200 %, text width (a centred column or the full pane) and
-  whether the note name is shown as a title.
+  (system, light, dark), zoom 50–200 %, text width (a centred column or the full pane),
+  whether the note name is shown as a title, and where added images go: the images folder
+  beside the note (`assets` by default) and whether each note gets a subfolder of its own
+  in it; without one, all the images go straight into the folder.
 - **Languages**: English and 16 more — 中文, हिन्दी, Español, Français, العربية, বাংলা,
   Português, Русский, اردو, Bahasa Indonesia, Deutsch, 日本語, Türkçe, 한국어, Italiano,
   Українська. By default the interface follows the browser's language. In Arabic and Urdu the

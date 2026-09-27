@@ -123,7 +123,10 @@
     "Show the note name as a title": "নোটের নাম শিরোনাম হিসেবে দেখান",
     "Light": "হালকা",
     "Dark": "গাঢ়",
-    "Close folder": "ফোল্ডার বন্ধ করুন"
+    "Close folder": "ফোল্ডার বন্ধ করুন",
+    "Images": "ছবি",
+    "Images folder": "ছবির ফোল্ডার",
+    "A subfolder named after the note": "নোটের নামে একটি সাবফোল্ডার"
   },
   "app": {
     "Notes editor": "নোট এডিটর"

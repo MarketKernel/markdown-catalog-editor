@@ -120,7 +120,10 @@
     "Show the note name as a title": "将笔记名称显示为标题",
     "Light": "浅色",
     "Dark": "深色",
-    "Close folder": "关闭文件夹"
+    "Close folder": "关闭文件夹",
+    "Images": "图片",
+    "Images folder": "图片文件夹",
+    "A subfolder named after the note": "以笔记命名的子文件夹"
   },
   "app": {
     "Notes editor": "笔记编辑器"

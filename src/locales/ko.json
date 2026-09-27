@@ -120,7 +120,10 @@
     "Show the note name as a title": "노트 이름을 제목으로 표시",
     "Light": "라이트",
     "Dark": "다크",
-    "Close folder": "폴더 닫기"
+    "Close folder": "폴더 닫기",
+    "Images": "이미지",
+    "Images folder": "이미지 폴더",
+    "A subfolder named after the note": "노트 이름으로 된 하위 폴더"
   },
   "app": {
     "Notes editor": "노트 편집기"

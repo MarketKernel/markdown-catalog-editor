@@ -126,7 +126,10 @@
     "Show the note name as a title": "Mostra il nome della nota come titolo",
     "Light": "Chiaro",
     "Dark": "Scuro",
-    "Close folder": "Chiudi cartella"
+    "Close folder": "Chiudi cartella",
+    "Images": "Immagini",
+    "Images folder": "Cartella delle immagini",
+    "A subfolder named after the note": "Una sottocartella con il nome della nota"
   },
   "app": {
     "Notes editor": "Editor di note"

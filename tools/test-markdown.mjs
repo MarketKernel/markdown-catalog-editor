@@ -84,6 +84,35 @@ check(
   '<pre><code>plain\n</code></pre>\n',
 );
 
+check(
+  'an embed with a folder shows the file name',
+  inline('![[assets/Ubuntu/2023-12-03 08.18.32.jpg]]'),
+  '<img class="embed" src="" alt="2023-12-03 08.18.32.jpg" data-embed="assets/Ubuntu/2023-12-03 08.18.32.jpg">',
+);
+check(
+  'a new image is plain Markdown, its name the text, a space escaped',
+  markdown.imageMarkdown('assets/Ubuntu/2023-12-03 08.18.32.jpg'),
+  '![2023-12-03 08.18.32](assets/Ubuntu/2023-12-03%2008.18.32.jpg)',
+);
+check(
+  'what would end the link or read as markup is escaped, other scripts stay',
+  markdown.imageMarkdown('assets/C# (1)/Схема 100%.png'),
+  '![Схема 100%](assets/C%23%20%281%29/Схема%20100%25.png)',
+);
+check(
+  'and it shows as an image of the folder',
+  inline(markdown.imageMarkdown('assets/C# (1)/Схема 100%.png')),
+  '<img src="" alt="Схема 100%" data-asset="assets/C%23%20%281%29/%D0%A1%D1%85%D0%B5%D0%BC%D0%B0%20100%25.png">',
+);
+check(
+  'a renamed note\'s images follow its images folder, width, caption and title kept',
+  markdown.retargetImages(
+    '![a](assets/Old/a%20b.png) ![t](<assets/Old/c d.png> "T") ![x](assets/Older/x.png) ![[assets/Old/a.png|300]] ![[assets/Older/b.png]] ![[a.png]] [[assets/Old/c.png]] [l](assets/Old/l.png)',
+    'assets/Old', 'assets/New',
+  ),
+  '![a](assets/New/a%20b.png) ![t](<assets/New/c d.png> "T") ![x](assets/Older/x.png) ![[assets/New/a.png|300]] ![[assets/Older/b.png]] ![[a.png]] [[assets/Old/c.png]] [l](assets/Old/l.png)',
+);
+
 const render = (text) => md.render(text).replace(/<svg[^]*?<\/svg>/g, '<svg>');
 check(
   'callout with a title-less marker',

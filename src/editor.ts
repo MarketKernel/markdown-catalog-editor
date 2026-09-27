@@ -141,6 +141,12 @@ export class Editor {
     this.report();
   }
 
+  /** Draws every block again, as when what its images or links point at may have changed. */
+  refresh(): void {
+    this.renderedEnvKey = '';
+    this.render();
+  }
+
   getText(): string {
     return this.eol === '\n' ? this.text : this.text.replace(/\n/g, this.eol);
   }
