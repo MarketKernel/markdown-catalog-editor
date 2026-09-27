@@ -1317,8 +1317,63 @@ details.callout[open] > summary.callout-title::after { transform: rotate(45deg);
 .toast--shown { opacity: 1; transform: translate(-50%, 0); }
 .toast--error { background: var(--danger); color: #fff; }
 
+/* ------------------------------------------------------------------ *
+ * Phones
+ * ------------------------------------------------------------------ */
+
+/* The shade behind the file panel on a phone; fixed, so it never takes a grid cell. */
+.scrim { display: none; position: fixed; inset: 0; z-index: 54; background: rgba(12, 12, 18, 0.34); }
+
 @media (max-width: 720px) {
   .app { grid-template-columns: 0 0 minmax(0, 1fr); }
-  .sidebar, .resizer { display: none; }
+  .resizer { display: none; }
   .scroller { padding: 22px 16px 40vh; }
+
+  /* The file panel slides over the note, closed until ☰ opens it. Its state is
+     body.drawer-open, never the desktop's sidebar-hidden. */
+  .sidebar,
+  body.sidebar-hidden .sidebar {
+    display: flex;
+    position: fixed;
+    inset-block: 0;
+    inset-inline-start: 0;
+    z-index: 55;
+    width: min(320px, 86vw);
+    box-shadow: var(--shadow);
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition: transform 0.2s ease, visibility 0.2s;
+  }
+  [dir='rtl'] .sidebar { transform: translateX(100%); }
+  body.drawer-open .sidebar { transform: none; visibility: visible; }
+  body.drawer-open .scrim { display: block; }
+
+  /* One row: ☰, Read / Edit and the buttons; formatting, of no use while
+     reading, gets a row of its own in edit mode. */
+  .toolbar { flex-wrap: wrap; gap: 4px 6px; padding: 6px 8px; }
+  .toolbar .icon-button { width: 40px; height: 40px; }
+  .segmented { margin: 0; }
+  .seg { padding: 6px 12px; font-size: 14px; }
+  #export { display: none; }
+  .toolbar-group--format { order: 1; flex: 1 0 calc(100% - 50px); }
+  .tool--more { order: 2; }
+  body:not(.mode-edit) .toolbar-group--format,
+  body:not(.mode-edit) .tool--more { display: none; }
+
+  .findbar { gap: 4px; padding: 6px 8px; }
+  .findbar .icon-button { width: 36px; height: 36px; }
+  .find-count { min-width: 44px; }
+
+  .status-count { display: none; }
+
+  /* The settings are taller than a phone held sideways. */
+  .popover { max-height: calc(100% - 16px); overflow-y: auto; }
+}
+
+@media (pointer: coarse) {
+  /* iOS zooms the page into any field under 16px, and does not zoom back out. */
+  input:not([type='checkbox']):not([type='radio']), select { font-size: 16px; }
+  /* Rows and buttons a finger can hit. */
+  .tree-item { padding-block: 8px; }
+  .tree-tool { width: 36px; height: 34px; }
 }

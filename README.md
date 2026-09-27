@@ -309,6 +309,11 @@ follows the system, and the site reads and links the same.
   Português, Русский, اردو, Bahasa Indonesia, Deutsch, 日本語, Türkçe, 한국어, Italiano,
   Українська. By default the interface follows the browser's language. In Arabic and Urdu the
   chrome is mirrored right to left; the note itself keeps its own direction.
+- **Phones**: on a screen narrower than 720 px the file panel slides over the note — ☰
+  opens it, picking a note or a tap beside it closes it — and the toolbar fits one row;
+  formatting gets a second row in edit mode only. Export is left out there. On a touch
+  screen the fields are at least 16 px, so iOS does not zoom into them, and the tree's rows
+  are taller. The desktop layout and its remembered panel width are untouched.
 - Autosave one second after an edit, undo and redo, search within the note.
 - The language, theme, zoom, text width, panel width, tag panel height and last opened note
   are remembered.
@@ -417,7 +422,8 @@ build/pages/        the PWA for GitHub Pages
 ## Limitations
 
 - Collaborative editing, plugins, sync and a link graph are not supported.
-- The layout targets the desktop; on a narrow screen the file panel hides itself.
+- On a phone the layout is made for reading: the tree's context menu needs a long press
+  that iOS does not turn into one, and tables are extended with bars that appear on hover.
 - Only Chromium-based browsers can write files.
 
 ## License

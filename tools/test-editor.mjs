@@ -189,7 +189,12 @@ async function launch(note, files = {}, init = '') {
     await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x, y: y + dy, button: 'left', buttons: 0, clickCount: 1 });
     await sleep(60);
   };
-  return { evaluate, press, type, click, drag, text, view, sleep, close, reload };
+  /** Resizes the page, as a narrower window or a phone held upright would. */
+  const viewport = async (width, height) => {
+    await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false });
+    await sleep(100);
+  };
+  return { evaluate, press, type, click, drag, text, view, sleep, close, reload, viewport };
 }
 
 /* ------------------------------------------------------------------ *
@@ -1059,6 +1064,56 @@ await scenario(null, async (b) => {
     shown: true, recent: [], primary: true, error: 'The folder "Notes" is no longer there, so it was removed from the list',
   });
 }, {}, originFolders);
+
+await scenario('# Note\n\nText\n', async (b) => {
+  const layout = () =>
+    b.evaluate(`(() => {
+      const sidebar = getComputedStyle(document.querySelector('.sidebar'));
+      const shown = (id) => getComputedStyle(document.getElementById(id)).display !== 'none';
+      return {
+        drawer: document.body.classList.contains('drawer-open'),
+        hidden: document.body.classList.contains('sidebar-hidden'),
+        panel: sidebar.visibility === 'visible' && sidebar.display !== 'none',
+        overlay: sidebar.position === 'fixed',
+        format: shown('format'),
+        scrolls: document.documentElement.scrollWidth > innerWidth,
+      };
+    })()`);
+  const stored = () => b.evaluate(`JSON.parse(localStorage.getItem('markdown-catalog-editor')).sidebarHidden ?? false`);
+  const settle = () => b.sleep(250);
+
+  eq('desktop: the panel is a column', await layout(), { drawer: false, hidden: false, panel: true, overlay: false, format: true, scrolls: false });
+  await b.click('#toggle-sidebar');
+  eq('desktop: the button hides it', (await layout()).hidden, true);
+  await b.click('#toggle-sidebar');
+  eq('and shows it again', (await layout()).hidden, false);
+
+  await b.viewport(390, 800);
+  await settle();
+  eq('phone: the panel is closed, the page does not scroll sideways', await layout(), { drawer: false, hidden: false, panel: false, overlay: true, format: true, scrolls: false });
+  await b.evaluate(`document.querySelector('.seg[data-mode=read]').click()`);
+  eq('phone: no formatting while reading', (await layout()).format, false);
+
+  await b.click('#toggle-sidebar');
+  await settle();
+  eq('phone: the button slides the panel over the note', await layout(), { drawer: true, hidden: false, panel: true, overlay: true, format: false, scrolls: false });
+  eq('without touching the desktop setting', await stored(), false);
+  await b.click('.tree-item[data-path="Other.md"]', 'start');
+  await settle();
+  eq('picking a note closes it', await b.evaluate(`[document.body.classList.contains('drawer-open'), document.getElementById('status-path').textContent]`), [false, 'Other.md']);
+
+  await b.click('#toggle-sidebar');
+  await b.click('#scrim');
+  eq('a tap on the shade closes it', (await layout()).drawer, false);
+  await b.click('#toggle-sidebar');
+  await b.press('Escape');
+  eq('and Escape', (await layout()).drawer, false);
+
+  await b.click('#toggle-sidebar');
+  await b.viewport(1200, 900);
+  await settle();
+  eq('back to desktop width, the column returns', await layout(), { drawer: false, hidden: false, panel: true, overlay: false, format: true, scrolls: false });
+}, { 'Other.md': '# Other\n' });
 
 console.log(`${passed} browser checks passed${failed ? `, ${failed} failed` : ''}`);
 process.exit(failed ? 1 : 0);

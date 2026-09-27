@@ -282,6 +282,7 @@ async function closeFolder(): Promise<void> {
   tree.setEntries([]);
   renderTags();
   placeholder.hidden = false;
+  setDrawer(false);
   app.hidden = true;
   gate.hidden = false;
   gateError.textContent = '';
@@ -353,6 +354,7 @@ async function acceptDrop(event: DragEvent): Promise<void> {
  * ------------------------------------------------------------------ */
 
 async function openNote(path: string): Promise<void> {
+  setDrawer(false);
   if (!vault) return;
   if (path === currentPath) return;
   await flushSave();
@@ -470,6 +472,7 @@ function embedPath(notePath: string, target: string): string {
 
 /** Shows a picture from the tree in place of the note — never as text in the editor. */
 async function openImage(path: string): Promise<void> {
+  setDrawer(false);
   if (!vault || path === viewedPath) return;
   await flushSave();
   const url = await assetUrl(path);
@@ -686,6 +689,7 @@ function renderNoteTags(): void {
 
 /** Shows the notes with a tag in place of the note — a list to read, not a text to edit. */
 async function openTag(tag: string): Promise<void> {
+  setDrawer(false);
   if (!vault) return;
   await flushSave();
   currentPath = null;
@@ -1654,7 +1658,25 @@ function setSidebar(width: number, hidden: boolean): void {
   persist();
 }
 
-el('toggle-sidebar').addEventListener('click', () => setSidebar(settings.sidebar, !settings.sidebarHidden));
+// On a phone the file panel slides over the note instead of taking a column,
+// and opening it there leaves the desktop's width and visibility alone.
+const narrow = matchMedia('(max-width: 720px)');
+
+function setDrawer(open: boolean): void {
+  document.body.classList.toggle('drawer-open', open && narrow.matches);
+}
+
+function toggleSidebar(): void {
+  if (narrow.matches) setDrawer(!document.body.classList.contains('drawer-open'));
+  else setSidebar(settings.sidebar, !settings.sidebarHidden);
+}
+
+el('toggle-sidebar').addEventListener('click', toggleSidebar);
+el('scrim').addEventListener('click', () => setDrawer(false));
+narrow.addEventListener('change', () => setDrawer(false));
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && document.body.classList.contains('drawer-open')) setDrawer(false);
+});
 
 const resizer = el('sidebar-resizer');
 resizer.addEventListener('pointerdown', (event) => {
@@ -1732,7 +1754,7 @@ document.addEventListener('keydown', (event) => {
   }
   if (key === '\\') {
     event.preventDefault();
-    setSidebar(settings.sidebar, !settings.sidebarHidden);
+    toggleSidebar();
     return;
   }
   if (!event.altKey && (key === '=' || key === '+')) {
