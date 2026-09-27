@@ -56,7 +56,11 @@
     "of notes": "catatan",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "Pilih folder berisi file {ext}. Tidak ada yang dikirim ke mana pun: file dibaca dan disimpan langsung di disk Anda sendiri.",
     "Open folder": "Buka folder",
-    "or drag a folder here": "atau seret folder ke sini"
+    "or drag a folder here": "atau seret folder ke sini",
+    "Recent folders": "Folder terbaru",
+    "Open {name}": "Buka “{name}”",
+    "Remove from the list": "Hapus dari daftar",
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "Folder “{name}” sudah tidak ada, jadi dihapus dari daftar"
   },
   "dialog": {
     "Note not found": "Catatan tidak ditemukan",
@@ -74,7 +78,10 @@
     "Delete the file \"{name}\"? This cannot be undone.": "Hapus file \"{name}\"? Tindakan ini tidak dapat dibatalkan.",
     "Delete": "Hapus",
     "Cancel": "Batal",
-    "Done": "Selesai"
+    "Done": "Selesai",
+    "Close folder": "Tutup folder",
+    "The note has unsaved changes. Close the folder anyway?": "Catatan memiliki perubahan yang belum disimpan. Tetap tutup folder?",
+    "Close": "Tutup"
   },
   "doc": {
     "no such file: {path}": "file tidak ada: {path}",
@@ -84,7 +91,8 @@
     "The folder is open read-only": "Folder dibuka dalam mode hanya-baca",
     "This browser cannot write files": "Browser ini tidak dapat menulis file",
     "\"{name}\" already exists": "\"{name}\" sudah ada",
-    "File not found: {path}": "File tidak ditemukan: {path}"
+    "File not found: {path}": "File tidak ditemukan: {path}",
+    "The browser was not allowed to open the folder": "Browser tidak diizinkan membuka folder"
   },
   "palette": {
     "Red": "Merah",
@@ -111,14 +119,14 @@
     "Text width": "Lebar teks",
     "Show the note name as a title": "Tampilkan nama catatan sebagai judul",
     "Light": "Terang",
-    "Dark": "Gelap"
+    "Dark": "Gelap",
+    "Close folder": "Tutup folder"
   },
   "app": {
     "Notes editor": "Editor catatan"
   },
   "sidebar": {
     "Notes": "Catatan",
-    "Open another folder": "Buka folder lain",
     "New note": "Catatan baru",
     "New folder": "Folder baru",
     "Filter by name": "Filter menurut nama",
@@ -129,7 +137,8 @@
     "File panel width": "Lebar panel file",
     "Tags": "Tag",
     "Tag tree": "Pohon tag",
-    "Tag panel height": "Tinggi panel tag"
+    "Tag panel height": "Tinggi panel tag",
+    "Close folder — back to the recent ones": "Tutup folder — kembali ke daftar terbaru"
   },
   "toolbar": {
     "Read": "Baca",

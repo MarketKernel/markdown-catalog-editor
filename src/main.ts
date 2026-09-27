@@ -10,6 +10,7 @@ import { exportDialog, type ExportChoice } from './export-ui';
 import { FLAGS, isRightToLeft, LANGUAGES, setLanguage, t, tn, translatePage, type Language } from './i18n';
 import { createMarkdown } from './markdown';
 import { Meta } from './meta';
+import { forgetFolder, isGranted, recentFolders, regainAccess, rememberFolder, rememberNote, type RecentFolder } from './recent';
 import {
   applyFullWidth,
   applySidebar,
@@ -41,6 +42,7 @@ import {
   isNote,
   join,
   resolvePath,
+  type DirHandleLike,
   type TreeEntry,
   type Vault,
 } from './vault';
@@ -70,6 +72,8 @@ const statusState = el('status-state');
 const statusCount = el('status-count');
 
 let vault: Vault | null = null;
+/** The open folder's entry among the recent ones; null for a folder opened without a handle. */
+let folder: RecentFolder | null = null;
 let currentPath: string | null = null;
 /** An image opened from the tree; it replaces the note, so `currentPath` is null meanwhile. */
 let viewedPath: string | null = null;
@@ -143,9 +147,13 @@ tagTree.setCollapsed(settings.collapsedTags);
 
 const gateError = el('gate-error');
 
-async function useVault(next: Vault): Promise<void> {
+/** `handle` → the folder is remembered, to be offered — or reopened at once — next time. */
+async function useVault(next: Vault, handle: DirHandleLike | null = null): Promise<void> {
   await flushSave();
+  // Scanned first: a folder that is gone leaves the open one, or the gate, as it was.
+  const entries = await next.scan();
   vault = next;
+  folder = handle ? await rememberFolder(handle) : null;
   currentPath = null;
   closeImage();
   closeTag();
@@ -153,7 +161,6 @@ async function useVault(next: Vault): Promise<void> {
   for (const url of assets.values()) URL.revokeObjectURL(url);
   assets.clear();
 
-  const entries = await next.scan();
   await loadMeta(next);
   tree.setEntries(entries);
   renderTags();
@@ -168,9 +175,8 @@ async function useVault(next: Vault): Promise<void> {
     toast(next.writable ? t('toast', 'No .md files in this folder — create the first note') : t('toast', 'No .md files in this folder'), 'error');
     return;
   }
-  const remembered = settings.lastPath && notes.some((note) => note.path === settings.lastPath)
-    ? settings.lastPath
-    : notes[0]!.path;
+  const last = folder ? folder.lastPath : settings.lastPath;
+  const remembered = last && notes.some((note) => note.path === last) ? last : notes[0]!.path;
   await openNote(remembered);
 }
 
@@ -180,7 +186,7 @@ async function pickFolder(): Promise<void> {
     try {
       const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
       const writable = await ensureWritable(handle);
-      await useVault(new DirectoryVault(handle, writable));
+      await useVault(new DirectoryVault(handle, writable), handle);
       if (!writable) toast(t('toast', 'Read-only access: saving will offer to download the file'), 'error');
     } catch (error) {
       if ((error as DOMException)?.name !== 'AbortError') showGateError(error);
@@ -196,8 +202,104 @@ function showGateError(error: unknown): void {
   else gateError.textContent = message;
 }
 
+/* The rest of the gate: the recent folders, the way back to them, and the start. */
+
+async function renderRecent(): Promise<void> {
+  const box = el('recent');
+  const recent = await recentFolders();
+  box.hidden = recent.length === 0;
+  // With folders to go back to, picking a new one is no longer the main thing to do.
+  el('open-folder').classList.toggle('button--primary', recent.length === 0);
+  box.replaceChildren(h('div', { class: 'recent-title', text: t('gate', 'Recent folders') }));
+  for (const item of recent) {
+    const open = h(
+      'button',
+      { type: 'button', class: 'recent-open', title: t('gate', 'Open {name}', { name: item.name }) },
+      folderIcon(),
+      h('span', { class: 'recent-name', text: item.name }),
+    );
+    open.addEventListener('click', () => void openRecent(item));
+    const forget = h('button', { type: 'button', class: 'recent-forget', title: t('gate', 'Remove from the list'), 'aria-label': t('gate', 'Remove from the list'), text: '×' });
+    forget.addEventListener('click', async () => {
+      await forgetFolder(item.id);
+      await renderRecent();
+    });
+    box.append(h('div', { class: 'recent-item' }, open, forget));
+  }
+  // Enter goes straight back to the last folder.
+  if (!gate.hidden) box.querySelector<HTMLButtonElement>('.recent-open')?.focus();
+}
+
+function folderIcon(): SVGSVGElement {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('aria-hidden', 'true');
+  const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  path.setAttribute('d', 'M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z');
+  svg.append(path);
+  return svg;
+}
+
+/** A recent folder, from a click: the browser asks for access again unless it was allowed for good. */
+async function openRecent(item: RecentFolder): Promise<void> {
+  gateError.textContent = '';
+  try {
+    const writable = await regainAccess(item.handle);
+    await useVault(new DirectoryVault(item.handle, writable), item.handle);
+    if (!writable) toast(t('toast', 'Read-only access: saving will offer to download the file'), 'error');
+  } catch (error) {
+    if ((error as DOMException)?.name !== 'NotFoundError') return showGateError(error);
+    await forgetFolder(item.id);
+    await renderRecent();
+    showGateError(new Error(t('gate', 'The folder "{name}" is no longer there, so it was removed from the list', { name: item.name })));
+  }
+}
+
+/** Back to the gate: the folder stays among the recent ones. */
+async function closeFolder(): Promise<void> {
+  await flushSave();
+  // The save failed and said so: the text would be lost with the folder.
+  if (dirty && vault?.writable) return;
+  if (dirty && !(await confirmAsk(t('dialog', 'Close folder'), t('dialog', 'The note has unsaved changes. Close the folder anyway?'), t('dialog', 'Close')))) return;
+  closeSettings?.();
+  if (!findbar.hidden) closeFind();
+  vault = null;
+  folder = null;
+  currentPath = null;
+  closeImage();
+  closeTag();
+  dirty = false;
+  editor.load('');
+  for (const url of assets.values()) URL.revokeObjectURL(url);
+  assets.clear();
+  meta = Meta.empty();
+  tree.setEntries([]);
+  renderTags();
+  placeholder.hidden = false;
+  app.hidden = true;
+  gate.hidden = false;
+  gateError.textContent = '';
+  renderState();
+  renderTitle();
+  renderDocumentTitle();
+  await renderRecent();
+}
+
+/** The last folder, straight away — when the browser still lets the page into it without a click. */
+async function reopenLast(): Promise<boolean> {
+  const [last] = await recentFolders();
+  if (!last || !(await isGranted(last.handle))) return false;
+  try {
+    await useVault(new DirectoryVault(last.handle, true), last.handle);
+    return true;
+  } catch {
+    /* moved or deleted — the gate lists it, and a click says what happened */
+    return false;
+  }
+}
+
 el('open-folder').addEventListener('click', () => void pickFolder());
-el('vault-name').addEventListener('click', () => void pickFolder());
+el('vault-name').addEventListener('click', () => void closeFolder());
 
 el<HTMLInputElement>('folder-picker').addEventListener('change', (event) => {
   const files = Array.from((event.target as HTMLInputElement).files ?? []);
@@ -226,7 +328,7 @@ async function acceptDrop(event: DragEvent): Promise<void> {
   if (!transfer) return;
   const handle = await handleFromDataTransfer(transfer.items);
   if (handle) {
-    await useVault(new DirectoryVault(handle, await ensureWritable(handle)));
+    await useVault(new DirectoryVault(handle, await ensureWritable(handle)), handle);
     return;
   }
   for (const item of Array.from(transfer.items)) {
@@ -257,14 +359,23 @@ async function openNote(path: string): Promise<void> {
     dirty = false;
     tree.setActive(path);
     renderNoteTags();
-    settings.lastPath = path;
-    persist();
+    rememberPath(path);
     renderDocumentTitle();
     placeholder.hidden = true;
     renderState();
     renderTitle();
   } catch (error) {
     toast(error instanceof Error ? error.message : String(error), 'error');
+  }
+}
+
+/** The note to reopen next time: in this folder, or — without a remembered folder — in any. */
+function rememberPath(path: string): void {
+  settings.lastPath = path;
+  persist();
+  if (folder) {
+    folder.lastPath = path;
+    void rememberNote(folder.id, path);
   }
 }
 
@@ -965,8 +1076,7 @@ async function renameEntry(entry: TreeEntry): Promise<void> {
     await refreshTree();
     if (currentPath) {
       tree.setActive(currentPath);
-      settings.lastPath = currentPath;
-      persist();
+      rememberPath(currentPath);
       renderTitle();
     } else if (viewedPath) {
       tree.setActive(viewedPath);
@@ -1352,12 +1462,25 @@ function openSettings(): void {
     zoom,
     row(t('settings', 'Text width'), width),
     h('label', { class: 'settings-row settings-row--check' }, title, h('span', { text: t('settings', 'Show the note name as a title') })),
+    folderRow(),
   );
   settingsButton.setAttribute('aria-expanded', 'true');
   closeSettings = popover(settingsButton, panel, () => {
     closeSettings = null;
     settingsButton.setAttribute('aria-expanded', 'false');
   });
+}
+
+/** The open folder, and the way out of it to the list of recent ones. */
+function folderRow(): HTMLElement {
+  const close = h('button', { class: 'button settings-close-folder', type: 'button', text: t('settings', 'Close folder') });
+  close.addEventListener('click', () => void closeFolder());
+  return h(
+    'div',
+    { class: 'settings-row settings-folder' },
+    h('span', { class: 'settings-folder-name', text: vault?.name ?? '' }),
+    close,
+  );
 }
 
 settingsButton.addEventListener('click', () => (closeSettings ? closeSettings() : openSettings()));
@@ -1559,25 +1682,36 @@ editor.setMode(settings.mode);
 syncModeButtons();
 renderState();
 
-// Served over HTTP next to the notes? Then there is nothing to pick.
+/** Served over HTTP next to the notes? Then there is nothing to pick. */
+async function openServedFolder(): Promise<boolean> {
+  if (!location.protocol.startsWith('http')) return false;
+  try {
+    const response = await fetch('index.json', { cache: 'no-store' });
+    if (!response.ok) return false;
+    const listing = (await response.json()) as { files?: string[]; name?: string };
+    if (!Array.isArray(listing.files) || listing.files.length === 0) return false;
+    const files = await Promise.all(
+      listing.files.map(async (path) => {
+        const blob = await (await fetch(path)).blob();
+        const file = new File([blob], baseOf(path));
+        Object.defineProperty(file, 'webkitRelativePath', { value: join(listing.name ?? 'notes', path) });
+        return file;
+      }),
+    );
+    await useVault(new FileListVault(files, listing.name ?? 'Notes'));
+    return true;
+  } catch {
+    /* no listing next to the page — the folder picker stays */
+    return false;
+  }
+}
+
+// The gate stays blank meanwhile, so it does not flash up before the folder opens by itself.
 void (async () => {
-  if (location.protocol.startsWith('http')) {
-    try {
-      const response = await fetch('index.json', { cache: 'no-store' });
-      if (!response.ok) return;
-      const listing = (await response.json()) as { files?: string[]; name?: string };
-      if (!Array.isArray(listing.files) || listing.files.length === 0) return;
-      const files = await Promise.all(
-        listing.files.map(async (path) => {
-          const blob = await (await fetch(path)).blob();
-          const file = new File([blob], baseOf(path));
-          Object.defineProperty(file, 'webkitRelativePath', { value: join(listing.name ?? 'notes', path) });
-          return file;
-        }),
-      );
-      await useVault(new FileListVault(files, listing.name ?? 'Notes'));
-    } catch {
-      /* no listing next to the page — the folder picker stays */
-    }
+  try {
+    if (!(await openServedFolder())) await reopenLast();
+  } finally {
+    gate.classList.remove('gate--starting');
+    if (!gate.hidden) await renderRecent();
   }
 })();

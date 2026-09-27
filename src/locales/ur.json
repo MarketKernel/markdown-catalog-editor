@@ -59,7 +59,11 @@
     "of notes": "فولڈر کھولیں",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "{ext} فائلوں والا فولڈر منتخب کریں۔ کچھ بھی کہیں نہیں بھیجا جاتا: فائلیں براہ راست آپ کی اپنی ڈسک پر پڑھی اور محفوظ کی جاتی ہیں۔",
     "Open folder": "فولڈر کھولیں",
-    "or drag a folder here": "یا کوئی فولڈر یہاں گھسیٹیں"
+    "or drag a folder here": "یا کوئی فولڈر یہاں گھسیٹیں",
+    "Recent folders": "حالیہ فولڈرز",
+    "Open {name}": "«{name}» کھولیں",
+    "Remove from the list": "فہرست سے ہٹائیں",
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "فولڈر «{name}» اب موجود نہیں، اس لیے اسے فہرست سے ہٹا دیا گیا"
   },
   "dialog": {
     "Note not found": "نوٹ نہیں ملا",
@@ -77,7 +81,10 @@
     "Delete the file \"{name}\"? This cannot be undone.": "فائل \"{name}\" حذف کریں؟ اسے واپس نہیں کیا جا سکتا۔",
     "Delete": "حذف کریں",
     "Cancel": "منسوخ کریں",
-    "Done": "ہو گیا"
+    "Done": "ہو گیا",
+    "Close folder": "فولڈر بند کریں",
+    "The note has unsaved changes. Close the folder anyway?": "نوٹ میں غیر محفوظ تبدیلیاں ہیں۔ پھر بھی فولڈر بند کریں؟",
+    "Close": "بند کریں"
   },
   "doc": {
     "no such file: {path}": "ایسی کوئی فائل نہیں: {path}",
@@ -87,7 +94,8 @@
     "The folder is open read-only": "فولڈر صرف پڑھنے کے لیے کھلا ہے",
     "This browser cannot write files": "یہ براؤزر فائلیں نہیں لکھ سکتا",
     "\"{name}\" already exists": "\"{name}\" پہلے سے موجود ہے",
-    "File not found: {path}": "فائل نہیں ملی: {path}"
+    "File not found: {path}": "فائل نہیں ملی: {path}",
+    "The browser was not allowed to open the folder": "براؤزر کو فولڈر کھولنے کی اجازت نہیں ملی"
   },
   "palette": {
     "Red": "سرخ",
@@ -114,14 +122,14 @@
     "Text width": "متن کی چوڑائی",
     "Show the note name as a title": "نوٹ کا نام عنوان کے طور پر دکھائیں",
     "Light": "روشن",
-    "Dark": "تاریک"
+    "Dark": "تاریک",
+    "Close folder": "فولڈر بند کریں"
   },
   "app": {
     "Notes editor": "نوٹس ایڈیٹر"
   },
   "sidebar": {
     "Notes": "نوٹس",
-    "Open another folder": "دوسرا فولڈر کھولیں",
     "New note": "نیا نوٹ",
     "New folder": "نیا فولڈر",
     "Filter by name": "نام سے فلٹر کریں",
@@ -132,7 +140,8 @@
     "File panel width": "فائل پینل کی چوڑائی",
     "Tags": "ٹیگ",
     "Tag tree": "ٹیگ ٹری",
-    "Tag panel height": "ٹیگ پینل کی اونچائی"
+    "Tag panel height": "ٹیگ پینل کی اونچائی",
+    "Close folder — back to the recent ones": "فولڈر بند کریں — حالیہ فولڈرز پر واپس"
   },
   "toolbar": {
     "Read": "پڑھیں",

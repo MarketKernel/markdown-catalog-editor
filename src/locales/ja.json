@@ -56,7 +56,11 @@
     "of notes": "フォルダを開く",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "{ext} ファイルを含むフォルダを選択してください。データはどこにも送信されません。ファイルはお使いのディスク上で直接読み込み・保存されます。",
     "Open folder": "フォルダを開く",
-    "or drag a folder here": "またはフォルダをここにドラッグ"
+    "or drag a folder here": "またはフォルダをここにドラッグ",
+    "Recent folders": "最近のフォルダ",
+    "Open {name}": "「{name}」を開く",
+    "Remove from the list": "一覧から削除",
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "フォルダ「{name}」は見つからないため、一覧から削除しました"
   },
   "dialog": {
     "Note not found": "ノートが見つかりません",
@@ -74,7 +78,10 @@
     "Delete the file \"{name}\"? This cannot be undone.": "ファイル「{name}」を削除しますか？この操作は取り消せません。",
     "Delete": "削除",
     "Cancel": "キャンセル",
-    "Done": "完了"
+    "Done": "完了",
+    "Close folder": "フォルダを閉じる",
+    "The note has unsaved changes. Close the folder anyway?": "ノートに未保存の変更があります。それでもフォルダを閉じますか？",
+    "Close": "閉じる"
   },
   "doc": {
     "no such file: {path}": "ファイルがありません：{path}",
@@ -84,7 +91,8 @@
     "The folder is open read-only": "フォルダは読み取り専用で開かれています",
     "This browser cannot write files": "このブラウザはファイルを書き込めません",
     "\"{name}\" already exists": "「{name}」はすでに存在します",
-    "File not found: {path}": "ファイルが見つかりません：{path}"
+    "File not found: {path}": "ファイルが見つかりません：{path}",
+    "The browser was not allowed to open the folder": "ブラウザにフォルダを開く許可が与えられませんでした"
   },
   "palette": {
     "Red": "赤",
@@ -111,14 +119,14 @@
     "Text width": "テキストの幅",
     "Show the note name as a title": "ノート名をタイトルとして表示",
     "Light": "ライト",
-    "Dark": "ダーク"
+    "Dark": "ダーク",
+    "Close folder": "フォルダを閉じる"
   },
   "app": {
     "Notes editor": "ノートエディタ"
   },
   "sidebar": {
     "Notes": "ノート",
-    "Open another folder": "別のフォルダを開く",
     "New note": "新規ノート",
     "New folder": "新規フォルダ",
     "Filter by name": "名前で絞り込み",
@@ -129,7 +137,8 @@
     "File panel width": "ファイルパネルの幅",
     "Tags": "タグ",
     "Tag tree": "タグツリー",
-    "Tag panel height": "タグパネルの高さ"
+    "Tag panel height": "タグパネルの高さ",
+    "Close folder — back to the recent ones": "フォルダを閉じる — 最近のフォルダ一覧へ"
   },
   "toolbar": {
     "Read": "閲覧",

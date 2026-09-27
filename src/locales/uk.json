@@ -65,7 +65,11 @@
     "of notes": "з нотатками",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "Виберіть папку з файлами {ext}. Нічого нікуди не надсилається: файли читаються й зберігаються безпосередньо на вашому диску.",
     "Open folder": "Відкрити папку",
-    "or drag a folder here": "або перетягніть папку сюди"
+    "or drag a folder here": "або перетягніть папку сюди",
+    "Recent folders": "Нещодавні папки",
+    "Open {name}": "Відкрити «{name}»",
+    "Remove from the list": "Прибрати зі списку",
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "Папки «{name}» більше немає, її прибрано зі списку"
   },
   "dialog": {
     "Note not found": "Нотатку не знайдено",
@@ -83,7 +87,10 @@
     "Delete the file \"{name}\"? This cannot be undone.": "Видалити файл «{name}»? Цю дію не можна скасувати.",
     "Delete": "Видалити",
     "Cancel": "Скасувати",
-    "Done": "Готово"
+    "Done": "Готово",
+    "Close folder": "Закрити папку",
+    "The note has unsaved changes. Close the folder anyway?": "У нотатці є незбережені зміни. Усе одно закрити папку?",
+    "Close": "Закрити"
   },
   "doc": {
     "no such file: {path}": "файл не знайдено: {path}",
@@ -93,7 +100,8 @@
     "The folder is open read-only": "Папку відкрито лише для читання",
     "This browser cannot write files": "Цей браузер не може записувати файли",
     "\"{name}\" already exists": "«{name}» вже існує",
-    "File not found: {path}": "Файл не знайдено: {path}"
+    "File not found: {path}": "Файл не знайдено: {path}",
+    "The browser was not allowed to open the folder": "Браузеру не дозволили відкрити папку"
   },
   "palette": {
     "Red": "Червоний",
@@ -120,14 +128,14 @@
     "Text width": "Ширина тексту",
     "Show the note name as a title": "Показувати назву нотатки як заголовок",
     "Light": "Світла",
-    "Dark": "Темна"
+    "Dark": "Темна",
+    "Close folder": "Закрити папку"
   },
   "app": {
     "Notes editor": "Редактор нотаток"
   },
   "sidebar": {
     "Notes": "Нотатки",
-    "Open another folder": "Відкрити іншу папку",
     "New note": "Нова нотатка",
     "New folder": "Нова папка",
     "Filter by name": "Фільтр за назвою",
@@ -138,7 +146,8 @@
     "File panel width": "Ширина панелі файлів",
     "Tags": "Теги",
     "Tag tree": "Дерево тегів",
-    "Tag panel height": "Висота панелі тегів"
+    "Tag panel height": "Висота панелі тегів",
+    "Close folder — back to the recent ones": "Закрити папку — до списку нещодавніх"
   },
   "toolbar": {
     "Read": "Читання",

@@ -59,7 +59,11 @@
     "of notes": "mit Notizen",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "Wählen Sie einen Ordner mit {ext}-Dateien. Nichts wird irgendwohin gesendet: Die Dateien werden direkt auf Ihrer eigenen Festplatte gelesen und gespeichert.",
     "Open folder": "Ordner öffnen",
-    "or drag a folder here": "oder ziehen Sie einen Ordner hierher"
+    "or drag a folder here": "oder ziehen Sie einen Ordner hierher",
+    "Recent folders": "Zuletzt geöffnete Ordner",
+    "Open {name}": "„{name}“ öffnen",
+    "Remove from the list": "Aus der Liste entfernen",
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "Den Ordner „{name}“ gibt es nicht mehr, er wurde aus der Liste entfernt"
   },
   "dialog": {
     "Note not found": "Notiz nicht gefunden",
@@ -77,7 +81,10 @@
     "Delete the file \"{name}\"? This cannot be undone.": "Die Datei „{name}“ löschen? Dies kann nicht rückgängig gemacht werden.",
     "Delete": "Löschen",
     "Cancel": "Abbrechen",
-    "Done": "Fertig"
+    "Done": "Fertig",
+    "Close folder": "Ordner schließen",
+    "The note has unsaved changes. Close the folder anyway?": "Die Notiz hat ungespeicherte Änderungen. Den Ordner trotzdem schließen?",
+    "Close": "Schließen"
   },
   "doc": {
     "no such file: {path}": "Datei existiert nicht: {path}",
@@ -87,7 +94,8 @@
     "The folder is open read-only": "Der Ordner ist schreibgeschützt geöffnet",
     "This browser cannot write files": "Dieser Browser kann keine Dateien schreiben",
     "\"{name}\" already exists": "„{name}“ existiert bereits",
-    "File not found: {path}": "Datei nicht gefunden: {path}"
+    "File not found: {path}": "Datei nicht gefunden: {path}",
+    "The browser was not allowed to open the folder": "Der Browser durfte den Ordner nicht öffnen"
   },
   "palette": {
     "Red": "Rot",
@@ -114,14 +122,14 @@
     "Text width": "Textbreite",
     "Show the note name as a title": "Notiznamen als Titel anzeigen",
     "Light": "Hell",
-    "Dark": "Dunkel"
+    "Dark": "Dunkel",
+    "Close folder": "Ordner schließen"
   },
   "app": {
     "Notes editor": "Notizeditor"
   },
   "sidebar": {
     "Notes": "Notizen",
-    "Open another folder": "Anderen Ordner öffnen",
     "New note": "Neue Notiz",
     "New folder": "Neuer Ordner",
     "Filter by name": "Nach Name filtern",
@@ -132,7 +140,8 @@
     "File panel width": "Breite der Dateileiste",
     "Tags": "Tags",
     "Tag tree": "Tag-Baum",
-    "Tag panel height": "Höhe des Tag-Bereichs"
+    "Tag panel height": "Höhe des Tag-Bereichs",
+    "Close folder — back to the recent ones": "Ordner schließen — zurück zu den zuletzt geöffneten"
   },
   "toolbar": {
     "Read": "Lesen",

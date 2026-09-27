@@ -62,7 +62,11 @@
     "of notes": "de notas",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "Escolha uma pasta com arquivos {ext}. Nada é enviado a lugar nenhum: os arquivos são lidos e salvos diretamente no seu disco.",
     "Open folder": "Abrir pasta",
-    "or drag a folder here": "ou arraste uma pasta para cá"
+    "or drag a folder here": "ou arraste uma pasta para cá",
+    "Recent folders": "Pastas recentes",
+    "Open {name}": "Abrir “{name}”",
+    "Remove from the list": "Remover da lista",
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "A pasta “{name}” não existe mais, por isso foi removida da lista"
   },
   "dialog": {
     "Note not found": "Nota não encontrada",
@@ -80,7 +84,10 @@
     "Delete the file \"{name}\"? This cannot be undone.": "Excluir o arquivo “{name}”? Esta ação não pode ser desfeita.",
     "Delete": "Excluir",
     "Cancel": "Cancelar",
-    "Done": "Concluído"
+    "Done": "Concluído",
+    "Close folder": "Fechar pasta",
+    "The note has unsaved changes. Close the folder anyway?": "A nota tem alterações não salvas. Fechar a pasta mesmo assim?",
+    "Close": "Fechar"
   },
   "doc": {
     "no such file: {path}": "arquivo inexistente: {path}",
@@ -90,7 +97,8 @@
     "The folder is open read-only": "A pasta está aberta somente para leitura",
     "This browser cannot write files": "Este navegador não consegue gravar arquivos",
     "\"{name}\" already exists": "“{name}” já existe",
-    "File not found: {path}": "Arquivo não encontrado: {path}"
+    "File not found: {path}": "Arquivo não encontrado: {path}",
+    "The browser was not allowed to open the folder": "O navegador não teve permissão para abrir a pasta"
   },
   "palette": {
     "Red": "Vermelho",
@@ -117,14 +125,14 @@
     "Text width": "Largura do texto",
     "Show the note name as a title": "Mostrar o nome da nota como título",
     "Light": "Claro",
-    "Dark": "Escuro"
+    "Dark": "Escuro",
+    "Close folder": "Fechar pasta"
   },
   "app": {
     "Notes editor": "Editor de notas"
   },
   "sidebar": {
     "Notes": "Notas",
-    "Open another folder": "Abrir outra pasta",
     "New note": "Nova nota",
     "New folder": "Nova pasta",
     "Filter by name": "Filtrar por nome",
@@ -135,7 +143,8 @@
     "File panel width": "Largura do painel de arquivos",
     "Tags": "Etiquetas",
     "Tag tree": "Árvore de etiquetas",
-    "Tag panel height": "Altura do painel de etiquetas"
+    "Tag panel height": "Altura do painel de etiquetas",
+    "Close folder — back to the recent ones": "Fechar pasta — voltar às recentes"
   },
   "toolbar": {
     "Read": "Leitura",

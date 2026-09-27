@@ -59,7 +59,11 @@
     "of notes": "फ़ोल्डर खोलें",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "{ext} फ़ाइलों वाला फ़ोल्डर चुनें। कुछ भी कहीं नहीं भेजा जाता: फ़ाइलें सीधे आपकी अपनी डिस्क पर पढ़ी और सहेजी जाती हैं।",
     "Open folder": "फ़ोल्डर खोलें",
-    "or drag a folder here": "या फ़ोल्डर यहाँ खींचें"
+    "or drag a folder here": "या फ़ोल्डर यहाँ खींचें",
+    "Recent folders": "हाल के फ़ोल्डर",
+    "Open {name}": "“{name}” खोलें",
+    "Remove from the list": "सूची से हटाएँ",
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "फ़ोल्डर “{name}” अब मौजूद नहीं है, इसलिए उसे सूची से हटा दिया गया"
   },
   "dialog": {
     "Note not found": "नोट नहीं मिला",
@@ -77,7 +81,10 @@
     "Delete the file \"{name}\"? This cannot be undone.": "फ़ाइल “{name}” हटाएँ? इसे पूर्ववत नहीं किया जा सकता।",
     "Delete": "हटाएँ",
     "Cancel": "रद्द करें",
-    "Done": "हो गया"
+    "Done": "हो गया",
+    "Close folder": "फ़ोल्डर बंद करें",
+    "The note has unsaved changes. Close the folder anyway?": "नोट में बिना सहेजे बदलाव हैं। फिर भी फ़ोल्डर बंद करें?",
+    "Close": "बंद करें"
   },
   "doc": {
     "no such file: {path}": "ऐसी कोई फ़ाइल नहीं: {path}",
@@ -87,7 +94,8 @@
     "The folder is open read-only": "फ़ोल्डर केवल पढ़ने के लिए खुला है",
     "This browser cannot write files": "यह ब्राउज़र फ़ाइलें नहीं लिख सकता",
     "\"{name}\" already exists": "“{name}” पहले से मौजूद है",
-    "File not found: {path}": "फ़ाइल नहीं मिली: {path}"
+    "File not found: {path}": "फ़ाइल नहीं मिली: {path}",
+    "The browser was not allowed to open the folder": "ब्राउज़र को फ़ोल्डर खोलने की अनुमति नहीं मिली"
   },
   "palette": {
     "Red": "लाल",
@@ -114,14 +122,14 @@
     "Text width": "टेक्स्ट की चौड़ाई",
     "Show the note name as a title": "नोट का नाम शीर्षक के रूप में दिखाएँ",
     "Light": "हल्की",
-    "Dark": "गहरी"
+    "Dark": "गहरी",
+    "Close folder": "फ़ोल्डर बंद करें"
   },
   "app": {
     "Notes editor": "नोट्स एडिटर"
   },
   "sidebar": {
     "Notes": "नोट्स",
-    "Open another folder": "दूसरा फ़ोल्डर खोलें",
     "New note": "नया नोट",
     "New folder": "नया फ़ोल्डर",
     "Filter by name": "नाम से फ़िल्टर करें",
@@ -132,7 +140,8 @@
     "File panel width": "फ़ाइल पैनल की चौड़ाई",
     "Tags": "टैग",
     "Tag tree": "टैग ट्री",
-    "Tag panel height": "टैग पैनल की ऊँचाई"
+    "Tag panel height": "टैग पैनल की ऊँचाई",
+    "Close folder — back to the recent ones": "फ़ोल्डर बंद करें — हाल के फ़ोल्डरों पर वापस"
   },
   "toolbar": {
     "Read": "पढ़ें",

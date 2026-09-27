@@ -56,7 +56,11 @@
     "of notes": "笔记文件夹",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "选择一个包含 {ext} 文件的文件夹。不会向任何地方发送数据：文件直接在你自己的磁盘上读取和保存。",
     "Open folder": "打开文件夹",
-    "or drag a folder here": "或将文件夹拖到此处"
+    "or drag a folder here": "或将文件夹拖到此处",
+    "Recent folders": "最近的文件夹",
+    "Open {name}": "打开“{name}”",
+    "Remove from the list": "从列表中移除",
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "文件夹“{name}”已不存在，已从列表中移除"
   },
   "dialog": {
     "Note not found": "未找到笔记",
@@ -74,7 +78,10 @@
     "Delete the file \"{name}\"? This cannot be undone.": "删除文件“{name}”？此操作无法撤销。",
     "Delete": "删除",
     "Cancel": "取消",
-    "Done": "完成"
+    "Done": "完成",
+    "Close folder": "关闭文件夹",
+    "The note has unsaved changes. Close the folder anyway?": "笔记有未保存的更改。仍要关闭文件夹吗？",
+    "Close": "关闭"
   },
   "doc": {
     "no such file: {path}": "文件不存在：{path}",
@@ -84,7 +91,8 @@
     "The folder is open read-only": "文件夹以只读方式打开",
     "This browser cannot write files": "此浏览器无法写入文件",
     "\"{name}\" already exists": "“{name}”已存在",
-    "File not found: {path}": "未找到文件：{path}"
+    "File not found: {path}": "未找到文件：{path}",
+    "The browser was not allowed to open the folder": "浏览器未获准打开该文件夹"
   },
   "palette": {
     "Red": "红色",
@@ -111,14 +119,14 @@
     "Text width": "文本宽度",
     "Show the note name as a title": "将笔记名称显示为标题",
     "Light": "浅色",
-    "Dark": "深色"
+    "Dark": "深色",
+    "Close folder": "关闭文件夹"
   },
   "app": {
     "Notes editor": "笔记编辑器"
   },
   "sidebar": {
     "Notes": "笔记",
-    "Open another folder": "打开其他文件夹",
     "New note": "新建笔记",
     "New folder": "新建文件夹",
     "Filter by name": "按名称筛选",
@@ -129,7 +137,8 @@
     "File panel width": "文件面板宽度",
     "Tags": "标签",
     "Tag tree": "标签树",
-    "Tag panel height": "标签面板高度"
+    "Tag panel height": "标签面板高度",
+    "Close folder — back to the recent ones": "关闭文件夹——返回最近的文件夹"
   },
   "toolbar": {
     "Read": "阅读",

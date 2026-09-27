@@ -62,7 +62,11 @@
     "of notes": "de notes",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "Choisissez un dossier contenant des fichiers {ext}. Rien n’est envoyé nulle part : les fichiers sont lus et enregistrés directement sur votre disque.",
     "Open folder": "Ouvrir un dossier",
-    "or drag a folder here": "ou faites glisser un dossier ici"
+    "or drag a folder here": "ou faites glisser un dossier ici",
+    "Recent folders": "Dossiers récents",
+    "Open {name}": "Ouvrir « {name} »",
+    "Remove from the list": "Retirer de la liste",
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "Le dossier « {name} » n’existe plus, il a été retiré de la liste"
   },
   "dialog": {
     "Note not found": "Note introuvable",
@@ -80,7 +84,10 @@
     "Delete the file \"{name}\"? This cannot be undone.": "Supprimer le fichier « {name} » ? Cette action est irréversible.",
     "Delete": "Supprimer",
     "Cancel": "Annuler",
-    "Done": "Terminé"
+    "Done": "Terminé",
+    "Close folder": "Fermer le dossier",
+    "The note has unsaved changes. Close the folder anyway?": "La note contient des modifications non enregistrées. Fermer le dossier quand même ?",
+    "Close": "Fermer"
   },
   "doc": {
     "no such file: {path}": "fichier introuvable : {path}",
@@ -90,7 +97,8 @@
     "The folder is open read-only": "Le dossier est ouvert en lecture seule",
     "This browser cannot write files": "Ce navigateur ne peut pas écrire de fichiers",
     "\"{name}\" already exists": "« {name} » existe déjà",
-    "File not found: {path}": "Fichier introuvable : {path}"
+    "File not found: {path}": "Fichier introuvable : {path}",
+    "The browser was not allowed to open the folder": "Le navigateur n’a pas été autorisé à ouvrir le dossier"
   },
   "palette": {
     "Red": "Rouge",
@@ -117,14 +125,14 @@
     "Text width": "Largeur du texte",
     "Show the note name as a title": "Afficher le nom de la note comme titre",
     "Light": "Clair",
-    "Dark": "Sombre"
+    "Dark": "Sombre",
+    "Close folder": "Fermer le dossier"
   },
   "app": {
     "Notes editor": "Éditeur de notes"
   },
   "sidebar": {
     "Notes": "Notes",
-    "Open another folder": "Ouvrir un autre dossier",
     "New note": "Nouvelle note",
     "New folder": "Nouveau dossier",
     "Filter by name": "Filtrer par nom",
@@ -135,7 +143,8 @@
     "File panel width": "Largeur du panneau des fichiers",
     "Tags": "Étiquettes",
     "Tag tree": "Arborescence des étiquettes",
-    "Tag panel height": "Hauteur du panneau des étiquettes"
+    "Tag panel height": "Hauteur du panneau des étiquettes",
+    "Close folder — back to the recent ones": "Fermer le dossier — retour aux dossiers récents"
   },
   "toolbar": {
     "Read": "Lecture",

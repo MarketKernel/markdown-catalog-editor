@@ -62,7 +62,11 @@
     "of notes": "di note",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "Scegli una cartella con file {ext}. Nulla viene inviato altrove: i file vengono letti e salvati direttamente sul tuo disco.",
     "Open folder": "Apri cartella",
-    "or drag a folder here": "o trascina qui una cartella"
+    "or drag a folder here": "o trascina qui una cartella",
+    "Recent folders": "Cartelle recenti",
+    "Open {name}": "Apri «{name}»",
+    "Remove from the list": "Rimuovi dall’elenco",
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "La cartella «{name}» non esiste più, quindi è stata rimossa dall’elenco"
   },
   "dialog": {
     "Note not found": "Nota non trovata",
@@ -80,7 +84,10 @@
     "Delete the file \"{name}\"? This cannot be undone.": "Eliminare il file «{name}»? L’operazione non può essere annullata.",
     "Delete": "Elimina",
     "Cancel": "Annulla",
-    "Done": "Fine"
+    "Done": "Fine",
+    "Close folder": "Chiudi cartella",
+    "The note has unsaved changes. Close the folder anyway?": "La nota ha modifiche non salvate. Chiudere comunque la cartella?",
+    "Close": "Chiudi"
   },
   "doc": {
     "no such file: {path}": "file inesistente: {path}",
@@ -90,7 +97,8 @@
     "The folder is open read-only": "La cartella è aperta in sola lettura",
     "This browser cannot write files": "Questo browser non può scrivere file",
     "\"{name}\" already exists": "«{name}» esiste già",
-    "File not found: {path}": "File non trovato: {path}"
+    "File not found: {path}": "File non trovato: {path}",
+    "The browser was not allowed to open the folder": "Al browser non è stato permesso di aprire la cartella"
   },
   "palette": {
     "Red": "Rosso",
@@ -117,14 +125,14 @@
     "Text width": "Larghezza del testo",
     "Show the note name as a title": "Mostra il nome della nota come titolo",
     "Light": "Chiaro",
-    "Dark": "Scuro"
+    "Dark": "Scuro",
+    "Close folder": "Chiudi cartella"
   },
   "app": {
     "Notes editor": "Editor di note"
   },
   "sidebar": {
     "Notes": "Note",
-    "Open another folder": "Apri un’altra cartella",
     "New note": "Nuova nota",
     "New folder": "Nuova cartella",
     "Filter by name": "Filtra per nome",
@@ -135,7 +143,8 @@
     "File panel width": "Larghezza del pannello dei file",
     "Tags": "Tag",
     "Tag tree": "Albero dei tag",
-    "Tag panel height": "Altezza del pannello dei tag"
+    "Tag panel height": "Altezza del pannello dei tag",
+    "Close folder — back to the recent ones": "Chiudi cartella — torna a quelle recenti"
   },
   "toolbar": {
     "Read": "Lettura",

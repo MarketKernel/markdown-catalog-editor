@@ -62,7 +62,11 @@
     "of notes": "de notas",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "Elige una carpeta con archivos {ext}. No se envía nada a ningún sitio: los archivos se leen y se guardan directamente en tu disco.",
     "Open folder": "Abrir carpeta",
-    "or drag a folder here": "o arrastra una carpeta aquí"
+    "or drag a folder here": "o arrastra una carpeta aquí",
+    "Recent folders": "Carpetas recientes",
+    "Open {name}": "Abrir «{name}»",
+    "Remove from the list": "Quitar de la lista",
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "La carpeta «{name}» ya no existe, así que se quitó de la lista"
   },
   "dialog": {
     "Note not found": "Nota no encontrada",
@@ -80,7 +84,10 @@
     "Delete the file \"{name}\"? This cannot be undone.": "¿Eliminar el archivo «{name}»? Esta acción no se puede deshacer.",
     "Delete": "Eliminar",
     "Cancel": "Cancelar",
-    "Done": "Listo"
+    "Done": "Listo",
+    "Close folder": "Cerrar carpeta",
+    "The note has unsaved changes. Close the folder anyway?": "La nota tiene cambios sin guardar. ¿Cerrar la carpeta de todos modos?",
+    "Close": "Cerrar"
   },
   "doc": {
     "no such file: {path}": "no existe el archivo: {path}",
@@ -90,7 +97,8 @@
     "The folder is open read-only": "La carpeta está abierta en solo lectura",
     "This browser cannot write files": "Este navegador no puede escribir archivos",
     "\"{name}\" already exists": "«{name}» ya existe",
-    "File not found: {path}": "Archivo no encontrado: {path}"
+    "File not found: {path}": "Archivo no encontrado: {path}",
+    "The browser was not allowed to open the folder": "No se permitió al navegador abrir la carpeta"
   },
   "palette": {
     "Red": "Rojo",
@@ -117,14 +125,14 @@
     "Text width": "Ancho del texto",
     "Show the note name as a title": "Mostrar el nombre de la nota como título",
     "Light": "Claro",
-    "Dark": "Oscuro"
+    "Dark": "Oscuro",
+    "Close folder": "Cerrar carpeta"
   },
   "app": {
     "Notes editor": "Editor de notas"
   },
   "sidebar": {
     "Notes": "Notas",
-    "Open another folder": "Abrir otra carpeta",
     "New note": "Nueva nota",
     "New folder": "Nueva carpeta",
     "Filter by name": "Filtrar por nombre",
@@ -135,7 +143,8 @@
     "File panel width": "Ancho del panel de archivos",
     "Tags": "Etiquetas",
     "Tag tree": "Árbol de etiquetas",
-    "Tag panel height": "Altura del panel de etiquetas"
+    "Tag panel height": "Altura del panel de etiquetas",
+    "Close folder — back to the recent ones": "Cerrar carpeta — volver a las recientes"
   },
   "toolbar": {
     "Read": "Lectura",

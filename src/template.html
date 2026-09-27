@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<section id="gate" class="gate">
+<section id="gate" class="gate gate--starting">
   <div class="gate-inner">
     <img class="gate-logo" src="__ICON__" alt="">
     <p class="eyebrow" data-i18n="gate">local editor · one file</p>
@@ -19,6 +19,7 @@
       files are read and saved straight on your own disk.
     </p>
     <p id="browser-note" class="gate-note" hidden></p>
+    <div id="recent" class="recent" hidden></div>
     <button id="open-folder" class="button button--primary" type="button"><span data-i18n="gate">Open folder</span> <span class="arrow">&rarr;</span></button>
     <p class="gate-hint" data-i18n="gate">or drag a folder here</p>
     <input id="folder-picker" type="file" webkitdirectory multiple hidden>
@@ -29,7 +30,7 @@
 <div id="app" class="app" hidden>
   <aside class="sidebar">
     <div class="sidebar-top">
-      <button id="vault-name" class="vault" type="button" title="Open another folder" data-i18n-attr="sidebar">
+      <button id="vault-name" class="vault" type="button" title="Close folder — back to the recent ones" data-i18n-attr="sidebar">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
         <span id="vault-label">Notes</span>
       </button>

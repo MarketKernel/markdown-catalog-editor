@@ -59,7 +59,11 @@
     "of notes": "ফোল্ডার খুলুন",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "{ext} ফাইলসহ একটি ফোল্ডার বেছে নিন। কিছুই কোথাও পাঠানো হয় না: ফাইলগুলো সরাসরি আপনার নিজের ডিস্কেই পড়া ও সংরক্ষণ করা হয়।",
     "Open folder": "ফোল্ডার খুলুন",
-    "or drag a folder here": "অথবা এখানে একটি ফোল্ডার টেনে আনুন"
+    "or drag a folder here": "অথবা এখানে একটি ফোল্ডার টেনে আনুন",
+    "Recent folders": "সাম্প্রতিক ফোল্ডার",
+    "Open {name}": "“{name}” খুলুন",
+    "Remove from the list": "তালিকা থেকে সরান",
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "“{name}” ফোল্ডারটি আর নেই, তাই তালিকা থেকে সরানো হয়েছে"
   },
   "dialog": {
     "Note not found": "নোট পাওয়া যায়নি",
@@ -77,7 +81,10 @@
     "Delete the file \"{name}\"? This cannot be undone.": "“{name}” ফাইলটি মুছবেন? এটি আর ফেরানো যাবে না।",
     "Delete": "মুছুন",
     "Cancel": "বাতিল",
-    "Done": "সম্পন্ন"
+    "Done": "সম্পন্ন",
+    "Close folder": "ফোল্ডার বন্ধ করুন",
+    "The note has unsaved changes. Close the folder anyway?": "নোটে অসংরক্ষিত পরিবর্তন আছে। তবুও ফোল্ডার বন্ধ করবেন?",
+    "Close": "বন্ধ করুন"
   },
   "doc": {
     "no such file: {path}": "এমন কোনো ফাইল নেই: {path}",
@@ -87,7 +94,8 @@
     "The folder is open read-only": "ফোল্ডারটি শুধু পড়ার জন্য খোলা",
     "This browser cannot write files": "এই ব্রাউজার ফাইল লিখতে পারে না",
     "\"{name}\" already exists": "“{name}” আগে থেকেই আছে",
-    "File not found: {path}": "ফাইল পাওয়া যায়নি: {path}"
+    "File not found: {path}": "ফাইল পাওয়া যায়নি: {path}",
+    "The browser was not allowed to open the folder": "ব্রাউজারকে ফোল্ডার খোলার অনুমতি দেওয়া হয়নি"
   },
   "palette": {
     "Red": "লাল",
@@ -114,14 +122,14 @@
     "Text width": "টেক্সটের প্রস্থ",
     "Show the note name as a title": "নোটের নাম শিরোনাম হিসেবে দেখান",
     "Light": "হালকা",
-    "Dark": "গাঢ়"
+    "Dark": "গাঢ়",
+    "Close folder": "ফোল্ডার বন্ধ করুন"
   },
   "app": {
     "Notes editor": "নোট এডিটর"
   },
   "sidebar": {
     "Notes": "নোট",
-    "Open another folder": "অন্য ফোল্ডার খুলুন",
     "New note": "নতুন নোট",
     "New folder": "নতুন ফোল্ডার",
     "Filter by name": "নাম দিয়ে ফিল্টার করুন",
@@ -132,7 +140,8 @@
     "File panel width": "ফাইল প্যানেলের প্রস্থ",
     "Tags": "ট্যাগ",
     "Tag tree": "ট্যাগের তালিকা",
-    "Tag panel height": "ট্যাগ প্যানেলের উচ্চতা"
+    "Tag panel height": "ট্যাগ প্যানেলের উচ্চতা",
+    "Close folder — back to the recent ones": "ফোল্ডার বন্ধ করুন — সাম্প্রতিক ফোল্ডারে ফিরুন"
   },
   "toolbar": {
     "Read": "পড়া",

@@ -4,8 +4,11 @@ A Markdown editor for a local folder of notes — in the spirit of Obsidian, but
 contained in one standalone HTML file. No network is used: files are read from and saved to
 disk directly.
 
-**[Online demo](https://marketkernel.github.io/markdown-catalog-editor/)** — the same editor,
-installable as an app and working offline. Your notes stay on your disk there too.
+**[Online demo](https://marketkernel.github.io/markdown-catalog-editor/)** — the same editor
+as a PWA (Progressive Web App): it can be installed into the system and then runs as a
+separate app, with its own window and icon, and works offline. In Chrome, Edge and Arc use
+the install button in the address bar; on iOS, Share → Add to Home Screen. Your notes stay
+on your disk there too.
 
 ![The editor with a folder of notes open: the file tree and tags on the left, a note in edit mode on the right](docs/macaed.jpg)
 
@@ -32,6 +35,14 @@ In Chrome, Edge and Arc the folder is opened through the File System Access API:
 read and written in place, and creating, renaming and deleting files and folders all work.
 In Safari and Firefox the folder opens read-only, and `⌘S` offers to download the modified
 file.
+
+The editor remembers the last six folders opened there (a page never learns a folder's path,
+so it keeps the folder's handle in the browser's IndexedDB), and the note last open in each.
+On the next start the last folder opens by itself if the browser still allows it — in an
+installed app, or once you chose "Allow on every visit". Otherwise the start screen lists the
+recent folders: one click, and the browser asks for access again. To go back to that list —
+to switch folders or open a new one — click the folder's name at the top of the file panel,
+or "Close folder" in the settings; × removes a folder from the list.
 
 If you put `macaed.html` next to your notes and serve it over HTTP, the page picks the folder
 up by itself — provided an `index.json` sits alongside it, of the form

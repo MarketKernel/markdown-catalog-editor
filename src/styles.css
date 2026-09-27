@@ -19,9 +19,11 @@
   --muted: #76767f;
   --faint: #9a9aa2;
   --accent: #6c4ee6;
+  --accent-strong: #5a3bd6;
   --accent-soft: #ded5ff;
   --accent-bg: rgba(108, 78, 230, 0.07);
   --danger: #c0392b;
+  --danger-strong: #a5301f;
   --code-bg: #f0f0ec;
   --mark-bg: #fff2a8;
   --shadow: 0 10px 30px rgba(20, 20, 30, 0.13);
@@ -45,9 +47,11 @@
   --muted: #9192a0;
   --faint: #6e7080;
   --accent: #a78bfa;
+  --accent-strong: #9171f5;
   --accent-soft: #3c3169;
   --accent-bg: rgba(167, 139, 250, 0.1);
   --danger: #e06c5d;
+  --danger-strong: #cf5646;
   --code-bg: #212229;
   --mark-bg: #6b5a17;
   --shadow: 0 12px 34px rgba(0, 0, 0, 0.5);
@@ -106,15 +110,19 @@ button, input, textarea, select {
   color: #fff;
   font-weight: 550;
 }
-.button--primary:hover { filter: brightness(1.08); }
 .button--ghost { background: transparent; }
-.button:disabled { opacity: 0.6; cursor: default; filter: none; }
 .button--danger {
   background: var(--danger);
   border-color: var(--danger);
   color: #fff;
   font-weight: 550;
 }
+/* `.button:hover` outranks the variants above; without these it swaps their fill for a pale one under white text. */
+.button--primary:hover { background: var(--accent-strong); border-color: var(--accent-strong); }
+.button--danger:hover { background: var(--danger-strong); border-color: var(--danger-strong); }
+.button:disabled { opacity: 0.6; cursor: default; }
+.button--primary:disabled { background: var(--accent); border-color: var(--accent); }
+.button--danger:disabled { background: var(--danger); border-color: var(--danger); }
 
 .icon-button {
   display: inline-flex;
@@ -188,6 +196,54 @@ button, input, textarea, select {
 }
 .gate-hint { color: var(--faint); margin: 12px 0 0; }
 .gate-error { color: var(--danger); min-height: 1.4em; margin: 12px 0 0; }
+/* Blank until the start has tried to reopen the last folder by itself. */
+.gate--starting .gate-inner { visibility: hidden; }
+
+.recent {
+  text-align: start;
+  border: 1px solid var(--edge);
+  border-radius: 11px;
+  padding: 6px;
+  margin: 0 0 18px;
+  background: var(--panel);
+}
+.recent-title {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--faint);
+  padding: 4px 8px 6px;
+}
+.recent-item { display: flex; align-items: center; border-radius: 7px; }
+.recent-item:hover { background: var(--panel-2); }
+.recent-open {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-radius: 7px;
+  background: none;
+  text-align: start;
+  padding: 8px;
+  cursor: pointer;
+  font-weight: 550;
+}
+.recent-open svg { width: 17px; height: 17px; flex: none; fill: none; stroke: var(--accent); stroke-width: 1.7; stroke-linejoin: round; }
+.recent-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.recent-forget {
+  flex: none;
+  border: 0;
+  background: none;
+  color: var(--faint);
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 18px;
+}
+.recent-forget:hover { color: var(--danger); }
 
 /* ------------------------------------------------------------------ *
  * Layout
@@ -1209,6 +1265,9 @@ details.callout[open] > summary.callout-title::after { transform: rotate(45deg);
 }
 .settings-row--check { justify-content: flex-start; gap: 9px; cursor: pointer; }
 .settings-row--check input { accent-color: var(--accent); margin: 0; width: 16px; height: 16px; }
+.settings-folder { margin-top: 8px; padding-top: 12px; border-top: 1px solid var(--edge); }
+.settings-folder-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.settings-close-folder { flex: none; }
 .settings-select {
   max-width: 190px;
   border: 1px solid var(--edge);

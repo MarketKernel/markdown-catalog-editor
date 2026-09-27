@@ -34,12 +34,19 @@ if (typeof WebSocket === 'undefined') {
   process.exit(1);
 }
 
-/** `files`: extra vault files beside the note, `{ 'assets/Note/a.png': Buffer }`. */
-async function launch(note, files = {}) {
+/**
+ * `files`: extra vault files beside the note, `{ 'assets/Note/a.png': Buffer }`.
+ * A null `note` serves the page alone, so it starts at the gate; `init` then
+ * runs in every page loaded, before the app.
+ */
+async function launch(note, files = {}, init = '') {
   const html = await readFile(APP);
   const server = createServer((req, res) => {
     const path = decodeURIComponent(req.url.slice(1));
-    if (req.url.startsWith('/index.json')) {
+    if (note === null && req.url !== '/') {
+      res.statusCode = 404;
+      res.end();
+    } else if (req.url.startsWith('/index.json')) {
       res.setHeader('content-type', 'application/json');
       res.end(JSON.stringify({ name: 'T', files: ['Note.md', ...Object.keys(files)] }));
     } else if (req.url.startsWith('/Note.md')) {
@@ -101,14 +108,22 @@ async function launch(note, files = {}) {
       const orig = URL.createObjectURL;
       URL.createObjectURL = (blob) => { window.__lastBlob = blob; return orig(blob); };
       HTMLAnchorElement.prototype.click = function () {};
+      ${init}
     `,
   });
-  await send('Page.navigate', { url: `http://127.0.0.1:${port}/` });
-  for (let i = 0; i < 50; i += 1) {
-    await sleep(100);
-    if (await evaluate(`document.querySelectorAll('#doc .block').length > 0`)) break;
-  }
-  await sleep(200);
+  /** Loads the page afresh, as a new visit would, and waits for its start to settle. */
+  const reload = async () => {
+    await send('Page.navigate', { url: `http://127.0.0.1:${port}/` });
+    const ready = note === null
+      ? `!document.getElementById('gate').classList.contains('gate--starting')`
+      : `document.querySelectorAll('#doc .block').length > 0`;
+    for (let i = 0; i < 50; i += 1) {
+      await sleep(100);
+      if (await evaluate(ready)) break;
+    }
+    await sleep(200);
+  };
+  await reload();
 
   const KEYS = {
     Enter: { code: 'Enter', windowsVirtualKeyCode: 13, text: '\r' },
@@ -174,7 +189,7 @@ async function launch(note, files = {}) {
     await send('Input.dispatchMouseEvent', { type: 'mouseReleased', x, y: y + dy, button: 'left', buttons: 0, clickCount: 1 });
     await sleep(60);
   };
-  return { evaluate, press, type, click, drag, text, view, sleep, close };
+  return { evaluate, press, type, click, drag, text, view, sleep, close, reload };
 }
 
 /* ------------------------------------------------------------------ *
@@ -189,8 +204,8 @@ const eq = (name, a, b) => {
   else failed += 1;
   if (!ok) console.error(`FAIL  ${name}\n  expected: ${JSON.stringify(b)}\n  actual:   ${JSON.stringify(a)}`);
 };
-async function scenario(note, fn, files) {
-  const b = await launch(note, files);
+async function scenario(note, fn, files, init) {
+  const b = await launch(note, files, init);
   try {
     await fn(b);
   } catch (error) {
@@ -373,6 +388,8 @@ const title = (b) => b.evaluate(`(() => { const t = document.getElementById('inl
 await scenario('Intro\n', async (b) => {
   eq('the file name shows as a title', await title(b), 'Note');
   await b.click('#doc > .block--paragraph', 'start');
+  // 2px into "Intro" is already past the middle of the narrow "I": the caret goes to the start by hand.
+  await b.evaluate(`document.querySelector('#doc textarea').setSelectionRange(0, 0)`);
   await b.type('# note\n\n');
   await b.press('Escape');
   eq('a matching first heading hides the title', await title(b), null);
@@ -616,7 +633,10 @@ await scenario('Note\n', async (b) => {
     'sub/B.md': 'B text\n',
     '.meta.json': JSON.stringify({ notes: { 'A.md': { tags: ['work/alpha'] }, 'sub/B.md': { tags: ['idea'] }, 'gone.md': { tags: ['stale'] } } }),
   }));
+  // The folder's name leads back to the gate, where another one is picked.
   await b.evaluate(`document.getElementById('vault-name').click()`);
+  await b.sleep(200);
+  await b.evaluate(`document.getElementById('open-folder').click()`);
   await b.sleep(300);
   const clickRow = (selector, text) => b.evaluate(`[...document.querySelectorAll(${JSON.stringify(selector)})].find((n) => n.textContent.includes(${JSON.stringify(text)})).click()`);
   const files = `[...document.querySelectorAll('#tree .tree-label')].map((n) => n.textContent)`;
@@ -701,7 +721,10 @@ const pasteImage = (b, name, text = '') => b.evaluate(`(() => {
 
 await scenario('Note\n', async (b) => {
   await b.evaluate(memoryFolder({ 'Note.md': 'Intro\n', 'assets/Note/image-1.png': 'taken' }));
+  // The folder's name leads back to the gate, where another one is picked.
   await b.evaluate(`document.getElementById('vault-name').click()`);
+  await b.sleep(200);
+  await b.evaluate(`document.getElementById('open-folder').click()`);
   await b.sleep(300);
   const stored = (path) => b.evaluate(`(() => { const v = window.__fs.get(${JSON.stringify(path)}); return v === undefined ? null : v instanceof Blob ? v.size : v; })()`);
   const saved = async () => {
@@ -756,7 +779,10 @@ await scenario('Note\n', async (b) => {
 
 await scenario('Text\n', async (b) => {
   await b.evaluate(memoryFolder({ 'Note.md': '| A |\n| --- |\n| b |\n' }));
+  // The folder's name leads back to the gate, where another one is picked.
   await b.evaluate(`document.getElementById('vault-name').click()`);
+  await b.sleep(200);
+  await b.evaluate(`document.getElementById('open-folder').click()`);
   await b.sleep(300);
   await b.click('#doc td');
   eq('an image pasted into a table cell', await pasteImage(b, 'image.png'), true);
@@ -782,7 +808,10 @@ const dropFiles = (b, target, where, names) => b.evaluate(`(() => {
 
 await scenario('Text\n', async (b) => {
   await b.evaluate(memoryFolder({ 'Note.md': 'One\n\nTwo\n\n| A |\n| --- |\n| b |\n\nEnd\n' }));
+  // The folder's name leads back to the gate, where another one is picked.
   await b.evaluate(`document.getElementById('vault-name').click()`);
+  await b.sleep(200);
+  await b.evaluate(`document.getElementById('open-folder').click()`);
   await b.sleep(300);
   const note = async () => {
     await b.press('s', 4);
@@ -838,6 +867,140 @@ await scenario('Text\n', async (b) => {
   eq('and says why it cannot keep it', await b.evaluate(`document.querySelector('.toast')?.textContent`), 'The folder is open read-only');
   eq('the text stays as it was', await b.text(), 'Text\n');
 });
+
+/* ------------------------------------------------------------------ *
+ * Recent folders
+ * ------------------------------------------------------------------ */
+
+/**
+ * Real folders of the origin-private file system behind `showDirectoryPicker`
+ * (`window.__pick` names the one handed over): their handles, unlike those of
+ * memoryFolder(), can be kept in IndexedDB. Access is played through
+ * localStorage, since a page that is loaded again forgets what it was granted:
+ * `__permission` is what queryPermission answers after a load ('granted' if
+ * unset), `__answer-read` and `__answer-readwrite` what the user says when
+ * asked. `window.__asked` lists the modes asked for.
+ */
+const originFolders = `
+  window.showDirectoryPicker = async () => (await navigator.storage.getDirectory()).getDirectoryHandle(window.__pick || 'Notes');
+  const granted = new Set();
+  window.__asked = [];
+  FileSystemHandle.prototype.queryPermission = async function ({ mode }) {
+    if (granted.has(mode) || (mode === 'read' && granted.has('readwrite'))) return 'granted';
+    return localStorage.getItem('__permission') || 'granted';
+  };
+  FileSystemHandle.prototype.requestPermission = async function ({ mode }) {
+    window.__asked.push(mode);
+    const answer = localStorage.getItem('__answer-' + mode) || 'granted';
+    if (answer === 'granted') granted.add(mode);
+    return answer;
+  };
+`;
+
+await scenario(null, async (b) => {
+  await b.evaluate(`(async () => {
+    const root = await navigator.storage.getDirectory();
+    for (const name of ['Notes', 'Other']) {
+      const dir = await root.getDirectoryHandle(name, { create: true });
+      for (const file of ['a.md', 'b.md']) {
+        const stream = await (await dir.getFileHandle(file, { create: true })).createWritable();
+        await stream.write('# ' + name + ' ' + file + '\\n');
+        await stream.close();
+      }
+    }
+  })()`);
+  const gate = () => b.evaluate(`({
+    shown: !document.getElementById('gate').hidden,
+    recent: [...document.querySelectorAll('.recent-name')].map((n) => n.textContent),
+    primary: document.getElementById('open-folder').classList.contains('button--primary'),
+    error: document.getElementById('gate-error').textContent,
+  })`);
+  const open = () => b.evaluate(`({
+    shown: document.getElementById('gate').hidden,
+    folder: document.getElementById('vault-label').textContent,
+    note: document.getElementById('status-path').textContent,
+  })`);
+  const toGate = async () => {
+    await b.evaluate(`document.getElementById('vault-name').click()`);
+    await b.sleep(300);
+  };
+  const pick = async (name) => {
+    await b.evaluate(`window.__pick = ${JSON.stringify(name)}; document.getElementById('open-folder').click()`);
+    await b.sleep(400);
+  };
+  const openRecent = async (index) => {
+    await b.evaluate(`document.querySelectorAll('.recent-open')[${index}].click()`);
+    await b.sleep(400);
+  };
+
+  eq('the first start is the gate with no folders to list', await gate(), { shown: true, recent: [], primary: true, error: '' });
+  await pick('Notes');
+  eq('a picked folder opens at its first note', await open(), { shown: true, folder: 'Notes', note: 'a.md' });
+  await b.evaluate(`[...document.querySelectorAll('#tree .tree-item')].find((n) => n.textContent.includes('b')).click()`);
+  await b.sleep(300);
+
+  await b.reload();
+  eq('a new visit opens the last folder by itself, at its last note', await open(), { shown: true, folder: 'Notes', note: 'b.md' });
+  eq('without asking for access, which is still granted', await b.evaluate(`window.__asked`), []);
+
+  await toGate();
+  eq('the folder name leads to the gate, which lists the folder', await gate(), { shown: true, recent: ['Notes'], primary: false, error: '' });
+  eq('with the focus on it, so Enter goes back', await b.evaluate(`document.activeElement.className`), 'recent-open');
+  await pick('Other');
+  eq('another folder opens from there', (await open()).folder, 'Other');
+
+  await b.evaluate(`document.getElementById('settings').click()`);
+  await b.sleep(200);
+  eq('the settings name the open folder', await b.evaluate(`document.querySelector('.settings-folder-name').textContent`), 'Other');
+  await b.evaluate(`document.querySelector('.settings-close-folder').click()`);
+  await b.sleep(300);
+  eq('"Close folder" in the settings leads to the gate, newest first', (await gate()).recent, ['Other', 'Notes']);
+  eq('and closes the settings', await b.evaluate(`document.querySelector('.popover') === null`), true);
+  eq('nothing of the folder stays behind', await b.evaluate(`[document.querySelectorAll('#tree .tree-item').length, document.title]`), [0, 'Notes editor']);
+
+  await pick('Notes');
+  await toGate();
+  eq('the same folder picked again is not listed twice', (await gate()).recent, ['Notes', 'Other']);
+  await openRecent(1);
+  eq('a listed folder opens', (await open()).folder, 'Other');
+  await toGate();
+  await openRecent(1);
+  eq('each folder at the note last open in it', await open(), { shown: true, folder: 'Notes', note: 'b.md' });
+
+  // Access lapsed, as after a restart of the browser.
+  await b.evaluate(`localStorage.setItem('__permission', 'prompt')`);
+  await b.reload();
+  eq('without access the start stays at the gate', await gate(), { shown: true, recent: ['Notes', 'Other'], primary: false, error: '' });
+  await openRecent(0);
+  eq('a click asks for access to write', await b.evaluate(`window.__asked`), ['readwrite']);
+  eq('and opens the folder', await open(), { shown: true, folder: 'Notes', note: 'b.md' });
+
+  await b.evaluate(`localStorage.setItem('__answer-readwrite', 'denied')`);
+  await b.reload();
+  await openRecent(0);
+  eq('refused writing, it asks to read', await b.evaluate(`window.__asked`), ['readwrite', 'read']);
+  eq('and opens the folder read-only', await b.evaluate(`document.getElementById('status-state').textContent`), 'read-only');
+
+  await b.evaluate(`localStorage.setItem('__answer-read', 'denied')`);
+  await b.reload();
+  await openRecent(0);
+  eq('refused both, it stays at the gate and says why', await gate(), {
+    shown: true, recent: ['Notes', 'Other'], primary: false, error: 'The browser was not allowed to open the folder',
+  });
+
+  await b.evaluate(`['__permission', '__answer-read', '__answer-readwrite'].forEach((key) => localStorage.removeItem(key))`);
+  await b.evaluate(`document.querySelectorAll('.recent-forget')[1].click()`);
+  await b.sleep(200);
+  eq('× takes a folder off the list', (await gate()).recent, ['Notes']);
+
+  await b.evaluate(`navigator.storage.getDirectory().then((root) => root.removeEntry('Notes', { recursive: true }))`);
+  await b.reload();
+  eq('a folder that is gone does not open by itself', await gate(), { shown: true, recent: ['Notes'], primary: false, error: '' });
+  await openRecent(0);
+  eq('a click on it says so and takes it off the list', await gate(), {
+    shown: true, recent: [], primary: true, error: 'The folder "Notes" is no longer there, so it was removed from the list',
+  });
+}, {}, originFolders);
 
 console.log(`${passed} browser checks passed${failed ? `, ${failed} failed` : ''}`);
 process.exit(failed ? 1 : 0);

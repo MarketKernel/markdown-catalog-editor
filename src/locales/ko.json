@@ -56,7 +56,11 @@
     "of notes": "폴더 열기",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "{ext} 파일이 있는 폴더를 선택하세요. 어떤 데이터도 전송되지 않으며, 파일은 사용자의 디스크에서 직접 읽고 저장됩니다.",
     "Open folder": "폴더 열기",
-    "or drag a folder here": "또는 폴더를 여기로 드래그하세요"
+    "or drag a folder here": "또는 폴더를 여기로 드래그하세요",
+    "Recent folders": "최근 폴더",
+    "Open {name}": "“{name}” 열기",
+    "Remove from the list": "목록에서 제거",
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "“{name}” 폴더가 더 이상 없어 목록에서 제거했습니다"
   },
   "dialog": {
     "Note not found": "노트를 찾을 수 없음",
@@ -74,7 +78,10 @@
     "Delete the file \"{name}\"? This cannot be undone.": "\"{name}\" 파일을 삭제할까요? 이 작업은 되돌릴 수 없습니다.",
     "Delete": "삭제",
     "Cancel": "취소",
-    "Done": "완료"
+    "Done": "완료",
+    "Close folder": "폴더 닫기",
+    "The note has unsaved changes. Close the folder anyway?": "노트에 저장되지 않은 변경 사항이 있습니다. 그래도 폴더를 닫을까요?",
+    "Close": "닫기"
   },
   "doc": {
     "no such file: {path}": "파일 없음: {path}",
@@ -84,7 +91,8 @@
     "The folder is open read-only": "폴더가 읽기 전용으로 열려 있습니다",
     "This browser cannot write files": "이 브라우저는 파일을 쓸 수 없습니다",
     "\"{name}\" already exists": "\"{name}\"이(가) 이미 있습니다",
-    "File not found: {path}": "파일을 찾을 수 없음: {path}"
+    "File not found: {path}": "파일을 찾을 수 없음: {path}",
+    "The browser was not allowed to open the folder": "브라우저가 폴더를 열 수 있는 권한을 받지 못했습니다"
   },
   "palette": {
     "Red": "빨간색",
@@ -111,14 +119,14 @@
     "Text width": "텍스트 너비",
     "Show the note name as a title": "노트 이름을 제목으로 표시",
     "Light": "라이트",
-    "Dark": "다크"
+    "Dark": "다크",
+    "Close folder": "폴더 닫기"
   },
   "app": {
     "Notes editor": "노트 편집기"
   },
   "sidebar": {
     "Notes": "노트",
-    "Open another folder": "다른 폴더 열기",
     "New note": "새 노트",
     "New folder": "새 폴더",
     "Filter by name": "이름으로 필터링",
@@ -129,7 +137,8 @@
     "File panel width": "파일 패널 너비",
     "Tags": "태그",
     "Tag tree": "태그 트리",
-    "Tag panel height": "태그 패널 높이"
+    "Tag panel height": "태그 패널 높이",
+    "Close folder — back to the recent ones": "폴더 닫기 — 최근 폴더 목록으로"
   },
   "toolbar": {
     "Read": "읽기",

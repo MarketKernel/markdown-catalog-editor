@@ -65,7 +65,11 @@
     "of notes": "с заметками",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "Выберите папку с файлами {ext}. Ничего никуда не отправляется: файлы читаются и сохраняются прямо на вашем диске.",
     "Open folder": "Открыть папку",
-    "or drag a folder here": "или перетащите папку сюда"
+    "or drag a folder here": "или перетащите папку сюда",
+    "Recent folders": "Недавние папки",
+    "Open {name}": "Открыть «{name}»",
+    "Remove from the list": "Убрать из списка",
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "Папки «{name}» больше нет, она убрана из списка"
   },
   "dialog": {
     "Note not found": "Заметка не найдена",
@@ -83,7 +87,10 @@
     "Delete the file \"{name}\"? This cannot be undone.": "Удалить файл «{name}»? Это действие нельзя отменить.",
     "Delete": "Удалить",
     "Cancel": "Отмена",
-    "Done": "Готово"
+    "Done": "Готово",
+    "Close folder": "Закрыть папку",
+    "The note has unsaved changes. Close the folder anyway?": "В заметке есть несохранённые изменения. Всё равно закрыть папку?",
+    "Close": "Закрыть"
   },
   "doc": {
     "no such file: {path}": "файл не найден: {path}",
@@ -93,7 +100,8 @@
     "The folder is open read-only": "Папка открыта только для чтения",
     "This browser cannot write files": "Этот браузер не умеет записывать файлы",
     "\"{name}\" already exists": "«{name}» уже существует",
-    "File not found: {path}": "Файл не найден: {path}"
+    "File not found: {path}": "Файл не найден: {path}",
+    "The browser was not allowed to open the folder": "Браузеру не разрешили открыть папку"
   },
   "palette": {
     "Red": "Красный",
@@ -120,14 +128,14 @@
     "Text width": "Ширина текста",
     "Show the note name as a title": "Показывать имя заметки как заголовок",
     "Light": "Светлая",
-    "Dark": "Тёмная"
+    "Dark": "Тёмная",
+    "Close folder": "Закрыть папку"
   },
   "app": {
     "Notes editor": "Редактор заметок"
   },
   "sidebar": {
     "Notes": "Заметки",
-    "Open another folder": "Открыть другую папку",
     "New note": "Новая заметка",
     "New folder": "Новая папка",
     "Filter by name": "Фильтр по имени",
@@ -138,7 +146,8 @@
     "File panel width": "Ширина панели файлов",
     "Tags": "Теги",
     "Tag tree": "Дерево тегов",
-    "Tag panel height": "Высота панели тегов"
+    "Tag panel height": "Высота панели тегов",
+    "Close folder — back to the recent ones": "Закрыть папку — к списку недавних"
   },
   "toolbar": {
     "Read": "Чтение",

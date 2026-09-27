@@ -148,6 +148,7 @@ export interface DirHandleLike {
   removeEntry(name: string, options?: { recursive?: boolean }): Promise<void>;
   queryPermission?(descriptor: { mode: 'read' | 'readwrite' }): Promise<PermissionState>;
   requestPermission?(descriptor: { mode: 'read' | 'readwrite' }): Promise<PermissionState>;
+  isSameEntry?(other: DirHandleLike): Promise<boolean>;
 }
 
 declare global {

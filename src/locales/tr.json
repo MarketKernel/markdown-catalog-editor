@@ -59,7 +59,11 @@
     "of notes": "açın",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "{ext} dosyaları içeren bir klasör seçin. Hiçbir şey hiçbir yere gönderilmez: dosyalar doğrudan kendi diskinizde okunur ve kaydedilir.",
     "Open folder": "Klasör aç",
-    "or drag a folder here": "veya bir klasörü buraya sürükleyin"
+    "or drag a folder here": "veya bir klasörü buraya sürükleyin",
+    "Recent folders": "Son klasörler",
+    "Open {name}": "“{name}” klasörünü aç",
+    "Remove from the list": "Listeden kaldır",
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "“{name}” klasörü artık yok, bu yüzden listeden kaldırıldı"
   },
   "dialog": {
     "Note not found": "Not bulunamadı",
@@ -77,7 +81,10 @@
     "Delete the file \"{name}\"? This cannot be undone.": "“{name}” dosyası silinsin mi? Bu işlem geri alınamaz.",
     "Delete": "Sil",
     "Cancel": "İptal",
-    "Done": "Bitti"
+    "Done": "Bitti",
+    "Close folder": "Klasörü kapat",
+    "The note has unsaved changes. Close the folder anyway?": "Notta kaydedilmemiş değişiklikler var. Klasör yine de kapatılsın mı?",
+    "Close": "Kapat"
   },
   "doc": {
     "no such file: {path}": "böyle bir dosya yok: {path}",
@@ -87,7 +94,8 @@
     "The folder is open read-only": "Klasör salt okunur olarak açık",
     "This browser cannot write files": "Bu tarayıcı dosya yazamaz",
     "\"{name}\" already exists": "“{name}” zaten var",
-    "File not found: {path}": "Dosya bulunamadı: {path}"
+    "File not found: {path}": "Dosya bulunamadı: {path}",
+    "The browser was not allowed to open the folder": "Tarayıcının klasörü açmasına izin verilmedi"
   },
   "palette": {
     "Red": "Kırmızı",
@@ -114,14 +122,14 @@
     "Text width": "Metin genişliği",
     "Show the note name as a title": "Not adını başlık olarak göster",
     "Light": "Açık",
-    "Dark": "Koyu"
+    "Dark": "Koyu",
+    "Close folder": "Klasörü kapat"
   },
   "app": {
     "Notes editor": "Not düzenleyici"
   },
   "sidebar": {
     "Notes": "Notlar",
-    "Open another folder": "Başka bir klasör aç",
     "New note": "Yeni not",
     "New folder": "Yeni klasör",
     "Filter by name": "Ada göre filtrele",
@@ -132,7 +140,8 @@
     "File panel width": "Dosya paneli genişliği",
     "Tags": "Etiketler",
     "Tag tree": "Etiket ağacı",
-    "Tag panel height": "Etiket panelinin yüksekliği"
+    "Tag panel height": "Etiket panelinin yüksekliği",
+    "Close folder — back to the recent ones": "Klasörü kapat — son klasörlere dön"
   },
   "toolbar": {
     "Read": "Okuma",
