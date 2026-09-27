@@ -53,7 +53,7 @@
   },
   "gate": {
     "Drag a folder, not a single file": "کوئی فولڈر گھسیٹیں، اکیلی فائل نہیں",
-    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "یہ براؤزر ڈسک پر فائلیں نہیں لکھ سکتا: فولڈر صرف پڑھنے کے لیے کھلے گا، اور محفوظ کرتے وقت ترمیم شدہ فائل ڈاؤن لوڈ کرنے کی پیشکش کی جائے گی۔ مکمل ترمیم Chrome، Edge اور Arc میں کام کرتی ہے۔",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "یہ براؤزر ڈسک پر فائلیں نہیں لکھ سکتا: فولڈر صرف پڑھنے کے لیے کھلے گا، اور محفوظ کرتے وقت ترمیم شدہ فائل ڈاؤن لوڈ کرنے کی پیشکش کی جائے گی۔ مکمل ترمیم کمپیوٹر پر Chrome، Edge اور Arc میں کام کرتی ہے۔",
     "local editor · one file": "مقامی ایڈیٹر · ایک فائل",
     "Open a folder": "اپنے نوٹس کا",
     "of notes": "فولڈر کھولیں",

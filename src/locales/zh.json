@@ -50,7 +50,7 @@
   },
   "gate": {
     "Drag a folder, not a single file": "请拖入文件夹，而不是单个文件",
-    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "此浏览器无法将文件写入磁盘：文件夹将以只读方式打开，保存时会下载修改后的文件。Chrome、Edge 和 Arc 支持完整编辑。",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "此浏览器无法将文件写入磁盘：文件夹将以只读方式打开，保存时会下载修改后的文件。电脑上的 Chrome、Edge 和 Arc 支持完整编辑。",
     "local editor · one file": "本地编辑器 · 单一文件",
     "Open a folder": "打开一个",
     "of notes": "笔记文件夹",

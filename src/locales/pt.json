@@ -56,7 +56,7 @@
   },
   "gate": {
     "Drag a folder, not a single file": "Arraste uma pasta, não um arquivo avulso",
-    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "Este navegador não consegue gravar arquivos no disco: a pasta será aberta somente para leitura e, ao salvar, será oferecido o download do arquivo modificado. A edição completa funciona no Chrome, Edge e Arc.",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "Este navegador não consegue gravar arquivos no disco: a pasta será aberta somente para leitura e, ao salvar, será oferecido o download do arquivo modificado. A edição completa funciona no Chrome, Edge e Arc no computador.",
     "local editor · one file": "editor local · um único arquivo",
     "Open a folder": "Abra uma pasta",
     "of notes": "de notas",

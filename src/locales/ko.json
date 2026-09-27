@@ -50,7 +50,7 @@
   },
   "gate": {
     "Drag a folder, not a single file": "파일 하나가 아니라 폴더를 드래그하세요",
-    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "이 브라우저는 디스크에 파일을 쓸 수 없습니다. 폴더는 읽기 전용으로 열리며, 저장하면 수정된 파일을 다운로드하도록 제안합니다. 전체 편집 기능은 Chrome, Edge, Arc에서 사용할 수 있습니다.",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "이 브라우저는 디스크에 파일을 쓸 수 없습니다. 폴더는 읽기 전용으로 열리며, 저장하면 수정된 파일을 다운로드하도록 제안합니다. 전체 편집 기능은 컴퓨터의 Chrome, Edge, Arc에서 사용할 수 있습니다.",
     "local editor · one file": "로컬 편집기 · 단일 파일",
     "Open a folder": "노트가 담긴",
     "of notes": "폴더 열기",

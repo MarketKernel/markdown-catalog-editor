@@ -6,9 +6,10 @@ disk directly.
 
 **[Online demo](https://marketkernel.github.io/markdown-catalog-editor/)** — the same editor
 as a PWA (Progressive Web App): it can be installed into the system and then runs as a
-separate app, with its own window and icon, and works offline. In Chrome, Edge and Arc use
-the install button in the address bar; on iOS, Share → Add to Home Screen. Your notes stay
-on your disk there too.
+separate app, with its own window and icon, and works offline. On a computer, in Chrome,
+Edge and Arc, use the install button in the address bar; on Android, Chrome's ⋮ menu →
+Install app; on iOS, Share → Add to Home Screen, in Safari or in Chrome. Your notes stay on
+your disk there too.
 
 ![The editor with a folder of notes open: the file tree and tags on the left, a note in edit mode on the right](docs/macaed.jpg)
 
@@ -34,7 +35,8 @@ on your disk there too.
 In Chrome, Edge and Arc the folder is opened through the File System Access API: notes are
 read and written in place, and creating, renaming and deleting files and folders all work.
 In Safari and Firefox the folder opens read-only, and `⌘S` offers to download the modified
-file.
+file — and so it does on phones: Chrome on Android has no File System Access, and every
+browser on iOS, Chrome included, runs on Safari's engine.
 
 The editor remembers the last six folders opened there (a page never learns a folder's path,
 so it keeps the folder's handle in the browser's IndexedDB), and the note last open in each.

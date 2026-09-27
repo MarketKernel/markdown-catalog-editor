@@ -59,7 +59,7 @@
   },
   "gate": {
     "Drag a folder, not a single file": "Перетягніть папку, а не окремий файл",
-    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "Цей браузер не може записувати файли на диск: папку буде відкрито лише для читання, а під час збереження буде запропоновано завантажити змінений файл. Повноцінне редагування працює в Chrome, Edge та Arc.",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "Цей браузер не може записувати файли на диск: папку буде відкрито лише для читання, а під час збереження буде запропоновано завантажити змінений файл. Повноцінне редагування працює в Chrome, Edge та Arc на комп’ютері.",
     "local editor · one file": "локальний редактор · один файл",
     "Open a folder": "Відкрийте папку",
     "of notes": "з нотатками",

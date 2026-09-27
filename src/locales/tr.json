@@ -53,7 +53,7 @@
   },
   "gate": {
     "Drag a folder, not a single file": "Tek bir dosya değil, bir klasör sürükleyin",
-    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "Bu tarayıcı diske dosya yazamaz: klasör salt okunur olarak açılacak ve kaydederken değiştirilen dosyayı indirmeniz önerilecek. Tam düzenleme Chrome, Edge ve Arc’ta çalışır.",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "Bu tarayıcı diske dosya yazamaz: klasör salt okunur olarak açılacak ve kaydederken değiştirilen dosyayı indirmeniz önerilecek. Tam düzenleme bilgisayarda Chrome, Edge ve Arc’ta çalışır.",
     "local editor · one file": "yerel düzenleyici · tek dosya",
     "Open a folder": "Not klasörünüzü",
     "of notes": "açın",

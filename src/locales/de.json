@@ -53,7 +53,7 @@
   },
   "gate": {
     "Drag a folder, not a single file": "Ziehen Sie einen Ordner, keine einzelne Datei",
-    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "Dieser Browser kann keine Dateien auf die Festplatte schreiben: Der Ordner wird schreibgeschützt geöffnet, und beim Speichern wird angeboten, die geänderte Datei herunterzuladen. Volle Bearbeitung funktioniert in Chrome, Edge und Arc.",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "Dieser Browser kann keine Dateien auf die Festplatte schreiben: Der Ordner wird schreibgeschützt geöffnet, und beim Speichern wird angeboten, die geänderte Datei herunterzuladen. Volle Bearbeitung funktioniert in Chrome, Edge und Arc auf dem Computer.",
     "local editor · one file": "lokaler Editor · eine Datei",
     "Open a folder": "Öffnen Sie einen Ordner",
     "of notes": "mit Notizen",

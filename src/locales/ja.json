@@ -50,7 +50,7 @@
   },
   "gate": {
     "Drag a folder, not a single file": "単一のファイルではなく、フォルダをドラッグしてください",
-    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "このブラウザはディスクにファイルを書き込めません。フォルダは読み取り専用で開かれ、保存時には変更したファイルのダウンロードを提案します。すべての編集機能は Chrome、Edge、Arc で利用できます。",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "このブラウザはディスクにファイルを書き込めません。フォルダは読み取り専用で開かれ、保存時には変更したファイルのダウンロードを提案します。すべての編集機能はパソコンの Chrome、Edge、Arc で利用できます。",
     "local editor · one file": "ローカルエディタ · 単一ファイル",
     "Open a folder": "ノートの",
     "of notes": "フォルダを開く",

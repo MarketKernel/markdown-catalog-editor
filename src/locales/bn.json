@@ -53,7 +53,7 @@
   },
   "gate": {
     "Drag a folder, not a single file": "একটি ফোল্ডার টেনে আনুন, একক ফাইল নয়",
-    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "এই ব্রাউজার ডিস্কে ফাইল লিখতে পারে না: ফোল্ডারটি শুধু পড়ার জন্য খুলবে, আর সংরক্ষণের সময় পরিবর্তিত ফাইলটি ডাউনলোড করার প্রস্তাব দেওয়া হবে। পূর্ণ সম্পাদনা Chrome, Edge ও Arc-এ কাজ করে।",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "এই ব্রাউজার ডিস্কে ফাইল লিখতে পারে না: ফোল্ডারটি শুধু পড়ার জন্য খুলবে, আর সংরক্ষণের সময় পরিবর্তিত ফাইলটি ডাউনলোড করার প্রস্তাব দেওয়া হবে। পূর্ণ সম্পাদনা কম্পিউটারে Chrome, Edge ও Arc-এ কাজ করে।",
     "local editor · one file": "লোকাল এডিটর · একটি ফাইল",
     "Open a folder": "আপনার নোটের",
     "of notes": "ফোল্ডার খুলুন",

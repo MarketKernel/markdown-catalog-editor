@@ -50,7 +50,7 @@
   },
   "gate": {
     "Drag a folder, not a single file": "Seret folder, bukan satu file",
-    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.": "Browser ini tidak dapat menulis file ke disk: folder akan dibuka dalam mode hanya-baca, dan saat menyimpan, file yang diubah akan ditawarkan untuk diunduh. Pengeditan penuh tersedia di Chrome, Edge, dan Arc.",
+    "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "Browser ini tidak dapat menulis file ke disk: folder akan dibuka dalam mode hanya-baca, dan saat menyimpan, file yang diubah akan ditawarkan untuk diunduh. Pengeditan penuh tersedia di Chrome, Edge, dan Arc di komputer.",
     "local editor · one file": "editor lokal · satu file",
     "Open a folder": "Buka folder",
     "of notes": "catatan",

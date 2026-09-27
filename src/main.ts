@@ -1600,7 +1600,7 @@ function applyLanguage(): void {
   note.hidden = Boolean(window.showDirectoryPicker);
   note.textContent = note.hidden
     ? ''
-    : t('gate', 'This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc.');
+    : t('gate', 'This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.');
 }
 
 function setTheme(theme: Theme): void {
