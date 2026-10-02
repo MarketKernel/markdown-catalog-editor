@@ -4,7 +4,7 @@ A Markdown editor for a local folder of notes — in the spirit of Obsidian, but
 contained in one standalone HTML file. No network is used: files are read from and saved to
 disk directly.
 
-**[Online demo](https://marketkernel.github.io/markdown-catalog-editor/)** — the same editor
+**[Online demo](https://markdown.marketkernel.com/)** — the same editor
 as a PWA (Progressive Web App): it can be installed into the system and then runs as a
 separate app, with its own window and icon, and works offline. On a computer, in Chrome,
 Edge and Arc, use the install button in the address bar; on Android, Chrome's ⋮ menu →
