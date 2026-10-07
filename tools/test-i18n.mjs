@@ -4,8 +4,9 @@
  * plural category of the language — and the lookup itself in src/i18n.ts.
  * A string a dictionary lacks is only reported: it is shown in English.
  */
+import { readFile } from 'node:fs/promises';
 import { checker, load } from './load.mjs';
-import { compare, dictionaries, extract } from './i18n.mjs';
+import { compare, dictionaries, extract, MANIFEST_TEXTS, manifestText } from './i18n.mjs';
 
 const { check, done } = checker();
 const I = await load('i18n');
@@ -51,6 +52,20 @@ for (const [language, dictionary] of Object.entries(all)) {
     }
   }
   check(`${language}: well-formed translations`, problems, []);
+}
+
+// A context written twice parses without a word, and the first one's strings are lost.
+for (const language of Object.keys(all)) {
+  const text = await readFile(new URL(`../src/locales/${language}.json`, import.meta.url), 'utf8');
+  const contexts = [...text.matchAll(/^ {2}"((?:\\.|[^"\\])*)":/gm)].map((match) => match[1]);
+  check(`${language}: each context once`, contexts.filter((name, at) => contexts.indexOf(name) !== at), []);
+}
+
+// What Chrome shows of the extension has its limits: build.mjs stops on a longer one.
+const source = JSON.parse(await readFile(new URL('../src/extension/manifest.json', import.meta.url), 'utf8'));
+for (const [language, dictionary] of Object.entries(all)) {
+  const long = MANIFEST_TEXTS.filter(({ max, path }) => max && (dictionary.manifest?.[manifestText(source, path)] ?? '').length > max).map(({ message }) => message);
+  check(`${language}: the extension's name and description fit Chrome's limits`, long, []);
 }
 
 // The lookup

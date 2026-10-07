@@ -4,12 +4,15 @@
  */
 
 import { leadingHeading, titleKey } from './blocks';
+import { appendClip, clipFileName, clipNote, cleanClipFolder, freeName, type Clip } from './clip';
+import { clipDialog } from './clip-ui';
 import { Editor, translateTableTools, type EditorStatus, type FormatAction, type Mode } from './editor';
 import { DEFAULT_TEMPLATE, SiteBuilder, type SiteNote } from './export';
 import { exportDialog, type ExportChoice } from './export-ui';
-import { FLAGS, isRightToLeft, LANGUAGES, setLanguage, t, tn, translatePage, type Language } from './i18n';
+import { FLAGS, isRightToLeft, language as currentLanguage, LANGUAGES, setLanguage, t, tn, translatePage, type Language } from './i18n';
 import { createMarkdown, imageMarkdown, retargetImages } from './markdown';
 import { Meta } from './meta';
+import { platform } from './platform';
 import { forgetFolder, isGranted, recentFolders, regainAccess, rememberFolder, rememberNote, type RecentFolder } from './recent';
 import {
   applyFullWidth,
@@ -27,6 +30,7 @@ import {
 import { renderTagBar, renderTagPage, TagTree } from './tags';
 import { FileTree, stripExtension } from './tree';
 import { ask, confirmAsk, h, popover, toast } from './ui';
+import { applyUpdate, canUpdate, checkForUpdate, justUpdated, startUpdates, updateState, type UpdateState } from './update';
 import {
   DirectoryVault,
   FileListVault,
@@ -179,11 +183,13 @@ async function useVault(next: Vault, handle: DirHandleLike | null = null): Promi
   const notes = tree.notes();
   if (notes.length === 0) {
     toast(next.writable ? t('toast', 'No .md files in this folder — create the first note') : t('toast', 'No .md files in this folder'), 'error');
-    return;
+  } else {
+    const last = folder ? folder.lastPath : settings.lastPath;
+    const remembered = last && notes.some((note) => note.path === last) ? last : notes[0]!.path;
+    await openNote(remembered);
   }
-  const last = folder ? folder.lastPath : settings.lastPath;
-  const remembered = last && notes.some((note) => note.path === last) ? last : notes[0]!.path;
-  await openNote(remembered);
+  // What the extension sent before a folder was open goes into this one.
+  void nextClip();
 }
 
 async function pickFolder(): Promise<void> {
@@ -1427,6 +1433,184 @@ findInput.addEventListener('keydown', (event) => {
 });
 
 /* ------------------------------------------------------------------ *
+ * Sent from the browser: the "Send to Markdown" extension's side panel
+ * ------------------------------------------------------------------ */
+
+/** What was sent and is waiting: for a folder to be opened, or for the dialog of the one before. */
+const clips: Clip[] = [];
+let clipping = false;
+
+function receiveClip(clip: Clip): void {
+  clips.push(clip);
+  void nextClip();
+}
+
+async function nextClip(): Promise<void> {
+  if (clipping || clips.length === 0) return;
+  if (!vault) {
+    toast(t('clip', 'Open a folder of notes, and what was sent goes into it'));
+    return;
+  }
+  if (!vault.writable) {
+    clips.length = 0;
+    toast(t('errors', 'The folder is open read-only'), 'error');
+    return;
+  }
+  const clip = clips.shift();
+  if (!clip) return;
+  clipping = true;
+  try {
+    await saveClip(clip);
+  } finally {
+    clipping = false;
+  }
+  void nextClip();
+}
+
+/** A name already in `dir`, in any case: a disk on a Mac or Windows takes `Note.md` and `note.md` for one file. */
+function takenIn(dir: string): (name: string) => boolean {
+  const entries = dir ? (tree.find(dir)?.children ?? []) : tree.getEntries();
+  const names = new Set(entries.map((entry) => entry.name.toLowerCase()));
+  return (name) => names.has(name.toLowerCase());
+}
+
+/** Asks where the clip goes — a new note, or the end of the open one — and writes it there. */
+async function saveClip(clip: Clip): Promise<void> {
+  const target = vault;
+  if (!target) return;
+  const choice = await clipDialog({
+    clip,
+    folder: settings.clipFolder,
+    name: clipFileName(clip.title, t('clip', 'Clipping')),
+    note: currentPath ? stripExtension(baseOf(currentPath)) : null,
+    append: clip.kind !== 'page' && currentPath !== null,
+  });
+  // The folder was closed or another one opened meanwhile: the clip has nowhere to go.
+  if (!choice || vault !== target) return;
+  const sent = { ...clip, markdown: choice.markdown };
+  try {
+    if (choice.append && currentPath) {
+      await flushSave();
+      const path = currentPath;
+      const text = appendClip(editor.getText(), sent);
+      await target.writeText(path, text);
+      editor.load(text);
+      dirty = false;
+      renderState();
+      renderTitle();
+      scroller.scrollTop = scroller.scrollHeight;
+      toast(t('clip', 'Added to the end of {name}', { name: baseOf(path) }));
+      return;
+    }
+    const dir = cleanClipFolder(choice.folder);
+    settings.clipFolder = dir;
+    persist();
+    const path = join(dir, freeName(clipFileName(stripExtension(choice.name.trim()), t('clip', 'Clipping')), takenIn(dir)));
+    await target.writeText(path, clipNote(sent));
+    await refreshTree();
+    await openNote(path);
+    toast(t('clip', 'Saved as {path}', { path }));
+  } catch (error) {
+    toast(t('toast', 'Could not save: {reason}', { reason: error instanceof Error ? error.message : String(error) }), 'error');
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Updates of the installed app (update.ts)
+ * ------------------------------------------------------------------ */
+
+/** The installed app's choice to update by itself, while nothing is lost by it. */
+function autoUpdateRow(): HTMLElement[] {
+  if (!canUpdate()) return [];
+  const box = h('input', { type: 'checkbox' });
+  box.checked = settings.autoUpdate;
+  box.addEventListener('change', () => {
+    settings.autoUpdate = box.checked;
+    persist();
+  });
+  return [
+    h('label', { class: 'settings-row settings-row--check' }, box, h('span', { text: t('update', 'Install updates by themselves when everything is saved and the app is in the background') })),
+  ];
+}
+
+/** The version, and in the installed app what is known of a newer one. */
+function versionLine(): HTMLElement {
+  const line = h('p', { class: 'settings-version', 'data-setting': 'update' });
+  // What the last check found is old news by the time the settings open again: they offer another.
+  const state = updateState();
+  showVersionLine(line, state.kind === 'checking' || state.kind === 'ready' ? state : { kind: 'idle' });
+  return line;
+}
+
+function showVersionLine(line: HTMLElement, state: UpdateState): void {
+  const version = t('settings', 'Version {version}', { version: __APP_VERSION__ });
+  if (!canUpdate()) {
+    line.textContent = version;
+    return;
+  }
+  const check = h('button', { type: 'button', class: 'link-button', text: t('update', 'Check for updates') });
+  check.addEventListener('click', () => void checkForUpdate());
+  let note: (Node | string)[];
+  switch (state.kind) {
+    case 'idle':
+      note = [check];
+      break;
+    case 'checking':
+      note = [t('update', 'Checking for updates…')];
+      break;
+    case 'latest':
+      note = [t('update', 'This is the latest version.')];
+      break;
+    case 'offline':
+      note = [t('update', 'No connection: could not check for updates.'), ' ', check];
+      break;
+    case 'ready':
+      note = [...updateReady(state.version), ' ', t('update', 'It also starts by itself the next time the app is opened.')];
+      break;
+  }
+  line.replaceChildren(version, ' · ', ...note);
+}
+
+/** "Version 1.2.3 is ready. Update", for the settings and the gate. */
+function updateReady(version: string | null): (Node | string)[] {
+  const button = h('button', { type: 'button', class: 'link-button', text: t('update', 'Update') });
+  button.addEventListener('click', () => void update());
+  return [version ? t('update', 'Version {version} is ready.', { version }) : t('update', 'A new version is ready.'), ' ', button];
+}
+
+/** The new version comes up after a reload: the note is saved first, or let go only when the user says so. */
+async function update(): Promise<void> {
+  await flushSave();
+  // The save failed and said so: the text would be lost with the reload.
+  if (dirty && vault?.writable) return;
+  if (dirty && !(await confirmAsk(t('update', 'Update'), t('update', 'The note has unsaved changes. Update anyway?'), t('update', 'Update')))) return;
+  dirty = false;
+  applyUpdate();
+}
+
+function showUpdate(state: UpdateState): void {
+  const onGate = el('gate-update');
+  onGate.hidden = state.kind !== 'ready';
+  if (state.kind === 'ready') onGate.replaceChildren(...updateReady(state.version));
+  const line = document.querySelector<HTMLElement>('[data-setting="update"]');
+  if (line) showVersionLine(line, state);
+  el('settings').classList.toggle('icon-button--badge', state.kind === 'ready');
+  updateQuietly();
+}
+
+/**
+ * With the setting on, a waiting version comes in while nobody is looking and
+ * nothing would be lost: every change saved, no export running, no dialog
+ * open, the window out of sight.
+ */
+function updateQuietly(): void {
+  if (!settings.autoUpdate || dirty || exporting || clipping || clips.length || document.visibilityState !== 'hidden' || updateState().kind !== 'ready') return;
+  if (document.querySelector('.overlay:not([hidden])')) return;
+  applyUpdate();
+}
+document.addEventListener('visibilitychange', updateQuietly);
+
+/* ------------------------------------------------------------------ *
  * Settings: language, theme, zoom, text width, note title, images
  * ------------------------------------------------------------------ */
 
@@ -1516,6 +1700,8 @@ function openSettings(): void {
     h('label', { class: 'settings-row settings-row--check' }, title, h('span', { text: t('settings', 'Show the note name as a title') })),
     ...imageRows(),
     folderRow(),
+    ...autoUpdateRow(),
+    versionLine(),
   );
   settingsButton.setAttribute('aria-expanded', 'true');
   closeSettings = popover(settingsButton, panel, () => {
@@ -1594,6 +1780,7 @@ function setLanguageChoice(choice: Settings['language']): void {
 
 function applyLanguage(): void {
   setLanguage(resolveLanguage(settings.language));
+  platform.languageChanged(currentLanguage());
   translatePage();
   translateTableTools(doc);
   const note = el('browser-note');
@@ -1777,6 +1964,7 @@ document.addEventListener('keydown', (event) => {
  * Start
  * ------------------------------------------------------------------ */
 
+el('version').textContent = __APP_VERSION__;
 applyLanguage();
 renderDocumentTitle();
 applyTheme(settings.theme);
@@ -1811,6 +1999,10 @@ async function openServedFolder(): Promise<boolean> {
     return false;
   }
 }
+
+startUpdates(showUpdate);
+if (justUpdated()) toast(t('update', 'Updated to version {version}.', { version: __APP_VERSION__ }));
+platform.start({ clip: receiveClip });
 
 // The gate stays blank meanwhile, so it does not flash up before the folder opens by itself.
 void (async () => {

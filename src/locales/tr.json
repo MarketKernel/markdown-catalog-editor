@@ -63,7 +63,8 @@
     "Recent folders": "Son klasörler",
     "Open {name}": "“{name}” klasörünü aç",
     "Remove from the list": "Listeden kaldır",
-    "The folder \"{name}\" is no longer there, so it was removed from the list": "“{name}” klasörü artık yok, bu yüzden listeden kaldırıldı"
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "“{name}” klasörü artık yok, bu yüzden listeden kaldırıldı",
+    "Version {version}": "Sürüm {version}"
   },
   "dialog": {
     "Note not found": "Not bulunamadı",
@@ -126,7 +127,8 @@
     "Close folder": "Klasörü kapat",
     "Images": "Görseller",
     "Images folder": "Görsel klasörü",
-    "A subfolder named after the note": "Notun adını taşıyan bir alt klasör"
+    "A subfolder named after the note": "Notun adını taşıyan bir alt klasör",
+    "Version {version}": "Sürüm {version}"
   },
   "app": {
     "Notes editor": "Not düzenleyici"
@@ -232,5 +234,47 @@
     "Switch to the light theme": "Açık temaya geç",
     "Previous note": "Önceki not",
     "Next note": "Sonraki not"
+  },
+  "clip": {
+    "The page \"{title}\" from {site}": "{site} sitesinden “{title}” sayfası",
+    "The selection on \"{title}\" from {site}": "{site} sitesinden “{title}” üzerindeki seçim",
+    "A link from {site}": "{site} sitesinden bir bağlantı",
+    "An image from {site}": "{site} sitesinden bir görsel",
+    "Folder": "Klasör",
+    "Name": "Ad",
+    "Markdown": "Markdown",
+    "Save": "Kaydet",
+    "Send to Markdown": "Send to Markdown",
+    "A new note": "Yeni bir not",
+    "The end of \"{note}\"": "“{note}” notunun sonu",
+    "The end of the open note": "Açık notun sonu",
+    "Open a folder of notes, and what was sent goes into it": "Bir not klasörü açın; gönderilen içine eklenir",
+    "Clipping": "Kupür",
+    "Added to the end of {name}": "{name} dosyasının sonuna eklendi",
+    "Saved as {path}": "{path} olarak kaydedildi"
+  },
+  "extension": {
+    "Send the page to Markdown": "Sayfayı Markdown'a gönder",
+    "Send the selection to Markdown": "Seçimi Markdown'a gönder",
+    "Send the link to Markdown": "Bağlantıyı Markdown'a gönder",
+    "Send the image to Markdown": "Görseli Markdown'a gönder"
+  },
+  "update": {
+    "Install updates by themselves when everything is saved and the app is in the background": "Her şey kaydedildiğinde ve uygulama arka planda çalışırken güncellemeleri kendiliğinden yükle",
+    "Check for updates": "Güncellemeleri kontrol et",
+    "Checking for updates…": "Güncellemeler kontrol ediliyor…",
+    "This is the latest version.": "Bu en son sürüm.",
+    "No connection: could not check for updates.": "Bağlantı yok: güncellemeler kontrol edilemedi.",
+    "It also starts by itself the next time the app is opened.": "Uygulama bir sonraki açılışında güncelleme kendiliğinden de yapılır.",
+    "Update": "Güncelle",
+    "Version {version} is ready.": "{version} sürümü hazır.",
+    "A new version is ready.": "Yeni bir sürüm hazır.",
+    "The note has unsaved changes. Update anyway?": "Notta kaydedilmemiş değişiklikler var. Yine de güncellensin mi?",
+    "Updated to version {version}.": "{version} sürümüne güncellendi."
+  },
+  "manifest": {
+    "Send to Markdown": "Send to Markdown",
+    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "Bir web sayfasını, seçimi, bağlantıyı veya görseli diskinizdeki bir Markdown notuna gönderir. Kenar panelinde düzenleyin.",
+    "Send the page or the selection to Markdown": "Sayfayı veya seçimi Markdown'a gönder"
   }
 }

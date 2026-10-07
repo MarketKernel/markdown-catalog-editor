@@ -60,7 +60,8 @@
     "Recent folders": "最近的文件夹",
     "Open {name}": "打开“{name}”",
     "Remove from the list": "从列表中移除",
-    "The folder \"{name}\" is no longer there, so it was removed from the list": "文件夹“{name}”已不存在，已从列表中移除"
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "文件夹“{name}”已不存在，已从列表中移除",
+    "Version {version}": "版本 {version}"
   },
   "dialog": {
     "Note not found": "未找到笔记",
@@ -123,7 +124,8 @@
     "Close folder": "关闭文件夹",
     "Images": "图片",
     "Images folder": "图片文件夹",
-    "A subfolder named after the note": "以笔记命名的子文件夹"
+    "A subfolder named after the note": "以笔记命名的子文件夹",
+    "Version {version}": "版本 {version}"
   },
   "app": {
     "Notes editor": "笔记编辑器"
@@ -227,5 +229,47 @@
     "Switch to the light theme": "切换到浅色主题",
     "Previous note": "上一条笔记",
     "Next note": "下一条笔记"
+  },
+  "clip": {
+    "The page \"{title}\" from {site}": "来自 {site} 的页面“{title}”",
+    "The selection on \"{title}\" from {site}": "来自 {site} 上“{title}”的选段",
+    "A link from {site}": "来自 {site} 的链接",
+    "An image from {site}": "来自 {site} 的图片",
+    "Folder": "文件夹",
+    "Name": "名称",
+    "Markdown": "Markdown",
+    "Save": "保存",
+    "Send to Markdown": "Send to Markdown",
+    "A new note": "新建笔记",
+    "The end of \"{note}\"": "“{note}”的末尾",
+    "The end of the open note": "当前打开笔记的末尾",
+    "Open a folder of notes, and what was sent goes into it": "打开一个笔记文件夹，发送的内容将保存到其中",
+    "Clipping": "剪藏",
+    "Added to the end of {name}": "已添加到 {name} 的末尾",
+    "Saved as {path}": "已保存为 {path}"
+  },
+  "extension": {
+    "Send the page to Markdown": "将页面发送到 Markdown",
+    "Send the selection to Markdown": "将选中内容发送到 Markdown",
+    "Send the link to Markdown": "将链接发送到 Markdown",
+    "Send the image to Markdown": "将图片发送到 Markdown"
+  },
+  "update": {
+    "Install updates by themselves when everything is saved and the app is in the background": "当所有内容已保存且应用在后台运行时，自动安装更新",
+    "Check for updates": "检查更新",
+    "Checking for updates…": "正在检查更新…",
+    "This is the latest version.": "这已是最新版本。",
+    "No connection: could not check for updates.": "无连接：无法检查更新。",
+    "It also starts by itself the next time the app is opened.": "下次打开应用时，它也会自动开始。",
+    "Update": "更新",
+    "Version {version} is ready.": "版本 {version} 已就绪。",
+    "A new version is ready.": "新版本已就绪。",
+    "The note has unsaved changes. Update anyway?": "笔记有未保存的更改。仍要更新吗？",
+    "Updated to version {version}.": "已更新到版本 {version}。"
+  },
+  "manifest": {
+    "Send to Markdown": "Send to Markdown",
+    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "将网页、选中内容、链接或图片发送到磁盘文件夹中的 Markdown 笔记。可在侧边栏中编辑。",
+    "Send the page or the selection to Markdown": "将页面或选中内容发送到 Markdown"
   }
 }

@@ -60,7 +60,8 @@
     "Recent folders": "최근 폴더",
     "Open {name}": "“{name}” 열기",
     "Remove from the list": "목록에서 제거",
-    "The folder \"{name}\" is no longer there, so it was removed from the list": "“{name}” 폴더가 더 이상 없어 목록에서 제거했습니다"
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "“{name}” 폴더가 더 이상 없어 목록에서 제거했습니다",
+    "Version {version}": "버전 {version}"
   },
   "dialog": {
     "Note not found": "노트를 찾을 수 없음",
@@ -123,7 +124,8 @@
     "Close folder": "폴더 닫기",
     "Images": "이미지",
     "Images folder": "이미지 폴더",
-    "A subfolder named after the note": "노트 이름으로 된 하위 폴더"
+    "A subfolder named after the note": "노트 이름으로 된 하위 폴더",
+    "Version {version}": "버전 {version}"
   },
   "app": {
     "Notes editor": "노트 편집기"
@@ -227,5 +229,47 @@
     "Switch to the light theme": "밝은 테마로 전환",
     "Previous note": "이전 노트",
     "Next note": "다음 노트"
+  },
+  "clip": {
+    "The page \"{title}\" from {site}": "{site}의 페이지 \"{title}\"",
+    "The selection on \"{title}\" from {site}": "{site}의 \"{title}\"에서 선택한 부분",
+    "A link from {site}": "{site}의 링크",
+    "An image from {site}": "{site}의 이미지",
+    "Folder": "폴더",
+    "Name": "이름",
+    "Markdown": "Markdown",
+    "Save": "저장",
+    "Send to Markdown": "Send to Markdown",
+    "A new note": "새 노트",
+    "The end of \"{note}\"": "\"{note}\"의 끝",
+    "The end of the open note": "열려 있는 노트의 끝",
+    "Open a folder of notes, and what was sent goes into it": "노트 폴더를 열면 보낸 내용이 그 안에 들어갑니다",
+    "Clipping": "스크랩",
+    "Added to the end of {name}": "{name}의 끝에 추가했습니다",
+    "Saved as {path}": "{path}(으)로 저장했습니다"
+  },
+  "extension": {
+    "Send the page to Markdown": "페이지를 Markdown으로 보내기",
+    "Send the selection to Markdown": "선택한 부분을 Markdown으로 보내기",
+    "Send the link to Markdown": "링크를 Markdown으로 보내기",
+    "Send the image to Markdown": "이미지를 Markdown으로 보내기"
+  },
+  "update": {
+    "Install updates by themselves when everything is saved and the app is in the background": "모든 항목이 저장되고 앱이 백그라운드에 있을 때 업데이트를 자동으로 설치",
+    "Check for updates": "업데이트 확인",
+    "Checking for updates…": "업데이트 확인 중…",
+    "This is the latest version.": "이것이 최신 버전입니다.",
+    "No connection: could not check for updates.": "연결 없음: 업데이트를 확인할 수 없습니다.",
+    "It also starts by itself the next time the app is opened.": "다음에 앱을 열 때도 자동으로 시작됩니다.",
+    "Update": "업데이트",
+    "Version {version} is ready.": "버전 {version}이(가) 준비되었습니다.",
+    "A new version is ready.": "새 버전이 준비되었습니다.",
+    "The note has unsaved changes. Update anyway?": "노트에 저장되지 않은 변경 사항이 있습니다. 그래도 업데이트할까요?",
+    "Updated to version {version}.": "버전 {version}(으)로 업데이트했습니다."
+  },
+  "manifest": {
+    "Send to Markdown": "Send to Markdown",
+    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "웹페이지, 선택한 부분, 링크, 이미지를 디스크 폴더의 Markdown 노트로 보냅니다. 사이드 패널에서 편집하세요.",
+    "Send the page or the selection to Markdown": "페이지 또는 선택한 부분을 Markdown으로 보내기"
   }
 }

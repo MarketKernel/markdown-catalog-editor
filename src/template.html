@@ -2,7 +2,14 @@
 <html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- resizes-content makes Chrome on Android shrink the page, not cover it, with the keyboard. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">
+<!-- The page's own code reaches nothing beyond its origin: connect-src 'self' is for a folder
+     served beside the page with an index.json. Pictures, video and frames a note links to on
+     the web are its author's choice and load as in any Markdown viewer. build.mjs swaps
+     'unsafe-inline' for the hash of the one script, so a script in a note's HTML never runs. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src * data: blob:; media-src * data: blob:; frame-src * data: blob:; font-src data:; connect-src 'self'; object-src 'none'; form-action 'none'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
 <title>Notes editor</title>
 <link rel="icon" href="__ICON__">
 <style>/*__STYLES__*/</style>
@@ -24,6 +31,9 @@
     <p class="gate-hint" data-i18n="gate">or drag a folder here</p>
     <input id="folder-picker" type="file" webkitdirectory multiple hidden>
     <p id="gate-error" class="gate-error" aria-live="polite"></p>
+    <p class="gate-version" data-i18n="gate">Version <span id="version" data-slot="version"></span></p>
+    <!-- The installed app, when a new version is waiting: main.ts fills it in. -->
+    <p id="gate-update" class="gate-version gate-update" hidden></p>
   </div>
 </section>
 

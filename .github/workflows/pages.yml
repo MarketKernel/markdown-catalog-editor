@@ -31,6 +31,9 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+      # What the deploy is: the editor, and the PWA offline and updating. The extension is not
+      # deployed here; test.yml runs its test on the same push.
+      - run: npm run test:editor && npm run test:convert && npm run test:pwa
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

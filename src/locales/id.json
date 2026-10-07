@@ -49,6 +49,7 @@
     "Export stopped": "Ekspor dihentikan"
   },
   "gate": {
+    "Version {version}": "Versi {version}",
     "Drag a folder, not a single file": "Seret folder, bukan satu file",
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "Browser ini tidak dapat menulis file ke disk: folder akan dibuka dalam mode hanya-baca, dan saat menyimpan, file yang diubah akan ditawarkan untuk diunduh. Pengeditan penuh tersedia di Chrome, Edge, dan Arc di komputer.",
     "local editor · one file": "editor lokal · satu file",
@@ -123,7 +124,8 @@
     "Close folder": "Tutup folder",
     "Images": "Gambar",
     "Images folder": "Folder gambar",
-    "A subfolder named after the note": "Subfolder dengan nama catatan"
+    "A subfolder named after the note": "Subfolder dengan nama catatan",
+    "Version {version}": "Versi {version}"
   },
   "app": {
     "Notes editor": "Editor catatan"
@@ -227,5 +229,47 @@
     "Switch to the light theme": "Beralih ke tema terang",
     "Previous note": "Catatan sebelumnya",
     "Next note": "Catatan berikutnya"
+  },
+  "clip": {
+    "The page \"{title}\" from {site}": "Halaman \"{title}\" dari {site}",
+    "The selection on \"{title}\" from {site}": "Pilihan pada \"{title}\" dari {site}",
+    "A link from {site}": "Tautan dari {site}",
+    "An image from {site}": "Gambar dari {site}",
+    "Folder": "Folder",
+    "Name": "Nama",
+    "Markdown": "Markdown",
+    "Save": "Simpan",
+    "Send to Markdown": "Send to Markdown",
+    "A new note": "Catatan baru",
+    "The end of \"{note}\"": "Akhir \"{note}\"",
+    "The end of the open note": "Akhir catatan yang terbuka",
+    "Open a folder of notes, and what was sent goes into it": "Buka folder catatan, dan yang dikirim akan masuk ke dalamnya",
+    "Clipping": "Kliping",
+    "Added to the end of {name}": "Ditambahkan ke akhir {name}",
+    "Saved as {path}": "Disimpan sebagai {path}"
+  },
+  "extension": {
+    "Send the page to Markdown": "Kirim halaman ke Markdown",
+    "Send the selection to Markdown": "Kirim pilihan ke Markdown",
+    "Send the link to Markdown": "Kirim tautan ke Markdown",
+    "Send the image to Markdown": "Kirim gambar ke Markdown"
+  },
+  "update": {
+    "Install updates by themselves when everything is saved and the app is in the background": "Pasang pembaruan secara otomatis saat semua tersimpan dan aplikasi berada di latar belakang",
+    "Check for updates": "Periksa pembaruan",
+    "Checking for updates…": "Memeriksa pembaruan…",
+    "This is the latest version.": "Ini adalah versi terbaru.",
+    "No connection: could not check for updates.": "Tidak ada koneksi: tidak dapat memeriksa pembaruan.",
+    "It also starts by itself the next time the app is opened.": "Pembaruan ini juga akan mulai sendiri saat aplikasi dibuka berikutnya.",
+    "Update": "Perbarui",
+    "Version {version} is ready.": "Versi {version} sudah siap.",
+    "A new version is ready.": "Versi baru sudah siap.",
+    "The note has unsaved changes. Update anyway?": "Catatan memiliki perubahan yang belum disimpan. Tetap perbarui?",
+    "Updated to version {version}.": "Diperbarui ke versi {version}."
+  },
+  "manifest": {
+    "Send to Markdown": "Send to Markdown",
+    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "Mengirim halaman web, pilihan, tautan, atau gambar ke catatan Markdown di folder pada disk Anda. Edit di panel samping.",
+    "Send the page or the selection to Markdown": "Kirim halaman atau pilihan ke Markdown"
   }
 }

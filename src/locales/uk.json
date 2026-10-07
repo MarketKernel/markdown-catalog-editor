@@ -69,7 +69,8 @@
     "Recent folders": "Нещодавні папки",
     "Open {name}": "Відкрити «{name}»",
     "Remove from the list": "Прибрати зі списку",
-    "The folder \"{name}\" is no longer there, so it was removed from the list": "Папки «{name}» більше немає, її прибрано зі списку"
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "Папки «{name}» більше немає, її прибрано зі списку",
+    "Version {version}": "Версія {version}"
   },
   "dialog": {
     "Note not found": "Нотатку не знайдено",
@@ -132,7 +133,8 @@
     "Close folder": "Закрити папку",
     "Images": "Зображення",
     "Images folder": "Тека зображень",
-    "A subfolder named after the note": "Підтека з назвою нотатки"
+    "A subfolder named after the note": "Підтека з назвою нотатки",
+    "Version {version}": "Версія {version}"
   },
   "app": {
     "Notes editor": "Редактор нотаток"
@@ -242,5 +244,47 @@
     "Switch to the light theme": "Увімкнути світлу тему",
     "Previous note": "Попередня нотатка",
     "Next note": "Наступна нотатка"
+  },
+  "clip": {
+    "The page \"{title}\" from {site}": "Сторінка «{title}» з {site}",
+    "The selection on \"{title}\" from {site}": "Виділення на «{title}» з {site}",
+    "A link from {site}": "Посилання з {site}",
+    "An image from {site}": "Зображення з {site}",
+    "Folder": "Тека",
+    "Name": "Назва",
+    "Markdown": "Markdown",
+    "Save": "Зберегти",
+    "Send to Markdown": "Send to Markdown",
+    "A new note": "Нова нотатка",
+    "The end of \"{note}\"": "Кінець «{note}»",
+    "The end of the open note": "Кінець відкритої нотатки",
+    "Open a folder of notes, and what was sent goes into it": "Відкрийте теку з нотатками, і надіслане потрапить до неї",
+    "Clipping": "Вирізка",
+    "Added to the end of {name}": "Додано в кінець {name}",
+    "Saved as {path}": "Збережено як {path}"
+  },
+  "extension": {
+    "Send the page to Markdown": "Надіслати сторінку в Markdown",
+    "Send the selection to Markdown": "Надіслати виділення в Markdown",
+    "Send the link to Markdown": "Надіслати посилання в Markdown",
+    "Send the image to Markdown": "Надіслати зображення в Markdown"
+  },
+  "update": {
+    "Install updates by themselves when everything is saved and the app is in the background": "Встановлювати оновлення самостійно, коли все збережено, а застосунок працює у фоновому режимі",
+    "Check for updates": "Перевірити оновлення",
+    "Checking for updates…": "Перевірка оновлень…",
+    "This is the latest version.": "Це остання версія.",
+    "No connection: could not check for updates.": "Немає з'єднання: не вдалося перевірити оновлення.",
+    "It also starts by itself the next time the app is opened.": "Оновлення також встановиться само собою під час наступного запуску застосунку.",
+    "Update": "Оновити",
+    "Version {version} is ready.": "Версія {version} готова.",
+    "A new version is ready.": "Готова нова версія.",
+    "The note has unsaved changes. Update anyway?": "У нотатці є незбережені зміни. Усе одно оновити?",
+    "Updated to version {version}.": "Оновлено до версії {version}."
+  },
+  "manifest": {
+    "Send to Markdown": "Send to Markdown",
+    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "Надсилає вебсторінку, виділення, посилання або зображення в нотатку Markdown у теці на диску. Редагуйте в бічній панелі.",
+    "Send the page or the selection to Markdown": "Надіслати сторінку або виділення в Markdown"
   }
 }

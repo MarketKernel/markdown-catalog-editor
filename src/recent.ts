@@ -79,11 +79,27 @@ export async function rememberFolder(handle: DirHandleLike): Promise<RecentFolde
     if (known) record.id = known.id;
     record.id = Number(await withStore('readwrite', (store) => store.put(record)));
     for (const stale of (await recentFolders()).slice(RECENT_MAX)) await forgetFolder(stale.id);
+    keepStorage();
     return record;
   } catch {
     /* no IndexedDB (private mode) — the folder simply is not offered next time */
     return null;
   }
+}
+
+/**
+ * Asks the browser to keep this origin's storage — the remembered folders —
+ * when the disk runs low, instead of clearing it with the other sites' data.
+ * Only where the answer comes without a question: the installed app and the
+ * extension's panel. A tab in Firefox would ask the user, for no good reason.
+ */
+function keepStorage(): void {
+  const installed = ['standalone', 'minimal-ui', 'window-controls-overlay'].some((mode) => matchMedia(`(display-mode: ${mode})`).matches);
+  if (!installed && location.protocol !== 'chrome-extension:') return;
+  void navigator.storage
+    ?.persisted?.()
+    .then((kept) => kept || navigator.storage.persist())
+    .catch(() => false);
 }
 
 /** Remembers the note open in the folder, to reopen it there next time. */

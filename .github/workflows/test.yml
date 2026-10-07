@@ -18,6 +18,9 @@ jobs:
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+      # ubuntu-latest ships Chrome at /usr/bin/google-chrome, where the browser tests look:
+      # the editor, the HTML → Markdown converter, the PWA offline and updating, the extension.
+      - run: npm run test:browser
 
       # The single HTML file must not pull anything off the network.
       - name: No external references in the build
@@ -30,4 +33,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: markdown-catalog-editor
-          path: build/macaed.html
+          path: |
+            build/macaed.html
+            build/macaed-extension-*.zip

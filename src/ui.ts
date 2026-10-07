@@ -78,10 +78,11 @@ function dialog(options: DialogOptions): Promise<string | null> {
 
 /**
  * Shows `box` over the page until Escape, a click outside it or the returned
- * function closes it. While `locked` says so, Escape and the outside click do
- * nothing — for a dialog busy with work it must see through.
+ * function closes it; `onClose` hears of it, whichever it was. While `locked`
+ * says so, Escape and the outside click do nothing — for a dialog busy with
+ * work it must see through.
  */
-export function openModal(box: HTMLElement, locked: () => boolean = () => false): () => void {
+export function openModal(box: HTMLElement, locked: () => boolean = () => false, onClose?: () => void): () => void {
   const host = shell();
   host.hidden = false;
   host.replaceChildren(box);
@@ -93,6 +94,7 @@ export function openModal(box: HTMLElement, locked: () => boolean = () => false)
     host.replaceChildren();
     document.removeEventListener('keydown', onKey, true);
     host.removeEventListener('mousedown', onDown);
+    onClose?.();
   };
   const onKey = (event: KeyboardEvent): void => {
     if (event.key !== 'Escape') return;

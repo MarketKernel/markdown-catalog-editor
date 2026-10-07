@@ -1,5 +1,27 @@
 # markdown-catalog-editor
 
+<!-- languages -->
+<h3 align="center">
+<b>🇬🇧 English</b> ·
+<a href="docs/readme/README.zh.md">🇨🇳 中文</a> ·
+<a href="docs/readme/README.hi.md">🇮🇳 हिन्दी</a> ·
+<a href="docs/readme/README.es.md">🇪🇸 Español</a> ·
+<a href="docs/readme/README.fr.md">🇫🇷 Français</a> ·
+<a href="docs/readme/README.ar.md">🇸🇦 العربية</a> ·
+<a href="docs/readme/README.bn.md">🇧🇩 বাংলা</a> ·
+<a href="docs/readme/README.pt.md">🇧🇷 Português</a> ·
+<a href="docs/readme/README.ru.md">🇷🇺 Русский</a> ·
+<a href="docs/readme/README.ur.md">🇵🇰 اردو</a> ·
+<a href="docs/readme/README.id.md">🇮🇩 Bahasa Indonesia</a> ·
+<a href="docs/readme/README.de.md">🇩🇪 Deutsch</a> ·
+<a href="docs/readme/README.ja.md">🇯🇵 日本語</a> ·
+<a href="docs/readme/README.tr.md">🇹🇷 Türkçe</a> ·
+<a href="docs/readme/README.ko.md">🇰🇷 한국어</a> ·
+<a href="docs/readme/README.it.md">🇮🇹 Italiano</a> ·
+<a href="docs/readme/README.uk.md">🇺🇦 Українська</a>
+</h3>
+<!-- /languages -->
+
 A Markdown editor for a local folder of notes — in the spirit of Obsidian, but entirely
 contained in one standalone HTML file. No network is used: files are read from and saved to
 disk directly.
@@ -9,7 +31,13 @@ as a PWA (Progressive Web App): it can be installed into the system and then run
 separate app, with its own window and icon, and works offline. On a computer, in Chrome,
 Edge and Arc, use the install button in the address bar; on Android, Chrome's ⋮ menu →
 Install app; on iOS, Share → Add to Home Screen, in Safari or in Chrome. Your notes stay on
-your disk there too.
+your disk there too, and the installed app updates when you say so — see
+"[GitHub Pages](#github-pages)".
+
+The same editor is also **Send to Markdown**, a [Chrome extension](#send-to-markdown-the-chrome-extension):
+a click on its button, or a right click on a page, sends the page — or the selection, a link,
+an image — to a note in your folder, and the editor opens beside the page in Chrome's side
+panel.
 
 ![The editor with a folder of notes open: the file tree and tags on the left, a note in edit mode on the right](docs/macaed.jpg)
 
@@ -49,6 +77,83 @@ or "Close folder" in the settings; × removes a folder from the list.
 If you put `macaed.html` next to your notes and serve it over HTTP, the page picks the folder
 up by itself — provided an `index.json` sits alongside it, of the form
 `{ "name": "Notes", "files": ["Note.md", "Folder/Other.md"] }`.
+
+## Send to Markdown: the Chrome extension
+
+`npm run build` also writes `build/extension/`: the editor as a Chrome extension, and
+`build/macaed-extension-<version>.zip` of it for the Chrome Web Store; a release carries the
+zip too. To install it: `chrome://extensions` → Developer mode → Load unpacked →
+`build/extension` (or the unpacked zip).
+
+The editor itself lives in Chrome's side panel, beside the page, in the phone layout, since a
+panel is narrow; it stays there across tabs. A folder opens in it as in the file, and the
+recent folders are remembered — the extension's own, apart from those of the file or the
+PWA. What the extension adds is sending things from the web to your notes:
+
+- **The toolbar button** (or `Alt+Shift+M`) sends the page: its main text — the article,
+  without the site's menus, sidebars, footer, share buttons, forms and hidden parts — or,
+  when something is selected on it, just the selection.
+- **The context menu** of a page has **Send the page to Markdown**; on selected text,
+  **Send the selection to Markdown**; on a link, **Send the link to Markdown**; on an image,
+  **Send the image to Markdown**.
+
+Either opens the side panel, and a dialog there shows what came — the page, the selection,
+the link or the image, and from which site — as Markdown you can still change, and asks where
+it goes:
+
+- **A new note**, the default for a page: in the clippings folder (`Clippings` at the root
+  unless you change it; the folder is remembered, empty means the root), named after the
+  page's title, with what a file name cannot hold left out. A name already taken gets a
+  number, `Title 2.md`. The note starts with front matter — the page's title, its address
+  and the day — and then the text; it opens once saved.
+
+  ```markdown
+  ---
+  title: "The page's title"
+  source: "https://example.com/post"
+  clipped: 2026-10-07
+  ---
+
+  # The page's title
+
+  The text…
+  ```
+
+- **The end of the open note**, the default for a selection, a link or an image: after a
+  blank line, followed by a line `— [The page's title](https://…)` that links where it came
+  from. A link needs none: it is its own source.
+
+Sent before a folder is open, it waits: the panel asks for a folder, and the dialog comes
+once one is open. A page the extension may not read — Chrome's own pages, the Web Store, a
+PDF — arrives as a link to it.
+
+**What the Markdown is.** Headings, paragraphs, **bold**, *italic*, ~~strikethrough~~,
+==highlight==, `code`, links and images with their full addresses, lists — nested, numbered,
+tasks — quotes, code blocks with their language (from `language-…`, GitHub's
+`highlight-source-…` and the like), tables (a line break in a cell as `<br>`, as the editor
+writes it), dividers. Text reads as itself: a `*`, a `#` at the start of a line or a `<b>`
+typed on the page is escaped, so it never turns into formatting, and no HTML of the page gets
+into the note. Images stay on the web, linked by their address; a lazy image's real address is
+taken rather than its placeholder, tracking pixels are left out.
+
+**Permissions.** `activeTab`: a click on the button, in the menu or the shortcut gives the
+extension that one tab, and only then does it read it — with `scripting`, a function run in
+the page that copies its text and returns. No content script runs anywhere, and there is no
+access to any site otherwise: no `host_permissions`, which the build refuses. `contextMenus`,
+`sidePanel`, and `storage` — the worker hands what it took to the panel of its window through
+`chrome.storage.session`, gone when the browser closes, and the panel's language goes to the
+worker, for the menu, in `chrome.storage.local`. The extension's pages have
+`connect-src 'none'`: the editor reaches nothing on the network; the build checks that, and
+that no page has an inline script or an outside address.
+
+**How it is made.** The panel is the page itself: `panel.html` with its script in `panel.js`,
+as Manifest V3 wants — the same `src/main.ts`, with `src/extension/extension.ts` in the place
+of `src/platform.ts`, whose hooks do nothing in the file and the PWA. The worker,
+`background.js`, has the button, the shortcut and the menu. Chrome opens a side panel only
+inside the click's own handler, before anything is awaited, so the worker opens the panel
+first and reads the tab after (`src/extension/grab.ts`); the panel turns that HTML into
+Markdown (`src/extension/to-markdown.ts`) and the editor asks where it goes (`src/clip-ui.ts`,
+`src/clip.ts`).
 
 ## Live preview
 
@@ -266,6 +371,24 @@ follows the system, and the site reads and links the same.
   left as it is. A template saved before a new placeholder appeared does not use it:
   **Reset to default** brings it in.
 
+## Privacy and security
+
+- **The page reaches nothing.** A Content-Security-Policy in the file lets its code fetch
+  nothing but files beside it on the same server (`connect-src 'self'`, for a folder served
+  with an `index.json`), and send no form anywhere. The build fails if the policy goes missing
+  or an external reference creeps in. The PWA's copy lets in its manifest and its service
+  worker, both from its own origin.
+- **Scripts in notes never run.** Notes may hold HTML — that is how text colours work — so the
+  policy allows exactly one script, the editor's own, by its hash: an `onerror` on an `<img>` or
+  a `<script>` in a note does nothing.
+- **What a note links to on the web loads from there**: an image, a video or an embedded
+  frame with an `https://` address, as in any Markdown viewer — that is the note's choice, not
+  the editor's. Such requests carry no `Referer`.
+- **Files stay on your disk.** Notes are read and written in place through the File System
+  Access API; the remembered folders are handles in the browser's IndexedDB, never paths or
+  contents.
+- The extension's permissions: see "[Send to Markdown](#send-to-markdown-the-chrome-extension)".
+
 ## Features
 
 - **File tree**: collapsible folders, filtering by name, creating, renaming and deleting
@@ -302,11 +425,14 @@ follows the system, and the site reads and links the same.
   in `.meta.json` — see "[Tags](#tags)".
 - **Export to HTML**: the folder, or one of its subfolders, as a static site with search,
   or as one page — see "[Export to HTML](#export-to-html)".
+- **Send to Markdown**: a page, a selection, a link or an image from Chrome to a note, as
+  Markdown — see "[Send to Markdown](#send-to-markdown-the-chrome-extension)".
 - **Settings** (the gear at the top right, next to search): interface language, theme
   (system, light, dark), zoom 50–200 %, text width (a centred column or the full pane),
   whether the note name is shown as a title, and where added images go: the images folder
   beside the note (`assets` by default) and whether each note gets a subfolder of its own
-  in it; without one, all the images go straight into the folder.
+  in it; without one, all the images go straight into the folder. At the bottom, the version
+  — and in the installed app, a check for updates and whether to install them by themselves.
 - **Languages**: English and 16 more — 中文, हिन्दी, Español, Français, العربية, বাংলা,
   Português, Русский, اردو, Bahasa Indonesia, Deutsch, 日本語, Türkçe, 한국어, Italiano,
   Українська. By default the interface follows the browser's language. In Arabic and Urdu the
@@ -357,28 +483,74 @@ plural category of the language (`Intl.PluralRules`), keyed by the English plura
 used; `npm test` checks that every translation keeps the English placeholders and has all
 plural forms.
 
+What Chrome shows of the extension itself — its name and description, the toolbar button's
+title — follows the browser's language rather than the panel's, through `chrome.i18n`. Those
+texts are the English ones in `src/extension/manifest.json`, translated in the same
+dictionaries under the context `manifest`; the build writes them to
+`_locales/<code>/messages.json` and puts `__MSG_appName__` and the like into the manifest.
+Chrome has codes of its own and ignores the rest: `pt` becomes `pt_BR` and `pt_PT`, `zh`
+becomes `zh_CN`, and Urdu has none, so there Chrome describes the extension in English. The
+build stops at a name over 75 characters or a description over 132. The context menu speaks
+the panel's language once the panel has been opened, the browser's before that.
+
+This README is translated as well: `docs/readme/README.<code>.md`, one per language, with the
+list of languages at the top of each. A change here belongs in the translations too.
+
 ## Build
 
 ```sh
-./build.sh         # installs the dependencies if needed, then builds build/macaed.html
+./build.sh         # installs the dependencies if needed, then builds
 npm install
-npm run build      # -> build/macaed.html
-npm run watch      # rebuild on changes in src/
+npm run build      # -> build/macaed.html, build/pages/, build/extension/ and its zip
+npm run watch      # rebuild on changes in src/ and assets/
 npm run typecheck  # tsc --noEmit
-npm test           # the block model, formatting, Markdown syntax, tags, the export and the dictionaries
-npm run test:browser  # the built editor in headless Chrome
+npm test           # the block model, formatting, Markdown syntax, tags, the export, clippings and the dictionaries
+npm run test:browser  # in headless Chrome: the editor, HTML → Markdown, the PWA, the extension
 npm run i18n       # strings each dictionary lacks or no longer needs
+npm run check      # typecheck, test, build and test:browser in a row: green means done
 ```
 
 `build.mjs` bundles `src/main.ts` with esbuild into an IIFE and substitutes it, along with
 the styles and the icon (a data URI), into `src/template.html`; the export's template and
-stylesheet are bundled as strings. The result is `build/macaed.html`, around 500 KB. The
-build fails if even one external reference is left in it.
+stylesheet are bundled as strings. The template's Content-Security-Policy gets the hash of
+that one script. The result is `build/macaed.html`, around 620 KB. The build fails if even one
+external reference is left in it.
 
 The same run writes `build/pages/`: that page as an installable PWA — `index.html` with a
-manifest link and a service worker registration, `manifest.webmanifest`, the icons and
-`sw.js`, which caches the page so it opens offline. `build/macaed.html` itself stays a single
-file with no external references.
+manifest link and a `<meta name="service-worker">` that tells the page to register its worker,
+`manifest.webmanifest`, the icons and `sw.js`, which caches the page so it opens offline.
+`build/macaed.html` itself stays a single file with no external references.
+
+And `build/extension/`: `panel.html` — the template, its script in `panel.js` — `background.js`,
+the icons, `_locales/` and `manifest.json`, whose version is `package.json`'s.
+`build/macaed-extension-<version>.zip` holds the same files with fixed dates: the same sources
+give the same bytes.
+
+The browser tests start the local Chrome (`CHROME=/path/to/chrome` to pick one) and speak the
+DevTools protocol to it, with no dependencies; without a Chrome they are skipped.
+`tools/test-extension.mjs` loads the extension through that protocol (`Extensions.loadUnpacked`
+over a pipe; `--load-extension` is gone from Chrome since version 137), opens a folder in the
+side panel and sends it pages, selections, links and images from test sites on a local server.
+Neither the toolbar button nor a context menu can be clicked from DevTools, so the test fires
+the worker's `onClicked` itself; with no real click Chrome grants no `activeTab`, so the copy
+under test may reach the test sites, `*.test`, as host permissions.
+
+## Versions and releases
+
+The version is written in one place, `package.json`. The build puts it into the page (the
+line under the start screen, the bottom of the settings), into the extension's
+`manifest.json` and into the PWA's cache name. A build of the commit tagged `v<version>` shows
+it as it is; any other adds its commit, `0.11.0+1a2b3c4`, so a page from `main` on GitHub
+Pages is not taken for the release. Chrome's `version` holds numbers only, so there the commit
+goes into `version_name`.
+
+```sh
+npm version minor           # 0.11.0 -> 0.12.0: package.json, package-lock.json, a commit and the tag v0.12.0
+git push --follow-tags      # the tag starts .github/workflows/release.yml
+```
+
+The release workflow stops if the tag and `package.json` disagree, runs the tests, then
+attaches `macaed-<tag>.html`, `macaed-extension-<tag>.zip` and `SHA256SUMS.txt`.
 
 ## GitHub Pages
 
@@ -388,13 +560,38 @@ file with no external references.
 install button in the address bar turns it into a separate app window; on iOS it is Share →
 Add to Home Screen. Folders open the same way as in the single file.
 
-Each deploy changes the cache name in `sw.js`, so the browser picks up the new version
-by itself; an open window switches to it on its next reload.
+**Offline.** Once opened, the editor works with no connection: the service worker keeps the
+page, its manifest and icons in a cache named after the version, and serves the page from
+there. Notes never pass through it — they are on your disk.
+
+**Updates.** Each deploy changes `sw.js`, so the browser finds the new worker by itself — on a
+launch with a connection, every few hours while the app stays open, when the connection comes
+back, or when Settings → Check for updates asks. The new worker downloads its version into a
+cache of its own and waits; the running one keeps serving the old page, offline too, so
+nothing changes under your hands. The settings, with a dot on their button, and the start
+screen then say "Version … is ready. Update": Update saves the open note (or asks, when it
+cannot be saved), lets the new worker in and reloads the page, which says once that it has
+been updated; the old cache is deleted. Without the button the new version starts once every
+window of the app has been closed — or, with "Install updates by themselves when everything is
+saved and the app is in the background" ticked in the settings, as soon as nothing is unsaved
+and the window is out of sight.
+
+That is also the trade-off: an installed PWA runs whatever the last deploy put there, while a
+downloaded file stays the version it is. For a version fixed on disk, take `macaed-<tag>.html`
+from a release and compare it with `SHA256SUMS.txt`.
+
+The installed app asks the browser to keep its storage (`navigator.storage.persist()`): a disk
+running low could otherwise take the offline copy and the remembered folders with it.
+
+`npm run test:browser` opens `build/pages/` too (`tools/test-pwa.mjs`): the service worker
+takes the page over, Chrome finds the manifest installable, and with the server gone the page
+still loads; then a check finds nothing, then no connection, then a new deploy, which waits
+until Update lets it in.
 
 ## Layout
 
 ```
-src/template.html   markup with the __STYLES__/__APP__/__ICON__ placeholders
+src/template.html   markup with the __STYLES__/__APP__/__ICON__ placeholders and the CSP
 src/styles.css      palette, light and dark themes, block paired with its source
 src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD
@@ -413,12 +610,22 @@ src/settings.ts     localStorage: language, theme, zoom, panel width, last note
 src/i18n.ts         t()/tn(), the language list and flags, translating the page's markup
 src/locales/        one dictionary per language
 src/ui.ts           dialogs, context menu, popover, notifications
-tools/              tests: block model, formatting, tags, the export, dictionaries, the editor in headless Chrome
-src/sw.js           the service worker of the Pages build
-vendor/             the icon, and its PNG sizes for the PWA
-docs/               the README screenshot; working notes (not under git)
+src/update.ts       the installed app's updates: the waiting worker, its version, Update
+src/platform.ts     what the page does beyond itself: nothing, except in the extension
+src/clip.ts         what the extension sends, as a note: file name, front matter, the end of a note
+src/clip-ui.ts      the dialog that asks where it goes
+src/pwa/sw.js       the service worker of the Pages build: offline, and a new version waits
+src/extension/      "Send to Markdown": manifest.json; background.ts (button, shortcut, menu);
+                    grab.ts (run in the page: its text or the selection); to-markdown.ts
+                    (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts
+tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
+                    formatting, tags, the export, clippings, dictionaries; in headless Chrome
+                    the editor, HTML → Markdown, the PWA and the extension
+assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
+docs/               the README screenshot and its translations, docs/readme/
 build/macaed.html   the build output
 build/pages/        the PWA for GitHub Pages
+build/extension/    the Chrome extension, and build/macaed-extension-<version>.zip of it
 ```
 
 ## Limitations
@@ -427,6 +634,9 @@ build/pages/        the PWA for GitHub Pages
 - On a phone the layout is made for reading: the tree's context menu needs a long press
   that iOS does not turn into one, and tables are extended with bars that appear on hover.
 - Only Chromium-based browsers can write files.
+- The extension is for Chrome (and browsers built on it with a side panel, such as Edge); it
+  is not in the Chrome Web Store yet. It keeps images on the web rather than downloading them
+  into the folder: that would need access to every site.
 
 ## License
 

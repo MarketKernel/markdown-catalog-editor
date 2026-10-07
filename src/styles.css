@@ -141,6 +141,28 @@ button, input, textarea, select {
 .icon-button:hover { background: var(--panel-2); color: var(--text); }
 .icon-button:disabled { opacity: 0.4; cursor: default; background: transparent; color: var(--muted); }
 .icon-button[aria-pressed='true'] { background: var(--accent-bg); color: var(--accent); }
+/* A dot on the settings when a new version of the installed app is ready. */
+.icon-button--badge { position: relative; }
+.icon-button--badge::after {
+  content: '';
+  position: absolute;
+  top: 7px;
+  inset-inline-end: 7px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.link-button {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: var(--accent);
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
 .icon-button svg {
   width: 25px;
   height: 25px;
@@ -196,6 +218,8 @@ button, input, textarea, select {
 }
 .gate-hint { color: var(--faint); margin: 12px 0 0; }
 .gate-error { color: var(--danger); min-height: 1.4em; margin: 12px 0 0; }
+.gate-version { color: var(--faint); font-size: 12px; margin: 14px 0 0; }
+.gate-update { margin-top: 4px; }
 /* Blank until the start has tried to reopen the last folder by itself. */
 .gate--starting .gate-inner { visibility: hidden; }
 
@@ -1158,6 +1182,17 @@ details.callout[open] > summary.callout-title::after { transform: rotate(45deg);
 }
 .export-template:focus { border-color: var(--accent); }
 .export-template:disabled, .export-folder:disabled { opacity: 0.6; }
+/* What the extension sent: where it goes, and its Markdown to look over. */
+.clip-source { overflow-wrap: anywhere; }
+.clip-targets { margin: 0 0 10px; }
+.clip-where { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 10px; }
+.clip-where[hidden] { display: none; }
+.clip-where .dialog-label { margin-bottom: 12px; }
+.clip-where .dialog-input { font-family: var(--mono); font-size: 13px; }
+.clip-markdown { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 40vh; }
+@media (max-width: 520px) {
+  .clip-where { grid-template-columns: minmax(0, 1fr); gap: 0; }
+}
 .export-progress { margin: 14px 0 0; }
 .export-progress-text {
   display: flex;
@@ -1292,6 +1327,7 @@ details.callout[open] > summary.callout-title::after { transform: rotate(45deg);
   padding: 5px 8px;
   font: inherit;
 }
+.settings-version { margin: 10px 0 0; color: var(--faint); font-size: 12px; line-height: 1.5; }
 .settings .zoom .icon-button { width: 34px; height: 30px; font-size: 17px; }
 .settings .zoom-value { min-width: 58px; font-size: 14px; }
 

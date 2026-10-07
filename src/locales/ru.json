@@ -69,7 +69,8 @@
     "Recent folders": "Недавние папки",
     "Open {name}": "Открыть «{name}»",
     "Remove from the list": "Убрать из списка",
-    "The folder \"{name}\" is no longer there, so it was removed from the list": "Папки «{name}» больше нет, она убрана из списка"
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "Папки «{name}» больше нет, она убрана из списка",
+    "Version {version}": "Версия {version}"
   },
   "dialog": {
     "Note not found": "Заметка не найдена",
@@ -132,7 +133,8 @@
     "Close folder": "Закрыть папку",
     "Images": "Рисунки",
     "Images folder": "Папка рисунков",
-    "A subfolder named after the note": "Подпапка с именем заметки"
+    "A subfolder named after the note": "Подпапка с именем заметки",
+    "Version {version}": "Версия {version}"
   },
   "app": {
     "Notes editor": "Редактор заметок"
@@ -242,5 +244,47 @@
     "Switch to the light theme": "Включить светлую тему",
     "Previous note": "Предыдущая заметка",
     "Next note": "Следующая заметка"
+  },
+  "clip": {
+    "The page \"{title}\" from {site}": "Страница «{title}» с сайта {site}",
+    "The selection on \"{title}\" from {site}": "Выделение на «{title}» с сайта {site}",
+    "A link from {site}": "Ссылка с сайта {site}",
+    "An image from {site}": "Изображение с сайта {site}",
+    "Folder": "Папка",
+    "Name": "Имя",
+    "Markdown": "Markdown",
+    "Save": "Сохранить",
+    "Send to Markdown": "Send to Markdown",
+    "A new note": "Новая заметка",
+    "The end of \"{note}\"": "Конец «{note}»",
+    "The end of the open note": "Конец открытой заметки",
+    "Open a folder of notes, and what was sent goes into it": "Откройте папку с заметками, и отправленное попадёт в неё",
+    "Clipping": "Вырезка",
+    "Added to the end of {name}": "Добавлено в конец {name}",
+    "Saved as {path}": "Сохранено как {path}"
+  },
+  "extension": {
+    "Send the page to Markdown": "Отправить страницу в Markdown",
+    "Send the selection to Markdown": "Отправить выделение в Markdown",
+    "Send the link to Markdown": "Отправить ссылку в Markdown",
+    "Send the image to Markdown": "Отправить изображение в Markdown"
+  },
+  "update": {
+    "Install updates by themselves when everything is saved and the app is in the background": "Устанавливать обновления самостоятельно, когда всё сохранено, а приложение работает в фоновом режиме",
+    "Check for updates": "Проверить обновления",
+    "Checking for updates…": "Проверка обновлений…",
+    "This is the latest version.": "Это последняя версия.",
+    "No connection: could not check for updates.": "Нет соединения: не удалось проверить обновления.",
+    "It also starts by itself the next time the app is opened.": "Обновление также установится само собой при следующем запуске приложения.",
+    "Update": "Обновить",
+    "Version {version} is ready.": "Версия {version} готова.",
+    "A new version is ready.": "Готова новая версия.",
+    "The note has unsaved changes. Update anyway?": "В заметке есть несохранённые изменения. Всё равно обновить?",
+    "Updated to version {version}.": "Обновлено до версии {version}."
+  },
+  "manifest": {
+    "Send to Markdown": "Send to Markdown",
+    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "Отправляет веб-страницу, выделение, ссылку или изображение в заметку Markdown в папке на диске. Редактируйте в боковой панели.",
+    "Send the page or the selection to Markdown": "Отправить страницу или выделение в Markdown"
   }
 }

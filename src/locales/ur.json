@@ -52,6 +52,7 @@
     "Export stopped": "برآمد روک دی گئی"
   },
   "gate": {
+    "Version {version}": "ورژن {version}",
     "Drag a folder, not a single file": "کوئی فولڈر گھسیٹیں، اکیلی فائل نہیں",
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "یہ براؤزر ڈسک پر فائلیں نہیں لکھ سکتا: فولڈر صرف پڑھنے کے لیے کھلے گا، اور محفوظ کرتے وقت ترمیم شدہ فائل ڈاؤن لوڈ کرنے کی پیشکش کی جائے گی۔ مکمل ترمیم کمپیوٹر پر Chrome، Edge اور Arc میں کام کرتی ہے۔",
     "local editor · one file": "مقامی ایڈیٹر · ایک فائل",
@@ -126,7 +127,8 @@
     "Close folder": "فولڈر بند کریں",
     "Images": "تصاویر",
     "Images folder": "تصاویر کا فولڈر",
-    "A subfolder named after the note": "نوٹ کے نام کا ذیلی فولڈر"
+    "A subfolder named after the note": "نوٹ کے نام کا ذیلی فولڈر",
+    "Version {version}": "ورژن {version}"
   },
   "app": {
     "Notes editor": "نوٹس ایڈیٹر"
@@ -232,5 +234,47 @@
     "Switch to the light theme": "ہلکی تھیم پر جائیں",
     "Previous note": "پچھلا نوٹ",
     "Next note": "اگلا نوٹ"
+  },
+  "clip": {
+    "The page \"{title}\" from {site}": "{site} سے صفحہ \"{title}\"",
+    "The selection on \"{title}\" from {site}": "{site} سے \"{title}\" میں انتخاب",
+    "A link from {site}": "{site} سے ایک لنک",
+    "An image from {site}": "{site} سے ایک تصویر",
+    "Folder": "فولڈر",
+    "Name": "نام",
+    "Markdown": "Markdown",
+    "Save": "محفوظ کریں",
+    "Send to Markdown": "Send to Markdown",
+    "A new note": "نیا نوٹ",
+    "The end of \"{note}\"": "\"{note}\" کا اختتام",
+    "The end of the open note": "کھلے نوٹ کا اختتام",
+    "Open a folder of notes, and what was sent goes into it": "نوٹس کا فولڈر کھولیں، بھیجی گئی چیز اس میں شامل ہو جائے گی",
+    "Clipping": "تراشہ",
+    "Added to the end of {name}": "{name} کے آخر میں شامل ہو گیا",
+    "Saved as {path}": "{path} کے طور پر محفوظ ہوا"
+  },
+  "extension": {
+    "Send the page to Markdown": "صفحہ Markdown کو بھیجیں",
+    "Send the selection to Markdown": "انتخاب Markdown کو بھیجیں",
+    "Send the link to Markdown": "لنک Markdown کو بھیجیں",
+    "Send the image to Markdown": "تصویر Markdown کو بھیجیں"
+  },
+  "update": {
+    "Install updates by themselves when everything is saved and the app is in the background": "جب سب کچھ محفوظ ہو اور ایپ پس منظر میں ہو تو اپڈیٹس خود بخود انسٹال کریں",
+    "Check for updates": "اپڈیٹس چیک کریں",
+    "Checking for updates…": "اپڈیٹس چیک ہو رہی ہیں…",
+    "This is the latest version.": "یہ تازہ ترین ورژن ہے۔",
+    "No connection: could not check for updates.": "کوئی کنکشن نہیں: اپڈیٹس چیک نہیں ہو سکیں۔",
+    "It also starts by itself the next time the app is opened.": "یہ اگلی بار ایپ کھلنے پر خود بخود شروع بھی ہو جاتا ہے۔",
+    "Update": "اپڈیٹ کریں",
+    "Version {version} is ready.": "ورژن {version} تیار ہے۔",
+    "A new version is ready.": "ایک نیا ورژن تیار ہے۔",
+    "The note has unsaved changes. Update anyway?": "نوٹ میں غیر محفوظ تبدیلیاں ہیں۔ پھر بھی اپڈیٹ کریں؟",
+    "Updated to version {version}.": "ورژن {version} پر اپڈیٹ ہو گیا۔"
+  },
+  "manifest": {
+    "Send to Markdown": "Send to Markdown",
+    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "ویب صفحہ، انتخاب، لنک یا تصویر کو آپ کی ڈسک کے فولڈر میں Markdown نوٹ میں بھیجتا ہے۔ اسے سائیڈ پینل میں ترمیم کریں۔",
+    "Send the page or the selection to Markdown": "صفحہ یا انتخاب Markdown کو بھیجیں"
   }
 }

@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Tag to create or update (for example, v1.1.1)
+        description: Tag to create or update (for example, v0.12.0)
         required: true
         type: string
 
@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   build:
-    name: Build single-file editor
+    name: Build the single file and the extension
     runs-on: ubuntu-latest
     env:
       RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
@@ -33,18 +33,31 @@ jobs:
           node-version: 20
           cache: npm
 
+      # The version lives in package.json only; `npm version x.y.z` writes it and makes the tag.
+      - name: Check that the tag is package.json's version
+        shell: bash
+        run: |
+          VERSION="v$(node -p "require('./package.json').version")"
+          if [ "$VERSION" != "$RELEASE_TAG" ]; then
+            echo "::error::The tag is $RELEASE_TAG but package.json has $VERSION"
+            exit 1
+          fi
+
       - run: npm ci
       - run: npm run typecheck
       - run: npm test
       - run: npm run build
+      - run: npm run test:browser
 
       - name: Package
         shell: bash
         run: |
           mkdir -p dist
           cp build/macaed.html "dist/macaed-$RELEASE_TAG.html"
+          # "Send to Markdown" for the Chrome Web Store; its manifest has package.json's version.
+          cp build/macaed-extension-*.zip "dist/macaed-extension-$RELEASE_TAG.zip"
           # Computed from dist, or the sums file would hold a path, not a file name.
-          ( cd dist && shasum -a 256 ./*.html > SHA256SUMS.txt )
+          ( cd dist && shasum -a 256 ./*.html ./*.zip > SHA256SUMS.txt )
           cat dist/SHA256SUMS.txt
 
       - name: Upload build artifact

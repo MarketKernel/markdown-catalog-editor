@@ -1,8 +1,8 @@
 {
   "name": "markdown-catalog-editor",
-  "version": "1.0.0",
+  "version": "0.11.0",
   "private": true,
-  "description": "A Markdown editor for a local folder of notes \u2014 one standalone HTML file",
+  "description": "A Markdown editor for a local folder of notes — one standalone HTML file, a PWA and a Chrome extension that sends web pages to it",
   "license": "MIT",
   "type": "module",
   "engines": {
@@ -12,11 +12,18 @@
     "build": "node build.mjs",
     "watch": "node build.mjs --watch",
     "typecheck": "tsc --noEmit",
-    "test": "node tools/test-blocks.mjs && node tools/test-format.mjs && node tools/test-table.mjs && node tools/test-markdown.mjs && node tools/test-meta.mjs && node tools/test-vault.mjs && node tools/test-export.mjs && node tools/test-i18n.mjs",
-    "test:browser": "node --experimental-websocket tools/test-editor.mjs",
-    "i18n": "node tools/i18n.mjs"
+    "test": "node tools/test-blocks.mjs && node tools/test-format.mjs && node tools/test-table.mjs && node tools/test-markdown.mjs && node tools/test-meta.mjs && node tools/test-vault.mjs && node tools/test-export.mjs && node tools/test-clip.mjs && node tools/test-i18n.mjs",
+    "test:browser": "npm run test:editor && npm run test:convert && npm run test:pwa && npm run test:extension",
+    "test:editor": "node --experimental-websocket tools/test-editor.mjs",
+    "test:convert": "node tools/test-convert.mjs",
+    "test:pwa": "node tools/test-pwa.mjs",
+    "test:extension": "node tools/test-extension.mjs",
+    "i18n": "node tools/i18n.mjs",
+    "shots": "node tools/shots.mjs",
+    "check": "npm run typecheck && npm test && npm run build && npm run test:browser"
   },
   "devDependencies": {
+    "@types/chrome": "^0.3.4",
     "esbuild": "^0.25.0",
     "highlight.js": "^11.11.1",
     "markdown-it": "^15.0.2",

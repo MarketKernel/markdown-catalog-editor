@@ -63,7 +63,8 @@
     "Recent folders": "हाल के फ़ोल्डर",
     "Open {name}": "“{name}” खोलें",
     "Remove from the list": "सूची से हटाएँ",
-    "The folder \"{name}\" is no longer there, so it was removed from the list": "फ़ोल्डर “{name}” अब मौजूद नहीं है, इसलिए उसे सूची से हटा दिया गया"
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "फ़ोल्डर “{name}” अब मौजूद नहीं है, इसलिए उसे सूची से हटा दिया गया",
+    "Version {version}": "वर्शन {version}"
   },
   "dialog": {
     "Note not found": "नोट नहीं मिला",
@@ -126,7 +127,8 @@
     "Close folder": "फ़ोल्डर बंद करें",
     "Images": "चित्र",
     "Images folder": "चित्रों का फ़ोल्डर",
-    "A subfolder named after the note": "नोट के नाम का एक सबफ़ोल्डर"
+    "A subfolder named after the note": "नोट के नाम का एक सबफ़ोल्डर",
+    "Version {version}": "वर्शन {version}"
   },
   "app": {
     "Notes editor": "नोट्स एडिटर"
@@ -232,5 +234,47 @@
     "Switch to the light theme": "हल्की थीम पर जाएँ",
     "Previous note": "पिछला नोट",
     "Next note": "अगला नोट"
+  },
+  "clip": {
+    "The page \"{title}\" from {site}": "{site} से पृष्ठ “{title}”",
+    "The selection on \"{title}\" from {site}": "{site} से “{title}” का चयनित भाग",
+    "A link from {site}": "{site} से एक लिंक",
+    "An image from {site}": "{site} से एक छवि",
+    "Folder": "फ़ोल्डर",
+    "Name": "नाम",
+    "Markdown": "Markdown",
+    "Save": "सहेजें",
+    "Send to Markdown": "Send to Markdown",
+    "A new note": "नया नोट",
+    "The end of \"{note}\"": "“{note}” का अंत",
+    "The end of the open note": "खुले नोट का अंत",
+    "Open a folder of notes, and what was sent goes into it": "नोट्स का फ़ोल्डर खोलें, भेजी गई सामग्री उसी में जाएगी",
+    "Clipping": "क्लिपिंग",
+    "Added to the end of {name}": "{name} के अंत में जोड़ा गया",
+    "Saved as {path}": "{path} के रूप में सहेजा गया"
+  },
+  "extension": {
+    "Send the page to Markdown": "पृष्ठ को Markdown में भेजें",
+    "Send the selection to Markdown": "चयनित भाग को Markdown में भेजें",
+    "Send the link to Markdown": "लिंक को Markdown में भेजें",
+    "Send the image to Markdown": "छवि को Markdown में भेजें"
+  },
+  "update": {
+    "Install updates by themselves when everything is saved and the app is in the background": "जब सब कुछ सहेजा जा चुका हो और ऐप बैकग्राउंड में हो, तो अपडेट अपने आप इंस्टॉल करें",
+    "Check for updates": "अपडेट जांचें",
+    "Checking for updates…": "अपडेट जांचे जा रहे हैं…",
+    "This is the latest version.": "यह नवीनतम वर्शन है।",
+    "No connection: could not check for updates.": "कोई कनेक्शन नहीं: अपडेट जांचे नहीं जा सके।",
+    "It also starts by itself the next time the app is opened.": "अगली बार ऐप खोलने पर यह अपने आप भी शुरू हो जाता है।",
+    "Update": "अपडेट करें",
+    "Version {version} is ready.": "वर्शन {version} तैयार है।",
+    "A new version is ready.": "नया वर्शन तैयार है।",
+    "The note has unsaved changes. Update anyway?": "नोट में बिना सहेजे बदलाव हैं। फिर भी अपडेट करें?",
+    "Updated to version {version}.": "वर्शन {version} में अपडेट हो गया।"
+  },
+  "manifest": {
+    "Send to Markdown": "Send to Markdown",
+    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "किसी वेब पृष्ठ, चयनित भाग, लिंक या छवि को आपकी डिस्क के फ़ोल्डर में Markdown नोट में भेजता है। साइड पैनल में संपादित करें।",
+    "Send the page or the selection to Markdown": "पृष्ठ या चयनित भाग को Markdown में भेजें"
   }
 }

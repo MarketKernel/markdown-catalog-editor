@@ -52,6 +52,7 @@
     "Export stopped": "রপ্তানি থামানো হয়েছে"
   },
   "gate": {
+    "Version {version}": "সংস্করণ {version}",
     "Drag a folder, not a single file": "একটি ফোল্ডার টেনে আনুন, একক ফাইল নয়",
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "এই ব্রাউজার ডিস্কে ফাইল লিখতে পারে না: ফোল্ডারটি শুধু পড়ার জন্য খুলবে, আর সংরক্ষণের সময় পরিবর্তিত ফাইলটি ডাউনলোড করার প্রস্তাব দেওয়া হবে। পূর্ণ সম্পাদনা কম্পিউটারে Chrome, Edge ও Arc-এ কাজ করে।",
     "local editor · one file": "লোকাল এডিটর · একটি ফাইল",
@@ -126,7 +127,8 @@
     "Close folder": "ফোল্ডার বন্ধ করুন",
     "Images": "ছবি",
     "Images folder": "ছবির ফোল্ডার",
-    "A subfolder named after the note": "নোটের নামে একটি সাবফোল্ডার"
+    "A subfolder named after the note": "নোটের নামে একটি সাবফোল্ডার",
+    "Version {version}": "সংস্করণ {version}"
   },
   "app": {
     "Notes editor": "নোট এডিটর"
@@ -232,5 +234,47 @@
     "Switch to the light theme": "হালকা থিমে যান",
     "Previous note": "আগের নোট",
     "Next note": "পরের নোট"
+  },
+  "clip": {
+    "The page \"{title}\" from {site}": "{site} থেকে “{title}” পৃষ্ঠাটি",
+    "The selection on \"{title}\" from {site}": "{site}-এর “{title}”-এ নির্বাচিত অংশ",
+    "A link from {site}": "{site} থেকে একটি লিংক",
+    "An image from {site}": "{site} থেকে একটি ছবি",
+    "Folder": "ফোল্ডার",
+    "Name": "নাম",
+    "Markdown": "Markdown",
+    "Save": "সংরক্ষণ",
+    "Send to Markdown": "Send to Markdown",
+    "A new note": "নতুন নোট",
+    "The end of \"{note}\"": "“{note}”-এর শেষে",
+    "The end of the open note": "খোলা নোটের শেষে",
+    "Open a folder of notes, and what was sent goes into it": "নোটের একটি ফোল্ডার খুলুন, পাঠানো জিনিসটি তাতে যোগ হবে",
+    "Clipping": "ক্লিপিং",
+    "Added to the end of {name}": "{name}-এর শেষে যোগ হয়েছে",
+    "Saved as {path}": "{path} হিসেবে সংরক্ষিত হয়েছে"
+  },
+  "extension": {
+    "Send the page to Markdown": "পৃষ্ঠাটি Markdown-এ পাঠান",
+    "Send the selection to Markdown": "নির্বাচিত অংশ Markdown-এ পাঠান",
+    "Send the link to Markdown": "লিংকটি Markdown-এ পাঠান",
+    "Send the image to Markdown": "ছবিটি Markdown-এ পাঠান"
+  },
+  "update": {
+    "Install updates by themselves when everything is saved and the app is in the background": "সবকিছু সংরক্ষিত থাকলে ও অ্যাপ ব্যাকগ্রাউন্ডে থাকলে আপডেট নিজে থেকেই ইনস্টল করুন",
+    "Check for updates": "আপডেট পরীক্ষা করুন",
+    "Checking for updates…": "আপডেট পরীক্ষা হচ্ছে…",
+    "This is the latest version.": "এটিই সর্বশেষ সংস্করণ।",
+    "No connection: could not check for updates.": "কোনো সংযোগ নেই: আপডেট পরীক্ষা করা যায়নি।",
+    "It also starts by itself the next time the app is opened.": "পরের বার অ্যাপ খোলার সময় এটি নিজে থেকেই শুরু হয়ে যায়।",
+    "Update": "আপডেট করুন",
+    "Version {version} is ready.": "সংস্করণ {version} প্রস্তুত।",
+    "A new version is ready.": "একটি নতুন সংস্করণ প্রস্তুত।",
+    "The note has unsaved changes. Update anyway?": "নোটে অসংরক্ষিত পরিবর্তন আছে। তবুও আপডেট করবেন?",
+    "Updated to version {version}.": "সংস্করণ {version}-এ আপডেট হয়েছে।"
+  },
+  "manifest": {
+    "Send to Markdown": "Send to Markdown",
+    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "একটি ওয়েব পৃষ্ঠা, নির্বাচিত অংশ, লিংক বা ছবি আপনার ডিস্কের ফোল্ডারে একটি Markdown নোটে পাঠায়। এটি সাইড প্যানেলে সম্পাদনা করুন।",
+    "Send the page or the selection to Markdown": "পৃষ্ঠা বা নির্বাচিত অংশ Markdown-এ পাঠান"
   }
 }

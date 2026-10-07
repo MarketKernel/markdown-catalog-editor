@@ -66,7 +66,8 @@
     "Recent folders": "Pastas recentes",
     "Open {name}": "Abrir “{name}”",
     "Remove from the list": "Remover da lista",
-    "The folder \"{name}\" is no longer there, so it was removed from the list": "A pasta “{name}” não existe mais, por isso foi removida da lista"
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "A pasta “{name}” não existe mais, por isso foi removida da lista",
+    "Version {version}": "Versão {version}"
   },
   "dialog": {
     "Note not found": "Nota não encontrada",
@@ -129,7 +130,8 @@
     "Close folder": "Fechar pasta",
     "Images": "Imagens",
     "Images folder": "Pasta de imagens",
-    "A subfolder named after the note": "Uma subpasta com o nome da nota"
+    "A subfolder named after the note": "Uma subpasta com o nome da nota",
+    "Version {version}": "Versão {version}"
   },
   "app": {
     "Notes editor": "Editor de notas"
@@ -237,5 +239,47 @@
     "Switch to the light theme": "Mudar para o tema claro",
     "Previous note": "Nota anterior",
     "Next note": "Próxima nota"
+  },
+  "clip": {
+    "The page \"{title}\" from {site}": "A página “{title}” de {site}",
+    "The selection on \"{title}\" from {site}": "A seleção em “{title}” de {site}",
+    "A link from {site}": "Um link de {site}",
+    "An image from {site}": "Uma imagem de {site}",
+    "Folder": "Pasta",
+    "Name": "Nome",
+    "Markdown": "Markdown",
+    "Save": "Salvar",
+    "Send to Markdown": "Send to Markdown",
+    "A new note": "Uma nova nota",
+    "The end of \"{note}\"": "O final de “{note}”",
+    "The end of the open note": "O final da nota aberta",
+    "Open a folder of notes, and what was sent goes into it": "Abra uma pasta de notas, e o que foi enviado será salvo nela",
+    "Clipping": "Recorte",
+    "Added to the end of {name}": "Adicionado ao final de {name}",
+    "Saved as {path}": "Salvo como {path}"
+  },
+  "extension": {
+    "Send the page to Markdown": "Enviar a página para Markdown",
+    "Send the selection to Markdown": "Enviar a seleção para Markdown",
+    "Send the link to Markdown": "Enviar o link para Markdown",
+    "Send the image to Markdown": "Enviar a imagem para Markdown"
+  },
+  "update": {
+    "Install updates by themselves when everything is saved and the app is in the background": "Instalar as atualizações automaticamente quando tudo estiver salvo e o app estiver em segundo plano",
+    "Check for updates": "Verificar atualizações",
+    "Checking for updates…": "Verificando atualizações…",
+    "This is the latest version.": "Esta é a versão mais recente.",
+    "No connection: could not check for updates.": "Sem conexão: não foi possível verificar atualizações.",
+    "It also starts by itself the next time the app is opened.": "Ela também será instalada sozinha na próxima vez que o app for aberto.",
+    "Update": "Atualizar",
+    "Version {version} is ready.": "A versão {version} está pronta.",
+    "A new version is ready.": "Uma nova versão está pronta.",
+    "The note has unsaved changes. Update anyway?": "A nota tem alterações não salvas. Atualizar mesmo assim?",
+    "Updated to version {version}.": "Atualizado para a versão {version}."
+  },
+  "manifest": {
+    "Send to Markdown": "Send to Markdown",
+    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "Envia uma página, uma seleção, um link ou uma imagem para uma nota Markdown em uma pasta do seu disco. Edite-a no painel lateral.",
+    "Send the page or the selection to Markdown": "Enviar a página ou a seleção para Markdown"
   }
 }

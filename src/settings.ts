@@ -1,5 +1,6 @@
-/** Language, theme, zoom, images folder and panel state, remembered in localStorage between sessions. */
+/** Language, theme, zoom, images and clippings folders, updates and panel state, remembered in localStorage between sessions. */
 
+import { cleanClipFolder, DEFAULT_CLIP_FOLDER } from './clip';
 import { detectLanguage, isLanguage, type Language } from './i18n';
 import { cleanImageFolder, DEFAULT_IMAGES, type ImageSettings } from './vault';
 
@@ -36,6 +37,10 @@ export interface Settings {
   exportSite: boolean;
   /** Where images added to a note are saved. */
   images: ImageSettings;
+  /** Where the extension's pages become notes, from the root of the folder; '' → the root itself. */
+  clipFolder: string;
+  /** The installed app lets a new version in by itself while nothing is unsaved and it is out of sight. */
+  autoUpdate: boolean;
 }
 
 const KEY = 'markdown-catalog-editor';
@@ -63,6 +68,8 @@ const DEFAULTS: Settings = {
   exportTags: true,
   exportSite: true,
   images: DEFAULT_IMAGES,
+  clipFolder: DEFAULT_CLIP_FOLDER,
+  autoUpdate: false,
 };
 
 export function loadSettings(): Settings {
@@ -85,6 +92,8 @@ export function loadSettings(): Settings {
         folder: cleanImageFolder(String(stored.images?.folder ?? '')),
         perNote: stored.images?.perNote !== false,
       },
+      clipFolder: typeof stored.clipFolder === 'string' ? cleanClipFolder(stored.clipFolder) : DEFAULT_CLIP_FOLDER,
+      autoUpdate: stored.autoUpdate === true,
     };
   } catch {
     return { ...DEFAULTS };

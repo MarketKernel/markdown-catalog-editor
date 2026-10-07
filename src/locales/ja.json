@@ -60,7 +60,8 @@
     "Recent folders": "最近のフォルダ",
     "Open {name}": "「{name}」を開く",
     "Remove from the list": "一覧から削除",
-    "The folder \"{name}\" is no longer there, so it was removed from the list": "フォルダ「{name}」は見つからないため、一覧から削除しました"
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "フォルダ「{name}」は見つからないため、一覧から削除しました",
+    "Version {version}": "バージョン {version}"
   },
   "dialog": {
     "Note not found": "ノートが見つかりません",
@@ -123,7 +124,8 @@
     "Close folder": "フォルダを閉じる",
     "Images": "画像",
     "Images folder": "画像フォルダー",
-    "A subfolder named after the note": "ノート名のサブフォルダー"
+    "A subfolder named after the note": "ノート名のサブフォルダー",
+    "Version {version}": "バージョン {version}"
   },
   "app": {
     "Notes editor": "ノートエディタ"
@@ -227,5 +229,47 @@
     "Switch to the light theme": "ライトテーマに切り替える",
     "Previous note": "前のノート",
     "Next note": "次のノート"
+  },
+  "clip": {
+    "The page \"{title}\" from {site}": "{site} のページ「{title}」",
+    "The selection on \"{title}\" from {site}": "{site} の「{title}」内の選択範囲",
+    "A link from {site}": "{site} からのリンク",
+    "An image from {site}": "{site} からの画像",
+    "Folder": "フォルダー",
+    "Name": "名前",
+    "Markdown": "Markdown",
+    "Save": "保存",
+    "Send to Markdown": "Send to Markdown",
+    "A new note": "新規ノート",
+    "The end of \"{note}\"": "「{note}」の末尾",
+    "The end of the open note": "開いているノートの末尾",
+    "Open a folder of notes, and what was sent goes into it": "ノートのフォルダーを開くと、送信した内容がそこに保存されます",
+    "Clipping": "クリップ",
+    "Added to the end of {name}": "{name} の末尾に追加しました",
+    "Saved as {path}": "{path} として保存しました"
+  },
+  "extension": {
+    "Send the page to Markdown": "ページを Markdown に送信",
+    "Send the selection to Markdown": "選択範囲を Markdown に送信",
+    "Send the link to Markdown": "リンクを Markdown に送信",
+    "Send the image to Markdown": "画像を Markdown に送信"
+  },
+  "update": {
+    "Install updates by themselves when everything is saved and the app is in the background": "すべて保存済みでアプリがバックグラウンドにあるとき、更新を自動的にインストールする",
+    "Check for updates": "更新を確認",
+    "Checking for updates…": "更新を確認しています…",
+    "This is the latest version.": "これは最新バージョンです。",
+    "No connection: could not check for updates.": "接続がありません: 更新を確認できませんでした。",
+    "It also starts by itself the next time the app is opened.": "次回アプリを開いたときにも自動的に始まります。",
+    "Update": "更新",
+    "Version {version} is ready.": "バージョン {version} の準備ができました。",
+    "A new version is ready.": "新しいバージョンの準備ができました。",
+    "The note has unsaved changes. Update anyway?": "ノートに未保存の変更があります。それでも更新しますか？",
+    "Updated to version {version}.": "バージョン {version} に更新しました。"
+  },
+  "manifest": {
+    "Send to Markdown": "Send to Markdown",
+    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "ウェブページ、選択範囲、リンク、画像をディスク上のフォルダー内の Markdown ノートに送信します。サイドパネルで編集できます。",
+    "Send the page or the selection to Markdown": "ページまたは選択範囲を Markdown に送信"
   }
 }

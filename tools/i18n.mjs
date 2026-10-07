@@ -1,8 +1,10 @@
 /**
  * The strings the interface shows, as the dictionaries in src/locales key them:
  * { context: { English text: null | [one, other] } }. They are read from the
- * t()/tn() calls in src/*.ts and the data-i18n marks in src/template.html, so
- * both must use plain string literals.
+ * t()/tn() calls in the .ts files under src/ and the data-i18n marks in
+ * src/template.html, so both must use plain string literals. What Chrome shows
+ * of the extension itself comes from src/extension/manifest.json, context
+ * "manifest".
  *
  * `node tools/i18n.mjs` prints, per language, the strings its dictionary lacks
  * and the ones it has but the interface no longer uses.
@@ -18,6 +20,18 @@ const unescape = (text) => text.replace(/\\(.)/g, '$1');
 
 const ATTRIBUTES = ['title', 'placeholder', 'aria-label'];
 
+/**
+ * The manifest's texts, by the chrome.i18n message build.mjs makes of each for
+ * _locales/<code>/messages.json, with Chrome's limit on its length.
+ */
+export const MANIFEST_TEXTS = [
+  { message: 'appName', path: ['name'], max: 75 },
+  { message: 'appDescription', path: ['description'], max: 132 },
+  { message: 'actionTitle', path: ['action', 'default_title'] },
+];
+
+export const manifestText = (manifest, path) => path.reduce((value, key) => value?.[key], manifest);
+
 function add(strings, context, text, forms = null) {
   strings[context] ??= {};
   strings[context][text] = forms;
@@ -30,7 +44,7 @@ function decode(html) {
 export async function extract() {
   const strings = {};
   const dir = join(root, 'src');
-  for (const name of (await readdir(dir)).filter((file) => file.endsWith('.ts')).sort()) {
+  for (const name of (await readdir(dir, { recursive: true })).filter((file) => file.endsWith('.ts')).sort()) {
     const code = await readFile(join(dir, name), 'utf8');
     for (const [, fn, context, first, second] of code.matchAll(CALL)) {
       if (fn === 'tn') add(strings, unescape(context), unescape(second), [unescape(first), unescape(second)]);
@@ -53,6 +67,9 @@ export async function extract() {
       if (value) add(strings, context, decode(value));
     }
   }
+
+  const manifest = JSON.parse(await readFile(join(dir, 'extension', 'manifest.json'), 'utf8'));
+  for (const { path } of MANIFEST_TEXTS) add(strings, 'manifest', manifestText(manifest, path));
   return strings;
 }
 
