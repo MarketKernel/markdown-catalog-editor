@@ -45,8 +45,11 @@
     "A link to \"{title}\"": "رابط إلى «{title}»",
     "There is no knowledge base yet: open a folder of notes in full mode.": "لا توجد قاعدة معرفة بعد: افتح مجلد ملاحظات في الوضع الكامل.",
     "Open in full mode": "فتح في الوضع الكامل",
-    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "«{name}» مغلقة. افتحها في الوضع الكامل، وسيُضاف المحدَّد إلى {note}.",
-    "\"{name}\" is closed. Open it in full mode.": "«{name}» مغلقة. افتحها في الوضع الكامل.",
+    "The browser did not open the folder here. Open it in full mode.": "لم يفتح المتصفح المجلد هنا. افتحه في الوضع الكامل.",
+    "Open": "فتح",
+    "\"{name}\" is closed: what you send is added once it opens.": "«{name}» مغلقة: سيُضاف ما ترسله بمجرد أن تُفتح.",
+    "When Chrome asks, choose \"Allow on every visit\", and it stays open.": "عندما يسأل Chrome، اختر «السماح في كل زيارة»، فيبقى مفتوحًا.",
+    "It goes to the end of {name} once \"{base}\" opens": "سيُضاف إلى نهاية {name} بمجرد أن تُفتح «{base}»",
     "Send to Markdown": "Send to Markdown",
     "To the end of {note}": "إلى نهاية {note}",
     "(a new note)": "(ملاحظة جديدة)",
@@ -93,6 +96,7 @@
     "of notes": "للملاحظات",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "اختر مجلدًا يحتوي على ملفات {ext}. لا يُرسَل أي شيء إلى أي مكان: تُقرأ الملفات وتُحفظ مباشرةً على قرصك.",
     "Open folder": "فتح مجلد",
+    "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "عندما يسأل Chrome، اختر «السماح في كل زيارة»: عندئذٍ يبقى المجلد مفتوحًا عند إغلاق اللوحة.",
     "or drag a folder here": "أو اسحب مجلدًا إلى هنا",
     "Recent folders": "المجلدات الأخيرة",
     "Open {name}": "فتح «{name}»",
@@ -299,7 +303,15 @@
     "Send the page to Markdown": "إرسال الصفحة إلى Markdown",
     "Send the selection to Markdown": "إرسال التحديد إلى Markdown",
     "Send the link to Markdown": "إرسال الرابط إلى Markdown",
-    "Send the image to Markdown": "إرسال الصورة إلى Markdown"
+    "Send the image to Markdown": "إرسال الصورة إلى Markdown",
+    "{count} sendings wait for the knowledge base to open": {
+      "zero": "لا شيء ينتظر فتح قاعدة المعرفة",
+      "one": "إرسال واحد ينتظر فتح قاعدة المعرفة",
+      "two": "إرسالان ينتظران فتح قاعدة المعرفة",
+      "few": "{count} إرسالات تنتظر فتح قاعدة المعرفة",
+      "many": "{count} إرسالًا ينتظر فتح قاعدة المعرفة",
+      "other": "{count} إرسال ينتظر فتح قاعدة المعرفة"
+    }
   },
   "update": {
     "Install updates by themselves when everything is saved and the app is in the background": "تثبيت التحديثات تلقائيًا عند حفظ كل شيء وتشغيل التطبيق في الخلفية",

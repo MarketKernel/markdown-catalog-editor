@@ -126,21 +126,32 @@ Chrome ウェブストア向けの `build/macaed-extension-<version>.zip` です
   参照）。
 - **フルモード** はサイドパネルを開きます。
 
-**ナレッジベースが閉じている場合**——ブラウザの再起動後、「アクセスのたびに許可」を選んでい
-ない限り——ページは、あなたがクリックするまでフォルダに入ることができません。このときウィン
-ドウはその旨を伝え、**フルモードで開く** がサイドパネルを開き、そこでフォルダを一度クリック
-するとアクセスが戻ります。フォルダが開かれると、選択していた内容は自動的に既定のノートへ送ら
-れます。
+**ナレッジベースが閉じている場合**——最後のサイドパネルが閉じると Chrome はフォルダへのアク
+セスを取り戻し、再起動後も同様です。「アクセスするたびに許可」を選んでいない限り——ページ
+は、あなたがクリックするまでフォルダに入ることができません。このときウィンドウはその旨を伝
+え、それでもパネルが最後に見たとおりのノート一覧を表示します——**Send to Markdown**、または
+ノートをクリックすると、選択した内容は拡張機能自身のストレージに取り置かれ、サイドパネルが
+再びそのフォルダを開くと、ノートの末尾に追加されます。**開く** はウィンドウの中で直接
+Chrome にフォルダを求めます。サイドパネルでフォルダを一度クリックするのも同じです。Chrome
+が確認したら **アクセスするたびに許可** を選んでください：そうすればフォルダは、パネルを閉
+じても、再起動後も、開いたままになります。
 
 サイドパネルがナレッジベースを開いているときは、ノートへの追加を行うのはそのパネルです——そ
 のノートはまだ保存されていない変更を抱えたまま開かれている場合があり、陰で書き込むとそれが
-失われてしまうためです。パネルが閉じている場合は、ウィンドウ自体がノートを書き込みます。
+失われてしまうためです。パネルが開いておらず、フォルダへのアクセスがまだ許可されている場合
+——「アクセスするたびに許可」によるものでも、**開く** によるものでも——ウィンドウ自体がノー
+トを書き込みます。
 
 ページの **右クリックメニュー** には **ページを Markdown に送信** があります。選択したテキ
 スト上では **選択範囲を Markdown に送信**、リンク上では **リンクを Markdown に送信**、画
-像上では **画像を Markdown に送信** があります。いずれもサイドパネルを開き、そこに表示され
-るダイアログには、届いた内容——そしてどのサイトからのものか——が、まだ編集可能な Markdown と
-して表示され、どこに保存するかを尋ねられます。
+像上では **画像を Markdown に送信** があります。いずれもサイドパネルを開きません：パネルを
+開くとページが脇へ押しやられてしまうからです。ウィンドウにパネルが開いていない場合、選んだ
+内容は **Send to Markdown** と同じように既定のノートの末尾に追加されます——あるいは、ナレッ
+ジベースが閉じている場合は、上記のとおり、開くのを待ちます。ツールバーのボタンは何が起きた
+かを示します：一瞬のチェックマーク、理由をタイトルに持つ `!`、そしてパネルがフォルダを開くま
+で、いくつの送信が待機しているか。ウィンドウのパネルが開いている場合は、代わりにそちらへ送ら
+れ、そこに表示されるダイアログには、届いた内容——そしてどのサイトからのものか——が、まだ編集
+可能な Markdown として表示され、どこに保存するかを尋ねられます。
 
 - **新規ノート**、ページの場合のデフォルト：クリップ用フォルダ内に（デフォルトではルートの
   `Clippings`、変更も可能です。このフォルダは記憶され、空欄はルートを意味します）、ページの
@@ -164,7 +175,8 @@ Chrome ウェブストア向けの `build/macaed-extension-<version>.zip` です
   Markdown と同じ方法です。リンクの場合は送信元の行は不要です——リンク自体がそのソースだから
   です。
 
-フォルダを開く前に送信された場合は、待機します。パネルはフォルダを求め、フォルダが開かれた時
+一度もフォルダが開かれないうちに送信された場合は、待機します。パネルはフォルダを求め、フォル
+ダが開かれた時
 点でダイアログが表示されます。拡張機能が読み取れないページ——Chrome 自体のページ、ウェブスト
 ア、PDF——は、それへのリンクとして届きます。
 
@@ -181,11 +193,15 @@ Chrome ウェブストア向けの `build/macaed-extension-<version>.zip` です
 だけが拡張機能に許可され、そこで初めて読み取りが行われます——`scripting` を使って、ページ内
 でテキストをコピーして返す関数が実行されます。コンテンツスクリプトはどこでも実行されず、他に
 いかなるサイトへのアクセスもありません。`host_permissions` は存在せず、ビルドはこれを拒否し
-ます。`contextMenus`、`sidePanel`、`storage`——サイドパネルへ送られる内容は、
-`chrome.storage.session`（ブラウザを閉じると消えます）を通じてそのウィンドウのパネルに渡さ
-れ、パネルの言語はメニューのために `chrome.storage.local` を通じてワーカーに渡されます。ボタ
-ンのウィンドウは `chrome.runtime` メッセージによって、そのウィンドウのパネルにノートへの追
-加を依頼し、パネルは拡張機能自身のページからのものだけを受け取ります。拡張機能のページには
+ます。`offscreen`：ワーカーには DOM がないため、パネルが開いていない場合、ページや選択範囲の
+HTML は拡張機能のオフスクリーンドキュメント内で Markdown に変換され、完了すると閉じられま
+す。`contextMenus`、`sidePanel`、`storage`——サイドパネルへ送られる内容は、
+`chrome.storage.session`（ブラウザを閉じると消えます）を通じてそのウィンドウのパネルに渡され
+ます。`chrome.storage.local` には、ナレッジベースが閉じている間にボタンのウィンドウが取り置
+いた内容、そのノートの一覧、パネルの言語、そして既定のノートが、ワーカーのために入ります。ボ
+タンのウィンドウとワーカーは、ナレッジベースを開いているパネルに対して `chrome.runtime` メッ
+セージでノートへの追加を依頼し、パネルは拡張機能自身のページからのものだけを受け取ります。拡
+張機能のページには
 `connect-src 'none'` が設定されています。エディタはネットワーク上の何にも到達しません。ビル
 ドはこれを確認し、またどのページにもインラインスクリプトや外部アドレスがないことも確認しま
 す。
@@ -196,11 +212,13 @@ Chrome ウェブストア向けの `build/macaed-extension-<version>.zip` です
 PWA では何もしません。ボタンのウィンドウは `popup.html` と `popup.js`
 （`src/extension/popup.ts`）で、そのページと同じスタイルを持ち、パネルと同じ IndexedDB から
 ナレッジベースのハンドルを読み取り、ブラウザがまだ許可している間はそれを通じて書き込みま
-す。ワーカーである `background.js` はメニューを担当します。Chrome はクリックのハンドラ自体
-の中で、何かを await する前にしかサイドパネルを開けないため、まずパネルが開かれ、その後でタ
-ブが読み取られます（`src/extension/take.ts`、`grab.ts`）。その HTML は
-`src/extension/to-markdown.ts` で Markdown に変換され、エディタはそれを追加するか、どこに保
-存するか尋ねます（`src/clip.ts`、`src/clip-ui.ts`）。
+す。そうでない場合は、送信された内容を `chrome.storage.local` に取り置き、フォルダを開いた
+パネルがそれを見つけます（`src/extension/messages.ts`）。ワーカーである `background.js` は
+メニューを担当します：タブを読み取り（`src/extension/take.ts`、`grab.ts`）、取得した内容をウ
+ィンドウのパネルへ送るか、ボタンのウィンドウと同じように既定のノートへ追加します
+（`src/extension/knowledge.ts`）。Markdown への変換は `offscreen.html` を通じて行われます
+（`src/extension/offscreen.ts`）。HTML は `src/extension/to-markdown.ts` で Markdown に変換さ
+れ、エディタはそれを追加するか、どこに保存するか尋ねます（`src/clip.ts`、`src/clip-ui.ts`）。
 
 ## ライブプレビュー
 
@@ -594,7 +612,8 @@ name="service-worker">` を持つ `index.html`、`manifest.webmanifest`、各ア
 
 そして `build/extension/`：`panel.html`——テンプレート本体、そのスクリプトは
 `panel.js`——`popup.html`（そのページのスタイルと `popup.css` を含む）と `popup.js`、
-`background.js`、各アイコン、`_locales/`、そして `manifest.json`（バージョンは
+`background.js`、`offscreen.html` と `offscreen.js`、各アイコン、`_locales/`、そして
+`manifest.json`（バージョンは
 `package.json` のものです）。`build/macaed-extension-<version>.zip` は同じファイルを固定日
 時で保持します。同じソースからは常に同じバイト列が生成されます。
 
@@ -604,8 +623,10 @@ name="service-worker">` を持つ `index.html`、`manifest.webmanifest`、各ア
 `Extensions.loadUnpacked`。`--load-extension` は Chrome 137 以降廃止されています）、サイド
 パネルでフォルダを開き、ローカルサーバー上のテストサイトからページ、選択範囲、リンク、画像
 を送信します。続いてボタンのウィンドウが、パネルを通じて、または単独で、選択内容を既定のノー
-トと指定したノートへ追加し、ナレッジベースが閉じている場合はそれをフルモードに渡します。右ク
-リックメニューは DevTools からクリックできないため、テストはワーカーの `onClicked` を自ら発
+トと指定したノートへ追加し、ナレッジベースが閉じている場合はそれをパネル用に取り置くか、自
+らフォルダを開きます。パネルが開いていない場合、メニューは既定のノートへ追加するか、それを
+取り置きます。右クリックメニューは DevTools からクリックできないため、テストはワー
+カーの `onClicked` を自ら発
 火させ、ボタンのウィンドウを独立したページとして開き、どのタブが隣にあるかを伝えます。実際の
 クリックがないため Chrome は `activeTab` を付与しません。そのため、テスト対象のコピーはテス
 トサイト `*.test` にホスト権限としてアクセスする場合があります。
@@ -705,7 +726,9 @@ src/pwa/sw.js       the service worker of the Pages build: offline, and a new ve
 src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.html, popup.css
                     (the button's window: Send to Markdown); background.ts (the menu); take.ts
                     and grab.ts (run in the page: its text or the selection); to-markdown.ts
-                    (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts
+                    (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts;
+                    knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
+                    offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
                     formatting, tags, the export, clippings, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension

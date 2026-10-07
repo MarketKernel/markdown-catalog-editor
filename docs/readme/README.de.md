@@ -133,20 +133,32 @@ Seite:
   (unten).
 - **Vollmodus** öffnet die Seitenleiste.
 
-**Wenn die Wissensdatenbank geschlossen ist** — nach einem Neustart des Browsers, sofern Sie
-nicht „Bei jedem Besuch erlauben“ gewählt haben —, kann eine Seite erst in einen Ordner
-gelangen, nachdem Sie geklickt haben: Das Fenster sagt das dann, und **Im Vollmodus öffnen**
-öffnet die Seitenleiste, wo ein Klick auf den Ordner den Zugriff zurückgibt. Was Sie
-ausgewählt hatten, geht von selbst an die Standardnotiz, sobald der Ordner geöffnet ist.
+**Wenn die Wissensdatenbank geschlossen ist** — Chrome nimmt den Zugriff auf einen Ordner
+zurück, sobald die letzte Seitenleiste schließt, und nach einem Neustart, sofern Sie nicht
+„Bei jedem Besuch zulassen“ gewählt haben —, kann eine Seite erst in den Ordner gelangen,
+nachdem Sie geklickt haben. Das Fenster sagt das dann und listet weiterhin die Notizen auf,
+so wie die Seitenleiste sie zuletzt gesehen hat: **Send to Markdown**, oder ein Klick auf
+eine Notiz, legt das Ausgewählte beiseite, im eigenen Speicher der Erweiterung, und es geht
+an das Ende dieser Notiz, sobald eine Seitenleiste den Ordner wieder öffnet. **Öffnen** fragt
+Chrome direkt im Fenster nach dem Ordner; ein Klick auf den Ordner in der Seitenleiste tut
+dasselbe. Wenn Chrome fragt, wählen Sie „Bei jedem Besuch zulassen“: Dann bleibt der Ordner
+geöffnet, wenn die Seitenleiste schließt, und nach einem Neustart.
 
 Hat die Seitenleiste die Wissensdatenbank geöffnet, ist es die Seitenleiste, die zur Notiz
 hinzufügt — sie kann diese Notiz mit noch nicht gespeicherten Änderungen geöffnet haben, die
-ein Schreiben in ihrem Rücken verlieren würde. Bei geschlossener Seitenleiste schreibt das
-Fenster die Notiz selbst.
+ein Schreiben in ihrem Rücken verlieren würde. Ist keine Seitenleiste geöffnet und der Ordner
+weiterhin erlaubt — bei jedem Besuch, oder über **Öffnen** — schreibt das Fenster die Notiz
+selbst.
 
 **Das Kontextmenü** einer Seite enthält **Seite an Markdown senden**; bei ausgewähltem Text
 **Auswahl an Markdown senden**; bei einem Link **Link an Markdown senden**; bei einem Bild
-**Bild an Markdown senden**. Jedes öffnet die Seitenleiste, wo ein Dialog zeigt, was
+**Bild an Markdown senden**. Keines davon öffnet die Seitenleiste: Eine sich öffnende
+Seitenleiste drängt die Seite zur Seite. Ist im Fenster keine Seitenleiste geöffnet, geht
+das Gewählte an das Ende der Standardnotiz, wie bei **Send to Markdown** — oder, bei
+geschlossener Wissensdatenbank, wartet wie oben beschrieben darauf. Die
+Symbolleisten-Schaltfläche zeigt, was geschehen ist: kurz ein Häkchen, oder `!` mit dem Grund
+im Titel, und wie viele Sendungen warten, bis eine Seitenleiste den Ordner öffnet. Ist die
+Seitenleiste des Fensters geöffnet, geht es stattdessen dorthin, wo ein Dialog zeigt, was
 angekommen ist — und von welcher Website — als Markdown, das Sie noch ändern können, und
 fragt, wohin es gehen soll:
 
@@ -174,7 +186,7 @@ fragt, wohin es gehen soll:
   ein Bild, auf dieselbe Weise wie Send to Markdown. Ein Link braucht keine Quellenzeile: Er
   ist seine eigene Quelle.
 
-Wird etwas gesendet, bevor ein Ordner geöffnet ist, wartet es: Die Seitenleiste fragt nach
+Wird etwas gesendet, bevor je ein Ordner geöffnet wurde, wartet es: Die Seitenleiste fragt nach
 einem Ordner, und der Dialog erscheint, sobald einer geöffnet ist. Eine Seite, die die
 Erweiterung nicht lesen darf — Chromes eigene Seiten, der Web Store, ein PDF — kommt als
 Link zu ihr an.
@@ -193,12 +205,17 @@ Adresse statt des Platzhalters verwendet, Tracking-Pixel werden weggelassen.
 Tastenkombination gibt der Erweiterung genau diesen einen Tab, und erst dann liest sie ihn
 aus — mit `scripting`, einer in der Seite ausgeführten Funktion, die ihren Text kopiert und
 zurückgibt. Nirgendwo läuft ein Content-Script, und es gibt sonst keinen Zugriff auf
-irgendeine Website: keine `host_permissions`, die der Build auch ablehnt. `contextMenus`,
-`sidePanel` und `storage` — was an die Seitenleiste gesendet wird, geht über
+irgendeine Website: keine `host_permissions`, die der Build auch ablehnt. `offscreen`: Der
+Worker hat kein DOM, daher wird, wenn keine Seitenleiste geöffnet ist, das HTML einer Seite
+oder einer Auswahl in einem Offscreen-Dokument der Erweiterung zu Markdown, das sich
+schließt, sobald es fertig ist. `contextMenus`, `sidePanel` und `storage` — was an die
+Seitenleiste gesendet wird, geht über
 `chrome.storage.session` an die Seitenleiste des jeweiligen Fensters, was beim Schließen des
-Browsers verschwindet, und die Sprache der Seitenleiste geht für das Menü in
-`chrome.storage.local` an den Worker. Das Fenster der Schaltfläche bittet die Seitenleiste
-ihres Fensters per `chrome.runtime`-Nachricht, etwas zu einer Notiz hinzuzufügen; sie nimmt
+Browsers verschwindet; in `chrome.storage.local` steht, was das Fenster der Schaltfläche
+beiseitegelegt hat, während die Wissensdatenbank geschlossen war, die Liste ihrer Notizen,
+und die Sprache der Seitenleiste sowie die Standardnotiz, für den Worker. Das Fenster der
+Schaltfläche und der Worker bitten eine Seitenleiste, die die Wissensdatenbank geöffnet hat,
+per `chrome.runtime`-Nachricht, etwas zu einer Notiz hinzuzufügen; sie nimmt
 das nur von den eigenen Seiten der Erweiterung entgegen. Die Seiten der Erweiterung haben
 `connect-src 'none'`: Der Editor erreicht nichts im Netzwerk; der Build prüft das sowie, dass
 keine Seite ein Inline-Script oder eine externe Adresse enthält.
@@ -209,12 +226,14 @@ Script in `panel.js`, wie Manifest V3 es verlangt — dasselbe `src/main.ts`, wo
 Datei und der PWA nichts tun. Das Fenster der Schaltfläche ist `popup.html` und `popup.js`
 (`src/extension/popup.ts`), mit den Stilen der Seite: Es liest das Handle der
 Wissensdatenbank aus derselben IndexedDB wie die Seitenleiste und schreibt darüber, solange
-der Browser es noch erlaubt. Der Worker, `background.js`, enthält das Menü. Chrome öffnet
-eine Seitenleiste nur innerhalb des eigenen Klick-Handlers, bevor irgendetwas awaited wird,
-daher wird zuerst die Seitenleiste geöffnet und danach der Tab ausgelesen
-(`src/extension/take.ts`, `grab.ts`); ihr HTML wird in `src/extension/to-markdown.ts` zu
-Markdown, und der Editor fügt es hinzu oder fragt, wohin es gehen soll (`src/clip.ts`,
-`src/clip-ui.ts`).
+der Browser es noch erlaubt; andernfalls legt es das Gesendete in `chrome.storage.local`
+beiseite, wo die Seitenleiste, die den Ordner öffnet, es findet (`src/extension/messages.ts`).
+Der Worker, `background.js`, enthält das Menü: Er liest den Tab (`src/extension/take.ts`,
+`grab.ts`) und schickt, was er genommen hat, an die Seitenleiste des Fensters, oder fügt es,
+wie das Fenster der Schaltfläche, der Standardnotiz hinzu (`src/extension/knowledge.ts`),
+über `offscreen.html` für das Markdown (`src/extension/offscreen.ts`). HTML wird in
+`src/extension/to-markdown.ts` zu Markdown, und der Editor fügt es hinzu oder fragt, wohin es
+gehen soll (`src/clip.ts`, `src/clip-ui.ts`).
 
 ## Live-Vorschau
 
@@ -630,7 +649,8 @@ das die Seite zwischenspeichert, sodass sie offline öffnet. `build/macaed.html`
 bleibt eine einzelne Datei ohne externe Referenzen.
 
 Und `build/extension/`: `panel.html` — die Vorlage, ihr Script in `panel.js` —
-`popup.html` (mit den Stilen der Seite und `popup.css`) und `popup.js`, `background.js`, die
+`popup.html` (mit den Stilen der Seite und `popup.css`) und `popup.js`, `background.js`,
+`offscreen.html` und `offscreen.js`, die
 Symbole, `_locales/` und `manifest.json`, deren Version die von `package.json` ist.
 `build/macaed-extension-<version>.zip` enthält dieselben Dateien mit festen Daten: dieselben
 Quellen ergeben dieselben Bytes.
@@ -642,8 +662,9 @@ dieses Protokoll (`Extensions.loadUnpacked` über eine Pipe; `--load-extension` 
 Chrome-Version 137 nicht mehr), öffnet einen Ordner in der Seitenleiste und sendet ihr
 Seiten, Auswahlen, Links und Bilder von Testseiten auf einem lokalen Server; danach fügt das
 Fenster der Schaltfläche Auswahlen zur Standardnotiz und zu einer gewählten hinzu, über die
-Seitenleiste und für sich allein, und reicht sie bei geschlossener Wissensdatenbank an den
-Vollmodus weiter. Ein Kontextmenü lässt sich nicht aus DevTools anklicken, daher löst der
+Seitenleiste und für sich allein, und legt sie bei geschlossener Wissensdatenbank für die
+Seitenleiste beiseite oder öffnet sie selbst; ist keine Seitenleiste geöffnet, fügt das Menü
+es der Standardnotiz hinzu oder legt es beiseite. Ein Kontextmenü lässt sich nicht aus DevTools anklicken, daher löst der
 Test das `onClicked` des Workers selbst aus und öffnet das Fenster der Schaltfläche als
 eigene Seite, der gesagt wird, welcher Tab daneben liegt; ohne echten Klick gewährt Chrome
 kein `activeTab`, daher darf die getestete Kopie die Testseiten, `*.test`, als
@@ -749,7 +770,9 @@ src/pwa/sw.js       the service worker of the Pages build: offline, and a new ve
 src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.html, popup.css
                     (the button's window: Send to Markdown); background.ts (the menu); take.ts
                     and grab.ts (run in the page: its text or the selection); to-markdown.ts
-                    (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts
+                    (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts;
+                    knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
+                    offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
                     formatting, tags, the export, clippings, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension

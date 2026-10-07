@@ -63,6 +63,7 @@
     "of notes": "de notas",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "Elige una carpeta con archivos {ext}. No se envía nada a ningún sitio: los archivos se leen y se guardan directamente en tu disco.",
     "Open folder": "Abrir carpeta",
+    "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "Cuando Chrome lo pregunte, elige «Permitir en cada visita»: la carpeta se mantendrá abierta cuando se cierre el panel.",
     "or drag a folder here": "o arrastra una carpeta aquí",
     "Recent folders": "Carpetas recientes",
     "Open {name}": "Abrir «{name}»",
@@ -264,7 +265,12 @@
     "Send the page to Markdown": "Enviar la página a Markdown",
     "Send the selection to Markdown": "Enviar la selección a Markdown",
     "Send the link to Markdown": "Enviar el enlace a Markdown",
-    "Send the image to Markdown": "Enviar la imagen a Markdown"
+    "Send the image to Markdown": "Enviar la imagen a Markdown",
+    "{count} sendings wait for the knowledge base to open": {
+      "one": "{count} envío espera a que se abra la base de conocimiento",
+      "many": "{count} de envíos esperan a que se abra la base de conocimiento",
+      "other": "{count} envíos esperan a que se abra la base de conocimiento"
+    }
   },
   "popup": {
     "Full mode": "Modo completo",
@@ -274,8 +280,11 @@
     "A link to \"{title}\"": "Un enlace a «{title}»",
     "There is no knowledge base yet: open a folder of notes in full mode.": "Todavía no hay base de conocimiento: abre una carpeta de notas en modo completo.",
     "Open in full mode": "Abrir en modo completo",
-    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "«{name}» está cerrada. Ábrela en modo completo, y lo seleccionado irá a {note}.",
-    "\"{name}\" is closed. Open it in full mode.": "«{name}» está cerrada. Ábrela en modo completo.",
+    "The browser did not open the folder here. Open it in full mode.": "El navegador no ha abierto la carpeta aquí. Ábrela en modo completo.",
+    "Open": "Abrir",
+    "\"{name}\" is closed: what you send is added once it opens.": "«{name}» está cerrada: lo que envíes se añadirá en cuanto se abra.",
+    "When Chrome asks, choose \"Allow on every visit\", and it stays open.": "Cuando Chrome lo pregunte, elige «Permitir en cada visita», y se mantendrá abierta.",
+    "It goes to the end of {name} once \"{base}\" opens": "Se añade al final de {name} en cuanto se abra «{base}»",
     "Send to Markdown": "Send to Markdown",
     "To the end of {note}": "Al final de {note}",
     "(a new note)": "(una nota nueva)",

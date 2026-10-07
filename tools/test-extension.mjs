@@ -192,7 +192,7 @@ try {
   /** Waits for the dialog of what was sent; a step that brings none ends the test there, saying which. */
   const dialogShown = async (step) => {
     if (await untilPanel(`!!${dialog}`)) return true;
-    throw new Error(`${step}: no dialog in the panel; toast: ${await inPanel(toast)}`);
+    throw new Error(`${step}: no dialog in the panel; toast: ${await inPanel(toast)}; errors: ${chrome.errors.join(" / ")}`);
   };
   const dialogState = () =>
     inPanel(`(() => {
@@ -225,7 +225,7 @@ try {
 
   // Sent before a folder is open: it waits for one
   await menu({ menuItemId: 'page' });
-  check('the menu opens the panel of its window', await inWorker(`self.__panelOpened`), [{ windowId: windowA }]);
+  check('the menu opens no panel: this one is open already', await inWorker(`self.__panelOpened`), []);
   check('with no folder, the panel asks for one', await untilPanel(`${toast} === 'Open a folder of notes, and what was sent goes into it'`), true);
   check('the panel took it out of the session storage', await inWorker(`chrome.storage.session.get(null).then((all) => Object.keys(all).length)`), 0);
   await press('#open-folder');
@@ -365,17 +365,51 @@ try {
   check('popup without the panel: it writes the default note itself', (await count('Clippings/The article.md', 'First paragraph')) === clipped + 1 && (await fileEnds('Clippings/The article.md', selection)), true);
   await closePopup();
 
-  // The knowledge base closed: full mode, and what is selected goes to the default note there
+  // The menu with no panel open: the worker adds it to the default note, and no panel opens
+  const countIs = async (path, text, n) => {
+    for (let i = 0; i < 50; i += 1) {
+      if ((await count(path, text)) === n) return true;
+      await sleep(100);
+    }
+    return false;
+  };
+  const badge = () => inWorker(`chrome.action.getBadgeText({})`);
+  const queued = `chrome.storage.local.get(null).then((all) => Object.entries(all).filter(([key]) => key.startsWith('queued:')).sort().map(([, q]) => [q.path, q.clip.kind]))`;
+  await select();
+  await menu({ menuItemId: 'selection', selectionText: 'First paragraph' });
+  check('menu without the panel: to the end of the default note', (await countIs('Clippings/The article.md', 'First paragraph', clipped + 2)) && (await fileEnds('Clippings/The article.md', selection)), true);
+  check('menu without the panel: a tick on the button', await badge(), '✓');
+  check('menu without the panel: no panel opens', [await inWorker(`self.__panelOpened`), await inWorker(`chrome.runtime.getContexts({ contextTypes: ['SIDE_PANEL'] }).then((c) => c.length)`)], [[], 0]);
+  check('menu without the panel: the offscreen document is gone again', await chrome.until(worker, `chrome.runtime.getContexts({ contextTypes: ['OFFSCREEN_DOCUMENT'] }).then((c) => c.length === 0)`), true);
+
+  // The knowledge base closed: what the menu sends waits, and the button counts it
+  await inWorker(`(() => { self.__query = FileSystemHandle.prototype.queryPermission; FileSystemHandle.prototype.queryPermission = async () => 'prompt'; return true; })()`);
+  await menu({ menuItemId: 'link', linkUrl: site('article.test', '/about'), selectionText: 'a link' });
+  check('menu, base closed: put aside for the default note', await chrome.until(worker, `${queued}.then((q) => JSON.stringify(q) === '[["Clippings/The article.md","link"]]')`), true);
+  check('menu, base closed: the button counts what waits', await chrome.until(worker, `chrome.action.getBadgeText({}).then((text) => text === '1')`, 8000), true);
+  await inWorker(`(FileSystemHandle.prototype.queryPermission = self.__query, true)`);
+
+  // The knowledge base closed, as Chrome leaves it once the last panel closes: what is sent waits for a panel
   await openPopup(`FileSystemHandle.prototype.queryPermission = async () => 'prompt';`);
   await shot('popup-closed', popup);
-  check('popup, base closed: it says so', await popupText('.popup-empty p'), '"Notes" is closed. Open it in full mode, and what is selected goes to Clippings/The article.md.');
-  await pressPopup('.popup-empty .button');
-  check('popup: full mode opens the panel of its window', await chrome.until(popup, `window.__closed === true && window.__panel?.[0]?.windowId === ${windowA}`), true);
-  check('popup: what is selected waits for the panel', await inWorker(`chrome.storage.session.get(null).then((all) => Object.values(all).map((sent) => [sent.kind, sent.to]))`), [['selection', 'default']]);
+  check('popup, base closed: it says so', await popupText('.popup-closed p'), '"Notes" is closed: what you send is added once it opens.');
+  check('popup, base closed: the notes as the panel last saw them', await inPopup(`[...document.querySelectorAll('.popup-note-name')].map((n) => n.textContent).sort()`), ['Inbox', 'The article', 'The article 2']);
+  await pressPopup('.popup-send');
+  await chrome.until(popup, `window.__closed === true`);
+  check('popup, base closed: it says where it goes', await popupText('.popup-done p'), 'It goes to the end of The article.md once "Notes" opens');
+  check('popup: put aside, the note untouched', [await inWorker(queued), await count('Clippings/The article.md', 'First paragraph')], [[['Clippings/The article.md', 'link'], ['Clippings/The article.md', 'selection']], clipped + 2]);
   await closePopup();
   await openPanel();
   check('full mode: the folder reopens', await untilPanel(`!document.getElementById('app').hidden`), true);
-  check('full mode: and the selection goes to the default note', (await fileEnds('Clippings/The article.md', selection)) && (await count('Clippings/The article.md', 'First paragraph')) === clipped + 2, true);
+  check('full mode: and what was put aside goes to its note, in order', (await countIs('Clippings/The article.md', 'First paragraph', clipped + 3)) && (await fileEnds('Clippings/The article.md', selection)) && (await count('Clippings/The article.md', `\n\n[a link](${site('article.test', '/about')})\n\nFirst paragraph`)) === 1, true);
+  check('full mode: and waits no longer', await chrome.until(worker, `${queued}.then((left) => left.length === 0)`), true);
+  check('full mode: the button counts nothing', await chrome.until(worker, `chrome.action.getBadgeText({}).then((text) => text === '')`, 8000), true);
+
+  // "Open" in the popup: the browser asks over it, and the knowledge base opens right there
+  await openPopup(`FileSystemHandle.prototype.queryPermission = async () => 'prompt'; FileSystemHandle.prototype.requestPermission = async () => 'granted';`);
+  await pressPopup('.popup-closed .button');
+  check('popup: "Open" opens the knowledge base', await chrome.until(popup, `!document.querySelector('.popup-closed') && document.querySelectorAll('.popup-note').length === 3`), true);
+  await closePopup();
 
   // Nothing selected: the page, and a note of its own through the panel's dialog
   await chrome.evaluate(siteTab, `getSelection().removeAllRanges(), true`);
@@ -395,6 +429,10 @@ try {
   await inPanel(`(() => { const select = document.querySelector('.popover .settings-select'); select.value = 'ru'; select.dispatchEvent(new Event('change')); return true; })()`);
   check('the language goes to the worker', await chrome.until(worker, `chrome.storage.local.get('language').then((s) => s.language === 'ru')`), true);
   check('the panel speaks it', await untilPanel(`document.documentElement.lang === 'ru'`), true);
+
+  // Back at the start screen, the panel says how to keep the folder open
+  await press('#vault-name');
+  check('the start screen: "Allow on every visit"', await untilPanel(`!document.getElementById('gate').hidden && !!document.querySelector('.recent-hint')`), true);
 
   await sleep(100);
   check('no errors in the panel or the worker', chrome.errors, []);

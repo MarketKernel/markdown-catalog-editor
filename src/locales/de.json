@@ -60,6 +60,7 @@
     "of notes": "mit Notizen",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "Wählen Sie einen Ordner mit {ext}-Dateien. Nichts wird irgendwohin gesendet: Die Dateien werden direkt auf Ihrer eigenen Festplatte gelesen und gespeichert.",
     "Open folder": "Ordner öffnen",
+    "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "Wenn Chrome fragt, wählen Sie „Bei jedem Besuch zulassen“: Dann bleibt der Ordner geöffnet, wenn der Seitenbereich geschlossen wird.",
     "or drag a folder here": "oder ziehen Sie einen Ordner hierher",
     "Recent folders": "Zuletzt geöffnete Ordner",
     "Open {name}": "„{name}“ öffnen",
@@ -259,7 +260,11 @@
     "Send the page to Markdown": "Seite an Markdown senden",
     "Send the selection to Markdown": "Auswahl an Markdown senden",
     "Send the link to Markdown": "Link an Markdown senden",
-    "Send the image to Markdown": "Bild an Markdown senden"
+    "Send the image to Markdown": "Bild an Markdown senden",
+    "{count} sendings wait for the knowledge base to open": {
+      "one": "{count} Eintrag wartet, bis die Wissensdatenbank geöffnet wird",
+      "other": "{count} Einträge warten, bis die Wissensdatenbank geöffnet wird"
+    }
   },
   "popup": {
     "Full mode": "Vollmodus",
@@ -269,8 +274,11 @@
     "A link to \"{title}\"": "Ein Link zu „{title}“",
     "There is no knowledge base yet: open a folder of notes in full mode.": "Es gibt noch keine Wissensdatenbank: Öffnen Sie einen Ordner mit Notizen im Vollmodus.",
     "Open in full mode": "Im Vollmodus öffnen",
-    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "„{name}“ ist geschlossen. Öffnen Sie es im Vollmodus, dann geht die Auswahl an {note}.",
-    "\"{name}\" is closed. Open it in full mode.": "„{name}“ ist geschlossen. Öffnen Sie es im Vollmodus.",
+    "The browser did not open the folder here. Open it in full mode.": "Der Browser hat den Ordner hier nicht geöffnet. Öffnen Sie ihn im Vollmodus.",
+    "Open": "Öffnen",
+    "\"{name}\" is closed: what you send is added once it opens.": "„{name}“ ist geschlossen: Das Gesendete wird hinzugefügt, sobald er geöffnet wird.",
+    "When Chrome asks, choose \"Allow on every visit\", and it stays open.": "Wenn Chrome fragt, wählen Sie „Bei jedem Besuch zulassen“, dann bleibt er geöffnet.",
+    "It goes to the end of {name} once \"{base}\" opens": "Es kommt an das Ende von {name}, sobald „{base}“ geöffnet wird",
     "Send to Markdown": "Send to Markdown",
     "To the end of {note}": "An das Ende von {note}",
     "(a new note)": "(eine neue Notiz)",

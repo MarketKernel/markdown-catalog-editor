@@ -8,24 +8,27 @@
  *
  * The knowledge base is the folder the side panel opened last. The popup
  * reads and writes it itself while the browser still lets the extension in —
- * the panel has it open, or it was allowed on every visit. Otherwise "Open in
- * full mode" opens the side panel, where a click on the folder lets the
- * browser ask, and what was selected goes on to the default note from there.
- * Choosing a folder is the panel's: a picker would close the popup anyway.
+ * the panel has it open, or it was allowed on every visit. Chrome takes the
+ * access back once the last panel closes: then the popup lists the notes as
+ * the panel last saw them, and what is sent waits in the extension's storage
+ * until a panel opens the folder again (messages.ts). Or "Open" asks the
+ * browser for the folder right here. Choosing another folder is the panel's:
+ * a picker would close the popup anyway.
  *
- * The panel of this window, when it has the knowledge base open, does the
- * writing itself: it may hold the note with unsaved changes (messages.ts).
+ * A panel that has the knowledge base open — this window's first — does the
+ * writing itself: it may hold the note with unsaved changes (knowledge.ts).
  */
 
-import { appendClip, type Clip } from '../clip';
+import type { Clip } from '../clip';
 import { setLanguage, t } from '../i18n';
 import { isGranted, recentFolders, type RecentFolder } from '../recent';
 import { applyTheme, loadSettings, resolveLanguage, saveSettings } from '../settings';
 import { h, toast } from '../ui';
-import { baseOf, dirOf, DirectoryVault, isNote, type TreeEntry } from '../vault';
-import { clipOf } from './extension';
-import type { AppendReply, AppendRequest, ChangedNotice, Sent } from './messages';
+import { baseOf, dirOf, DirectoryVault, ensureWritable, isNote, type TreeEntry } from '../vault';
+import { clipOf, writeClip } from './knowledge';
+import { DEFAULT_NOTE_KEY, NOTES_KEY, queuedKey, type KnownNotes, type Queued, type Sent } from './messages';
 import { putForPanel, takeTab } from './take';
+import { htmlToMarkdown } from './to-markdown';
 
 const NAME = 'Markdown Knowledge Base';
 
@@ -65,25 +68,43 @@ async function start(): Promise<void> {
   windowId = (await chrome.windows.getCurrent()).id ?? tab?.windowId ?? -1;
   // The click on the button gave the extension this tab (activeTab): what is selected on it, read now.
   sent = tab ? await takeTab(tab, false) : null;
-  clip = sent ? clipOf(sent) : null;
+  clip = sent ? await clipOf(sent, htmlToMarkdown) : null;
+  void chrome.storage.local.set({ [DEFAULT_NOTE_KEY]: settings.defaultNote }).catch(() => undefined);
   base = (await recentFolders())[0] ?? null;
-  if (base && (await isGranted(base.handle))) {
-    try {
-      vault = new DirectoryVault(base.handle, true);
-      notes = notePaths(await vault.scan());
-    } catch {
-      // Moved or deleted: the panel says what happened when the folder is picked there.
-      vault = null;
-    }
+  if (base && (await isGranted(base.handle))) await scan();
+  if (base && !vault) {
+    const known = (await chrome.storage.local.get(NOTES_KEY))[NOTES_KEY] as KnownNotes | undefined;
+    if (known?.folder === base.id) notes = known.paths;
   }
   render();
+}
+
+/** The knowledge base, read now that the browser lets the extension in. */
+async function scan(): Promise<void> {
+  if (!base) return;
+  try {
+    const opened = new DirectoryVault(base.handle, true);
+    notes = notePaths(await opened.scan());
+    vault = opened;
+  } catch {
+    // Moved or deleted: the panel says what happened when the folder is picked there.
+    vault = null;
+  }
+}
+
+/** "Open": the browser asks for the folder over the popup; turned down, it stays closed. */
+async function open(): Promise<void> {
+  if (!base || busy) return;
+  if (await ensureWritable(base.handle)) await scan();
+  if (vault) render();
+  else toast(t('popup', 'The browser did not open the folder here. Open it in full mode.'), 'error');
 }
 
 function render(): void {
   const head = h('header', { class: 'popup-head' }, icon(FOLDER), h('span', { class: 'popup-base', text: base?.name ?? NAME }));
   const foot = h('footer', { class: 'popup-foot' });
   const full = h('button', { type: 'button', class: 'button button--small popup-full' }, icon(PANEL), t('popup', 'Full mode'));
-  full.addEventListener('click', () => openFullMode(null));
+  full.addEventListener('click', () => openFullMode(false));
   foot.append(full);
   root.replaceChildren(head, preview(), h('div', { class: 'popup-body' }, ...body()), foot);
 }
@@ -102,18 +123,7 @@ function preview(): HTMLElement {
 
 function body(): HTMLElement[] {
   if (!base) {
-    return [empty(t('popup', 'There is no knowledge base yet: open a folder of notes in full mode.'), t('popup', 'Open in full mode'), null)];
-  }
-  if (!vault) {
-    return [
-      empty(
-        clip
-          ? t('popup', '"{name}" is closed. Open it in full mode, and what is selected goes to {note}.', { name: base.name, note: settings.defaultNote })
-          : t('popup', '"{name}" is closed. Open it in full mode.', { name: base.name }),
-        t('popup', 'Open in full mode'),
-        clip ? 'default' : null,
-      ),
-    ];
+    return [empty(t('popup', 'There is no knowledge base yet: open a folder of notes in full mode.'), t('popup', 'Open in full mode'))];
   }
   const send = h('button', { type: 'button', class: 'button button--primary popup-send', text: t('popup', 'Send to Markdown') });
   send.disabled = !clip;
@@ -123,8 +133,24 @@ function body(): HTMLElement[] {
   const actions = h('div', { class: 'popup-actions' }, send);
   if (clip?.kind === 'page') {
     const asNote = h('button', { type: 'button', class: 'button popup-as-note', text: t('popup', 'As a new note') });
-    asNote.addEventListener('click', () => openFullMode('dialog'));
+    asNote.addEventListener('click', () => openFullMode(true));
     actions.append(asNote);
+  }
+  const shown: HTMLElement[] = [actions, target];
+  if (!vault) {
+    const reopen = h('button', { type: 'button', class: 'button button--small', text: t('popup', 'Open') });
+    reopen.addEventListener('click', () => void open());
+    shown.unshift(
+      h(
+        'div',
+        { class: 'popup-closed' },
+        h('p', { text: t('popup', '"{name}" is closed: what you send is added once it opens.', { name: base.name }) }),
+        h('p', { class: 'popup-hint', text: t('popup', 'When Chrome asks, choose "Allow on every visit", and it stays open.') }),
+        reopen,
+      ),
+    );
+    // Never opened in a panel since the notes were kept: the default note is all there is to offer.
+    if (!notes.length) return shown;
   }
 
   const filter = h('input', { class: 'popup-filter', type: 'search', placeholder: t('popup', 'Add to another note'), 'aria-label': t('popup', 'Add to another note'), autocomplete: 'off', spellcheck: 'false' });
@@ -143,7 +169,7 @@ function body(): HTMLElement[] {
     fill();
   });
   fill();
-  return [actions, target, filter, list];
+  return [...shown, filter, list];
 }
 
 function noteRow(path: string): HTMLElement {
@@ -162,33 +188,36 @@ function noteRow(path: string): HTMLElement {
     settings.defaultNote = path;
     // The panel keeps its own copy of the settings: it hears of this through the storage event.
     saveSettings({ ...loadSettings(), defaultNote: path });
+    void chrome.storage.local.set({ [DEFAULT_NOTE_KEY]: path }).catch(() => undefined);
     render();
   });
   return h('li', { class: `popup-row${isDefault ? ' popup-row--default' : ''}` }, pick, star);
 }
 
-function empty(text: string, button: string, send: 'default' | null): HTMLElement {
+function empty(text: string, button: string): HTMLElement {
   const open = h('button', { type: 'button', class: 'button button--primary', text: button });
-  open.addEventListener('click', () => openFullMode(send));
+  open.addEventListener('click', () => openFullMode(false));
   return h('div', { class: 'popup-empty' }, h('p', { text }), open);
 }
 
-/** Adds what was selected to the note: through the panel of this window when it has the knowledge base, else here. */
+/**
+ * Adds what was selected to the note: through the panel of this window when
+ * it has the knowledge base, else here; with the knowledge base closed, it
+ * waits for a panel to open it.
+ */
 async function add(path: string): Promise<void> {
-  if (!clip || !base || !vault || busy) return;
+  if (!clip || !base || busy) return;
   busy = true;
   root.classList.add('popup--busy');
   try {
-    const request: AppendRequest = { to: 'panel', type: 'append', windowId, folder: base.id, path, clip };
-    const reply = (await chrome.runtime.sendMessage(request).catch(() => null)) as AppendReply | null;
-    if (reply?.error) throw new Error(reply.error);
-    if (!reply?.done) {
-      const text = notes.includes(path) ? await vault.readText(path) : '';
-      await vault.writeText(path, appendClip(text, clip));
-      const changed: ChangedNotice = { to: 'panel', type: 'changed', folder: base.id, path };
-      void chrome.runtime.sendMessage(changed).catch(() => undefined);
+    if (!vault) {
+      const queued: Queued = { folder: base.id, path, clip };
+      await chrome.storage.local.set({ [queuedKey()]: queued });
+      done(t('popup', 'It goes to the end of {name} once "{base}" opens', { name: baseOf(path), base: base.name }));
+      return;
     }
-    done(path);
+    await writeClip(vault, base.id, path, clip, htmlToMarkdown, windowId);
+    done(t('clip', 'Added to the end of {name}', { name: baseOf(path) }));
   } catch (error) {
     busy = false;
     root.classList.remove('popup--busy');
@@ -196,19 +225,15 @@ async function add(path: string): Promise<void> {
   }
 }
 
-function done(path: string): void {
-  root.replaceChildren(h('div', { class: 'popup-done' }, h('p', { text: t('clip', 'Added to the end of {name}', { name: baseOf(path) }) })));
+function done(text: string): void {
+  root.replaceChildren(h('div', { class: 'popup-done' }, h('p', { text })));
   window.setTimeout(() => window.close(), 900);
 }
 
-/**
- * The side panel, opened in the click itself, as Chrome wants. `default`:
- * what is selected goes to the default note once the knowledge base is open
- * there; `dialog`: the panel asks where it goes; null: only the panel.
- */
-function openFullMode(then: 'default' | 'dialog' | null): void {
+/** The side panel, opened in the click itself, as Chrome wants; `withPage`: the panel asks where the page goes. */
+function openFullMode(withPage: boolean): void {
   const opening = chrome.sidePanel.open({ windowId }).catch(() => undefined);
-  const handOver = sent && then ? putForPanel({ ...sent, windowId, ...(then === 'default' ? { to: 'default' as const } : {}) }) : Promise.resolve();
+  const handOver = sent && withPage ? putForPanel({ ...sent, windowId }) : Promise.resolve();
   void Promise.all([opening, handOver]).finally(() => window.close());
 }
 

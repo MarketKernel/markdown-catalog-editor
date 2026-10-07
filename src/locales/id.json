@@ -57,6 +57,7 @@
     "Open a folder": "Buka folder",
     "of notes": "catatan",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "Pilih folder berisi file {ext}. Tidak ada yang dikirim ke mana pun: file dibaca dan disimpan langsung di disk Anda sendiri.",
+    "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "Saat Chrome bertanya, pilih “Izinkan setiap kunjungan”: folder akan tetap terbuka saat panel ditutup.",
     "Open folder": "Buka folder",
     "or drag a folder here": "atau seret folder ke sini",
     "Recent folders": "Folder terbaru",
@@ -254,7 +255,10 @@
     "Send the page to Markdown": "Kirim halaman ke Markdown",
     "Send the selection to Markdown": "Kirim pilihan ke Markdown",
     "Send the link to Markdown": "Kirim tautan ke Markdown",
-    "Send the image to Markdown": "Kirim gambar ke Markdown"
+    "Send the image to Markdown": "Kirim gambar ke Markdown",
+    "{count} sendings wait for the knowledge base to open": {
+      "other": "{count} kiriman menunggu basis pengetahuan dibuka"
+    }
   },
   "popup": {
     "Full mode": "Mode penuh",
@@ -264,8 +268,11 @@
     "A link to \"{title}\"": "Tautan ke \"{title}\"",
     "There is no knowledge base yet: open a folder of notes in full mode.": "Belum ada basis pengetahuan: buka folder catatan dalam mode penuh.",
     "Open in full mode": "Buka dalam mode penuh",
-    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "\"{name}\" tertutup. Buka dalam mode penuh, lalu yang dipilih akan masuk ke {note}.",
-    "\"{name}\" is closed. Open it in full mode.": "\"{name}\" tertutup. Buka dalam mode penuh.",
+    "The browser did not open the folder here. Open it in full mode.": "Browser tidak membuka folder di sini. Buka dalam mode penuh.",
+    "Open": "Buka",
+    "\"{name}\" is closed: what you send is added once it opens.": "\"{name}\" tertutup: yang Anda kirim akan ditambahkan begitu folder ini terbuka.",
+    "When Chrome asks, choose \"Allow on every visit\", and it stays open.": "Saat Chrome bertanya, pilih \"Izinkan setiap kunjungan\", maka folder akan tetap terbuka.",
+    "It goes to the end of {name} once \"{base}\" opens": "Masuk ke akhir {name} begitu \"{base}\" terbuka",
     "Send to Markdown": "Send to Markdown",
     "To the end of {note}": "Ke akhir {note}",
     "(a new note)": "(catatan baru)",

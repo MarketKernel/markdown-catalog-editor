@@ -37,8 +37,11 @@
     "A link to \"{title}\"": "“{title}” का लिंक",
     "There is no knowledge base yet: open a folder of notes in full mode.": "अभी कोई नॉलेज बेस नहीं है: पूरे मोड में नोट्स का फ़ोल्डर खोलें।",
     "Open in full mode": "पूरे मोड में खोलें",
-    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "“{name}” बंद है। इसे पूरे मोड में खोलें, तो चुना गया भाग {note} में चला जाएगा।",
-    "\"{name}\" is closed. Open it in full mode.": "“{name}” बंद है। इसे पूरे मोड में खोलें।",
+    "The browser did not open the folder here. Open it in full mode.": "ब्राउज़र ने यहाँ फ़ोल्डर नहीं खोला। इसे पूरे मोड में खोलें।",
+    "Open": "खोलें",
+    "\"{name}\" is closed: what you send is added once it opens.": "“{name}” बंद है: आप जो भेजेंगे, वह इसके खुलते ही जुड़ जाएगा।",
+    "When Chrome asks, choose \"Allow on every visit\", and it stays open.": "जब Chrome पूछे, तो “हर विज़िट पर अनुमति दें” चुनें, तो यह खुला रहेगा।",
+    "It goes to the end of {name} once \"{base}\" opens": "यह “{base}” के खुलते ही {name} के अंत में जुड़ जाएगा",
     "Send to Markdown": "Send to Markdown",
     "To the end of {note}": "{note} के अंत में",
     "(a new note)": "(एक नया नोट)",
@@ -79,6 +82,7 @@
     "Open a folder": "अपने नोट्स का",
     "of notes": "फ़ोल्डर खोलें",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "{ext} फ़ाइलों वाला फ़ोल्डर चुनें। कुछ भी कहीं नहीं भेजा जाता: फ़ाइलें सीधे आपकी अपनी डिस्क पर पढ़ी और सहेजी जाती हैं।",
+    "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "जब Chrome पूछे, तो “हर विज़िट पर अनुमति दें” चुनें: इससे पैनल बंद होने पर भी फ़ोल्डर खुला रहता है।",
     "Open folder": "फ़ोल्डर खोलें",
     "or drag a folder here": "या फ़ोल्डर यहाँ खींचें",
     "Recent folders": "हाल के फ़ोल्डर",
@@ -279,7 +283,11 @@
     "Send the page to Markdown": "पृष्ठ को Markdown में भेजें",
     "Send the selection to Markdown": "चयनित भाग को Markdown में भेजें",
     "Send the link to Markdown": "लिंक को Markdown में भेजें",
-    "Send the image to Markdown": "छवि को Markdown में भेजें"
+    "Send the image to Markdown": "छवि को Markdown में भेजें",
+    "{count} sendings wait for the knowledge base to open": {
+      "one": "{count} भेजी गई चीज़ नॉलेज बेस खुलने का इंतज़ार कर रही है",
+      "other": "{count} भेजी गई चीज़ें नॉलेज बेस खुलने का इंतज़ार कर रही हैं"
+    }
   },
   "update": {
     "Install updates by themselves when everything is saved and the app is in the background": "जब सब कुछ सहेजा जा चुका हो और ऐप बैकग्राउंड में हो, तो अपडेट अपने आप इंस्टॉल करें",

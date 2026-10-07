@@ -128,20 +128,30 @@ klasörlerinden ayrı.
   (aşağıda).
 - **Tam mod** yan paneli açar.
 
-**Bilgi tabanı kapalıyken** — tarayıcı yeniden başladıktan sonra, „Her ziyarette izin
-ver“i seçmediyseniz — bir sayfa, siz tıklayana kadar bir klasöre giremez: pencere bunu o
-zaman söyler, ve **Tam modda aç**, yan paneli açar; burada klasöre bir tıklama erişimi
-geri verir. Seçtiğiniz şey, klasör açılır açılmaz kendiliğinden varsayılan nota gider.
+**Bilgi tabanı kapalıyken** — Chrome, son yan panel kapandığında ve yeniden başlatmadan
+sonra bir klasörün erişimini geri alır, „Her ziyarette izin ver“i seçmediyseniz — bir sayfa,
+siz tıklayana kadar klasöre giremez. Pencere bunu o zaman söyler ve notları, panelin son
+gördüğü hâliyle yine de listeler: **Send to Markdown**, ya da bir nota tıklamak, seçtiğiniz
+şeyi uzantının kendi deposunda bir kenara koyar, ve bir yan panel klasörü yeniden açar açmaz
+o notun sonuna gider. **Aç**, Chrome'dan klasörü doğrudan pencerede ister; yan paneldeki
+klasöre bir tıklama da aynısını yapar. Chrome sorduğunda, „Her ziyarette izin ver“i seçin:
+o zaman klasör, panel kapandığında ve yeniden başlatmadan sonra da açık kalır.
 
 Yan panel bilgi tabanını açıkken, nota ekleyen paneldir — o notu henüz kaydedilmemiş
-değişikliklerle açık tutuyor olabilir, ki arkasından bir yazma bunları kaybederdi. Panel
-kapalıyken, notu pencerenin kendisi yazar.
+değişikliklerle açık tutuyor olabilir, ki arkasından bir yazma bunları kaybederdi. Hiçbir
+panel açık değilken ve klasöre hâlâ izin verilmişken — her ziyarette, ya da **Aç**
+aracılığıyla — notu pencerenin kendisi yazar.
 
 Bir sayfanın **bağlam menüsünde** **Sayfayı Markdown'a gönder** vardır; seçili metinde
 **Seçimi Markdown'a gönder**; bir bağlantıda **Bağlantıyı Markdown'a gönder**; bir
-görselde **Görseli Markdown'a gönder**. Her biri yan paneli açar, orada bir iletişim
-kutusu neyin geldiğini — ve hangi siteden — hâlâ değiştirebileceğiniz Markdown olarak
-gösterir, ve nereye gideceğini sorar:
+görselde **Görseli Markdown'a gönder**. Bunların hiçbiri yan paneli açmaz: bir panelin
+açılması sayfayı kenara sıkıştırır. Pencerede açık bir panel yokken, seçtiğiniz şey, **Send
+to Markdown**'da olduğu gibi varsayılan notun sonuna gider — ya da, bilgi tabanı kapalıyken,
+yukarıdaki gibi onu bekler. Araç çubuğu düğmesi ne olduğunu söyler: bir an için bir onay
+işareti, başlığında nedeniyle birlikte `!`, ve bir panel klasörü açana kadar kaç gönderimin
+beklediği. Pencerenin paneli açıkken, o oraya gider; orada bir iletişim kutusu neyin geldiğini
+— ve hangi siteden — hâlâ değiştirebileceğiniz Markdown olarak gösterir, ve nereye gideceğini
+sorar:
 
 - **Yeni bir not**, bir sayfa için varsayılan: kırpma klasöründe (siz değiştirmediğiniz
   sürece kökte `Clippings`; klasör hatırlanır, boş olması kök anlamına gelir), sayfanın
@@ -164,7 +174,7 @@ gösterir, ve nereye gideceğini sorar:
 - **Açık notun sonu**, bir seçim, bağlantı veya görsel için varsayılan, Send to Markdown
   ile aynı şekilde. Bir bağlantının kaynak satırına ihtiyacı yoktur: o kendi kaynağıdır.
 
-Bir klasör açılmadan önce bir şey gönderilirse bekler: panel bir klasör ister, ve iletişim
+Hiçbir klasör hiç açılmamışken bir şey gönderilirse bekler: panel bir klasör ister, ve iletişim
 kutusu biri açıldığında gelir. Uzantının okuyamayabileceği bir sayfa — Chrome'un kendi
 sayfaları, Web Mağazası, bir PDF — ona bir bağlantı olarak gelir.
 
@@ -182,11 +192,15 @@ pikselleri dışarıda bırakılır.
 sekmeyi verir, ve ancak o zaman onu okur — `scripting` ile, sayfada çalışan ve metnini
 kopyalayıp döndüren bir işlev. Hiçbir yerde bir içerik betiği (content script) çalışmaz, ve
 başka türlü hiçbir siteye erişim yoktur: `host_permissions` yok, ki build bunu zaten
-reddeder. `contextMenus`, `sidePanel` ve `storage` — yan panele gönderilen şey, tarayıcı
-kapandığında kaybolan `chrome.storage.session` üzerinden kendi penceresinin paneline gider,
-ve panelin dili, menü için `chrome.storage.local`'de işçiye gider. Düğmenin penceresi, bir
-`chrome.runtime` mesajıyla kendi penceresinin panelinden bir nota eklemesini ister; panel
-bunu yalnızca uzantının kendi sayfalarından kabul eder. Uzantının sayfalarında
+reddeder. `offscreen`: işçinin DOM'u yoktur, bu yüzden panel açık değilken bir sayfanın veya
+seçimin HTML'i, uzantının bir offscreen belgesinde Markdown'a dönüşür; bu belge iş bitince
+kapanır. `contextMenus`, `sidePanel` ve `storage` — yan panele gönderilen şey, tarayıcı
+kapandığında kaybolan `chrome.storage.session` üzerinden kendi penceresinin paneline gider;
+`chrome.storage.local`'de, düğmenin penceresinin bilgi tabanı kapalıyken bir kenara koyduğu
+şey, notlarının listesi, ve panelin dili ve varsayılan not, işçi için bulunur. Düğmenin
+penceresi ve işçi, bilgi tabanı açık olan bir panelden bir `chrome.runtime` mesajıyla bir
+nota eklemesini ister; panel bunu yalnızca uzantının kendi sayfalarından kabul eder.
+Uzantının sayfalarında
 `connect-src 'none'` vardır: düzenleyici ağda hiçbir şeye ulaşmaz; build bunu ve hiçbir
 sayfada satır içi bir betik veya dış bir adres olmadığını denetler.
 
@@ -195,11 +209,13 @@ V3'ün istediği gibi — aynı `src/main.ts`, `src/platform.ts` yerine
 `src/extension/extension.ts` ile, ki onun kancaları dosyada ve PWA'da hiçbir şey yapmaz.
 Düğmenin penceresi, `popup.html` ve `popup.js`'dir (`src/extension/popup.ts`), sayfanın
 stilleriyle: bilgi tabanının tanıtıcısını panelle aynı IndexedDB'den okur, ve tarayıcı hâlâ
-izin verdiği sürece onun üzerinden yazar. İşçi, `background.js`, menüyü içerir. Chrome bir
-yan paneli yalnızca tıklamanın kendi işleyicisi içinde, herhangi bir şey beklenmeden (await)
-önce açar, bu yüzden önce panel açılır, sonra sekme okunur (`src/extension/take.ts`,
-`grab.ts`); onun HTML'i `src/extension/to-markdown.ts`'de Markdown'a dönüşür, ve
-düzenleyici onu ekler veya nereye gideceğini sorar (`src/clip.ts`, `src/clip-ui.ts`).
+izin verdiği sürece onun üzerinden yazar; aksi hâlde, gönderileni `chrome.storage.local`'de
+bir kenara koyar, klasörü açan panel onu orada bulur (`src/extension/messages.ts`). İşçi,
+`background.js`, menüyü içerir: sekmeyi okur (`src/extension/take.ts`, `grab.ts`), ve
+aldığını pencerenin paneline gönderir, ya da düğmenin penceresinin yaptığı gibi varsayılan
+nota ekler (`src/extension/knowledge.ts`), Markdown için `offscreen.html` aracılığıyla
+(`src/extension/offscreen.ts`). HTML, `src/extension/to-markdown.ts`'de Markdown'a dönüşür,
+ve düzenleyici onu ekler veya nereye gideceğini sorar (`src/clip.ts`, `src/clip-ui.ts`).
 
 ## Canlı önizleme
 
@@ -592,8 +608,8 @@ sayfayı önbelleğe alıp çevrimdışı açılmasını sağlayan `sw.js`. `bui
 kendisi hiçbir dış referansı olmayan tek bir dosya olarak kalır.
 
 Ve `build/extension/`: `panel.html` — şablon, betiği `panel.js`'de — `popup.html`
-(sayfanın stilleriyle ve `popup.css`) ve `popup.js`, `background.js`, simgeler,
-`_locales/` ve sürümü `package.json`'ınki olan `manifest.json`.
+(sayfanın stilleriyle ve `popup.css`) ve `popup.js`, `background.js`, `offscreen.html` ve
+`offscreen.js`, simgeler, `_locales/` ve sürümü `package.json`'ınki olan `manifest.json`.
 `build/macaed-extension-<version>.zip`, aynı dosyaları sabit tarihlerle tutar: aynı
 kaynaklar aynı bayt'ları verir.
 
@@ -604,7 +620,9 @@ hiçbir bağımlılık olmadan onunla DevTools protokolünü konuşur; Chrome ol
 yan panelde bir klasör açar ve ona yerel bir sunucudaki test sitelerinden sayfalar,
 seçimler, bağlantılar ve görseller gönderir; ardından düğmenin penceresi, panel üzerinden
 ve kendi başına, seçimleri varsayılan nota ve seçilen bir nota ekler, ve bilgi tabanı
-kapalıyken onları tam moda aktarır. Bir bağlam menüsü DevTools'tan tıklanamaz, bu yüzden
+kapalıyken onları panel için bir kenara koyar, ya da kendisi açar; panel açık değilken, menü
+varsayılan nota ekler, ya da bir kenara koyar. Bir bağlam menüsü DevTools'tan tıklanamaz, bu
+yüzden
 test işçinin `onClicked`'ını kendisi tetikler ve düğmenin penceresini, hangi sekmenin
 yanında olduğu söylenen kendi sayfası olarak açar; gerçek bir tıklama olmadan Chrome
 hiçbir `activeTab` vermez, bu yüzden test edilen kopya, test sitelerine, `*.test`, konak
@@ -701,7 +719,9 @@ src/pwa/sw.js       the service worker of the Pages build: offline, and a new ve
 src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.html, popup.css
                     (the button's window: Send to Markdown); background.ts (the menu); take.ts
                     and grab.ts (run in the page: its text or the selection); to-markdown.ts
-                    (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts
+                    (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts;
+                    knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
+                    offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
                     formatting, tags, the export, clippings, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension

@@ -61,6 +61,7 @@
     "of notes": "ফোল্ডার খুলুন",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "{ext} ফাইলসহ একটি ফোল্ডার বেছে নিন। কিছুই কোথাও পাঠানো হয় না: ফাইলগুলো সরাসরি আপনার নিজের ডিস্কেই পড়া ও সংরক্ষণ করা হয়।",
     "Open folder": "ফোল্ডার খুলুন",
+    "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "Chrome জিজ্ঞাসা করলে, “প্রতিবার অনুমতি দিন” বেছে নিন: তাহলে প্যানেল বন্ধ হলেও ফোল্ডারটি খোলা থাকবে।",
     "or drag a folder here": "অথবা এখানে একটি ফোল্ডার টেনে আনুন",
     "Recent folders": "সাম্প্রতিক ফোল্ডার",
     "Open {name}": "“{name}” খুলুন",
@@ -259,7 +260,11 @@
     "Send the page to Markdown": "পৃষ্ঠাটি Markdown-এ পাঠান",
     "Send the selection to Markdown": "নির্বাচিত অংশ Markdown-এ পাঠান",
     "Send the link to Markdown": "লিংকটি Markdown-এ পাঠান",
-    "Send the image to Markdown": "ছবিটি Markdown-এ পাঠান"
+    "Send the image to Markdown": "ছবিটি Markdown-এ পাঠান",
+    "{count} sendings wait for the knowledge base to open": {
+      "one": "{count}টি পাঠানো জিনিস নলেজ বেস খোলার অপেক্ষায়",
+      "other": "{count}টি পাঠানো জিনিস নলেজ বেস খোলার অপেক্ষায়"
+    }
   },
   "popup": {
     "Full mode": "পূর্ণ মোড",
@@ -269,8 +274,11 @@
     "A link to \"{title}\"": "“{title}”-এর একটি লিংক",
     "There is no knowledge base yet: open a folder of notes in full mode.": "এখনও কোনো নলেজ বেস নেই: পূর্ণ মোডে নোটের একটি ফোল্ডার খুলুন।",
     "Open in full mode": "পূর্ণ মোডে খুলুন",
-    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "“{name}” বন্ধ আছে। পূর্ণ মোডে এটি খুলুন, তাহলে নির্বাচিত অংশ {note}-এ যোগ হবে।",
-    "\"{name}\" is closed. Open it in full mode.": "“{name}” বন্ধ আছে। পূর্ণ মোডে এটি খুলুন।",
+    "The browser did not open the folder here. Open it in full mode.": "ব্রাউজার এখানে ফোল্ডারটি খোলেনি। পূর্ণ মোডে এটি খুলুন।",
+    "Open": "খুলুন",
+    "\"{name}\" is closed: what you send is added once it opens.": "“{name}” বন্ধ আছে: এটি খুললে আপনার পাঠানো জিনিস যোগ হবে।",
+    "When Chrome asks, choose \"Allow on every visit\", and it stays open.": "Chrome জিজ্ঞাসা করলে, “প্রতিবার অনুমতি দিন” বেছে নিন, তাহলে এটি খোলা থাকবে।",
+    "It goes to the end of {name} once \"{base}\" opens": "“{base}” খুললে এটি {name}-এর শেষে যোগ হবে",
     "Send to Markdown": "Send to Markdown",
     "To the end of {note}": "{note}-এর শেষে",
     "(a new note)": "(নতুন একটি নোট)",

@@ -132,20 +132,32 @@ página:
   propia (más abajo).
 - **Modo completo** abre el panel lateral.
 
-**Cuando la base de conocimiento está cerrada** — tras reiniciar el navegador, a menos que
-hayas elegido "Permitir en cada visita" — una página no puede entrar en una carpeta hasta que
-haces clic: la ventana lo indica entonces, y **Abrir en modo completo** abre el panel
-lateral, donde un clic en la carpeta devuelve el acceso. Lo que seleccionaste pasa por sí
-solo a la nota predeterminada en cuanto la carpeta está abierta.
+**Cuando la base de conocimiento está cerrada** — Chrome retira el acceso a una carpeta en
+cuanto se cierra el último panel lateral, y tras reiniciar, a menos que hayas elegido
+"Permitir en cada visita" — una página no puede entrar en la carpeta hasta que haces clic.
+La ventana lo indica entonces y sigue listando las notas, tal como las vio el panel por
+última vez: **Send to Markdown**, o un clic en una nota, deja aparte lo que seleccionaste, en
+el almacenamiento propio de la extensión, y pasa al final de esa nota en cuanto un panel
+lateral vuelve a abrir la carpeta. **Abrir** le pide la carpeta a Chrome directamente en la
+ventana; un clic en la carpeta en el panel lateral hace lo mismo. Cuando Chrome lo pregunte,
+elige "Permitir en cada visita": la carpeta se mantendrá entonces abierta cuando se cierre
+el panel, y tras reiniciar.
 
 Cuando el panel lateral tiene abierta la base de conocimiento, es el panel el que añade a la
 nota — puede tener esa nota abierta con cambios aún sin guardar, que una escritura a sus
-espaldas perdería. Con el panel cerrado, la ventana escribe la nota ella misma.
+espaldas perdería. Sin ningún panel abierto y con la carpeta aún permitida — en cada visita,
+o mediante **Abrir** — la ventana escribe la nota ella misma.
 
 **El menú contextual** de una página tiene **Enviar la página a Markdown**; en un texto
 seleccionado, **Enviar la selección a Markdown**; en un enlace, **Enviar el enlace a
-Markdown**; en una imagen, **Enviar la imagen a Markdown**. Cualquiera de ellos abre el panel
-lateral, donde un diálogo muestra lo que llegó — y de qué sitio — como Markdown que todavía
+Markdown**; en una imagen, **Enviar la imagen a Markdown**. Ninguno de ellos abre el panel
+lateral: al abrirse, un panel desplaza la página a un lado. Si no hay ningún panel abierto
+en la ventana, lo que elegiste va al final de la nota predeterminada, igual que con **Send to
+Markdown** — o, con la base de conocimiento cerrada, espera a que se abra, como antes. El
+botón de la barra de herramientas indica lo que pasó: una marca de verificación por un
+momento, o `!` con el motivo en su título, y cuántos envíos esperan, hasta que un panel abre
+la carpeta. Si el panel de la ventana está abierto, va allí en su lugar, donde un diálogo
+muestra lo que llegó — y de qué sitio — como Markdown que todavía
 puedes cambiar, y pregunta adónde va:
 
 - **Una nota nueva**, la opción predeterminada para una página: en la carpeta de recortes
@@ -171,7 +183,7 @@ puedes cambiar, y pregunta adónde va:
   una imagen, de la misma manera que Send to Markdown. Un enlace no necesita línea de fuente:
   es su propia fuente.
 
-Enviado antes de que haya una carpeta abierta, espera: el panel pide una carpeta, y el
+Enviado antes de que se abriera alguna vez una carpeta, espera: el panel pide una carpeta, y el
 diálogo aparece en cuanto hay una abierta. Una página que la extensión no puede leer — las
 propias páginas de Chrome, la Web Store, un PDF — llega como un enlace a ella.
 
@@ -189,10 +201,15 @@ lugar de su marcador de posición, y los píxeles de seguimiento se dejan fuera.
 esa única pestaña, y solo entonces la lee — con `scripting`, una función ejecutada en la
 página que copia su texto y lo devuelve. Ningún content script se ejecuta en ningún sitio, y
 no hay acceso a ningún sitio por lo demás: no hay `host_permissions`, cosa que la
-compilación rechaza. `contextMenus`, `sidePanel` y `storage` — lo que se envía al panel
+compilación rechaza. `offscreen`: el worker no tiene DOM, así que, sin ningún panel abierto,
+el HTML de una página o una selección se convierte en Markdown en un documento offscreen de
+la extensión, que se cierra en cuanto termina. `contextMenus`, `sidePanel` y `storage` — lo
+que se envía al panel
 lateral llega al panel de su ventana mediante `chrome.storage.session`, que desaparece
-cuando el navegador se cierra, y el idioma del panel llega al worker, para el menú, en
-`chrome.storage.local`. La ventana del botón le pide al panel de su ventana que añada algo a
+cuando el navegador se cierra; en `chrome.storage.local` está lo que la ventana del botón
+dejó aparte mientras la base de conocimiento estaba cerrada, la lista de sus notas, y el
+idioma del panel y la nota predeterminada, para el worker. La ventana del botón y el worker
+le piden a un panel que tiene abierta la base de conocimiento que añada algo a
 una nota con un mensaje de `chrome.runtime`, que el panel solo acepta de las propias páginas
 de la extensión. Las páginas de la extensión tienen `connect-src 'none'`: el editor no
 accede a nada por la red; la compilación lo comprueba, así como que ninguna página tenga un
@@ -203,10 +220,13 @@ script en línea o una dirección externa.
 en el lugar de `src/platform.ts`, cuyos enganches no hacen nada en el archivo y en la PWA. La
 ventana del botón es `popup.html` y `popup.js` (`src/extension/popup.ts`), con los estilos
 de la página: lee el identificador de la base de conocimiento del mismo IndexedDB que el
-panel, y escribe a través de él mientras el navegador todavía lo permite. El worker,
-`background.js`, tiene el menú. Chrome solo abre un panel lateral dentro del propio
-manejador del clic, antes de esperar nada, así que el panel se abre primero y la pestaña se
-lee después (`src/extension/take.ts`, `grab.ts`); su HTML se convierte en Markdown en
+panel, y escribe a través de él mientras el navegador todavía lo permite; si no, deja aparte
+lo enviado en `chrome.storage.local`, donde el panel que abre la carpeta lo encuentra
+(`src/extension/messages.ts`). El worker,
+`background.js`, tiene el menú: lee la pestaña (`src/extension/take.ts`, `grab.ts`), y envía
+lo que tomó al panel de la ventana, o lo añade a la nota predeterminada igual que hace la
+ventana del botón (`src/extension/knowledge.ts`), a través de `offscreen.html` para el
+Markdown (`src/extension/offscreen.ts`). El HTML se convierte en Markdown en
 `src/extension/to-markdown.ts`, y el editor lo añade o pregunta adónde va (`src/clip.ts`,
 `src/clip-ui.ts`).
 
@@ -617,7 +637,8 @@ en caché la página para que se abra sin conexión. `build/macaed.html` en sí 
 como un único archivo sin referencias externas.
 
 Y `build/extension/`: `panel.html` — la plantilla, con su script en `panel.js` —
-`popup.html` (con los estilos de la página y `popup.css`) y `popup.js`, `background.js`, los
+`popup.html` (con los estilos de la página y `popup.css`) y `popup.js`, `background.js`,
+`offscreen.html` y `offscreen.js`, los
 iconos, `_locales/` y `manifest.json`, cuya versión es la de `package.json`.
 `build/macaed-extension-<version>.zip` contiene los mismos archivos con fechas fijas: los
 mismos orígenes dan los mismos bytes.
@@ -629,7 +650,8 @@ uno) y le hablan en el protocolo DevTools, sin dependencias; sin un Chrome se om
 la versión 137), abre una carpeta en el panel lateral y le envía páginas, selecciones,
 enlaces e imágenes desde sitios de prueba en un servidor local; luego la ventana del botón
 añade selecciones a la nota predeterminada y a una elegida, a través del panel y por sí
-sola, y, con la base de conocimiento cerrada, se las pasa al modo completo. Un menú
+sola, y, con la base de conocimiento cerrada, las deja aparte para el panel, o lo abre ella
+misma; sin ningún panel abierto, el menú añade a la nota predeterminada, o la deja aparte. Un menú
 contextual no se puede pulsar desde DevTools, así que la prueba dispara ella misma el
 `onClicked` del worker, y abre la ventana del botón como una página propia, indicándole qué
 pestaña tiene al lado; sin un clic real Chrome no concede `activeTab`, así que la copia bajo
@@ -734,7 +756,9 @@ src/pwa/sw.js       the service worker of the Pages build: offline, and a new ve
 src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.html, popup.css
                     (the button's window: Send to Markdown); background.ts (the menu); take.ts
                     and grab.ts (run in the page: its text or the selection); to-markdown.ts
-                    (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts
+                    (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts;
+                    knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
+                    offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
                     formatting, tags, the export, clippings, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension

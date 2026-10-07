@@ -35,8 +35,11 @@
     "A link to \"{title}\"": "「{title}」へのリンク",
     "There is no knowledge base yet: open a folder of notes in full mode.": "まだナレッジベースがありません：フルモードでノートのフォルダを開いてください。",
     "Open in full mode": "フルモードで開く",
-    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "「{name}」は閉じています。フルモードで開くと、選択した内容が {note} に送信されます。",
-    "\"{name}\" is closed. Open it in full mode.": "「{name}」は閉じています。フルモードで開いてください。",
+    "The browser did not open the folder here. Open it in full mode.": "ブラウザはここでフォルダを開きませんでした。フルモードで開いてください。",
+    "Open": "開く",
+    "\"{name}\" is closed: what you send is added once it opens.": "「{name}」は閉じています：送信した内容は、開くと追加されます。",
+    "When Chrome asks, choose \"Allow on every visit\", and it stays open.": "Chrome が確認したら「アクセスするたびに許可」を選ぶと、開いたままになります。",
+    "It goes to the end of {name} once \"{base}\" opens": "「{base}」が開くと、{name} の末尾に追加されます",
     "Send to Markdown": "Send to Markdown",
     "To the end of {note}": "{note} の末尾に追加",
     "(a new note)": "(新規ノート)",
@@ -79,6 +82,7 @@
     "or drag a folder here": "またはフォルダをここにドラッグ",
     "Recent folders": "最近のフォルダ",
     "Open {name}": "「{name}」を開く",
+    "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "Chrome が確認したら「アクセスするたびに許可」を選ぶと、パネルを閉じてもフォルダは開いたままになります。",
     "Remove from the list": "一覧から削除",
     "The folder \"{name}\" is no longer there, so it was removed from the list": "フォルダ「{name}」は見つからないため、一覧から削除しました",
     "Version {version}": "バージョン {version}",
@@ -274,7 +278,10 @@
     "Send the page to Markdown": "ページを Markdown に送信",
     "Send the selection to Markdown": "選択範囲を Markdown に送信",
     "Send the link to Markdown": "リンクを Markdown に送信",
-    "Send the image to Markdown": "画像を Markdown に送信"
+    "Send the image to Markdown": "画像を Markdown に送信",
+    "{count} sendings wait for the knowledge base to open": {
+      "other": "{count} 件の送信がナレッジベースが開くのを待っています"
+    }
   },
   "update": {
     "Install updates by themselves when everything is saved and the app is in the background": "すべて保存済みでアプリがバックグラウンドにあるとき、更新を自動的にインストールする",

@@ -35,8 +35,10 @@
     "A link to \"{title}\"": "指向“{title}”的链接",
     "There is no knowledge base yet: open a folder of notes in full mode.": "还没有知识库：请在完整模式中打开一个笔记文件夹。",
     "Open in full mode": "在完整模式中打开",
-    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "“{name}”已关闭。请在完整模式中打开它，选中的内容将发送到 {note}。",
-    "\"{name}\" is closed. Open it in full mode.": "“{name}”已关闭。请在完整模式中打开它。",
+    "The browser did not open the folder here. Open it in full mode.": "浏览器未能在此处打开该文件夹。请在完整模式中打开它。",
+    "Open": "打开",
+    "\"{name}\" is closed: what you send is added once it opens.": "“{name}”已关闭：你发送的内容会在它打开后添加进去。",
+    "When Chrome asks, choose \"Allow on every visit\", and it stays open.": "当 Chrome 询问时，选择“每次访问都允许”，文件夹就会保持打开状态。",
     "Send to Markdown": "Send to Markdown",
     "To the end of {note}": "添加到 {note} 的末尾",
     "(a new note)": "(新笔记)",
@@ -45,7 +47,8 @@
     "No notes match": "没有匹配的笔记",
     "Add to {note}": "添加到 {note}",
     "The default note": "默认笔记",
-    "Make it the default note": "设为默认笔记"
+    "Make it the default note": "设为默认笔记",
+    "It goes to the end of {name} once \"{base}\" opens": "“{base}”打开后，会添加到 {name} 的末尾"
   },
   "toast": {
     "Path copied: {path}": "已复制路径：{path}",
@@ -82,7 +85,8 @@
     "Remove from the list": "从列表中移除",
     "The folder \"{name}\" is no longer there, so it was removed from the list": "文件夹“{name}”已不存在，已从列表中移除",
     "Version {version}": "版本 {version}",
-    "Drag a folder or a note": "拖入一个文件夹或一篇笔记"
+    "Drag a folder or a note": "拖入一个文件夹或一篇笔记",
+    "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "当 Chrome 询问时，选择“每次访问都允许”：这样面板关闭后文件夹仍会保持打开。"
   },
   "dialog": {
     "Note not found": "未找到笔记",
@@ -274,7 +278,10 @@
     "Send the page to Markdown": "将页面发送到 Markdown",
     "Send the selection to Markdown": "将选中内容发送到 Markdown",
     "Send the link to Markdown": "将链接发送到 Markdown",
-    "Send the image to Markdown": "将图片发送到 Markdown"
+    "Send the image to Markdown": "将图片发送到 Markdown",
+    "{count} sendings wait for the knowledge base to open": {
+      "other": "{count} 条内容正在等待知识库打开"
+    }
   },
   "update": {
     "Install updates by themselves when everything is saved and the app is in the background": "当所有内容已保存且应用在后台运行时，自动安装更新",

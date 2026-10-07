@@ -7,8 +7,11 @@
     "A link to \"{title}\"": "Un link a «{title}»",
     "There is no knowledge base yet: open a folder of notes in full mode.": "Non c’è ancora una base di conoscenza: apri una cartella di note in modalità completa.",
     "Open in full mode": "Apri in modalità completa",
-    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "«{name}» è chiusa. Aprila in modalità completa e la selezione andrà in {note}.",
-    "\"{name}\" is closed. Open it in full mode.": "«{name}» è chiusa. Aprila in modalità completa.",
+    "The browser did not open the folder here. Open it in full mode.": "Il browser non ha aperto la cartella qui. Aprila in modalità completa.",
+    "Open": "Apri",
+    "\"{name}\" is closed: what you send is added once it opens.": "«{name}» è chiusa: quello che invii viene aggiunto appena si apre.",
+    "When Chrome asks, choose \"Allow on every visit\", and it stays open.": "Quando Chrome lo chiede, scegli «Consenti a ogni visita» e resterà aperta.",
+    "It goes to the end of {name} once \"{base}\" opens": "Va alla fine di {name} appena si apre «{base}»",
     "Send to Markdown": "Send to Markdown",
     "To the end of {note}": "Alla fine di {note}",
     "(a new note)": "(nuova nota)",
@@ -82,6 +85,7 @@
     "Open a folder": "Apri una cartella",
     "of notes": "di note",
     "Pick a folder with {ext} files. Nothing is sent anywhere: files are read and saved straight on your own disk.": "Scegli una cartella con file {ext}. Nulla viene inviato altrove: i file vengono letti e salvati direttamente sul tuo disco.",
+    "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "Quando Chrome lo chiede, scegli «Consenti a ogni visita»: la cartella resta aperta anche alla chiusura del pannello.",
     "Open folder": "Apri cartella",
     "or drag a folder here": "o trascina qui una cartella",
     "Recent folders": "Cartelle recenti",
@@ -284,7 +288,12 @@
     "Send the page to Markdown": "Invia la pagina a Markdown",
     "Send the selection to Markdown": "Invia la selezione a Markdown",
     "Send the link to Markdown": "Invia il link a Markdown",
-    "Send the image to Markdown": "Invia l’immagine a Markdown"
+    "Send the image to Markdown": "Invia l’immagine a Markdown",
+    "{count} sendings wait for the knowledge base to open": {
+      "one": "{count} invio attende che si apra la base di conoscenza",
+      "many": "{count} di invii attendono che si apra la base di conoscenza",
+      "other": "{count} invii attendono che si apra la base di conoscenza"
+    }
   },
   "update": {
     "Install updates by themselves when everything is saved and the app is in the background": "Installa gli aggiornamenti da sola quando tutto è salvato e l’app è in background",

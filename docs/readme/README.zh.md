@@ -111,17 +111,26 @@ zip）。
 - 没有选中任何内容时，**作为新笔记** 会把整个页面变成一篇独立的笔记（见下文）。
 - **完整模式** 会打开侧边栏。
 
-**当知识库处于关闭状态时**——浏览器重启之后，除非你曾选择过“每次访问都允许”——页面在你点击
-之前无法进入文件夹：此时窗口会说明这一点，**在完整模式中打开** 会打开侧边栏，在那里点击一
-下文件夹即可重新获得访问权限。一旦文件夹打开，你选中的内容会自动发送到默认笔记。
+**当知识库处于关闭状态时**——最后一个侧边栏关闭后，以及重启之后，Chrome 都会收回对文件夹的
+访问权限，除非你曾选择过“每次访问都允许”——在你点击之前，页面都无法进入文件夹。此时窗口会
+说明这一点，并仍会按侧边栏最后看到的样子列出笔记：**Send to Markdown**，或点击某篇笔记，会
+把你选中的内容暂存到扩展程序自己的存储中，一旦某个侧边栏重新打开该文件夹，它就会被添加到那
+篇笔记的末尾。**打开** 会直接在窗口中向 Chrome 请求该文件夹；在侧边栏中点击一下文件夹也是
+同样的效果。当 Chrome 询问时，选择**每次访问都允许**：这样文件夹会在侧边栏关闭后，以及重
+启之后，仍保持打开状态。
 
 当侧边栏中打开着知识库时，是侧边栏在向笔记中添加内容——它可能已经打开了那篇笔记，并带有尚未
-保存的更改，背着它写入会丢失这些更改。侧边栏关闭时，则由窗口自己写入笔记。
+保存的更改，背着它写入会丢失这些更改。当没有侧边栏打开、且文件夹仍被允许访问时——无论是通
+过“每次访问都允许”，还是通过**打开**——则由窗口自己写入笔记。
 
 页面的**右键菜单**中有**将页面发送到 Markdown**；选中文字时，有**将选中内容发送到
 Markdown**；在链接上，有**将链接发送到 Markdown**；在图片上，有**将图片发送到 Markdown**。
-点击后都会打开侧边栏，其中的对话框会显示收到的内容——以及来自哪个网站——以 Markdown 形式呈
-现，你仍可以修改它，并会询问要保存到哪里：
+它们都不会打开侧边栏：打开侧边栏会把页面挤到一边。当窗口中没有打开的侧边栏时，你选择的内容
+会像 **Send to Markdown** 一样添加到默认笔记的末尾——如果知识库处于关闭状态，则像上文所说
+的那样先等待它。工具栏按钮会显示发生了什么：短暂显示一个勾号，或在标题中带有原因的 `!`，
+以及有多少条待发送内容在等待侧边栏打开文件夹。当窗口的侧边栏已打开时，内容会改为发送到那
+里，其中的对话框会显示收到的内容——以及来自哪个网站——以 Markdown 形式呈现，你仍可以修改
+它，并会询问要保存到哪里：
 
 - **新建笔记**，页面的默认选项：保存在剪藏文件夹中（默认是根目录下的 `Clippings`，可自行更
   改；该文件夹会被记住，留空表示根目录），以页面标题命名，文件名中不允许出现的字符会被去掉。
@@ -143,7 +152,8 @@ Markdown**；在链接上，有**将链接发送到 Markdown**；在图片上，
 - **当前打开笔记的末尾**，选中内容、链接或图片的默认选项，方式与 Send to Markdown 相同。链
   接不需要来源行——它自己就是来源。
 
-如果在打开文件夹之前就发送了内容，它会先等待：侧边栏会要求你打开一个文件夹，对话框会在文件夹
+如果在任何文件夹被打开之前就发送了内容，它会先等待：侧边栏会要求你打开一个文件夹，对话框会
+在文件夹
 打开后出现。扩展程序无法读取的页面——Chrome 自身的页面、网上应用店、PDF——会以指向它的链接形
 式送达。
 
@@ -157,10 +167,13 @@ Markdown**；在链接上，有**将链接发送到 Markdown**；在图片上，
 **权限。** `activeTab`：点击按钮、菜单项或快捷键，才会把那一个标签页授予扩展程序，也只有这时
 扩展程序才会读取它——通过 `scripting`，在页面中运行一个函数，复制其文本并返回。扩展程序在任
 何地方都不运行内容脚本，也没有其他方式访问任何网站：没有 `host_permissions`，构建流程会拒绝它
-的出现。`contextMenus`、`sidePanel` 和 `storage`——发送到侧边栏的内容会通过
-`chrome.storage.session`（浏览器关闭即清空）交给所在窗口的侧边栏，而侧边栏的语言则通过
-`chrome.storage.local` 传给后台工作进程，供菜单使用。按钮的窗口会通过 `chrome.runtime` 消息，
-请求所在窗口的侧边栏把内容添加到一篇笔记中，而侧边栏只会接受来自扩展程序自身页面的这类消息。
+的出现。`offscreen`：后台工作进程没有 DOM，因此在没有侧边栏打开时，页面或选中内容的 HTML
+会在扩展程序的一个 offscreen 文档中转换为 Markdown，完成后该文档会关闭。`contextMenus`、
+`sidePanel` 和 `storage`——发送到侧边栏的内容会通过
+`chrome.storage.session`（浏览器关闭即清空）交给所在窗口的侧边栏；`chrome.storage.local` 中
+保存着按钮的窗口在知识库关闭期间暂存的内容、它的笔记列表，以及侧边栏的语言和默认笔记，供后
+台工作进程使用。按钮的窗口和后台工作进程都会通过 `chrome.runtime` 消息，请求已打开知识库的
+侧边栏把内容添加到一篇笔记中，而侧边栏只会接受来自扩展程序自身页面的这类消息。
 扩展程序的页面带有 `connect-src 'none'`：编辑器不会在网络上访问任何东西；构建流程会检查这一
 点，以及是否有页面包含内联脚本或外部地址。
 
@@ -168,11 +181,13 @@ Markdown**；在链接上，有**将链接发送到 Markdown**；在图片上，
 的要求——同样的 `src/main.ts`，只是用 `src/extension/extension.ts` 取代了 `src/platform.ts`，
 后者的钩子在单文件版本和 PWA 中什么都不做。按钮的窗口是 `popup.html` 和 `popup.js`
 （`src/extension/popup.ts`），带有与该页面相同的样式：它从与侧边栏相同的 IndexedDB 中读取知
-识库的句柄，并在浏览器仍然允许的情况下通过它写入。后台工作进程 `background.js` 负责菜单。
-Chrome 只允许在点击事件自身的处理函数内部、且在任何 await 之前打开侧边栏，因此会先打开侧边
-栏，之后再读取标签页内容（`src/extension/take.ts`、`grab.ts`）；其 HTML 会在
-`src/extension/to-markdown.ts` 中转换为 Markdown，编辑器再将其添加进去，或询问它要保存到哪
-里（`src/clip.ts`、`src/clip-ui.ts`）。
+识库的句柄，并在浏览器仍然允许的情况下通过它写入；否则会把发送的内容暂存到 `chrome.storage.local` 中，
+由打开该文件夹的侧边栏在那里找到它（`src/extension/messages.ts`）。后台工作进程
+`background.js` 负责菜单：它读取标签页内容（`src/extension/take.ts`、`grab.ts`），并把取得
+的内容发送给窗口的侧边栏，或者像按钮的窗口一样把它添加到默认笔记中
+（`src/extension/knowledge.ts`），通过 `offscreen.html` 来转换 Markdown
+（`src/extension/offscreen.ts`）。HTML 会在 `src/extension/to-markdown.ts` 中转换为
+Markdown，编辑器再将其添加进去，或询问它要保存到哪里（`src/clip.ts`、`src/clip-ui.ts`）。
 
 ## 实时预览
 
@@ -494,8 +509,8 @@ URI）一起替换进 `src/template.html`；导出功能所用的模板和样式
 本身依旧是一个不含任何外部引用的单一文件。
 
 还有 `build/extension/`：`panel.html`——模板本身，其脚本位于 `panel.js`——`popup.html`
-（带有该页面的样式和 `popup.css`）及 `popup.js`、`background.js`、各个图标、`_locales/` 以
-及 `manifest.json`，其版本号取自 `package.json`。
+（带有该页面的样式和 `popup.css`）及 `popup.js`、`background.js`、`offscreen.html` 和
+`offscreen.js`、各个图标、`_locales/` 以及 `manifest.json`，其版本号取自 `package.json`。
 `build/macaed-extension-<version>.zip` 包含同样的文件，并带有固定的日期：相同的源码总是产生
 相同的字节。
 
@@ -504,7 +519,8 @@ URI）一起替换进 `src/template.html`；导出功能所用的模板和样式
 `tools/test-extension.mjs` 通过该协议加载扩展程序（通过管道调用 `Extensions.loadUnpacked`；
 `--load-extension` 自 Chrome 137 版起已被移除），在侧边栏中打开一个文件夹，并向它发送来自本
 地服务器上测试网站的页面、选中内容、链接和图片；随后按钮的窗口会通过侧边栏以及独立地，把选
-中内容添加到默认笔记和指定笔记中，并在知识库关闭的情况下，把内容交给完整模式处理。右键菜单
+中内容添加到默认笔记和指定笔记中，并在知识库关闭的情况下，把内容暂存给侧边栏，或自行打开
+它；在没有侧边栏打开的情况下，菜单会添加到默认笔记，或者把内容暂存起来。右键菜单
 无法从 DevTools 中点击，因此测试会自行触发后台工作进程的 `onClicked`，并把按钮的窗口作为一个
 独立页面打开，告知它旁边是哪一个标签页；由于没有真实的点击，Chrome 不会授予 `activeTab`，因
 此被测试的这一份扩展程序可能需要把测试网站 `*.test` 作为主机权限才能访问。
@@ -596,7 +612,9 @@ src/pwa/sw.js       the service worker of the Pages build: offline, and a new ve
 src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.html, popup.css
                     (the button's window: Send to Markdown); background.ts (the menu); take.ts
                     and grab.ts (run in the page: its text or the selection); to-markdown.ts
-                    (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts
+                    (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts;
+                    knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
+                    offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
                     formatting, tags, the export, clippings, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension

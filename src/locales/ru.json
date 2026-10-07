@@ -69,6 +69,7 @@
     "or drag a folder here": "или перетащите папку сюда",
     "Recent folders": "Недавние папки",
     "Open {name}": "Открыть «{name}»",
+    "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "Когда Chrome спросит, выберите «Разрешать при каждом посещении»: тогда папка останется открытой и после закрытия панели.",
     "Remove from the list": "Убрать из списка",
     "The folder \"{name}\" is no longer there, so it was removed from the list": "Папки «{name}» больше нет, она убрана из списка",
     "Version {version}": "Версия {version}"
@@ -269,7 +270,13 @@
     "Send the page to Markdown": "Отправить страницу в Markdown",
     "Send the selection to Markdown": "Отправить выделение в Markdown",
     "Send the link to Markdown": "Отправить ссылку в Markdown",
-    "Send the image to Markdown": "Отправить изображение в Markdown"
+    "Send the image to Markdown": "Отправить изображение в Markdown",
+    "{count} sendings wait for the knowledge base to open": {
+      "one": "{count} отправка ждёт, пока откроется база знаний",
+      "few": "{count} отправки ждут, пока откроется база знаний",
+      "many": "{count} отправок ждут, пока откроется база знаний",
+      "other": "{count} отправки ждут, пока откроется база знаний"
+    }
   },
   "popup": {
     "Full mode": "Полный режим",
@@ -279,8 +286,11 @@
     "A link to \"{title}\"": "Ссылка на «{title}»",
     "There is no knowledge base yet: open a folder of notes in full mode.": "База знаний ещё не открыта: откройте папку с заметками в полном режиме.",
     "Open in full mode": "Открыть в полном режиме",
-    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "«{name}» закрыта. Откройте её в полном режиме, и выделенное попадёт в {note}.",
-    "\"{name}\" is closed. Open it in full mode.": "«{name}» закрыта. Откройте её в полном режиме.",
+    "The browser did not open the folder here. Open it in full mode.": "Браузер не открыл папку здесь. Откройте её в полном режиме.",
+    "Open": "Открыть",
+    "\"{name}\" is closed: what you send is added once it opens.": "«{name}» закрыта: то, что вы отправите, добавится, когда она откроется.",
+    "When Chrome asks, choose \"Allow on every visit\", and it stays open.": "Когда Chrome спросит, выберите «Разрешать при каждом посещении» — и она останется открытой.",
+    "It goes to the end of {name} once \"{base}\" opens": "Попадёт в конец {name}, когда откроется «{base}»",
     "Send to Markdown": "Send to Markdown",
     "To the end of {note}": "В конец {note}",
     "(a new note)": "(новая заметка)",

@@ -65,7 +65,8 @@
     "Open {name}": "“{name}” klasörünü aç",
     "Remove from the list": "Listeden kaldır",
     "The folder \"{name}\" is no longer there, so it was removed from the list": "“{name}” klasörü artık yok, bu yüzden listeden kaldırıldı",
-    "Version {version}": "Sürüm {version}"
+    "Version {version}": "Sürüm {version}",
+    "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "Chrome sorduğunda “Her ziyarette izin ver” seçeneğini seçin: panel kapandığında klasör açık kalır."
   },
   "dialog": {
     "Note not found": "Not bulunamadı",
@@ -259,7 +260,11 @@
     "Send the page to Markdown": "Sayfayı Markdown'a gönder",
     "Send the selection to Markdown": "Seçimi Markdown'a gönder",
     "Send the link to Markdown": "Bağlantıyı Markdown'a gönder",
-    "Send the image to Markdown": "Görseli Markdown'a gönder"
+    "Send the image to Markdown": "Görseli Markdown'a gönder",
+    "{count} sendings wait for the knowledge base to open": {
+      "one": "{count} gönderi bilgi tabanının açılmasını bekliyor",
+      "other": "{count} gönderi bilgi tabanının açılmasını bekliyor"
+    }
   },
   "popup": {
     "Full mode": "Tam mod",
@@ -269,8 +274,10 @@
     "A link to \"{title}\"": "“{title}” sayfasına bir bağlantı",
     "There is no knowledge base yet: open a folder of notes in full mode.": "Henüz bir bilgi tabanı yok: tam modda bir not klasörü açın.",
     "Open in full mode": "Tam modda aç",
-    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "“{name}” kapalı. Tam modda açın; seçili olan {note} içine eklenecek.",
-    "\"{name}\" is closed. Open it in full mode.": "“{name}” kapalı. Tam modda açın.",
+    "The browser did not open the folder here. Open it in full mode.": "Tarayıcı klasörü burada açmadı. Tam modda açın.",
+    "Open": "Aç",
+    "\"{name}\" is closed: what you send is added once it opens.": "“{name}” kapalı: gönderdiğiniz şey o açılınca eklenir.",
+    "When Chrome asks, choose \"Allow on every visit\", and it stays open.": "Chrome sorduğunda “Her ziyarette izin ver” seçeneğini seçin, böylece açık kalır.",
     "Send to Markdown": "Send to Markdown",
     "To the end of {note}": "{note} notunun sonuna",
     "(a new note)": "(yeni bir not)",
@@ -279,7 +286,8 @@
     "No notes match": "Eşleşen not yok",
     "Add to {note}": "{note} notuna ekle",
     "The default note": "Varsayılan not",
-    "Make it the default note": "Varsayılan not yap"
+    "Make it the default note": "Varsayılan not yap",
+    "It goes to the end of {name} once \"{base}\" opens": "“{base}” açılınca {name} dosyasının sonuna eklenir"
   },
   "update": {
     "Install updates by themselves when everything is saved and the app is in the background": "Her şey kaydedildiğinde ve uygulama arka planda çalışırken güncellemeleri kendiliğinden yükle",

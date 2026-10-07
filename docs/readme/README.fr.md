@@ -129,21 +129,32 @@ page :
   entière (voir plus bas).
 - **Mode complet** ouvre le panneau latéral.
 
-**Quand la base de connaissances est fermée** — après un redémarrage du navigateur, sauf si vous
-avez choisi « Autoriser à chaque visite » — une page ne peut pas entrer dans un dossier avant que
-vous ne cliquiez : la fenêtre le signale alors, et **Ouvrir en mode complet** ouvre le panneau
-latéral, où un clic sur le dossier redonne l'accès. Ce que vous avez sélectionné part ensuite
-vers la note par défaut une fois le dossier ouvert.
+**Quand la base de connaissances est fermée** — Chrome reprend l'accès à un dossier dès que le
+dernier panneau latéral se ferme, et après un redémarrage, sauf si vous avez choisi « Autoriser
+à chaque visite » — une page ne peut pas entrer dans le dossier avant que vous ne cliquiez. La
+fenêtre le signale alors et liste quand même les notes, telles que le panneau les a vues en
+dernier : **Send to Markdown**, ou un clic sur une note, met de côté ce que vous avez
+sélectionné, dans le stockage propre à l'extension, et cela part à la fin de cette note une
+fois qu'un panneau latéral rouvre le dossier. **Ouvrir** demande le dossier à Chrome directement
+dans la fenêtre ; un clic sur le dossier dans le panneau latéral fait de même. Quand Chrome le
+demande, choisissez **Autoriser à chaque visite** : le dossier reste alors ouvert à la fermeture
+du panneau, et après un redémarrage.
 
 Quand le panneau latéral a la base de connaissances ouverte, c'est lui qui ajoute à la note — il
 peut avoir cette note ouverte avec des modifications pas encore enregistrées, qu'une écriture
-dans son dos ferait perdre. Le panneau fermé, c'est la fenêtre qui écrit la note elle-même.
+dans son dos ferait perdre. Sans panneau ouvert et le dossier encore autorisé — à chaque visite,
+ou via **Ouvrir** — c'est la fenêtre qui écrit la note elle-même.
 
 **Le menu contextuel** d'une page propose **Envoyer la page vers Markdown** ; sur un texte
 sélectionné, **Envoyer la sélection vers Markdown** ; sur un lien, **Envoyer le lien vers
-Markdown** ; sur une image, **Envoyer l’image vers Markdown**. Chacun ouvre le panneau latéral,
-où une boîte de dialogue montre ce qui est arrivé — et depuis quel site — sous forme de Markdown
-que vous pouvez encore modifier, et demande où cela doit aller :
+Markdown** ; sur une image, **Envoyer l’image vers Markdown**. Aucun n'ouvre le panneau
+latéral : ouvrir un panneau resserre la page. Sans panneau ouvert dans la fenêtre, ce que vous
+avez choisi va à la fin de la note par défaut, comme avec **Send to Markdown** — ou, la base de
+connaissances fermée, attend qu'elle s'ouvre, comme plus haut. Le bouton de la barre d'outils
+dit ce qui s'est passé : une coche un instant, `!` avec la raison dans son titre, et combien
+d'envois attendent, jusqu'à ce qu'un panneau ouvre le dossier. Si le panneau de la fenêtre est
+ouvert, cela y va à la place, où une boîte de dialogue montre ce qui est arrivé — et depuis quel
+site — sous forme de Markdown que vous pouvez encore modifier, et demande où cela doit aller :
 
 - **Une nouvelle note**, le choix par défaut pour une page : dans le dossier des coupures
   (`Clippings` à la racine sauf si vous le changez ; le dossier est mémorisé, vide signifiant la
@@ -168,8 +179,8 @@ que vous pouvez encore modifier, et demande où cela doit aller :
   de la même façon que Send to Markdown. Un lien n'a pas besoin de ligne de source : il est sa
   propre source.
 
-Envoyé avant qu'un dossier soit ouvert, cela attend : le panneau demande un dossier, et la boîte
-de dialogue arrive une fois qu'un dossier est ouvert. Une page que l'extension ne peut pas lire —
+Envoyé avant qu'aucun dossier n'ait jamais été ouvert, cela attend : le panneau demande un
+dossier, et la boîte de dialogue arrive une fois qu'un dossier est ouvert. Une page que l'extension ne peut pas lire —
 les pages internes de Chrome, le Web Store, un PDF — arrive sous forme de lien vers elle.
 
 **Ce qu'est le Markdown.** Titres, paragraphes, **gras**, *italique*, ~~barré~~,
@@ -186,10 +197,15 @@ sont laissés de côté.
 l'extension cet onglet-là, et c'est seulement alors qu'elle le lit — avec `scripting`, une
 fonction exécutée dans la page copie son texte et le renvoie. Aucun script de contenu ne
 s'exécute où que ce soit, et il n'y a par ailleurs aucun accès à aucun site : pas de
-`host_permissions`, que la build refuse. `contextMenus`, `sidePanel` et `storage` — ce qui est envoyé au panneau latéral arrive au
-panneau de sa fenêtre via `chrome.storage.session`, effacé à la fermeture du navigateur, et la
-langue du panneau remonte vers le worker, pour le menu, dans `chrome.storage.local`. La fenêtre
-du bouton demande au panneau de sa fenêtre d'ajouter à une note par un message `chrome.runtime`,
+`host_permissions`, que la build refuse. `offscreen` : le worker n'a pas de DOM, donc, sans
+panneau ouvert, le HTML d'une page ou d'une sélection devient du Markdown dans un document
+offscreen de l'extension, qui se ferme une fois le travail fait. `contextMenus`, `sidePanel` et
+`storage` — ce qui est envoyé au panneau latéral arrive au
+panneau de sa fenêtre via `chrome.storage.session`, effacé à la fermeture du navigateur ; dans
+`chrome.storage.local`, ce que la fenêtre du bouton a mis de côté quand la base de connaissances
+était fermée, la liste de ses notes, et la langue du panneau et la note par défaut, pour le
+worker. La fenêtre du bouton et le worker demandent à un panneau qui a la base de connaissances
+ouverte d'ajouter à une note par un message `chrome.runtime`,
 que le panneau n'accepte que des pages de l'extension elle-même. Les pages de l'extension ont
 `connect-src 'none'` : l'éditeur ne contacte
 rien sur le réseau ; la build le vérifie, tout comme l'absence de script en ligne ou d'adresse
@@ -200,12 +216,14 @@ externe sur n'importe quelle page.
 à la place de `src/platform.ts`, dont les points d'ancrage (hooks) ne font rien dans le fichier et
 la PWA. La fenêtre du bouton est `popup.html` et `popup.js` (`src/extension/popup.ts`), avec les
 styles de la page : elle lit le descripteur de la base de connaissances dans le même IndexedDB
-que le panneau, et écrit à travers lui tant que le navigateur le permet encore. Le worker,
-`background.js`, porte le menu. Chrome n'ouvre un panneau latéral que dans le gestionnaire du
-clic lui-même, avant tout `await`, si bien que le panneau est ouvert en premier et l'onglet lu
-ensuite (`src/extension/take.ts`, `grab.ts`) ; son HTML devient du Markdown dans
-`src/extension/to-markdown.ts`, et l'éditeur l'ajoute ou demande où cela va (`src/clip.ts`,
-`src/clip-ui.ts`).
+que le panneau, et écrit à travers lui tant que le navigateur le permet encore ; sinon, elle met
+ce qui est envoyé de côté dans `chrome.storage.local`, où le panneau qui ouvre le dossier le
+retrouve (`src/extension/messages.ts`). Le worker, `background.js`, porte le menu : il lit
+l'onglet (`src/extension/take.ts`, `grab.ts`), et envoie ce qu'il a pris au panneau de la
+fenêtre, ou l'ajoute à la note par défaut comme le fait la fenêtre du bouton
+(`src/extension/knowledge.ts`), via `offscreen.html` pour le Markdown
+(`src/extension/offscreen.ts`). Le HTML devient du Markdown dans `src/extension/to-markdown.ts`,
+et l'éditeur l'ajoute ou demande où cela va (`src/clip.ts`, `src/clip-ui.ts`).
 
 ## Aperçu en direct
 
@@ -604,7 +622,8 @@ cache pour qu'elle s'ouvre hors connexion. `build/macaed.html` lui-même reste u
 référence externe.
 
 Et `build/extension/` : `panel.html` — le modèle, son script dans `panel.js` — `popup.html`
-(avec les styles de la page et `popup.css`) et `popup.js`, `background.js`, les icônes,
+(avec les styles de la page et `popup.css`) et `popup.js`, `background.js`, `offscreen.html` et
+`offscreen.js`, les icônes,
 `_locales/` et `manifest.json`, dont la version est celle de `package.json`.
 `build/macaed-extension-<version>.zip` contient les mêmes fichiers avec des dates fixes : les
 mêmes sources donnent les mêmes octets.
@@ -616,7 +635,8 @@ pipe ; `--load-extension` a disparu de Chrome depuis la version 137), ouvre un d
 panneau latéral et lui envoie des pages, des sélections, des liens et des images depuis des sites
 de test sur un serveur local ; puis la fenêtre du bouton ajoute des sélections à la note par
 défaut et à une note choisie, via le panneau et seule, et, la base de connaissances fermée, les
-confie au mode complet. Un menu contextuel ne peut pas être cliqué depuis DevTools, donc le test
+met de côté pour le panneau, ou l'ouvre elle-même ; sans panneau ouvert, le menu ajoute à la
+note par défaut, ou le met de côté. Un menu contextuel ne peut pas être cliqué depuis DevTools, donc le test
 déclenche lui-même le `onClicked` du worker, et ouvre la fenêtre du bouton comme une page à part,
 informée de l'onglet à côté d'elle ; sans clic réel, Chrome n'accorde pas `activeTab`, si bien
 que la copie testée peut atteindre les sites de test, `*.test`, en tant que permissions d'hôte.
@@ -717,7 +737,9 @@ src/pwa/sw.js       the service worker of the Pages build: offline, and a new ve
 src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.html, popup.css
                     (the button's window: Send to Markdown); background.ts (the menu); take.ts
                     and grab.ts (run in the page: its text or the selection); to-markdown.ts
-                    (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts
+                    (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts;
+                    knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
+                    offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
                     formatting, tags, the export, clippings, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension

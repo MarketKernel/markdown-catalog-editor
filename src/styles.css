@@ -239,6 +239,7 @@ button, input, textarea, select {
   padding: 4px 8px 6px;
 }
 .recent-item { display: flex; align-items: center; border-radius: 7px; }
+.recent-hint { margin: 4px 8px 4px; color: var(--muted); font-size: 12.5px; line-height: 1.45; }
 .recent-item:hover { background: var(--panel-2); }
 .recent-open {
   flex: 1;

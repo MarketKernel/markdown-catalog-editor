@@ -126,20 +126,30 @@ Access가 없고, iOS의 모든 브라우저는 Chrome을 포함해 Safari의 �
   됩니다(아래 참고).
 - **전체 모드**는 사이드 패널을 엽니다.
 
-**지식 베이스가 닫혀 있을 때** — 브라우저를 다시 시작한 뒤, "항상 허용"을 선택하지
-않았다면 — 페이지는 클릭 전까지는 폴더에 들어갈 수 없습니다: 창은 이를 알리고,
-**전체 모드에서 열기**를 누르면 사이드 패널이 열리며, 그곳에서 폴더를 한 번 클릭하면
-접근 권한을 다시 얻습니다. 폴더가 열리면 선택했던 내용은 저절로 기본 노트로 이어집니다.
+**지식 베이스가 닫혀 있을 때** — 마지막 사이드 패널이 닫히면 Chrome은 폴더에 대한 접근
+권한을 도로 가져가며, 다시 시작한 뒤에도 그렇습니다 — "방문할 때마다 허용"을 선택하지
+않았다면 — 페이지는 클릭 전까지는 폴더에 들어갈 수 없습니다. 창은 이를 알리면서도, 패널이
+마지막으로 본 그대로 노트 목록을 계속 보여 줍니다: **Send to Markdown**을 누르거나 노트를
+클릭하면 선택한 내용이 확장 프로그램 자신의 저장소에 따로 보관되며, 사이드 패널이 그 폴더를
+다시 열면 그 노트의 끝에 추가됩니다. **열기**는 창 안에서 바로 Chrome에 폴더를 요청합니다;
+사이드 패널에서 폴더를 한 번 클릭하는 것도 마찬가지입니다. Chrome이 물으면 **방문할 때마다
+허용**을 선택하세요: 그러면 폴더는 패널을 닫아도, 다시 시작한 뒤에도 계속 열려 있습니다.
 
 사이드 패널에 지식 베이스가 열려 있으면, 노트에 추가하는 일은 패널이 맡습니다 — 패널이
 그 노트를 저장되지 않은 변경 사항과 함께 열어 두고 있을 수 있으며, 뒤에서 몰래 쓰면 그
-변경 사항을 잃게 되기 때문입니다. 패널이 닫혀 있으면 창이 직접 노트를 씁니다.
+변경 사항을 잃게 되기 때문입니다. 패널이 열려 있지 않고 폴더에 대한 접근이 여전히 허용되어
+있으면 — 매번 허용으로든, **열기**를 통해서든 — 창이 직접 노트를 씁니다.
 
 페이지의 **컨텍스트 메뉴**에는 **페이지를 Markdown으로 보내기**가 있고, 선택한
 텍스트에는 **선택한 부분을 Markdown으로 보내기**, 링크에는 **링크를 Markdown으로
-보내기**, 이미지에는 **이미지를 Markdown으로 보내기**가 있습니다. 어느 것을 선택하든
-사이드 패널이 열리고, 그 안의 대화상자에 전송된 내용 — 그리고 어느 사이트에서
-왔는지 — 이 여전히 수정할 수 있는 Markdown 형태로 표시되며, 어디에 저장할지 묻습니다:
+보내기**, 이미지에는 **이미지를 Markdown으로 보내기**가 있습니다. 어느 것도 사이드 패널을
+열지 않습니다: 패널이 열리면 페이지가 옆으로 밀려나기 때문입니다. 창에 열린 패널이 없으면,
+고른 내용은 **Send to Markdown**과 마찬가지로 기본 노트의 끝에 추가됩니다 — 또는 지식
+베이스가 닫혀 있으면 위에서처럼 열리기를 기다립니다. 툴바 버튼은 무슨 일이 있었는지
+알려 줍니다: 잠깐 나타나는 체크 표시, 이유가 제목에 담긴 `!`, 그리고 패널이 폴더를 열 때까지
+기다리는 전송 개수입니다. 창의 패널이 열려 있으면 대신 그곳으로 가며, 그 안의 대화상자에
+전송된 내용 — 그리고 어느 사이트에서 왔는지 — 이 여전히 수정할 수 있는 Markdown 형태로
+표시되며, 어디에 저장할지 묻습니다:
 
 - **새 노트** — 페이지의 기본값입니다: 스크랩 폴더(바꾸지 않는 한 루트의 `Clippings`;
   이 폴더는 기억되며, 비워 두면 루트를 뜻합니다)에, 페이지 제목을 따서 이름이 붙고,
@@ -162,7 +172,7 @@ Access가 없고, iOS의 모든 브라우저는 Chrome을 포함해 Safari의 �
 - **열려 있는 노트의 끝** — 선택한 부분, 링크, 이미지의 기본값이며, Send to Markdown과
   같은 방식입니다. 링크는 출처 줄이 필요 없습니다: 링크 자신이 이미 출처이기 때문입니다.
 
-폴더를 열기 전에 전송하면 대기 상태가 됩니다: 패널이 폴더를 요청하고, 폴더가 열리면
+폴더가 한 번도 열린 적 없는 상태에서 전송하면 대기 상태가 됩니다: 패널이 폴더를 요청하고, 폴더가 열리면
 그제서야 대화상자가 나타납니다. 확장 프로그램이 읽을 수 없는 페이지 — Chrome 자체
 페이지, 웹 스토어, PDF — 는 그 페이지로의 링크 형태로 전달됩니다.
 
@@ -179,11 +189,14 @@ Access가 없고, iOS의 모든 브라우저는 Chrome을 포함해 Safari의 �
 권한이 확장 프로그램에 주어지고, 그때서야 비로소 읽습니다 — `scripting` 권한으로
 페이지 안에서 함수를 실행해 텍스트를 복사해 돌려받는 방식입니다. 콘텐츠 스크립트는
 어디에서도 실행되지 않으며, 그 밖의 방법으로는 어떤 사이트에도 접근하지 않습니다:
-`host_permissions`은 없으며, 빌드가 이를 거부합니다. `contextMenus`, `sidePanel`,
+`host_permissions`은 없으며, 빌드가 이를 거부합니다. `offscreen`: 워커에는 DOM이 없으므로,
+패널이 열려 있지 않으면 페이지나 선택한 부분의 HTML은 확장 프로그램의 오프스크린 문서 안에서
+Markdown으로 바뀌며, 끝나면 그 문서는 닫힙니다. `contextMenus`, `sidePanel`,
 `storage` — 사이드 패널로 보내는 내용은 브라우저가 닫히면 사라지는
-`chrome.storage.session`을 통해 해당 창의 패널에 전달되며, 패널의 언어는 메뉴를 위해
-`chrome.storage.local`을 통해 워커로 전달됩니다. 버튼의 창은 `chrome.runtime` 메시지로
-자신의 창의 패널에 노트에 추가해 달라고 요청하며, 패널은 확장 프로그램 자신의
+`chrome.storage.session`을 통해 해당 창의 패널에 전달됩니다. `chrome.storage.local`에는
+지식 베이스가 닫혀 있는 동안 버튼의 창이 따로 보관해 둔 내용, 그 노트 목록, 패널의 언어,
+그리고 기본 노트가 워커를 위해 담깁니다. 버튼의 창과 워커는 지식 베이스가 열려 있는 패널에
+`chrome.runtime` 메시지로 노트에 추가해 달라고 요청하며, 패널은 확장 프로그램 자신의
 페이지에서 온 것만 받아들입니다. 확장 프로그램의 페이지들은 `connect-src 'none'`을
 가지고 있습니다: 편집기는 네트워크의 어떤 것에도 접근하지 않으며, 빌드가 이를 확인하고,
 어떤 페이지에도 인라인 스크립트나 외부 주소가 없는지도 확인합니다.
@@ -194,10 +207,12 @@ Access가 없고, iOS의 모든 브라우저는 Chrome을 포함해 Safari의 �
 PWA에서는 아무 일도 하지 않습니다. 버튼의 창은 `popup.html`과 `popup.js`
 (`src/extension/popup.ts`)이며, 페이지의 스타일을 그대로 씁니다: 패널과 같은
 IndexedDB에서 지식 베이스의 핸들을 읽고, 브라우저가 여전히 허용하는 동안 그것을 통해
-직접 씁니다. 워커인 `background.js`가 메뉴를 담당합니다. Chrome은 클릭 핸들러 안에서,
-아무것도 기다리기 전에만 사이드 패널을 열 수 있으므로, 패널을 먼저 연 다음 탭을
-읽습니다(`src/extension/take.ts`, `grab.ts`). 그 HTML은
-`src/extension/to-markdown.ts`에서 Markdown으로 바뀌고, 편집기는 그것을 추가하거나
+직접 씁니다; 그렇지 않으면 전송된 내용을 `chrome.storage.local`에 따로 보관해 두고,
+폴더를 여는 패널이 그것을 찾습니다(`src/extension/messages.ts`). 워커인 `background.js`가
+메뉴를 담당합니다: 탭을 읽고(`src/extension/take.ts`, `grab.ts`), 가져온 내용을 창의
+패널로 보내거나, 버튼의 창과 마찬가지로 기본 노트에 추가합니다(`src/extension/knowledge.ts`).
+Markdown으로의 변환은 `offscreen.html`을 통해 이루어집니다(`src/extension/offscreen.ts`).
+HTML은 `src/extension/to-markdown.ts`에서 Markdown으로 바뀌고, 편집기는 그것을 추가하거나
 어디에 저장할지 묻습니다(`src/clip.ts`, `src/clip-ui.ts`).
 
 ## 실시간 미리보기
@@ -597,7 +612,7 @@ Content-Security-Policy는 그 스크립트 하나의 해시값을 갖습니다.
 
 그리고 `build/extension/`: `panel.html`(템플릿과 그 스크립트인 `panel.js`),
 `popup.html`(페이지의 스타일과 `popup.css`)과 `popup.js`, `background.js`,
-아이콘들, `_locales/`, 그리고 `package.json`의 버전을
+`offscreen.html`과 `offscreen.js`, 아이콘들, `_locales/`, 그리고 `package.json`의 버전을
 따르는 `manifest.json`입니다. `build/macaed-extension-<version>.zip`은
 같은 파일들을 고정된 날짜로 담고 있습니다: 같은 소스는 같은 바이트를
 만들어 냅니다.
@@ -610,7 +625,8 @@ Content-Security-Policy는 그 스크립트 하나의 해시값을 갖습니다.
 사라졌습니다), 사이드 패널에서 폴더를 열고 로컬 서버의 테스트 사이트에서
 페이지, 선택한 부분, 링크, 이미지를 보냅니다. 그다음 버튼의 창이 선택한
 부분을 패널을 통해, 그리고 그 자체로 기본 노트와 고른 노트에 추가하며,
-지식 베이스가 닫혀 있을 때는 전체 모드로 넘깁니다. 컨텍스트 메뉴는
+지식 베이스가 닫혀 있을 때는 그것을 패널을 위해 따로 두거나 스스로 폴더를 엽니다;
+패널이 열려 있지 않으면 메뉴는 기본 노트에 추가하거나 따로 둡니다. 컨텍스트 메뉴는
 DevTools에서는 클릭할 수 없으므로, 테스트는 워커의 `onClicked`를 직접
 실행시키고, 버튼의 창을 옆에 둘 탭을 알려 준 채로 독립된 페이지로
 엽니다. 실제 클릭이 없으면 Chrome은 `activeTab`을 부여하지
@@ -720,7 +736,9 @@ src/pwa/sw.js       the service worker of the Pages build: offline, and a new ve
 src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.html, popup.css
                     (the button's window: Send to Markdown); background.ts (the menu); take.ts
                     and grab.ts (run in the page: its text or the selection); to-markdown.ts
-                    (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts
+                    (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts;
+                    knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
+                    offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
                     formatting, tags, the export, clippings, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension

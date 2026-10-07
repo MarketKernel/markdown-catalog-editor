@@ -35,8 +35,11 @@
     "A link to \"{title}\"": "“{title}”로의 링크",
     "There is no knowledge base yet: open a folder of notes in full mode.": "아직 지식 베이스가 없습니다: 전체 모드에서 노트 폴더를 여세요.",
     "Open in full mode": "전체 모드에서 열기",
-    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "“{name}”이(가) 닫혀 있습니다. 전체 모드에서 열면 선택한 부분이 {note}(으)로 들어갑니다.",
-    "\"{name}\" is closed. Open it in full mode.": "“{name}”이(가) 닫혀 있습니다. 전체 모드에서 여세요.",
+    "The browser did not open the folder here. Open it in full mode.": "브라우저가 여기서 폴더를 열지 않았습니다. 전체 모드에서 여세요.",
+    "Open": "열기",
+    "\"{name}\" is closed: what you send is added once it opens.": "“{name}”이(가) 닫혀 있습니다: 보낸 내용은 열리면 추가됩니다.",
+    "When Chrome asks, choose \"Allow on every visit\", and it stays open.": "Chrome이 물으면 “방문할 때마다 허용”을 선택하면 계속 열려 있습니다.",
+    "It goes to the end of {name} once \"{base}\" opens": "“{base}”이(가) 열리면 {name}의 끝에 추가됩니다",
     "Send to Markdown": "Send to Markdown",
     "To the end of {note}": "{note}의 끝에",
     "(a new note)": "(새 노트)",
@@ -80,6 +83,7 @@
     "or drag a folder here": "또는 폴더를 여기로 드래그하세요",
     "Recent folders": "최근 폴더",
     "Open {name}": "“{name}” 열기",
+    "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "Chrome이 물으면 “방문할 때마다 허용”을 선택하세요: 그러면 패널을 닫아도 폴더가 계속 열려 있습니다.",
     "Remove from the list": "목록에서 제거",
     "The folder \"{name}\" is no longer there, so it was removed from the list": "“{name}” 폴더가 더 이상 없어 목록에서 제거했습니다",
     "Version {version}": "버전 {version}"
@@ -274,7 +278,10 @@
     "Send the page to Markdown": "페이지를 Markdown으로 보내기",
     "Send the selection to Markdown": "선택한 부분을 Markdown으로 보내기",
     "Send the link to Markdown": "링크를 Markdown으로 보내기",
-    "Send the image to Markdown": "이미지를 Markdown으로 보내기"
+    "Send the image to Markdown": "이미지를 Markdown으로 보내기",
+    "{count} sendings wait for the knowledge base to open": {
+      "other": "보낸 항목 {count}개가 지식 베이스가 열리기를 기다리고 있습니다"
+    }
   },
   "update": {
     "Install updates by themselves when everything is saved and the app is in the background": "모든 항목이 저장되고 앱이 백그라운드에 있을 때 업데이트를 자동으로 설치",

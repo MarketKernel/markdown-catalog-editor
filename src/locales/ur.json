@@ -37,8 +37,10 @@
     "A link to \"{title}\"": "\"{title}\" کا لنک",
     "There is no knowledge base yet: open a folder of notes in full mode.": "ابھی کوئی نالج بیس نہیں: مکمل موڈ میں نوٹس کا فولڈر کھولیں۔",
     "Open in full mode": "مکمل موڈ میں کھولیں",
-    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "\"{name}\" بند ہے۔ اسے مکمل موڈ میں کھولیں، منتخب شدہ چیز {note} میں شامل ہو جائے گی۔",
-    "\"{name}\" is closed. Open it in full mode.": "\"{name}\" بند ہے۔ اسے مکمل موڈ میں کھولیں۔",
+    "The browser did not open the folder here. Open it in full mode.": "براؤزر نے یہاں فولڈر نہیں کھولا۔ اسے مکمل موڈ میں کھولیں۔",
+    "Open": "کھولیں",
+    "\"{name}\" is closed: what you send is added once it opens.": "\"{name}\" بند ہے: جو آپ بھیجیں گے وہ اس کے کھلتے ہی شامل ہو جائے گا۔",
+    "When Chrome asks, choose \"Allow on every visit\", and it stays open.": "جب Chrome پوچھے تو \"ہر وزٹ پر اجازت دیں\" منتخب کریں، اس طرح یہ کھلا رہے گا۔",
     "Send to Markdown": "Send to Markdown",
     "To the end of {note}": "{note} کے آخر میں",
     "(a new note)": "(ایک نیا نوٹ)",
@@ -47,7 +49,8 @@
     "No notes match": "کوئی نوٹ مماثل نہیں",
     "Add to {note}": "{note} میں شامل کریں",
     "The default note": "ڈیفالٹ نوٹ",
-    "Make it the default note": "اسے ڈیفالٹ نوٹ بنائیں"
+    "Make it the default note": "اسے ڈیفالٹ نوٹ بنائیں",
+    "It goes to the end of {name} once \"{base}\" opens": "\"{base}\" کھلتے ہی {name} کے آخر میں شامل ہو جائے گا"
   },
   "toast": {
     "Finish what is open first, then open the note again": "پہلے جو کھلا ہے اسے مکمل کریں، پھر نوٹ دوبارہ کھولیں",
@@ -85,7 +88,8 @@
     "Recent folders": "حالیہ فولڈرز",
     "Open {name}": "«{name}» کھولیں",
     "Remove from the list": "فہرست سے ہٹائیں",
-    "The folder \"{name}\" is no longer there, so it was removed from the list": "فولڈر «{name}» اب موجود نہیں، اس لیے اسے فہرست سے ہٹا دیا گیا"
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "فولڈر «{name}» اب موجود نہیں، اس لیے اسے فہرست سے ہٹا دیا گیا",
+    "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "جب Chrome پوچھے تو \"ہر وزٹ پر اجازت دیں\" منتخب کریں: اس کے بعد پینل بند ہونے پر بھی فولڈر کھلا رہتا ہے۔"
   },
   "dialog": {
     "Note not found": "نوٹ نہیں ملا",
@@ -279,7 +283,11 @@
     "Send the page to Markdown": "صفحہ Markdown کو بھیجیں",
     "Send the selection to Markdown": "انتخاب Markdown کو بھیجیں",
     "Send the link to Markdown": "لنک Markdown کو بھیجیں",
-    "Send the image to Markdown": "تصویر Markdown کو بھیجیں"
+    "Send the image to Markdown": "تصویر Markdown کو بھیجیں",
+    "{count} sendings wait for the knowledge base to open": {
+      "one": "{count} بھیجی گئی چیز نالج بیس کھلنے کا انتظار کر رہی ہے",
+      "other": "{count} بھیجی گئی چیزیں نالج بیس کھلنے کا انتظار کر رہی ہیں"
+    }
   },
   "update": {
     "Install updates by themselves when everything is saved and the app is in the background": "جب سب کچھ محفوظ ہو اور ایپ پس منظر میں ہو تو اپڈیٹس خود بخود انسٹال کریں",

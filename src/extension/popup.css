@@ -46,6 +46,20 @@ body.popup-page { width: 360px; overflow: hidden; }
 
 .popup-body { flex: 1; min-height: 0; overflow: auto; overscroll-behavior-y: contain; padding: 0 14px 10px; }
 
+.popup-closed {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--edge);
+  border-radius: 9px;
+  background: var(--panel);
+}
+.popup-closed p { margin: 0; line-height: 1.45; overflow-wrap: anywhere; }
+.popup-hint { color: var(--muted); font-size: 12.5px; }
+
 .popup-actions { display: flex; gap: 8px; }
 .popup-send { flex: 1; }
 .popup-target { margin: 6px 0 12px; color: var(--muted); font-size: 12.5px; overflow-wrap: anywhere; }

@@ -339,14 +339,16 @@ function localizeManifest(source, dictionaries) {
 /** build/extension/: the side panel is the page itself, its script a file of its own, as Manifest V3 wants. */
 async function buildExtension(template, styles, iconUri) {
   const dir = at('build', 'extension');
-  const [manifestSource, texts, popupHtml, popupStyles, panelJs, popupJs, backgroundJs] = await Promise.all([
+  const [manifestSource, texts, popupHtml, popupStyles, offscreenHtml, panelJs, popupJs, backgroundJs, offscreenJs] = await Promise.all([
     readFile(at('src/extension/manifest.json'), 'utf8').then(JSON.parse),
     dictionaries(),
     readFile(at('src/extension/popup.html'), 'utf8'),
     readFile(at('src/extension/popup.css'), 'utf8'),
+    readFile(at('src/extension/offscreen.html'), 'utf8'),
     bundle('src/main.ts', { plugins: [extensionPlatform] }),
     bundle('src/extension/popup.ts'),
     bundle('src/extension/background.ts', { format: 'esm' }),
+    bundle('src/extension/offscreen.ts'),
   ]);
   // Chrome's version is numbers only; the one with the commit goes where Chrome shows it.
   const { manifest, locales } = localizeManifest({ ...manifestSource, version: release.version }, texts);
@@ -366,6 +368,8 @@ async function buildExtension(template, styles, iconUri) {
     ['popup.html', popup],
     ['popup.js', popupJs],
     ['background.js', backgroundJs],
+    ['offscreen.html', offscreenHtml],
+    ['offscreen.js', offscreenJs],
     ...locales,
   ]);
   assertExtension(files, manifest);

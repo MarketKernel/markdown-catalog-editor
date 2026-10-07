@@ -50,7 +50,8 @@ async function withStore<T>(mode: IDBTransactionMode, run: (store: IDBObjectStor
 
 /** Newest first; empty where IndexedDB or folder handles are unavailable. */
 export async function recentFolders(): Promise<RecentFolder[]> {
-  if (typeof indexedDB === 'undefined' || typeof window.showDirectoryPicker !== 'function') return [];
+  // The extension's worker has no picker, but reads the folders its panel keeps.
+  if (typeof indexedDB === 'undefined' || !('showDirectoryPicker' in globalThis || 'ServiceWorkerGlobalScope' in globalThis)) return [];
   try {
     const all = await withStore<RecentFolder[]>('readonly', (store) => store.getAll() as IDBRequest<RecentFolder[]>);
     return all.sort((a, b) => b.opened - a.opened);

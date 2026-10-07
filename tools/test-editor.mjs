@@ -99,6 +99,11 @@ async function launch(note, files = {}, init = '') {
     return r.result.value;
   };
   const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  /** Asks again until `expr` is true: a note opens after its file is read, later on a busy machine. */
+  const until = async (expr, timeout = 3000) => {
+    for (const end = Date.now() + timeout; Date.now() < end; await sleep(50)) if (await evaluate(expr)) return true;
+    return false;
+  };
 
   await send('Page.enable');
   await send('Runtime.enable');
@@ -194,7 +199,7 @@ async function launch(note, files = {}, init = '') {
     await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: false });
     await sleep(100);
   };
-  return { evaluate, press, type, click, drag, text, view, sleep, close, reload, viewport };
+  return { evaluate, press, type, click, drag, text, view, sleep, until, close, reload, viewport };
 }
 
 /* ------------------------------------------------------------------ *
@@ -683,6 +688,7 @@ await scenario('Note\n', async (b) => {
   eq('a chip on the list opens its own tag', await b.evaluate(`document.getElementById('status-path').textContent`), '#work/alpha');
   await clickRow('#tag-tree .tree-item', 'idea');
   await clickRow('#tag-page .tag-note-open', 'B');
+  await b.until(`document.getElementById('status-path').textContent === 'sub/B.md'`);
   eq('a note opens from the list', await b.evaluate(`[document.getElementById('tag-page').hidden, document.getElementById('status-path').textContent]`), [true, 'sub/B.md']);
   await b.evaluate(`document.querySelector('#note-tags .tag-remove').click()`);
   await b.sleep(100);
@@ -730,7 +736,7 @@ await scenario('Note\n', async (b) => {
   await b.evaluate(`document.getElementById('vault-name').click()`);
   await b.sleep(200);
   await b.evaluate(`document.getElementById('open-folder').click()`);
-  await b.sleep(300);
+  await b.until(`document.querySelectorAll('#doc img').length === 4`);
   const stored = (path) => b.evaluate(`(() => { const v = window.__fs.get(${JSON.stringify(path)}); return v === undefined ? null : v instanceof Blob ? v.size : v; })()`);
   const saved = async () => {
     await b.press('s', 4);
@@ -805,7 +811,7 @@ await scenario('Text\n', async (b) => {
   await b.evaluate(`document.getElementById('vault-name').click()`);
   await b.sleep(200);
   await b.evaluate(`document.getElementById('open-folder').click()`);
-  await b.sleep(300);
+  await b.until(`document.querySelectorAll('#doc img').length === 4`);
   const stored = (path) => b.evaluate(`(() => { const v = window.__fs.get(${JSON.stringify(path)}); return v === undefined ? null : v instanceof Blob ? v.size : v; })()`);
   eq('old embeds, embeds with a path, ones elsewhere and plain images are all found', await b.evaluate(`[
     document.querySelectorAll('#doc img').length,

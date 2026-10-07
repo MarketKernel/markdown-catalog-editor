@@ -127,21 +127,31 @@ página:
   própria (abaixo).
 - **Modo completo** abre o painel lateral.
 
-**Quando a base de conhecimento está fechada** — depois que o navegador reinicia, a menos
-que você tenha escolhido "Permitir em cada visita" — uma página não consegue entrar em uma
-pasta até você clicar: a janela então avisa, e **Abrir no modo completo** abre o painel
-lateral, onde um clique na pasta devolve o acesso. O que você selecionou vai sozinho para a
-nota padrão assim que a pasta é aberta.
+**Quando a base de conhecimento está fechada** — o Chrome retoma o acesso a uma pasta assim
+que o último painel lateral se fecha, e também depois de reiniciar, a menos que você tenha
+escolhido "Permitir em todas as visitas" — uma página não consegue entrar na pasta até você
+clicar. A janela então avisa e continua listando as notas, como o painel as viu pela última
+vez: **Send to Markdown**, ou um clique em uma nota, deixa o que você selecionou de lado, no
+próprio armazenamento da extensão, e vai para o final dessa nota assim que um painel lateral
+abrir a pasta de novo. **Abrir** pede a pasta ao Chrome ali mesmo na janela; um clique na
+pasta no painel lateral faz o mesmo. Quando o Chrome perguntar, escolha **Permitir em todas
+as visitas**: a pasta então permanece aberta quando o painel se fecha, e depois de reiniciar.
 
 Quando o painel lateral tem a base de conhecimento aberta, é o painel que acrescenta à nota
 — ele pode ter essa nota aberta com alterações ainda não salvas, que uma gravação pelas
-costas dele perderia. Com o painel fechado, a própria janela grava a nota.
+costas dele perderia. Sem nenhum painel aberto e com a pasta ainda permitida — em todas as
+visitas, ou pelo **Abrir** — a própria janela grava a nota.
 
 **O menu de contexto** de uma página tem **Enviar a página para Markdown**; em um texto
 selecionado, **Enviar a seleção para Markdown**; em um link, **Enviar o link para
-Markdown**; em uma imagem, **Enviar a imagem para Markdown**. Cada um deles abre o painel
-lateral, onde um diálogo mostra o que chegou — e de qual site — como Markdown que você ainda
-pode alterar, e pergunta para onde vai:
+Markdown**; em uma imagem, **Enviar a imagem para Markdown**. Nenhum deles abre o painel
+lateral: abrir um painel espreme a página para o lado. Sem nenhum painel aberto na janela, o
+que você escolheu vai para o final da nota padrão, como com o **Send to Markdown** — ou, com
+a base de conhecimento fechada, espera por ela, como acima. O botão da barra de ferramentas
+diz o que aconteceu: uma marca de visto por um momento, `!` com o motivo em seu título, e
+quantos envios esperam, até um painel abrir a pasta. Com o painel da janela aberto, ele vai
+para lá em vez disso, onde um diálogo mostra o que chegou — e de qual site — como Markdown
+que você ainda pode alterar, e pergunta para onde vai:
 
 - **Uma nova nota**, o padrão para uma página: na pasta de recortes (`Clippings` na raiz a
   menos que você a mude; a pasta é lembrada, vazio significa a raiz), com o nome do título
@@ -165,7 +175,7 @@ pode alterar, e pergunta para onde vai:
   jeito que o Send to Markdown. Um link não precisa de linha de fonte: ele é sua própria
   fonte.
 
-Enviado antes de uma pasta estar aberta, ele espera: o painel pede uma pasta, e o diálogo
+Enviado antes que qualquer pasta tenha sido aberta, ele espera: o painel pede uma pasta, e o diálogo
 aparece assim que uma é aberta. Uma página que a extensão não pode ler — as próprias
 páginas do Chrome, a Web Store, um PDF — chega como um link para ela.
 
@@ -183,11 +193,15 @@ os pixels de rastreamento são deixados de fora.
 aquela única aba, e só então ela a lê — com `scripting`, uma função executada na página que
 copia seu texto e o retorna. Nenhum content script roda em lugar nenhum, e não há acesso a
 nenhum site de outra forma: não há `host_permissions`, o que a compilação recusa.
-`contextMenus`, `sidePanel` e `storage` — o que é enviado ao painel lateral vai ao painel de
-sua janela por meio de `chrome.storage.session`, que some quando o navegador fecha, e o
-idioma do painel chega ao worker, para o menu, em `chrome.storage.local`. A janela do botão
-pede ao painel de sua janela que acrescente algo a uma nota com uma mensagem de
-`chrome.runtime`, que o painel só aceita das próprias páginas da extensão. As páginas da
+`offscreen`: o worker não tem DOM, então, sem nenhum painel aberto, o HTML de uma página ou
+de uma seleção vira Markdown em um documento offscreen da extensão, que se fecha assim que
+termina. `contextMenus`, `sidePanel` e `storage` — o que é enviado ao painel lateral vai ao
+painel de sua janela por meio de `chrome.storage.session`, que some quando o navegador fecha;
+em `chrome.storage.local` fica o que a janela do botão deixou de lado enquanto a base de
+conhecimento estava fechada, a lista de suas notas, o idioma do painel e a nota padrão, para
+o worker. A janela do botão e o worker pedem a um painel que tenha a base de conhecimento
+aberta que acrescente algo a uma nota com uma mensagem de `chrome.runtime`, que o painel só
+aceita das próprias páginas da extensão. As páginas da
 extensão têm `connect-src 'none'`: o editor não acessa nada pela rede; a compilação verifica
 isso, e também que nenhuma página tenha um script inline ou um endereço externo.
 
@@ -196,11 +210,14 @@ como exige o Manifest V3 — o mesmo `src/main.ts`, com `src/extension/extension
 lugar de `src/platform.ts`, cujos hooks não fazem nada no arquivo e na PWA. A janela do
 botão é `popup.html` e `popup.js` (`src/extension/popup.ts`), com os estilos da página: ela
 lê o identificador da base de conhecimento do mesmo IndexedDB que o painel, e grava por meio
-dele enquanto o navegador ainda permite. O worker, `background.js`, tem o menu. O Chrome só
-abre um painel lateral dentro do próprio handler do clique, antes de qualquer espera, então
-o painel é aberto primeiro e a aba é lida depois (`src/extension/take.ts`, `grab.ts`); o
-HTML dela vira Markdown em `src/extension/to-markdown.ts`, e o editor a acrescenta ou
-pergunta para onde vai (`src/clip.ts`, `src/clip-ui.ts`).
+dele enquanto o navegador ainda permite; senão, deixa o que foi enviado de lado em
+`chrome.storage.local`, onde o painel que abre a pasta o encontra
+(`src/extension/messages.ts`). O worker, `background.js`, tem o menu: ele lê a aba
+(`src/extension/take.ts`, `grab.ts`), e envia o que pegou para o painel da janela, ou o
+acrescenta à nota padrão como a janela do botão faz (`src/extension/knowledge.ts`), por meio
+de `offscreen.html` para o Markdown (`src/extension/offscreen.ts`). O HTML vira Markdown em
+`src/extension/to-markdown.ts`, e o editor a acrescenta ou pergunta para onde vai
+(`src/clip.ts`, `src/clip-ui.ts`).
 
 ## Visualização ao vivo
 
@@ -592,8 +609,9 @@ armazena a página em cache para que ela abra offline. O próprio `build/macaed.
 continua sendo um único arquivo sem referências externas.
 
 E `build/extension/`: `panel.html` — o modelo, com seu script em `panel.js` —
-`popup.html` (com os estilos da página e `popup.css`) e `popup.js`, `background.js`, os
-ícones, `_locales/` e `manifest.json`, cuja versão é a do `package.json`.
+`popup.html` (com os estilos da página e `popup.css`) e `popup.js`, `background.js`,
+`offscreen.html` e `offscreen.js`, os ícones, `_locales/` e `manifest.json`, cuja versão é a
+do `package.json`.
 `build/macaed-extension-<version>.zip` contém os mesmos arquivos com datas fixas: as mesmas
 fontes dão os mesmos bytes.
 
@@ -604,7 +622,9 @@ e falam o protocolo DevTools com ele, sem dependências; sem um Chrome eles são
 versão 137), abre uma pasta no painel lateral e envia a ela páginas, seleções, links e
 imagens de sites de teste em um servidor local; depois a janela do botão acrescenta seleções
 à nota padrão e a uma escolhida, através do painel e por conta própria, e, com a base de
-conhecimento fechada, as entrega ao modo completo. Um menu de contexto não pode ser clicado
+conhecimento fechada, as deixa de lado para o painel, ou abre a pasta ela mesma; sem painel
+aberto, o menu acrescenta à nota padrão, ou a deixa de lado. Um menu de
+contexto não pode ser clicado
 a partir do DevTools, então o teste dispara ele mesmo o `onClicked` do worker, e abre a
 janela do botão como uma página própria, dizendo a ela qual aba está ao lado; sem um clique
 real o Chrome não concede `activeTab`, então a cópia sob teste pode acessar os sites de
@@ -704,7 +724,9 @@ src/pwa/sw.js       the service worker of the Pages build: offline, and a new ve
 src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.html, popup.css
                     (the button's window: Send to Markdown); background.ts (the menu); take.ts
                     and grab.ts (run in the page: its text or the selection); to-markdown.ts
-                    (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts
+                    (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts;
+                    knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
+                    offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
                     formatting, tags, the export, clippings, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension

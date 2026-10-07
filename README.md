@@ -120,19 +120,29 @@ recent folders are remembered — the extension's own, apart from those of the f
 - With nothing selected, **As a new note** turns the page into a note of its own (below).
 - **Full mode** opens the side panel.
 
-**When the knowledge base is closed** — after the browser restarts, unless you chose "Allow on
-every visit" — a page cannot get into a folder until you click: the window then says so, and
-**Open in full mode** opens the side panel, where one click on the folder gives the access
-back. What you selected goes on to the default note by itself once the folder is open.
+**When the knowledge base is closed** — Chrome takes the access to a folder back once the last
+side panel closes, and after a restart, unless you chose "Allow on every visit" — a page cannot
+get into the folder until you click. The window then says so and still lists the notes, as the
+panel last saw them: **Send to Markdown**, or a click on a note, puts what you selected aside,
+in the extension's own storage, and it goes to the end of that note once a side panel opens the
+folder again. **Open** asks Chrome for the folder right in the window; one click on the folder
+in the side panel does the same. When Chrome asks, choose **Allow on every visit**: the folder
+then stays open when the panel closes, and after a restart.
 
 When the side panel has the knowledge base open, it is the panel that adds to the note — it
 may have that note open with changes not yet saved, which a write behind its back would lose.
-With the panel closed, the window writes the note itself.
+With no panel open and the folder still allowed — on every visit, or through **Open** — the window
+writes the note itself.
 
 **The context menu** of a page has **Send the page to Markdown**; on selected text, **Send the
 selection to Markdown**; on a link, **Send the link to Markdown**; on an image, **Send the
-image to Markdown**. Each opens the side panel, where a dialog shows what came — and from
-which site — as Markdown you can still change, and asks where it goes:
+image to Markdown**. None of them opens the side panel: a panel opening squeezes the page
+aside. With no panel open in the window, what you chose goes to the end of the default note,
+as with **Send to Markdown** — or, with the knowledge base closed, waits for it, as above. The
+toolbar button says what happened: a tick for a moment, `!` with the reason in its title, and
+how many sendings wait, until a panel opens the folder. With the panel of the window open, it
+goes there instead, where a dialog shows what came — and from which site — as Markdown you can
+still change, and asks where it goes:
 
 - **A new note**, the default for a page: in the clippings folder (`Clippings` at the root
   unless you change it; the folder is remembered, empty means the root), named after the
@@ -155,8 +165,8 @@ which site — as Markdown you can still change, and asks where it goes:
 - **The end of the open note**, the default for a selection, a link or an image, the same
   way as Send to Markdown. A link needs no source line: it is its own source.
 
-Sent before a folder is open, it waits: the panel asks for a folder, and the dialog comes
-once one is open. A page the extension may not read — Chrome's own pages, the Web Store, a
+Sent before any folder was ever opened, it waits: the panel asks for a folder, and the dialog
+comes once one is open. A page the extension may not read — Chrome's own pages, the Web Store, a
 PDF — arrives as a link to it.
 
 **What the Markdown is.** Headings, paragraphs, **bold**, *italic*, ~~strikethrough~~,
@@ -171,12 +181,15 @@ taken rather than its placeholder, tracking pixels are left out.
 **Permissions.** `activeTab`: a click on the button, in the menu or the shortcut gives the
 extension that one tab, and only then does it read it — with `scripting`, a function run in
 the page that copies its text and returns. No content script runs anywhere, and there is no
-access to any site otherwise: no `host_permissions`, which the build refuses. `contextMenus`,
+access to any site otherwise: no `host_permissions`, which the build refuses. `offscreen`: the
+worker has no DOM, so with no panel open a page's or a selection's HTML becomes Markdown in an
+offscreen document of the extension, which closes once it is done. `contextMenus`,
 `sidePanel`, and `storage` — what is sent to the side panel goes to the panel of its window
-through `chrome.storage.session`, gone when the browser closes, and the panel's language goes
-to the worker, for the menu, in `chrome.storage.local`. The button's window asks the panel of
-its window to add to a note with a `chrome.runtime` message, which the panel takes only from
-the extension's own pages. The extension's pages have
+through `chrome.storage.session`, gone when the browser closes; in `chrome.storage.local`, what
+the button's window put aside while the knowledge base was closed, the list of its notes, and
+the panel's language and the default note, for the worker. The button's window and the worker
+ask a panel that has the knowledge base open to add to a note with a `chrome.runtime` message,
+which the panel takes only from the extension's own pages. The extension's pages have
 `connect-src 'none'`: the editor reaches nothing on the network; the build checks that, and
 that no page has an inline script or an outside address.
 
@@ -185,11 +198,13 @@ as Manifest V3 wants — the same `src/main.ts`, with `src/extension/extension.t
 of `src/platform.ts`, whose hooks do nothing in the file and the PWA. The button's window is
 `popup.html` and `popup.js` (`src/extension/popup.ts`), with the page's styles: it reads the
 knowledge base's handle from the same IndexedDB as the panel, and writes through it while the
-browser still allows it. The worker, `background.js`, has the menu. Chrome opens a side panel
-only inside the click's own handler, before anything is awaited, so the panel is opened first
-and the tab read after (`src/extension/take.ts`, `grab.ts`); its HTML becomes Markdown in
-`src/extension/to-markdown.ts`, and the editor adds it or asks where it goes (`src/clip.ts`,
-`src/clip-ui.ts`).
+browser still allows it; otherwise it puts what is sent aside in `chrome.storage.local`, where
+the panel that opens the folder finds it (`src/extension/messages.ts`). The worker,
+`background.js`, has the menu: it reads the tab (`src/extension/take.ts`, `grab.ts`), and sends
+what it took to the panel of the window, or adds it to the default note as the button's window
+does (`src/extension/knowledge.ts`), through `offscreen.html` for the Markdown
+(`src/extension/offscreen.ts`). HTML becomes Markdown in `src/extension/to-markdown.ts`, and the
+editor adds it or asks where it goes (`src/clip.ts`, `src/clip-ui.ts`).
 
 ## Live preview
 
@@ -561,7 +576,8 @@ manifest link and a `<meta name="service-worker">` that tells the page to regist
 `build/macaed.html` itself stays a single file with no external references.
 
 And `build/extension/`: `panel.html` — the template, its script in `panel.js` — `popup.html`
-(with the page's styles and `popup.css`) and `popup.js`, `background.js`, the icons,
+(with the page's styles and `popup.css`) and `popup.js`, `background.js`, `offscreen.html` and
+`offscreen.js`, the icons,
 `_locales/` and `manifest.json`, whose version is `package.json`'s.
 `build/macaed-extension-<version>.zip` holds the same files with fixed dates: the same sources
 give the same bytes.
@@ -572,7 +588,8 @@ DevTools protocol to it, with no dependencies; without a Chrome they are skipped
 over a pipe; `--load-extension` is gone from Chrome since version 137), opens a folder in the
 side panel and sends it pages, selections, links and images from test sites on a local server;
 then the button's window adds selections to the default note and to one picked, through the
-panel and on its own, and, with the knowledge base closed, hands them to full mode. A context
+panel and on its own, and, with the knowledge base closed, puts them aside for the panel, or
+opens it itself; with no panel open, the menu adds to the default note, or puts it aside. A context
 menu cannot be clicked from DevTools, so the test fires the worker's `onClicked` itself, and
 opens the button's window as a page of its own, told which tab is beside it; with no real click
 Chrome grants no `activeTab`, so the copy under test may reach the test sites, `*.test`, as host
@@ -668,7 +685,9 @@ src/pwa/sw.js       the service worker of the Pages build: offline, and a new ve
 src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.html, popup.css
                     (the button's window: Send to Markdown); background.ts (the menu); take.ts
                     and grab.ts (run in the page: its text or the selection); to-markdown.ts
-                    (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts
+                    (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts;
+                    knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
+                    offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
                     formatting, tags, the export, clippings, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension

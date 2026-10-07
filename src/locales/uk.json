@@ -71,7 +71,8 @@
     "Open {name}": "Відкрити «{name}»",
     "Remove from the list": "Прибрати зі списку",
     "The folder \"{name}\" is no longer there, so it was removed from the list": "Папки «{name}» більше немає, її прибрано зі списку",
-    "Version {version}": "Версія {version}"
+    "Version {version}": "Версія {version}",
+    "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "Коли Chrome запитає, виберіть «Дозволити при кожному відвідуванні»: тоді папка залишатиметься відкритою після закриття панелі."
   },
   "dialog": {
     "Note not found": "Нотатку не знайдено",
@@ -269,7 +270,13 @@
     "Send the page to Markdown": "Надіслати сторінку в Markdown",
     "Send the selection to Markdown": "Надіслати виділення в Markdown",
     "Send the link to Markdown": "Надіслати посилання в Markdown",
-    "Send the image to Markdown": "Надіслати зображення в Markdown"
+    "Send the image to Markdown": "Надіслати зображення в Markdown",
+    "{count} sendings wait for the knowledge base to open": {
+      "one": "{count} надсилання чекає, доки відкриється база знань",
+      "few": "{count} надсилання чекають, доки відкриється база знань",
+      "many": "{count} надсилань чекають, доки відкриється база знань",
+      "other": "{count} надсилання чекають, доки відкриється база знань"
+    }
   },
   "popup": {
     "Full mode": "Повний режим",
@@ -279,8 +286,10 @@
     "A link to \"{title}\"": "Посилання на «{title}»",
     "There is no knowledge base yet: open a folder of notes in full mode.": "Бази знань ще немає: відкрийте папку з нотатками в повному режимі.",
     "Open in full mode": "Відкрити в повному режимі",
-    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "«{name}» закрита. Відкрийте її в повному режимі, і виділене потрапить до {note}.",
-    "\"{name}\" is closed. Open it in full mode.": "«{name}» закрита. Відкрийте її в повному режимі.",
+    "The browser did not open the folder here. Open it in full mode.": "Браузер не відкрив папку тут. Відкрийте її в повному режимі.",
+    "Open": "Відкрити",
+    "\"{name}\" is closed: what you send is added once it opens.": "«{name}» закрита: те, що ви надсилаєте, додасться, щойно вона відкриється.",
+    "When Chrome asks, choose \"Allow on every visit\", and it stays open.": "Коли Chrome запитає, виберіть «Дозволити при кожному відвідуванні», і вона залишиться відкритою.",
     "Send to Markdown": "Send to Markdown",
     "To the end of {note}": "У кінець {note}",
     "(a new note)": "(нова нотатка)",
@@ -289,7 +298,8 @@
     "No notes match": "Нотатки не знайдено",
     "Add to {note}": "Додати до {note}",
     "The default note": "Нотатка за умовчанням",
-    "Make it the default note": "Зробити нотаткою за умовчанням"
+    "Make it the default note": "Зробити нотаткою за умовчанням",
+    "It goes to the end of {name} once \"{base}\" opens": "Потрапить у кінець {name}, щойно відкриється «{base}»"
   },
   "update": {
     "Install updates by themselves when everything is saved and the app is in the background": "Встановлювати оновлення самостійно, коли все збережено, а застосунок працює у фоновому режимі",

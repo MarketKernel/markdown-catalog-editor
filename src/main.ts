@@ -192,7 +192,9 @@ async function useVault(next: Vault, handle: DirHandleLike | null = null): Promi
     const remembered = last && notes.some((note) => note.path === last) ? last : notes[0]!.path;
     await openNote(remembered);
   }
-  // What the extension sent before a folder was open goes into this one.
+  // What the extension sent or put aside before a folder was open goes into this one — after
+  // the note is open, or it would be read before the end is added.
+  opened();
   void nextClip();
 }
 
@@ -241,6 +243,10 @@ async function renderRecent(): Promise<void> {
       await renderRecent();
     });
     box.append(h('div', { class: 'recent-item' }, open, forget));
+  }
+  // The extension's panel: Chrome takes the access back once it closes, unless allowed for good.
+  if (recent.length && location.protocol === 'chrome-extension:') {
+    box.append(h('p', { class: 'recent-hint', text: t('gate', 'When Chrome asks, choose "Allow on every visit": the folder then stays open when the panel closes.') }));
   }
   // Enter goes straight back to the last folder.
   if (!gate.hidden) box.querySelector<HTMLButtonElement>('.recent-open')?.focus();
@@ -291,6 +297,7 @@ async function closeFolder(): Promise<void> {
   meta = Meta.empty();
   tree.setEntries([]);
   renderTags();
+  opened();
   placeholder.hidden = false;
   setDrawer(false);
   app.hidden = true;
@@ -408,8 +415,24 @@ function takeLaunchedNotes(): void {
  * Notes
  * ------------------------------------------------------------------ */
 
+/**
+ * Reading a note into the editor and adding to the end of one, one at a
+ * time: a note read while its end is being written would come back without
+ * it, and the next save would write it over.
+ */
+let noteWork: Promise<unknown> = Promise.resolve();
+function oneAtATime<T>(work: () => Promise<T>): Promise<T> {
+  const run = noteWork.then(work, work);
+  noteWork = run.catch(() => undefined);
+  return run;
+}
+
 async function openNote(path: string): Promise<void> {
   setDrawer(false);
+  await oneAtATime(() => readNote(path));
+}
+
+async function readNote(path: string): Promise<void> {
   if (!vault) return;
   if (path === currentPath) return;
   await flushSave();
@@ -860,21 +883,24 @@ async function flushSave(): Promise<void> {
   if (dirty && vault?.writable && currentPath) await save();
 }
 
-async function save(): Promise<void> {
-  if (!vault || !currentPath || !dirty) return;
+/** False when the note could not be written: that is said, and it stays unsaved. */
+async function save(): Promise<boolean> {
+  if (!vault || !currentPath || !dirty) return true;
   if (!vault.writable) {
     download(baseOf(currentPath), editor.getText());
     dirty = false;
     renderState();
-    return;
+    return true;
   }
   const saving = revision;
   try {
     await vault.writeText(currentPath, editor.getText());
     dirty = revision !== saving;
     renderState();
+    return true;
   } catch (error) {
     toast(t('toast', 'Could not save: {reason}', { reason: error instanceof Error ? error.message : String(error) }), 'error');
+    return false;
   }
 }
 
@@ -1099,6 +1125,12 @@ async function refreshTree(): Promise<void> {
   tree.setEntries(await vault.scan());
   tree.setActive(currentPath);
   renderTags();
+  opened();
+}
+
+/** The extension keeps the notes of its knowledge base, for its popup to list while the folder is closed. */
+function opened(): void {
+  platform.opened(folder?.id ?? null, vault ? tree.notes().map((note) => note.path) : []);
 }
 
 function withExtension(name: string): string {
@@ -1488,16 +1520,12 @@ findInput.addEventListener('keydown', (event) => {
  * Sent from the browser: the "Send to Markdown" extension's side panel
  * ------------------------------------------------------------------ */
 
-/**
- * What was sent and is waiting: for a folder to be opened, or for the dialog
- * of the one before. `toDefault`: sent by the popup to the default note while
- * the knowledge base was closed — it goes there once a folder is open.
- */
-const clips: { clip: Clip; toDefault: boolean }[] = [];
+/** What was sent and is waiting: for a folder to be opened, or for the dialog of the one before. */
+const clips: Clip[] = [];
 let clipping = false;
 
-function receiveClip(clip: Clip, toDefault: boolean): void {
-  clips.push({ clip, toDefault });
+function receiveClip(clip: Clip): void {
+  clips.push(clip);
   void nextClip();
 }
 
@@ -1517,8 +1545,7 @@ async function nextClip(): Promise<void> {
   if (!next) return;
   clipping = true;
   try {
-    if (next.toDefault) await appendToNote(settings.defaultNote, next.clip).catch(reportSaveError);
-    else await saveClip(next.clip);
+    await saveClip(next);
   } finally {
     clipping = false;
   }
@@ -1571,45 +1598,54 @@ function reportSaveError(error: unknown): void {
 /**
  * Adds the clip to the end of a note of the open folder — made if it is not
  * there yet, as the default note may be. The note open in the editor gets it
- * through the editor, its unsaved changes saved with it; it is shown at its
- * end.
+ * in the editor, at once, and is saved with its unsaved changes; it is shown
+ * at its end. False when the folder was closed or another one opened
+ * meanwhile.
  */
-async function appendToNote(path: string, clip: Clip): Promise<void> {
+async function appendToNote(path: string, clip: Clip): Promise<boolean> {
   const target = vault;
   if (!target?.writable) throw new Error(t('errors', 'The folder is open read-only'));
-  if (path === currentPath) {
-    await flushSave();
-    const text = appendClip(editor.getText(), clip);
-    await target.writeText(path, text);
-    editor.load(text);
-    dirty = false;
-    renderState();
-    renderTitle();
-    scroller.scrollTop = scroller.scrollHeight;
-  } else {
-    let text = '';
-    const known = tree.find(path);
-    if (known) text = await target.readText(path);
-    await target.writeText(path, appendClip(text, clip));
-    if (!known) await refreshTree();
-  }
-  toast(t('clip', 'Added to the end of {name}', { name: baseOf(path) }));
+  return oneAtATime(async () => {
+    if (vault !== target) return false;
+    if (path === currentPath) {
+      // Nothing awaited between reading the editor and filling it: what is typed meanwhile stays.
+      editor.load(appendClip(editor.getText(), clip));
+      dirty = true;
+      revision += 1;
+      renderState();
+      renderTitle();
+      scroller.scrollTop = scroller.scrollHeight;
+      // Not written: it said so, and the note stays unsaved with the clip in it.
+      if (!(await save())) return true;
+    } else {
+      let text = '';
+      const known = tree.find(path);
+      if (known) text = await target.readText(path);
+      await target.writeText(path, appendClip(text, clip));
+      if (!known) await refreshTree();
+    }
+    toast(t('clip', 'Added to the end of {name}', { name: baseOf(path) }));
+    return true;
+  });
 }
 
 /** The popup's request, when this panel has the knowledge base open. */
 async function appendFromPopup(folderId: number, path: string, clip: Clip): Promise<boolean> {
   if (!vault || vault.loose || folder?.id !== folderId) return false;
-  await appendToNote(path, clip);
-  return true;
+  return appendToNote(path, clip);
 }
 
-/** The popup wrote a note of this folder itself: shown here and not being edited, it is read again. */
+/** A note of this folder was written elsewhere: shown here and not being edited, it is read again. */
 async function noteChanged(folderId: number, path: string): Promise<void> {
   if (!vault || folder?.id !== folderId) return;
   if (!tree.find(path)) await refreshTree();
   if (path !== currentPath || dirty) return;
+  const before = revision;
   try {
-    editor.load(await vault.readText(path));
+    const text = await vault.readText(path);
+    // Typed into meanwhile: what is typed stays, and saving it keeps the other change out — as any edit would.
+    if (path !== currentPath || revision !== before) return;
+    editor.load(text);
     renderTitle();
   } catch {
     /* gone meanwhile: the tree says so on its next scan */

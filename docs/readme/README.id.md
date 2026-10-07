@@ -73,7 +73,7 @@ Editor mengingat enam folder terakhir yang dibuka di sana (sebuah halaman tidak 
 mengetahui jalur sebuah folder, sehingga ia menyimpan handle folder itu di IndexedDB
 peramban), beserta catatan yang terakhir dibuka di masing-masing. Pada saat berikutnya
 dimulai, folder terakhir terbuka dengan sendirinya jika peramban masih mengizinkannya —
-dalam aplikasi yang terpasang, atau setelah Anda memilih "Izinkan di setiap kunjungan". Jika
+dalam aplikasi yang terpasang, atau setelah Anda memilih "Izinkan setiap kunjungan". Jika
 tidak, layar awal menampilkan daftar folder terbaru: satu klik, dan peramban meminta akses
 lagi. Untuk kembali ke daftar itu — untuk berpindah folder atau membuka folder baru — klik
 nama folder di bagian atas panel file, atau "Tutup folder" di pengaturan; × menghapus sebuah
@@ -129,22 +129,32 @@ dari milik file atau PWA.
   tersendiri (di bawah).
 - **Mode penuh** membuka panel samping.
 
-**Ketika basis pengetahuan tertutup** — setelah peramban dimulai ulang, kecuali Anda memilih
-"Izinkan di setiap kunjungan" — sebuah halaman tidak dapat masuk ke folder sampai Anda
-mengklik: jendela itu lalu menyatakannya, dan **Buka dalam mode penuh** membuka panel
-samping, tempat satu klik pada folder mengembalikan aksesnya. Apa yang Anda pilih lalu masuk
-ke catatan bawaan dengan sendirinya begitu folder terbuka.
+**Ketika basis pengetahuan tertutup** — Chrome mengambil kembali akses ke sebuah folder begitu
+panel samping terakhir ditutup, dan setelah dimulai ulang, kecuali Anda memilih "Izinkan setiap
+kunjungan" — sebuah halaman tidak dapat masuk ke folder sampai Anda mengklik. Jendela itu lalu
+menyatakannya dan tetap mencantumkan catatan-catatan, seperti terakhir dilihat panel: **Send to
+Markdown**, atau klik pada sebuah catatan, menyisihkan apa yang Anda pilih ke penyimpanan milik
+ekstensi sendiri, dan itu akan masuk ke akhir catatan itu begitu sebuah panel samping membuka
+folder itu lagi. **Buka** meminta folder ke Chrome langsung di jendela itu; satu klik pada
+folder di panel samping melakukan hal yang sama. Saat Chrome bertanya, pilih **Izinkan setiap
+kunjungan**: folder itu lalu tetap terbuka saat panel ditutup, dan setelah dimulai ulang.
 
 Ketika panel samping memiliki basis pengetahuan terbuka, panel itulah yang menambahkan ke
 catatan — panel mungkin memiliki catatan itu terbuka dengan perubahan yang belum tersimpan,
-yang akan hilang jika ditulis dari belakang. Dengan panel tertutup, jendela itu sendiri yang
-menulis catatannya.
+yang akan hilang jika ditulis dari belakang. Dengan tidak ada panel terbuka dan folder masih
+diizinkan — di setiap kunjungan, atau lewat **Buka** — jendela itu sendiri yang menulis
+catatannya.
 
 **Menu konteks** pada sebuah halaman memiliki **Kirim halaman ke Markdown**; pada teks yang
 dipilih, **Kirim pilihan ke Markdown**; pada tautan, **Kirim tautan ke Markdown**; pada
-gambar, **Kirim gambar ke Markdown**. Masing-masing membuka panel samping, tempat sebuah
-dialog menampilkan apa yang datang — dan dari situs mana — sebagai Markdown yang masih dapat
-Anda ubah, serta menanyakan ke mana tujuannya:
+gambar, **Kirim gambar ke Markdown**. Tidak satu pun membuka panel samping: membuka panel akan
+menyempitkan halaman. Dengan tidak ada panel terbuka di jendela, apa yang Anda pilih masuk ke
+akhir catatan bawaan, seperti dengan **Send to Markdown** — atau, dengan basis pengetahuan
+tertutup, menunggu folder itu terbuka, seperti di atas. Tombol bilah alat menunjukkan apa yang
+terjadi: tanda centang sebentar, `!` dengan alasannya pada judulnya, dan berapa banyak kiriman
+yang menunggu, sampai sebuah panel membuka folder. Jika panel jendela itu terbuka, hal itu
+masuk ke sana, tempat sebuah dialog menampilkan apa yang datang — dan dari situs mana — sebagai
+Markdown yang masih dapat Anda ubah, serta menanyakan ke mana tujuannya:
 
 - **Catatan baru**, pilihan bawaan untuk sebuah halaman: di folder kliping (`Clippings` di
   root kecuali Anda mengubahnya; folder ini diingat, kosong berarti root), dinamai sesuai
@@ -168,8 +178,8 @@ Anda ubah, serta menanyakan ke mana tujuannya:
   dengan cara yang sama seperti Send to Markdown. Sebuah tautan tidak memerlukan baris
   sumber: ia adalah sumbernya sendiri.
 
-Jika dikirim sebelum folder dibuka, ia menunggu: panel meminta sebuah folder, dan dialog
-muncul begitu satu folder terbuka. Halaman yang tidak dapat dibaca oleh ekstensi — halaman
+Jika dikirim sebelum folder mana pun pernah dibuka, ia menunggu: panel meminta sebuah folder,
+dan dialog muncul begitu satu folder terbuka. Halaman yang tidak dapat dibaca oleh ekstensi — halaman
 Chrome sendiri, Web Store, sebuah PDF — datang sebagai tautan ke halaman itu.
 
 **Inilah isi Markdown-nya.** Judul, paragraf, **tebal**, *miring*, ~~coret~~, ==sorot==,
@@ -185,11 +195,15 @@ asli dari gambar lazy diambil, bukan placeholder-nya, dan tracking pixel dihilan
 ke satu tab itu saja, dan baru setelah itu ekstensi membacanya — dengan `scripting`, sebuah
 fungsi dijalankan di halaman yang menyalin teksnya lalu mengembalikannya. Tidak ada content
 script yang berjalan di mana pun, dan tidak ada akses ke situs mana pun selain itu: tidak ada
-`host_permissions`, yang ditolak oleh proses build. `contextMenus`, `sidePanel`, dan
-`storage` — apa yang dikirim ke panel samping diteruskan ke panel pada jendelanya lewat
-`chrome.storage.session`, yang hilang saat peramban ditutup, dan bahasa panel diteruskan ke
-worker, untuk menu, lewat `chrome.storage.local`. Jendela tombol meminta panel pada
-jendelanya sendiri untuk menambahkan ke sebuah catatan lewat pesan `chrome.runtime`, yang
+`host_permissions`, yang ditolak oleh proses build. `offscreen`: worker tidak memiliki DOM,
+jadi dengan tidak ada panel terbuka, HTML sebuah halaman atau pilihan menjadi Markdown di
+sebuah dokumen offscreen milik ekstensi, yang ditutup begitu selesai. `contextMenus`,
+`sidePanel`, dan `storage` — apa yang dikirim ke panel samping diteruskan ke panel pada
+jendelanya lewat `chrome.storage.session`, yang hilang saat peramban ditutup; di
+`chrome.storage.local`, apa yang disisihkan jendela tombol selagi basis pengetahuan tertutup,
+daftar catatannya, dan bahasa panel serta catatan bawaan, untuk worker. Jendela tombol dan
+worker meminta sebuah panel yang memiliki basis pengetahuan terbuka untuk menambahkan ke
+sebuah catatan lewat pesan `chrome.runtime`, yang
 hanya diterima panel dari halaman-halaman ekstensi sendiri. Halaman-halaman ekstensi memiliki
 `connect-src 'none'`: editor tidak menjangkau apa pun di jaringan; proses build memeriksa hal
 ini, dan memastikan tidak ada halaman yang memiliki skrip inline atau alamat luar.
@@ -200,11 +214,14 @@ ini, dan memastikan tidak ada halaman yang memiliki skrip inline atau alamat lua
 apa pun pada file dan PWA. Jendela tombol adalah `popup.html` dan `popup.js`
 (`src/extension/popup.ts`), dengan gaya (styles) milik halaman: jendela ini membaca handle
 basis pengetahuan dari IndexedDB yang sama dengan panel, dan menulis lewatnya selama
-peramban masih mengizinkannya. Worker, `background.js`, memiliki menu. Chrome hanya membuka
-panel samping di dalam handler klik itu sendiri, sebelum apa pun di-await, sehingga panel
-dibuka terlebih dahulu lalu tab dibaca setelahnya (`src/extension/take.ts`, `grab.ts`);
-HTML-nya menjadi Markdown di `src/extension/to-markdown.ts`, dan editor menambahkannya atau
-menanyakan ke mana tujuannya (`src/clip.ts`, `src/clip-ui.ts`).
+peramban masih mengizinkannya; jika tidak, jendela ini menyisihkan apa yang dikirim ke
+`chrome.storage.local`, tempat panel yang membuka folder menemukannya
+(`src/extension/messages.ts`). Worker, `background.js`, memiliki menu: worker membaca tab
+(`src/extension/take.ts`, `grab.ts`), dan mengirim apa yang diambilnya ke panel jendela, atau
+menambahkannya ke catatan bawaan seperti yang dilakukan jendela tombol
+(`src/extension/knowledge.ts`), lewat `offscreen.html` untuk Markdown-nya
+(`src/extension/offscreen.ts`). HTML-nya menjadi Markdown di `src/extension/to-markdown.ts`,
+dan editor menambahkannya atau menanyakan ke mana tujuannya (`src/clip.ts`, `src/clip-ui.ts`).
 
 ## Pratinjau langsung
 
@@ -607,7 +624,8 @@ yang menyimpan cache halaman agar dapat dibuka secara offline. `build/macaed.htm
 tetap menjadi satu file tunggal tanpa referensi eksternal.
 
 Dan `build/extension/`: `panel.html` — templatnya, skripnya di `panel.js` — `popup.html`
-(dengan gaya milik halaman dan `popup.css`) dan `popup.js`, `background.js`, ikon-ikon,
+(dengan gaya milik halaman dan `popup.css`) dan `popup.js`, `background.js`, `offscreen.html`
+dan `offscreen.js`, ikon-ikon,
 `_locales/`, dan `manifest.json`, yang versinya mengikuti milik `package.json`.
 `build/macaed-extension-<version>.zip` menyimpan file-file yang sama dengan tanggal yang
 tetap: sumber yang sama menghasilkan byte yang sama.
@@ -619,7 +637,9 @@ dilewati. `tools/test-extension.mjs` memuat ekstensi lewat protokol itu
 Chrome sejak versi 137), membuka sebuah folder di panel samping, dan mengirimkan halaman,
 pilihan, tautan, dan gambar dari situs uji pada server lokal kepadanya; lalu jendela tombol
 menambahkan pilihan ke catatan bawaan dan ke satu yang dipilih, lewat panel maupun sendiri,
-dan, dengan basis pengetahuan tertutup, menyerahkannya ke mode penuh. Menu konteks tidak
+dan, dengan basis pengetahuan tertutup, menyisihkannya untuk panel, atau membukanya sendiri;
+dengan tidak ada panel terbuka, menu menambahkan ke catatan bawaan, atau menyisihkannya.
+Menu konteks tidak
 dapat diklik dari DevTools, sehingga pengujian memicu `onClicked` milik worker secara
 langsung, dan membuka jendela tombol sebagai sebuah halaman tersendiri, diberi tahu tab mana
 yang ada di sampingnya; tanpa klik sungguhan, Chrome tidak memberikan `activeTab`, sehingga
@@ -722,7 +742,9 @@ src/pwa/sw.js       the service worker of the Pages build: offline, and a new ve
 src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.html, popup.css
                     (the button's window: Send to Markdown); background.ts (the menu); take.ts
                     and grab.ts (run in the page: its text or the selection); to-markdown.ts
-                    (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts
+                    (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts;
+                    knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
+                    offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
                     formatting, tags, the export, clippings, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
