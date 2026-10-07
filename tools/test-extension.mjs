@@ -105,9 +105,22 @@ try {
 
   // Window A holds the sites and the side panel; window B the extension's own test page.
   const firstTab = (await chrome.targets()).find((t) => t.type === 'page');
-  const { targetId: helperTarget } = await chrome.send('Target.createTarget', { url: `${origin}/test.html`, newWindow: true });
+  // Right after loading the extension, a slow machine can still show an error page for its own
+  // pages (a document with no origin, where localStorage throws), and an error page is "complete"
+  // too: so it is asked for again until it is the extension's page.
+  async function openOwnPage(session, path) {
+    const url = `${origin}/${path}`;
+    for (let attempt = 0; attempt < 10; attempt += 1) {
+      const { errorText } = await chrome.send('Page.navigate', { url }, session);
+      if (!errorText && (await chrome.until(session, `document.readyState === 'complete' && location.href === ${JSON.stringify(url)}`, 3000))) return;
+      await sleep(300);
+    }
+    throw new Error(`Chrome would not open ${url}`);
+  }
+  const { targetId: helperTarget } = await chrome.send('Target.createTarget', { url: 'about:blank', newWindow: true });
   const helper = await chrome.attach(helperTarget, 'helper');
-  await chrome.until(helper, `document.readyState === 'complete'`);
+  await chrome.send('Page.enable', {}, helper);
+  await openOwnPage(helper, 'test.html');
   const inHelper = (expression) => chrome.evaluate(helper, expression);
   await inHelper(`(async () => {
     localStorage.setItem('markdown-catalog-editor', JSON.stringify({ language: 'en', mode: 'read' }));
@@ -302,8 +315,8 @@ try {
       },
       popup,
     );
-    await chrome.send('Page.navigate', { url: `${origin}/popup.html` }, popup);
-    await chrome.until(popup, `document.readyState === 'complete' && !!document.querySelector('.popup-preview')`);
+    await openOwnPage(popup, 'popup.html');
+    await chrome.until(popup,`document.readyState === 'complete' && !!document.querySelector('.popup-preview')`);
   }
   async function closePopup() {
     await chrome.send('Target.closeTarget', { targetId: popupTarget });
