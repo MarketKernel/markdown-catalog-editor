@@ -37,7 +37,28 @@
       "other": "{count} حرف"
     }
   },
+  "popup": {
+    "Full mode": "الوضع الكامل",
+    "Nothing on this tab can be sent.": "لا يوجد في هذا التبويب ما يمكن إرساله.",
+    "The selection on {site}": "التحديد في {site}",
+    "Nothing is selected: the whole page \"{title}\"": "لا شيء محدَّد: الصفحة كاملةً «{title}»",
+    "A link to \"{title}\"": "رابط إلى «{title}»",
+    "There is no knowledge base yet: open a folder of notes in full mode.": "لا توجد قاعدة معرفة بعد: افتح مجلد ملاحظات في الوضع الكامل.",
+    "Open in full mode": "فتح في الوضع الكامل",
+    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "«{name}» مغلقة. افتحها في الوضع الكامل، وسيُضاف المحدَّد إلى {note}.",
+    "\"{name}\" is closed. Open it in full mode.": "«{name}» مغلقة. افتحها في الوضع الكامل.",
+    "Send to Markdown": "Send to Markdown",
+    "To the end of {note}": "إلى نهاية {note}",
+    "(a new note)": "(ملاحظة جديدة)",
+    "As a new note": "كملاحظة جديدة",
+    "Add to another note": "إضافة إلى ملاحظة أخرى",
+    "No notes match": "لا توجد ملاحظات مطابقة",
+    "Add to {note}": "إضافة إلى {note}",
+    "The default note": "الملاحظة الافتراضية",
+    "Make it the default note": "اجعلها الملاحظة الافتراضية"
+  },
   "toast": {
+    "Finish what is open first, then open the note again": "أنهِ ما هو مفتوح أولًا، ثم افتح الملاحظة مرة أخرى",
     "Path copied: {path}": "نُسخ المسار: {path}",
     "No .md files in this folder — create the first note": "لا توجد ملفات .md في هذا المجلد — أنشئ أول ملاحظة",
     "No .md files in this folder": "لا توجد ملفات .md في هذا المجلد",
@@ -65,7 +86,7 @@
   },
   "gate": {
     "Version {version}": "الإصدار {version}",
-    "Drag a folder, not a single file": "اسحب مجلدًا، لا ملفًا واحدًا",
+    "Drag a folder or a note": "اسحب مجلدًا أو ملاحظة",
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "لا يستطيع هذا المتصفح كتابة الملفات على القرص: سيُفتح المجلد للقراءة فقط، وعند الحفظ سيُعرض تنزيل الملف المعدَّل. يعمل التحرير الكامل في Chrome و Edge و Arc على الكمبيوتر.",
     "local editor · one file": "محرر محلي · ملف واحد",
     "Open a folder": "افتح مجلدًا",
@@ -108,7 +129,8 @@
     "This browser cannot write files": "لا يستطيع هذا المتصفح كتابة الملفات",
     "\"{name}\" already exists": "«{name}» موجود بالفعل",
     "File not found: {path}": "الملف غير موجود: {path}",
-    "The browser was not allowed to open the folder": "لم يُسمح للمتصفح بفتح المجلد"
+    "The browser was not allowed to open the folder": "لم يُسمح للمتصفح بفتح المجلد",
+    "A note opened on its own has no folder around it": "الملاحظة المفتوحة بمفردها لا يحيط بها مجلد"
   },
   "palette": {
     "Red": "أحمر",
@@ -294,7 +316,7 @@
   },
   "manifest": {
     "Send to Markdown": "Send to Markdown",
-    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "يرسل صفحة ويب أو تحديدًا أو رابطًا أو صورة إلى ملاحظة Markdown في مجلد على قرصك. عدّلها من اللوحة الجانبية.",
-    "Send the page or the selection to Markdown": "إرسال الصفحة أو التحديد إلى Markdown"
+    "Markdown Knowledge Base": "Markdown Knowledge Base",
+    "Sends what you select on a web page to your Markdown notes on disk: the default note or one you pick. Edit them in the side panel.": "يرسل ما تحدده في صفحة ويب إلى ملاحظات Markdown على قرصك: الملاحظة الافتراضية أو أخرى تختارها. عدّلها من اللوحة الجانبية."
   }
 }

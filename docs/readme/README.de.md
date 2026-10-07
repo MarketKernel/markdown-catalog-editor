@@ -32,13 +32,15 @@ eigenständige App mit eigenem Fenster und Symbol und funktioniert auch offline.
 Computer, in Chrome, Edge und Arc, verwenden Sie die Installationsschaltfläche in der
 Adressleiste; auf Android über Chromes ⋮-Menü → App installieren; auf iOS über Teilen → Zum
 Home-Bildschirm, in Safari oder in Chrome. Auch dort bleiben Ihre Notizen auf Ihrer
-Festplatte, und die installierte App aktualisiert sich, wenn Sie es sagen — siehe
+Festplatte, die installierte App öffnet eine `.md`-Datei direkt aus dem Finder oder
+Explorer, und sie aktualisiert sich, wenn Sie es sagen — siehe
 „[GitHub Pages](#github-pages)“.
 
-Derselbe Editor ist auch **Send to Markdown**, eine [Chrome-Erweiterung](#send-to-markdown-die-chrome-erweiterung):
-Ein Klick auf ihre Schaltfläche oder ein Rechtsklick auf eine Seite sendet die Seite — oder
-die Auswahl, einen Link, ein Bild — an eine Notiz in Ihrem Ordner, und der Editor öffnet
-sich neben der Seite in Chromes Seitenleiste.
+Derselbe Editor ist auch **Markdown Knowledge Base**, eine
+[Chrome-Erweiterung](#markdown-knowledge-base-die-chrome-erweiterung): Markieren Sie Text auf
+einer Webseite, drücken Sie ihre Schaltfläche, und **Send to Markdown** fügt ihn der
+Standardnotiz Ihrer Wissensdatenbank hinzu — oder einer beliebigen Notiz, die Sie wählen. Der
+Editor selbst öffnet sich neben der Seite in Chromes Seitenleiste.
 
 ![Der Editor mit einem geöffneten Ordner voller Notizen: der Datei- und Tag-Baum links, eine Notiz im Bearbeitungsmodus rechts](../macaed.jpg)
 
@@ -82,30 +84,71 @@ Wenn Sie `macaed.html` neben Ihre Notizen legen und über HTTP bereitstellen, er
 Seite den Ordner von selbst — vorausgesetzt, eine `index.json` liegt daneben, in der Form
 `{ "name": "Notes", "files": ["Note.md", "Folder/Other.md"] }`.
 
-## Send to Markdown: die Chrome-Erweiterung
+### Eine einzelne Notiz
+
+Eine `.md`-Datei lässt sich auch für sich allein öffnen, ohne ihren Ordner:
+
+- **Aus dem Finder oder Explorer**, in der installierten App (Chrome oder Edge auf dem
+  Computer): Öffnen mit → die App, oder legen Sie sie als Standard-App für `.md` fest. Die
+  Notiz gelangt in das Fenster der App, wenn eines geöffnet ist — zwei Fenster auf derselben
+  Datei würden sich beim Speichern gegenseitig überschreiben — und nimmt dort den Platz des
+  angezeigten Ordners ein; wird dieselbe Notiz erneut geöffnet, bleibt sie, wie sie ist.
+- **Auf das Fenster gezogen**, in jedem Browser.
+
+Die Notiz wird an Ort und Stelle gelesen und geschrieben, wie in einem Ordner — in Safari und
+Firefox schreibgeschützt, wobei `⌘S` einen Download anbietet. Ohne einen Ordner darum herum
+gibt es nichts daneben zu erstellen, umzubenennen oder zu löschen, und keine Bilder aus ihrem
+Ordner, Tags oder Export: Das kommt mit dem Öffnen des Ordners. Eine so geöffnete Notiz wird
+nicht zu den zuletzt verwendeten Ordnern hinzugefügt.
+
+## Markdown Knowledge Base: die Chrome-Erweiterung
 
 `npm run build` schreibt auch `build/extension/`: den Editor als Chrome-Erweiterung, sowie
 `build/macaed-extension-<version>.zip` davon für den Chrome Web Store; ein Release enthält
 das Zip ebenfalls. Zum Installieren: `chrome://extensions` → Entwicklermodus → Entpackte
 Erweiterung laden → `build/extension` (oder das entpackte Zip).
 
-Der Editor selbst lebt in Chromes Seitenleiste, neben der Seite, im Telefon-Layout, da eine
-Seitenleiste schmal ist; er bleibt dort über Tabs hinweg erhalten. Ein Ordner öffnet sich
-darin wie in der Datei, und die zuletzt verwendeten Ordner werden gespeichert — eigene der
-Erweiterung, getrennt von denen der Datei oder der PWA. Was die Erweiterung hinzufügt, ist
-das Senden von Dingen aus dem Web an Ihre Notizen:
+**Die Wissensdatenbank** ist der Ordner mit Notizen, der zuletzt in der Erweiterung geöffnet
+wurde. Der Editor selbst — der **Vollmodus** — lebt in Chromes Seitenleiste, neben der Seite,
+im Telefon-Layout, da eine Seitenleiste schmal ist; er bleibt dort über Tabs hinweg erhalten.
+Ein Ordner öffnet sich darin wie in der Datei, und die zuletzt verwendeten Ordner werden
+gespeichert — eigene der Erweiterung, getrennt von denen der Datei oder der PWA.
 
-- **Die Symbolleisten-Schaltfläche** (oder `Alt+Shift+M`) sendet die Seite: ihren
-  Haupttext — den Artikel, ohne die Menüs, Seitenleisten, Fußzeile, Teilen-Schaltflächen,
-  Formulare und verborgenen Teile der Website — oder, wenn etwas darauf ausgewählt ist, nur
-  die Auswahl.
-- **Das Kontextmenü** einer Seite enthält **Die Seite an Markdown senden**; bei
-  ausgewähltem Text **Die Auswahl an Markdown senden**; bei einem Link **Den Link an
-  Markdown senden**; bei einem Bild **Das Bild an Markdown senden**.
+**Die Symbolleisten-Schaltfläche** (oder `Alt+Shift+M`) öffnet ein kleines Fenster über der
+Seite:
 
-Beides öffnet die Seitenleiste, und ein Dialog dort zeigt, was angekommen ist — die Seite,
-die Auswahl, der Link oder das Bild, und von welcher Website — als Markdown, das Sie noch
-ändern können, und fragt, wohin es gehen soll:
+- Oben, was auf der Seite ausgewählt ist, als Markdown — oder, wenn nichts ausgewählt ist,
+  der Haupttext der Seite: der Artikel, ohne die Menüs, Seitenleisten, Fußzeile,
+  Teilen-Schaltflächen, Formulare und verborgenen Teile der Website.
+- **Send to Markdown** fügt es an das Ende der **Standardnotiz** an — zu Beginn `Inbox.md`
+  im Wurzelverzeichnis der Wissensdatenbank, angelegt, sobald sie das erste Mal gebraucht
+  wird. Nach einer Leerzeile kommt der Text, dann eine Zeile `— [Der Titel der
+  Seite](https://…)`, die dorthin verlinkt, woher es kam. Das Fenster schließt sich, sobald
+  geschrieben ist.
+- **Zu einer anderen Notiz hinzufügen**: die Notizen der Wissensdatenbank, mit einem Feld,
+  um eine nach Namen zu finden; ein Klick auf eine Notiz fügt es stattdessen dort hinzu. Der
+  Stern neben einer Notiz macht sie zur Standardnotiz; die Standardnotiz steht an erster
+  Stelle.
+- Ist nichts ausgewählt, verwandelt **Als neue Notiz** die Seite in eine eigene Notiz
+  (unten).
+- **Vollmodus** öffnet die Seitenleiste.
+
+**Wenn die Wissensdatenbank geschlossen ist** — nach einem Neustart des Browsers, sofern Sie
+nicht „Bei jedem Besuch erlauben“ gewählt haben —, kann eine Seite erst in einen Ordner
+gelangen, nachdem Sie geklickt haben: Das Fenster sagt das dann, und **Im Vollmodus öffnen**
+öffnet die Seitenleiste, wo ein Klick auf den Ordner den Zugriff zurückgibt. Was Sie
+ausgewählt hatten, geht von selbst an die Standardnotiz, sobald der Ordner geöffnet ist.
+
+Hat die Seitenleiste die Wissensdatenbank geöffnet, ist es die Seitenleiste, die zur Notiz
+hinzufügt — sie kann diese Notiz mit noch nicht gespeicherten Änderungen geöffnet haben, die
+ein Schreiben in ihrem Rücken verlieren würde. Bei geschlossener Seitenleiste schreibt das
+Fenster die Notiz selbst.
+
+**Das Kontextmenü** einer Seite enthält **Seite an Markdown senden**; bei ausgewähltem Text
+**Auswahl an Markdown senden**; bei einem Link **Link an Markdown senden**; bei einem Bild
+**Bild an Markdown senden**. Jedes öffnet die Seitenleiste, wo ein Dialog zeigt, was
+angekommen ist — und von welcher Website — als Markdown, das Sie noch ändern können, und
+fragt, wohin es gehen soll:
 
 - **Eine neue Notiz**, die Voreinstellung für eine Seite: im Ausschnitte-Ordner
   (`Clippings` im Wurzelverzeichnis, sofern Sie es nicht ändern; der Ordner wird
@@ -128,9 +171,8 @@ die Auswahl, der Link oder das Bild, und von welcher Website — als Markdown, d
   ```
 
 - **Das Ende der geöffneten Notiz**, die Voreinstellung für eine Auswahl, einen Link oder
-  ein Bild: nach einer Leerzeile, gefolgt von einer Zeile `— [Der Titel der
-  Seite](https://…)`, die dorthin verlinkt, woher es kam. Ein Link braucht das nicht: Er ist
-  seine eigene Quelle.
+  ein Bild, auf dieselbe Weise wie Send to Markdown. Ein Link braucht keine Quellenzeile: Er
+  ist seine eigene Quelle.
 
 Wird etwas gesendet, bevor ein Ordner geöffnet ist, wartet es: Die Seitenleiste fragt nach
 einem Ordner, und der Dialog erscheint, sobald einer geöffnet ist. Eine Seite, die die
@@ -152,22 +194,27 @@ Tastenkombination gibt der Erweiterung genau diesen einen Tab, und erst dann lie
 aus — mit `scripting`, einer in der Seite ausgeführten Funktion, die ihren Text kopiert und
 zurückgibt. Nirgendwo läuft ein Content-Script, und es gibt sonst keinen Zugriff auf
 irgendeine Website: keine `host_permissions`, die der Build auch ablehnt. `contextMenus`,
-`sidePanel` und `storage` — der Worker übergibt, was er erfasst hat, über
-`chrome.storage.session` an die Seitenleiste seines Fensters, was beim Schließen des
+`sidePanel` und `storage` — was an die Seitenleiste gesendet wird, geht über
+`chrome.storage.session` an die Seitenleiste des jeweiligen Fensters, was beim Schließen des
 Browsers verschwindet, und die Sprache der Seitenleiste geht für das Menü in
-`chrome.storage.local` an den Worker. Die Seiten der Erweiterung haben `connect-src 'none'`:
-Der Editor erreicht nichts im Netzwerk; der Build prüft das sowie, dass keine Seite ein
-Inline-Script oder eine externe Adresse enthält.
+`chrome.storage.local` an den Worker. Das Fenster der Schaltfläche bittet die Seitenleiste
+ihres Fensters per `chrome.runtime`-Nachricht, etwas zu einer Notiz hinzuzufügen; sie nimmt
+das nur von den eigenen Seiten der Erweiterung entgegen. Die Seiten der Erweiterung haben
+`connect-src 'none'`: Der Editor erreicht nichts im Netzwerk; der Build prüft das sowie, dass
+keine Seite ein Inline-Script oder eine externe Adresse enthält.
 
 **Wie es gemacht ist.** Die Seitenleiste ist die Seite selbst: `panel.html` mit ihrem
 Script in `panel.js`, wie Manifest V3 es verlangt — dasselbe `src/main.ts`, wobei
 `src/extension/extension.ts` an die Stelle von `src/platform.ts` tritt, dessen Hooks in der
-Datei und der PWA nichts tun. Der Worker, `background.js`, enthält die Schaltfläche, die
-Tastenkombination und das Menü. Chrome öffnet eine Seitenleiste nur innerhalb des eigenen
-Klick-Handlers, bevor irgendetwas awaited wird, daher öffnet der Worker zuerst die
-Seitenleiste und liest danach den Tab aus (`src/extension/grab.ts`); die Seitenleiste
-wandelt dieses HTML in Markdown um (`src/extension/to-markdown.ts`), und der Editor fragt,
-wohin es gehen soll (`src/clip-ui.ts`, `src/clip.ts`).
+Datei und der PWA nichts tun. Das Fenster der Schaltfläche ist `popup.html` und `popup.js`
+(`src/extension/popup.ts`), mit den Stilen der Seite: Es liest das Handle der
+Wissensdatenbank aus derselben IndexedDB wie die Seitenleiste und schreibt darüber, solange
+der Browser es noch erlaubt. Der Worker, `background.js`, enthält das Menü. Chrome öffnet
+eine Seitenleiste nur innerhalb des eigenen Klick-Handlers, bevor irgendetwas awaited wird,
+daher wird zuerst die Seitenleiste geöffnet und danach der Tab ausgelesen
+(`src/extension/take.ts`, `grab.ts`); ihr HTML wird in `src/extension/to-markdown.ts` zu
+Markdown, und der Editor fügt es hinzu oder fragt, wohin es gehen soll (`src/clip.ts`,
+`src/clip-ui.ts`).
 
 ## Live-Vorschau
 
@@ -432,7 +479,7 @@ das Design folgt dem System, und die Website liest und verlinkt genauso.
 - **Dateien bleiben auf Ihrer Festplatte.** Notizen werden direkt an Ort und Stelle über die
   File System Access API gelesen und geschrieben; die gespeicherten Ordner sind Handles in
   der IndexedDB des Browsers, nie Pfade oder Inhalte.
-- Die Berechtigungen der Erweiterung: siehe „[Send to Markdown](#send-to-markdown-die-chrome-erweiterung)“.
+- Die Berechtigungen der Erweiterung: siehe „[Markdown Knowledge Base](#markdown-knowledge-base-die-chrome-erweiterung)“.
 
 ## Funktionen
 
@@ -474,8 +521,12 @@ das Design folgt dem System, und die Website liest und verlinkt genauso.
   von den Notizen in `.meta.json` gehalten — siehe „[Tags](#tags)“.
 - **Export nach HTML**: der Ordner, oder einer seiner Unterordner, als statische Website
   mit Suche, oder als eine einzelne Seite — siehe „[Export nach HTML](#export-nach-html)“.
-- **Send to Markdown**: eine Seite, eine Auswahl, ein Link oder ein Bild aus Chrome an eine
-  Notiz, als Markdown — siehe „[Send to Markdown](#send-to-markdown-die-chrome-erweiterung)“.
+- **Eine einzelne Notiz**, geöffnet aus dem Finder oder Explorer in der installierten App,
+  oder auf das Fenster gezogen — siehe „[Eine einzelne Notiz](#eine-einzelne-notiz)“.
+- **Markdown Knowledge Base**: was in Chrome ausgewählt ist, an die Standardnotiz oder an
+  eine, die Sie wählen, mit Send to Markdown; eine Seite, ein Link oder ein Bild an eine
+  Notiz — siehe
+  „[Markdown Knowledge Base](#markdown-knowledge-base-die-chrome-erweiterung)“.
 - **Einstellungen** (das Zahnrad oben rechts, neben der Suche): Sprache der Oberfläche,
   Design (System, Hell, Dunkel), Zoom 50–200 %, Textbreite (eine zentrierte Spalte oder die
   volle Breite), ob der Notizname als Titel angezeigt wird, und wohin hinzugefügte Bilder
@@ -570,7 +621,7 @@ npm run check      # typecheck, test, build and test:browser in a row: green mea
 Styles und dem Symbol (einem Data-URI), in `src/template.html` ein; die Vorlage und das
 Stylesheet des Exports werden als Zeichenketten gebündelt. Die Content-Security-Policy der
 Vorlage erhält den Hash dieses einen Scripts. Das Ergebnis ist `build/macaed.html`, etwa
-620 KB. Der Build schlägt fehl, wenn auch nur eine externe Referenz darin verbleibt.
+640 KB. Der Build schlägt fehl, wenn auch nur eine externe Referenz darin verbleibt.
 
 Derselbe Durchlauf schreibt `build/pages/`: diese Seite als installierbare PWA —
 `index.html` mit einem Manifest-Link und einem `<meta name="service-worker">`, das der
@@ -579,19 +630,23 @@ das die Seite zwischenspeichert, sodass sie offline öffnet. `build/macaed.html`
 bleibt eine einzelne Datei ohne externe Referenzen.
 
 Und `build/extension/`: `panel.html` — die Vorlage, ihr Script in `panel.js` —
-`background.js`, die Symbole, `_locales/` und `manifest.json`, deren Version die von
-`package.json` ist. `build/macaed-extension-<version>.zip` enthält dieselben Dateien mit
-festen Daten: dieselben Quellen ergeben dieselben Bytes.
+`popup.html` (mit den Stilen der Seite und `popup.css`) und `popup.js`, `background.js`, die
+Symbole, `_locales/` und `manifest.json`, deren Version die von `package.json` ist.
+`build/macaed-extension-<version>.zip` enthält dieselben Dateien mit festen Daten: dieselben
+Quellen ergeben dieselben Bytes.
 
 Die Browsertests starten das lokale Chrome (`CHROME=/pfad/zu/chrome`, um eines
 auszuwählen) und sprechen ohne Abhängigkeiten das DevTools-Protokoll mit ihm; ohne ein
 Chrome werden sie übersprungen. `tools/test-extension.mjs` lädt die Erweiterung über
 dieses Protokoll (`Extensions.loadUnpacked` über eine Pipe; `--load-extension` gibt es seit
 Chrome-Version 137 nicht mehr), öffnet einen Ordner in der Seitenleiste und sendet ihr
-Seiten, Auswahlen, Links und Bilder von Testseiten auf einem lokalen Server. Weder die
-Symbolleisten-Schaltfläche noch ein Kontextmenü lassen sich aus DevTools anklicken, daher
-löst der Test das `onClicked` des Workers selbst aus; ohne echten Klick gewährt Chrome kein
-`activeTab`, daher darf die getestete Kopie die Testseiten, `*.test`, als
+Seiten, Auswahlen, Links und Bilder von Testseiten auf einem lokalen Server; danach fügt das
+Fenster der Schaltfläche Auswahlen zur Standardnotiz und zu einer gewählten hinzu, über die
+Seitenleiste und für sich allein, und reicht sie bei geschlossener Wissensdatenbank an den
+Vollmodus weiter. Ein Kontextmenü lässt sich nicht aus DevTools anklicken, daher löst der
+Test das `onClicked` des Workers selbst aus und öffnet das Fenster der Schaltfläche als
+eigene Seite, der gesagt wird, welcher Tab daneben liegt; ohne echten Klick gewährt Chrome
+kein `activeTab`, daher darf die getestete Kopie die Testseiten, `*.test`, als
 Host-Berechtigungen erreichen.
 
 ## Versionen und Releases
@@ -645,6 +700,13 @@ dorthin gebracht hat, während eine heruntergeladene Datei die Version bleibt, d
 Für eine auf der Festplatte festgelegte Version nehmen Sie `macaed-<tag>.html` aus einem
 Release und vergleichen es mit `SHA256SUMS.txt`.
 
+**Eine `.md` öffnen.** Das Manifest nennt Markdown-Dateien als Dateien, die die App öffnet
+(`file_handlers`), und hält sie auf ein Fenster beschränkt (`launch_handler`,
+`focus-existing`): siehe „[Eine einzelne Notiz](#eine-einzelne-notiz)“. Die Seite nimmt sie
+über `launchQueue` entgegen, sobald ihr Start — das erneute Öffnen des letzten Ordners —
+abgeschlossen ist, sodass der Ordner die Notiz nie ersetzt; eine Notiz, die während eines
+Exports oder bei geöffnetem Dialog ankommt, wartet, bis Sie sie erneut öffnen.
+
 Die installierte App bittet den Browser, ihren Speicher zu behalten
 (`navigator.storage.persist()`): Eine knapp werdende Festplatte könnte sonst die
 Offline-Kopie und die gespeicherten Ordner mit sich reißen.
@@ -653,6 +715,9 @@ Offline-Kopie und die gespeicherten Ordner mit sich reißen.
 Worker übernimmt die Seite, Chrome findet das Manifest installierbar, und mit
 abgeschaltetem Server lädt die Seite trotzdem noch; dann findet eine Prüfung nichts, dann
 keine Verbindung, dann ein neues Deployment, das wartet, bis Aktualisieren es hereinlässt.
+Chrome im Headless-Modus übergibt einer App keine Datei, daher gibt eine
+Ersatz-`launchQueue` der Seite ein echtes Datei-Handle: Die Notiz öffnet sich von selbst, und
+eine Bearbeitung wird darin gespeichert.
 
 ## Layout
 
@@ -660,7 +725,7 @@ keine Verbindung, dann ein neues Deployment, das wartet, bis Aktualisieren es he
 src/template.html   markup with the __STYLES__/__APP__/__ICON__ placeholders and the CSP
 src/styles.css      palette, light and dark themes, block paired with its source
 src/main.ts         opening a folder, saving, toolbar, search, settings
-src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD
+src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -681,8 +746,9 @@ src/platform.ts     what the page does beyond itself: nothing, except in the ext
 src/clip.ts         what the extension sends, as a note: file name, front matter, the end of a note
 src/clip-ui.ts      the dialog that asks where it goes
 src/pwa/sw.js       the service worker of the Pages build: offline, and a new version waits
-src/extension/      "Send to Markdown": manifest.json; background.ts (button, shortcut, menu);
-                    grab.ts (run in the page: its text or the selection); to-markdown.ts
+src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.html, popup.css
+                    (the button's window: Send to Markdown); background.ts (the menu); take.ts
+                    and grab.ts (run in the page: its text or the selection); to-markdown.ts
                     (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
                     formatting, tags, the export, clippings, dictionaries; in headless Chrome

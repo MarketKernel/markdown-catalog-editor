@@ -1,15 +1,17 @@
 /**
  * The side panel's part of the Chrome extension, in the place of
  * src/platform.ts (build.mjs swaps them). The panel is the editor itself;
- * this takes what the service worker put aside for this window
- * (messages.ts), turns its HTML into Markdown and hands it to the editor,
- * which asks where it goes.
+ * this takes what was put aside for this window (messages.ts), turns its HTML
+ * into Markdown and hands it to the editor, which asks where it goes — or,
+ * sent by the popup to the default note, adds it there. And it answers the
+ * popup of its window, which asks it to add to a note of the folder it has
+ * open.
  */
 
 import { destination, markdownLink, type Clip } from '../clip';
 import type { Language } from '../i18n';
 import type { Platform, PlatformHost } from '../platform';
-import { LANGUAGE_KEY, SENT_PREFIX, windowOf, type Sent } from './messages';
+import { LANGUAGE_KEY, ownSender, SENT_PREFIX, windowOf, type AppendReply, type AppendRequest, type ChangedNotice, type Sent } from './messages';
 import { htmlToMarkdown } from './to-markdown';
 
 let host: PlatformHost | null = null;
@@ -42,7 +44,7 @@ async function take(): Promise<void> {
   await chrome.storage.session.remove(mine);
   for (const key of mine) {
     const sent = all[key];
-    if (sent) host?.clip(clipOf(sent));
+    if (sent) host?.clip(clipOf(sent), sent.to === 'default');
   }
 }
 
@@ -51,6 +53,20 @@ export const platform: Platform = {
     host = next;
     chrome.storage.session.onChanged.addListener((changes) => {
       if (Object.keys(changes).some((key) => key.startsWith(SENT_PREFIX) && changes[key]?.newValue)) void take();
+    });
+    chrome.runtime.onMessage.addListener((message: AppendRequest | ChangedNotice | null, sender, reply: (answer: AppendReply) => void) => {
+      if (!ownSender(sender) || message?.to !== 'panel' || !host) return false;
+      if (message.type === 'changed') {
+        host.changed(message.folder, message.path);
+        return false;
+      }
+      // The popup of another window has a panel of its own to ask.
+      if (message.type !== 'append' || message.windowId !== windowId) return false;
+      host.append(message.folder, message.path, message.clip).then(
+        (done) => reply({ done }),
+        (error: unknown) => reply({ done: false, error: error instanceof Error ? error.message : String(error) }),
+      );
+      return true;
     });
     void chrome.windows.getCurrent().then((current) => {
       windowId = current.id ?? null;

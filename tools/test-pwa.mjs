@@ -138,6 +138,60 @@ try {
   check('pwa: offline after the update', await evaluate(`!document.getElementById('gate').hidden`), true);
   check('pwa: no "updated" the second time', await evaluate(`document.querySelector('.toast--shown')?.textContent ?? ''`), '');
 
+  // A note opened from the Finder or Explorer with the installed app
+  state.offline = false;
+  state.nextVersion = null;
+  const manifest = JSON.parse(await readFile(join(PAGES, 'manifest.webmanifest'), 'utf8'));
+  check('pwa: the manifest takes .md files, into the open window', [manifest.file_handlers?.[0]?.accept?.['text/markdown']?.includes('.md'), manifest.launch_handler], [
+    true,
+    { client_mode: 'focus-existing' },
+  ]);
+  // Headless Chrome hands no file to an app: a stand-in launchQueue gives the page a real handle, from its private file system.
+  await chrome.send(
+    'Page.addScriptToEvaluateOnNewDocument',
+    { source: `Object.defineProperty(window, 'launchQueue', { configurable: true, value: { setConsumer(consumer) { window.__launch = consumer; } } });` },
+    s,
+  );
+  await load();
+  check('pwa: the page takes launched files once it has started', await until(`typeof window.__launch === 'function'`), true);
+  const launch = (name, text) =>
+    evaluate(`(async () => {
+      const handle = await (await navigator.storage.getDirectory()).getFileHandle(${JSON.stringify(name)}, { create: true });
+      const stream = await handle.createWritable();
+      await stream.write(${JSON.stringify(text)});
+      await stream.close();
+      window.__launch({ files: [handle] });
+      return true;
+    })()`);
+  // Asked again while a save still holds the file: the private file system refuses to read it then.
+  const fileText = async (name) => {
+    for (let i = 0; i < 50; i += 1) {
+      const text = await evaluate(`navigator.storage.getDirectory().then((d) => d.getFileHandle(${JSON.stringify(name)})).then((h) => h.getFile()).then((f) => f.text()).catch(() => null)`);
+      if (text !== null) return text;
+      await sleep(100);
+    }
+    return null;
+  };
+  await launch('Launched.md', '# Launched\n\nFrom the Finder.\n');
+  check('pwa: a launched note opens on its own', await until(`document.getElementById('status-path').textContent === 'Launched.md' && document.getElementById('vault-label').textContent === 'Launched.md'`), true);
+  check('pwa: alone in the tree', await evaluate(`[...document.querySelectorAll('#tree [data-path]')].map((n) => n.dataset.path)`), ['Launched.md']);
+  check('pwa: and writable in place', await evaluate(`document.getElementById('status-state').textContent`), 'saved');
+  await evaluate(`document.querySelector('[data-mode="edit"]').click(), true`);
+  await chrome.click(s, '#doc .block:last-child');
+  await until(`document.activeElement?.tagName === 'TEXTAREA'`);
+  await evaluate(`(() => { const area = document.activeElement; area.setSelectionRange(area.value.length, area.value.length); return true; })()`);
+  await chrome.send('Input.insertText', { text: ' Edited.' }, s);
+  let saved = null;
+  // Autosaved a second after the edit.
+  for (let i = 0; i < 50 && saved !== '# Launched\n\nFrom the Finder. Edited.\n'; i += 1) {
+    await sleep(100);
+    saved = await fileText('Launched.md');
+  }
+  check('pwa: an edit is saved into the file itself', saved, '# Launched\n\nFrom the Finder. Edited.\n');
+  check('pwa: no folder around it: no new note', await evaluate(`document.getElementById('new-note').click(), new Promise((r) => setTimeout(() => r(document.querySelector('.toast--shown')?.textContent), 100))`), 'A note opened on its own has no folder around it');
+  await launch('Other.md', 'Another note.\n');
+  check('pwa: another note takes its place', await until(`document.getElementById('status-path').textContent === 'Other.md'`), true);
+
   // A deploy found while the start screen shows is offered on it
   state.offline = false;
   state.notes = false;

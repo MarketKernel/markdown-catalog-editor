@@ -52,10 +52,11 @@
       "other": "{count} páginas exportadas para {folder}"
     },
     "Export stopped: {folder} is incomplete": "Exportação interrompida: {folder} está incompleta",
-    "Export stopped": "Exportação interrompida"
+    "Export stopped": "Exportação interrompida",
+    "Finish what is open first, then open the note again": "Termine primeiro o que está aberto e abra a nota novamente"
   },
   "gate": {
-    "Drag a folder, not a single file": "Arraste uma pasta, não um arquivo avulso",
+    "Drag a folder or a note": "Arraste uma pasta ou uma nota",
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "Este navegador não consegue gravar arquivos no disco: a pasta será aberta somente para leitura e, ao salvar, será oferecido o download do arquivo modificado. A edição completa funciona no Chrome, Edge e Arc no computador.",
     "local editor · one file": "editor local · um único arquivo",
     "Open a folder": "Abra uma pasta",
@@ -99,7 +100,8 @@
     "This browser cannot write files": "Este navegador não consegue gravar arquivos",
     "\"{name}\" already exists": "“{name}” já existe",
     "File not found: {path}": "Arquivo não encontrado: {path}",
-    "The browser was not allowed to open the folder": "O navegador não teve permissão para abrir a pasta"
+    "The browser was not allowed to open the folder": "O navegador não teve permissão para abrir a pasta",
+    "A note opened on its own has no folder around it": "Uma nota aberta sozinha não tem uma pasta ao redor"
   },
   "palette": {
     "Red": "Vermelho",
@@ -264,6 +266,26 @@
     "Send the link to Markdown": "Enviar o link para Markdown",
     "Send the image to Markdown": "Enviar a imagem para Markdown"
   },
+  "popup": {
+    "Full mode": "Modo completo",
+    "Nothing on this tab can be sent.": "Nada nesta aba pode ser enviado.",
+    "The selection on {site}": "A seleção em {site}",
+    "Nothing is selected: the whole page \"{title}\"": "Nada está selecionado: a página inteira “{title}”",
+    "A link to \"{title}\"": "Um link para “{title}”",
+    "There is no knowledge base yet: open a folder of notes in full mode.": "Ainda não há base de conhecimento: abra uma pasta de notas no modo completo.",
+    "Open in full mode": "Abrir no modo completo",
+    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "“{name}” está fechada. Abra-a no modo completo, e o que estiver selecionado irá para {note}.",
+    "\"{name}\" is closed. Open it in full mode.": "“{name}” está fechada. Abra-a no modo completo.",
+    "Send to Markdown": "Send to Markdown",
+    "To the end of {note}": "No final de {note}",
+    "(a new note)": "(uma nota nova)",
+    "As a new note": "Como uma nova nota",
+    "Add to another note": "Adicionar a outra nota",
+    "No notes match": "Nenhuma nota corresponde",
+    "Add to {note}": "Adicionar a {note}",
+    "The default note": "A nota padrão",
+    "Make it the default note": "Torná-la a nota padrão"
+  },
   "update": {
     "Install updates by themselves when everything is saved and the app is in the background": "Instalar as atualizações automaticamente quando tudo estiver salvo e o app estiver em segundo plano",
     "Check for updates": "Verificar atualizações",
@@ -279,7 +301,7 @@
   },
   "manifest": {
     "Send to Markdown": "Send to Markdown",
-    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "Envia uma página, uma seleção, um link ou uma imagem para uma nota Markdown em uma pasta do seu disco. Edite-a no painel lateral.",
-    "Send the page or the selection to Markdown": "Enviar a página ou a seleção para Markdown"
+    "Markdown Knowledge Base": "Markdown Knowledge Base",
+    "Sends what you select on a web page to your Markdown notes on disk: the default note or one you pick. Edit them in the side panel.": "Envia o que você seleciona numa página para suas notas Markdown no disco: a nota padrão ou a que escolher. Edite-as no painel."
   }
 }

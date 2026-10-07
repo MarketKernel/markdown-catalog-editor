@@ -1,19 +1,19 @@
 /**
- * The Chrome extension's service worker: the toolbar button, its keyboard
- * shortcut and the context menu send a page, a selection, a link or an image
- * to the side panel, where the editor saves it as a note.
+ * The Chrome extension's service worker: the context menu, which sends a
+ * page, a selection, a link or an image to the side panel, where the editor
+ * asks where it goes. The toolbar button opens the popup (popup.ts) and needs
+ * nothing here.
  *
  * Chrome opens the side panel only from inside the click's handler, before
  * any await — so the panel is opened first, and what was sent is read from
- * the tab after (grab.ts, run in the page with executeScript). The click gives
- * the extension that tab and nothing more (activeTab): it has no standing
- * access to any site. What it took goes to the panel through
- * chrome.storage.session (messages.ts).
+ * the tab after (take.ts). The click gives the extension that tab and nothing
+ * more (activeTab): it has no standing access to any site. What it took goes
+ * to the panel through chrome.storage.session (messages.ts).
  */
 
 import { detectLanguage, setLanguage, t } from '../i18n';
-import { describe, grab } from './grab';
-import { LANGUAGE_KEY, sentKey, type Sent } from './messages';
+import { LANGUAGE_KEY } from './messages';
+import { putForPanel, takeTab, takeTarget } from './take';
 
 type MenuId = 'page' | 'selection' | 'link' | 'image';
 
@@ -52,75 +52,20 @@ chrome.storage.local.onChanged.addListener(async (changes) => {
   for (const id of MENUS) chrome.contextMenus.update(id, { title: titleOf(id) }, () => void chrome.runtime.lastError);
 });
 
-// The button sends the page (or what is selected on it); Chrome's own setting would only open the panel.
+// The button opens the popup; the panel opens from there ("Full mode") or from the menu.
 void chrome.sidePanel.setPanelBehavior({ openPanelOnActionClick: false });
-
-function openPanel(windowId: number): void {
-  chrome.sidePanel.open({ windowId }).catch(() => undefined);
-}
-
-chrome.action.onClicked.addListener((tab) => {
-  openPanel(tab.windowId);
-  void sendTab(tab, false);
-});
 
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (!tab) return;
-  openPanel(tab.windowId);
+  chrome.sidePanel.open({ windowId: tab.windowId }).catch(() => undefined);
   const id = info.menuItemId as MenuId;
-  if (id === 'page' || id === 'selection') void sendTab(tab, id === 'selection', info.frameId, info.selectionText);
-  else if (id === 'link' && info.linkUrl) void sendTarget(tab, 'link', info.linkUrl, info.frameId, info.selectionText);
-  else if (id === 'image' && info.srcUrl) void sendTarget(tab, 'image', info.srcUrl, info.frameId);
+  const sent =
+    id === 'page' || id === 'selection'
+      ? takeTab(tab, id === 'selection', info.frameId, info.selectionText)
+      : id === 'link' && info.linkUrl
+        ? takeTarget(tab, 'link', info.linkUrl, info.frameId, info.selectionText)
+        : id === 'image' && info.srcUrl
+          ? takeTarget(tab, 'image', info.srcUrl, info.frameId)
+          : Promise.resolve(null);
+  void sent.then((what) => (what ? putForPanel(what) : undefined));
 });
-
-/** The frame the menu was opened in, or the page itself. */
-function targetOf(tab: chrome.tabs.Tab, frameId?: number): chrome.scripting.InjectionTarget {
-  return { tabId: tab.id ?? -1, frameIds: [frameId ?? 0] };
-}
-
-/**
- * The selection, or the page's text when nothing is selected. A page no
- * extension may read — the browser's own, the Web Store, a PDF — goes as a
- * link to it.
- */
-async function sendTab(tab: chrome.tabs.Tab, selectionOnly: boolean, frameId?: number, selectionText?: string): Promise<void> {
-  const base = { windowId: tab.windowId, title: tab.title ?? '', url: tab.url ?? '', target: '', text: '' };
-  try {
-    const [result] = await chrome.scripting.executeScript({ target: targetOf(tab, frameId), func: grab, args: [selectionOnly] });
-    const grabbed = result?.result;
-    if (grabbed?.html.trim()) {
-      await put({ ...base, kind: grabbed.selection ? 'selection' : 'page', title: grabbed.title || base.title, url: grabbed.url || base.url, html: grabbed.html });
-      return;
-    }
-  } catch {
-    /* not a page the extension may read: below */
-  }
-  if (selectionText?.trim()) await put({ ...base, kind: 'selection', html: escapeHtml(selectionText) });
-  else if (base.url) await put({ ...base, kind: 'link', html: '', target: base.url, text: base.title });
-}
-
-async function sendTarget(tab: chrome.tabs.Tab, kind: 'link' | 'image', target: string, frameId?: number, selectionText?: string): Promise<void> {
-  let text = selectionText?.trim() ?? '';
-  if (!text) {
-    try {
-      const [result] = await chrome.scripting.executeScript({ target: targetOf(tab, frameId), func: describe, args: [kind, target] });
-      text = result?.result ?? '';
-    } catch {
-      /* the address alone */
-    }
-  }
-  await put({ kind, windowId: tab.windowId, title: tab.title ?? '', url: tab.url ?? '', html: '', target, text });
-}
-
-/** Into the session storage, where the panel of the window takes it; too large a page goes as a link to it. */
-async function put(sent: Sent): Promise<void> {
-  try {
-    await chrome.storage.session.set({ [sentKey(sent.windowId)]: sent });
-  } catch {
-    if (sent.html) await put({ ...sent, kind: 'link', html: '', target: sent.url, text: sent.title });
-  }
-}
-
-function escapeHtml(text: string): string {
-  return text.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c] ?? c);
-}

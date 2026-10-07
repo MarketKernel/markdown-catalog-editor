@@ -24,6 +24,8 @@ export interface Vault {
   readonly name: string;
   /** False → the editor saves by offering a download instead of writing to disk. */
   readonly writable: boolean;
+  /** Notes opened on their own, without their folder: no new files, images, tags or export. */
+  readonly loose?: boolean;
   scan(): Promise<TreeEntry[]>;
   readText(path: string): Promise<string>;
   /** Images and other binaries; null when the vault has no such file. */
@@ -205,6 +207,8 @@ export interface FileHandleLike {
   readonly name: string;
   getFile(): Promise<File>;
   createWritable?(): Promise<WritableLike>;
+  queryPermission?(descriptor: { mode: 'read' | 'readwrite' }): Promise<PermissionState>;
+  requestPermission?(descriptor: { mode: 'read' | 'readwrite' }): Promise<PermissionState>;
 }
 
 export interface DirHandleLike {
@@ -225,6 +229,10 @@ declare global {
   }
   interface DataTransferItem {
     getAsFileSystemHandle?(): Promise<DirHandleLike | FileHandleLike | null>;
+  }
+  interface Window {
+    /** Files the system opened with the installed app (the manifest's file_handlers). */
+    launchQueue?: { setConsumer(consumer: (params: { readonly files: readonly (FileHandleLike | DirHandleLike)[] }) => void): void };
   }
 }
 
@@ -534,12 +542,116 @@ export async function filesFromEntry(entry: FileSystemEntry): Promise<File[]> {
 
 /** Chromium may hand a writable handle straight from the drop. */
 export async function handleFromDataTransfer(items: DataTransferItemList): Promise<DirHandleLike | null> {
-  for (const item of Array.from(items)) {
-    if (item.kind !== 'file' || !item.getAsFileSystemHandle) continue;
-    const handle = await item.getAsFileSystemHandle();
-    if (handle && handle.kind === 'directory') return handle;
+  return (await handlesFromDataTransfer(items)).find((handle): handle is DirHandleLike => handle.kind === 'directory') ?? null;
+}
+
+/** Every handle of a drop, asked for at once: the items are gone after the first await. */
+export async function handlesFromDataTransfer(items: DataTransferItemList): Promise<(DirHandleLike | FileHandleLike)[]> {
+  const pending = Array.from(items)
+    .filter((item) => item.kind === 'file' && item.getAsFileSystemHandle)
+    .map((item) => {
+      // A drop the page made itself, or an item with no file behind it, may throw rather than reject.
+      try {
+        return item.getAsFileSystemHandle!().catch(() => null);
+      } catch {
+        return Promise.resolve(null);
+      }
+    });
+  return (await Promise.all(pending)).filter((handle): handle is DirHandleLike | FileHandleLike => Boolean(handle?.kind));
+}
+
+/** Write access to a note opened on its own; a refusal leaves it read-only. */
+export async function fileWritable(handle: FileHandleLike): Promise<boolean> {
+  if (!handle.createWritable) return false;
+  try {
+    if (!handle.queryPermission) return true;
+    if ((await handle.queryPermission({ mode: 'readwrite' })) === 'granted') return true;
+    return (await handle.requestPermission?.({ mode: 'readwrite' })) === 'granted';
+  } catch {
+    return false;
   }
-  return null;
+}
+
+/**
+ * Notes opened one by one, without their folder: a .md the system opened with
+ * the installed app (the manifest's file_handlers), or dropped on the window.
+ * Each is read and written in place through its own handle. There is no
+ * folder around them to create, rename or delete in, nor to find images or
+ * .meta.json in: those come with opening the folder.
+ */
+export class NoteFilesVault implements Vault {
+  readonly loose = true;
+  readonly name: string;
+  private readonly files = new Map<string, FileHandleLike>();
+
+  constructor(handles: readonly FileHandleLike[], readonly writable: boolean) {
+    for (const handle of handles) if (!this.files.has(handle.name)) this.files.set(handle.name, handle);
+    this.name = handles.length === 1 ? (handles[0]?.name ?? '') : `${handles[0]?.name ?? ''} +${handles.length - 1}`;
+  }
+
+  /** The same file opened again: the window that has it keeps it. */
+  async holds(handle: FileHandleLike): Promise<boolean> {
+    for (const file of this.files.values()) {
+      const same = (file as { isSameEntry?(other: FileHandleLike): Promise<boolean> }).isSameEntry;
+      if (same && (await same.call(file, handle).catch(() => false))) return true;
+    }
+    return false;
+  }
+
+  async scan(): Promise<TreeEntry[]> {
+    return sortEntries([...this.files.keys()].map((name) => ({ kind: 'file' as const, name, path: name })));
+  }
+
+  private handle(path: string): FileHandleLike {
+    const handle = this.files.get(path);
+    if (!handle) throw new Error(t('errors', 'A note opened on its own has no folder around it'));
+    return handle;
+  }
+
+  async readText(path: string): Promise<string> {
+    return (await this.handle(path).getFile()).text();
+  }
+
+  async readBlob(path: string): Promise<Blob | null> {
+    const handle = this.files.get(path);
+    return handle ? handle.getFile() : null;
+  }
+
+  async writeText(path: string, text: string): Promise<void> {
+    const handle = this.handle(path);
+    if (!handle.createWritable) throw new Error(t('errors', 'This browser cannot write files'));
+    const stream = await handle.createWritable();
+    await stream.write(text);
+    await stream.close();
+  }
+
+  private noFolder(): never {
+    throw new Error(t('errors', 'A note opened on its own has no folder around it'));
+  }
+
+  async writeBlob(): Promise<void> {
+    this.noFolder();
+  }
+
+  async createFile(): Promise<string> {
+    this.noFolder();
+  }
+
+  async createDir(): Promise<string> {
+    this.noFolder();
+  }
+
+  async rename(): Promise<string> {
+    this.noFolder();
+  }
+
+  async remove(): Promise<void> {
+    this.noFolder();
+  }
+
+  writer(): VaultWriter {
+    this.noFolder();
+  }
 }
 
 /** Asks for write access; a refusal only downgrades the vault to read-only. */

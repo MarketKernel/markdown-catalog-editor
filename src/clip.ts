@@ -19,6 +19,16 @@ export interface Clip {
 
 export const DEFAULT_CLIP_FOLDER = 'Clippings';
 
+/** The knowledge base's default note: where "Send to Markdown" adds what is selected. */
+export const DEFAULT_NOTE = 'Inbox.md';
+
+/** The default note's path as typed → a note inside the folder; nothing → Inbox.md. */
+export function cleanNotePath(path: string): string {
+  const clean = cleanClipFolder(path);
+  if (!clean) return DEFAULT_NOTE;
+  return /\.(md|markdown|mdown|mkd|txt)$/i.test(clean) ? clean : `${clean}.md`;
+}
+
 /** A clippings folder as typed → a path inside the notes folder; nothing → the root. */
 export function cleanClipFolder(folder: string): string {
   return folder

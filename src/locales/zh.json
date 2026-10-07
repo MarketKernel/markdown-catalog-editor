@@ -27,6 +27,26 @@
       "other": "{count} 个字符"
     }
   },
+  "popup": {
+    "Full mode": "完整模式",
+    "Nothing on this tab can be sent.": "此标签页上没有可发送的内容。",
+    "The selection on {site}": "{site} 上的选段",
+    "Nothing is selected: the whole page \"{title}\"": "未选中任何内容：整个页面“{title}”",
+    "A link to \"{title}\"": "指向“{title}”的链接",
+    "There is no knowledge base yet: open a folder of notes in full mode.": "还没有知识库：请在完整模式中打开一个笔记文件夹。",
+    "Open in full mode": "在完整模式中打开",
+    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "“{name}”已关闭。请在完整模式中打开它，选中的内容将发送到 {note}。",
+    "\"{name}\" is closed. Open it in full mode.": "“{name}”已关闭。请在完整模式中打开它。",
+    "Send to Markdown": "Send to Markdown",
+    "To the end of {note}": "添加到 {note} 的末尾",
+    "(a new note)": "(新笔记)",
+    "As a new note": "作为新笔记",
+    "Add to another note": "添加到其他笔记",
+    "No notes match": "没有匹配的笔记",
+    "Add to {note}": "添加到 {note}",
+    "The default note": "默认笔记",
+    "Make it the default note": "设为默认笔记"
+  },
   "toast": {
     "Path copied: {path}": "已复制路径：{path}",
     "No .md files in this folder — create the first note": "此文件夹中没有 .md 文件 — 创建第一篇笔记吧",
@@ -46,10 +66,10 @@
       "other": "已将 {count} 个页面导出到 {folder}"
     },
     "Export stopped: {folder} is incomplete": "导出已停止：{folder} 不完整",
-    "Export stopped": "导出已停止"
+    "Export stopped": "导出已停止",
+    "Finish what is open first, then open the note again": "先完成当前打开的操作，再重新打开笔记"
   },
   "gate": {
-    "Drag a folder, not a single file": "请拖入文件夹，而不是单个文件",
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "此浏览器无法将文件写入磁盘：文件夹将以只读方式打开，保存时会下载修改后的文件。电脑上的 Chrome、Edge 和 Arc 支持完整编辑。",
     "local editor · one file": "本地编辑器 · 单一文件",
     "Open a folder": "打开一个",
@@ -61,7 +81,8 @@
     "Open {name}": "打开“{name}”",
     "Remove from the list": "从列表中移除",
     "The folder \"{name}\" is no longer there, so it was removed from the list": "文件夹“{name}”已不存在，已从列表中移除",
-    "Version {version}": "版本 {version}"
+    "Version {version}": "版本 {version}",
+    "Drag a folder or a note": "拖入一个文件夹或一篇笔记"
   },
   "dialog": {
     "Note not found": "未找到笔记",
@@ -93,7 +114,8 @@
     "This browser cannot write files": "此浏览器无法写入文件",
     "\"{name}\" already exists": "“{name}”已存在",
     "File not found: {path}": "未找到文件：{path}",
-    "The browser was not allowed to open the folder": "浏览器未获准打开该文件夹"
+    "The browser was not allowed to open the folder": "浏览器未获准打开该文件夹",
+    "A note opened on its own has no folder around it": "单独打开的笔记周围没有文件夹"
   },
   "palette": {
     "Red": "红色",
@@ -269,7 +291,7 @@
   },
   "manifest": {
     "Send to Markdown": "Send to Markdown",
-    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "将网页、选中内容、链接或图片发送到磁盘文件夹中的 Markdown 笔记。可在侧边栏中编辑。",
-    "Send the page or the selection to Markdown": "将页面或选中内容发送到 Markdown"
+    "Markdown Knowledge Base": "Markdown Knowledge Base",
+    "Sends what you select on a web page to your Markdown notes on disk: the default note or one you pick. Edit them in the side panel.": "将你在网页上选中的内容发送到磁盘上的 Markdown 笔记：默认笔记或你选择的笔记。可在侧边栏中编辑。"
   }
 }

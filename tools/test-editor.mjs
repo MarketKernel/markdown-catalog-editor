@@ -911,8 +911,8 @@ await scenario('Text\n', async (b) => {
 
   await dropFiles(b, paragraph(0), 'end', ['other.md']);
   await b.sleep(200);
-  eq('a drop with no picture is still a folder to open', await b.evaluate(`document.querySelector('.toast')?.textContent`), 'Drag a folder, not a single file');
-  eq('the note has every picture, and only those', await note(),
+  eq('a dropped note with no picture opens on its own', await b.evaluate(`[document.getElementById('status-path').textContent, document.getElementById('vault-label').textContent, document.getElementById('doc').textContent.trim()]`), ['other.md', 'other.md', 'text']);
+  eq('the note before is saved first, with every picture, and only those', await note(),
     'One\n\n![image-2](assets/Note/image-2.png)Two![image-1](assets/Note/image-1.png)\n\n| A |\n| --- |\n| b![image-3](assets/Note/image-3.png) |\n\nEnd![image-4](assets/Note/image-4.png)\n\n![image-5](assets/Note/image-5.png)\n');
 });
 

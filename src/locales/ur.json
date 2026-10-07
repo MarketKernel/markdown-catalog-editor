@@ -29,7 +29,28 @@
       "other": "{count} حروف"
     }
   },
+  "popup": {
+    "Full mode": "مکمل موڈ",
+    "Nothing on this tab can be sent.": "اس ٹیب پر کچھ ایسا نہیں جو بھیجا جا سکے۔",
+    "The selection on {site}": "{site} پر انتخاب",
+    "Nothing is selected: the whole page \"{title}\"": "کچھ منتخب نہیں: پورا صفحہ \"{title}\"",
+    "A link to \"{title}\"": "\"{title}\" کا لنک",
+    "There is no knowledge base yet: open a folder of notes in full mode.": "ابھی کوئی نالج بیس نہیں: مکمل موڈ میں نوٹس کا فولڈر کھولیں۔",
+    "Open in full mode": "مکمل موڈ میں کھولیں",
+    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "\"{name}\" بند ہے۔ اسے مکمل موڈ میں کھولیں، منتخب شدہ چیز {note} میں شامل ہو جائے گی۔",
+    "\"{name}\" is closed. Open it in full mode.": "\"{name}\" بند ہے۔ اسے مکمل موڈ میں کھولیں۔",
+    "Send to Markdown": "Send to Markdown",
+    "To the end of {note}": "{note} کے آخر میں",
+    "(a new note)": "(ایک نیا نوٹ)",
+    "As a new note": "نئے نوٹ کے طور پر",
+    "Add to another note": "کسی اور نوٹ میں شامل کریں",
+    "No notes match": "کوئی نوٹ مماثل نہیں",
+    "Add to {note}": "{note} میں شامل کریں",
+    "The default note": "ڈیفالٹ نوٹ",
+    "Make it the default note": "اسے ڈیفالٹ نوٹ بنائیں"
+  },
   "toast": {
+    "Finish what is open first, then open the note again": "پہلے جو کھلا ہے اسے مکمل کریں، پھر نوٹ دوبارہ کھولیں",
     "Path copied: {path}": "پاتھ کاپی ہو گیا: {path}",
     "No .md files in this folder — create the first note": "اس فولڈر میں کوئی .md فائل نہیں — پہلا نوٹ بنائیں",
     "No .md files in this folder": "اس فولڈر میں کوئی .md فائل نہیں",
@@ -53,7 +74,7 @@
   },
   "gate": {
     "Version {version}": "ورژن {version}",
-    "Drag a folder, not a single file": "کوئی فولڈر گھسیٹیں، اکیلی فائل نہیں",
+    "Drag a folder or a note": "کوئی فولڈر یا نوٹ گھسیٹیں",
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "یہ براؤزر ڈسک پر فائلیں نہیں لکھ سکتا: فولڈر صرف پڑھنے کے لیے کھلے گا، اور محفوظ کرتے وقت ترمیم شدہ فائل ڈاؤن لوڈ کرنے کی پیشکش کی جائے گی۔ مکمل ترمیم کمپیوٹر پر Chrome، Edge اور Arc میں کام کرتی ہے۔",
     "local editor · one file": "مقامی ایڈیٹر · ایک فائل",
     "Open a folder": "اپنے نوٹس کا",
@@ -96,7 +117,8 @@
     "This browser cannot write files": "یہ براؤزر فائلیں نہیں لکھ سکتا",
     "\"{name}\" already exists": "\"{name}\" پہلے سے موجود ہے",
     "File not found: {path}": "فائل نہیں ملی: {path}",
-    "The browser was not allowed to open the folder": "براؤزر کو فولڈر کھولنے کی اجازت نہیں ملی"
+    "The browser was not allowed to open the folder": "براؤزر کو فولڈر کھولنے کی اجازت نہیں ملی",
+    "A note opened on its own has no folder around it": "اکیلا کھلا نوٹ کسی فولڈر کے بغیر ہے"
   },
   "palette": {
     "Red": "سرخ",
@@ -274,7 +296,7 @@
   },
   "manifest": {
     "Send to Markdown": "Send to Markdown",
-    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "ویب صفحہ، انتخاب، لنک یا تصویر کو آپ کی ڈسک کے فولڈر میں Markdown نوٹ میں بھیجتا ہے۔ اسے سائیڈ پینل میں ترمیم کریں۔",
-    "Send the page or the selection to Markdown": "صفحہ یا انتخاب Markdown کو بھیجیں"
+    "Markdown Knowledge Base": "Markdown Knowledge Base",
+    "Sends what you select on a web page to your Markdown notes on disk: the default note or one you pick. Edit them in the side panel.": "ویب صفحے پر منتخب متن آپ کی ڈسک کے Markdown نوٹس میں بھیجتا ہے: ڈیفالٹ نوٹ یا کوئی اور آپ کا چنا ہوا۔ سائیڈ پینل میں ترمیم کریں۔"
   }
 }

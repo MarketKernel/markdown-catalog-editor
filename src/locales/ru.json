@@ -55,10 +55,11 @@
       "other": "{count} страницы экспортировано в {folder}"
     },
     "Export stopped: {folder} is incomplete": "Экспорт остановлен: папка {folder} заполнена не полностью",
-    "Export stopped": "Экспорт остановлен"
+    "Export stopped": "Экспорт остановлен",
+    "Finish what is open first, then open the note again": "Сначала завершите то, что уже открыто, затем откройте заметку заново"
   },
   "gate": {
-    "Drag a folder, not a single file": "Перетащите папку, а не отдельный файл",
+    "Drag a folder or a note": "Перетащите папку или заметку",
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "Этот браузер не умеет записывать файлы на диск: папка откроется только для чтения, а при сохранении будет предложено скачать изменённый файл. Полноценное редактирование работает в Chrome, Edge и Arc на компьютере.",
     "local editor · one file": "локальный редактор · один файл",
     "Open a folder": "Откройте папку",
@@ -102,7 +103,8 @@
     "This browser cannot write files": "Этот браузер не умеет записывать файлы",
     "\"{name}\" already exists": "«{name}» уже существует",
     "File not found: {path}": "Файл не найден: {path}",
-    "The browser was not allowed to open the folder": "Браузеру не разрешили открыть папку"
+    "The browser was not allowed to open the folder": "Браузеру не разрешили открыть папку",
+    "A note opened on its own has no folder around it": "У заметки, открытой отдельно, нет папки вокруг"
   },
   "palette": {
     "Red": "Красный",
@@ -269,6 +271,26 @@
     "Send the link to Markdown": "Отправить ссылку в Markdown",
     "Send the image to Markdown": "Отправить изображение в Markdown"
   },
+  "popup": {
+    "Full mode": "Полный режим",
+    "Nothing on this tab can be sent.": "На этой вкладке нечего отправить.",
+    "The selection on {site}": "Выделение на {site}",
+    "Nothing is selected: the whole page \"{title}\"": "Ничего не выделено: вся страница «{title}»",
+    "A link to \"{title}\"": "Ссылка на «{title}»",
+    "There is no knowledge base yet: open a folder of notes in full mode.": "База знаний ещё не открыта: откройте папку с заметками в полном режиме.",
+    "Open in full mode": "Открыть в полном режиме",
+    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "«{name}» закрыта. Откройте её в полном режиме, и выделенное попадёт в {note}.",
+    "\"{name}\" is closed. Open it in full mode.": "«{name}» закрыта. Откройте её в полном режиме.",
+    "Send to Markdown": "Send to Markdown",
+    "To the end of {note}": "В конец {note}",
+    "(a new note)": "(новая заметка)",
+    "As a new note": "Как новая заметка",
+    "Add to another note": "Добавить в другую заметку",
+    "No notes match": "Заметки не найдены",
+    "Add to {note}": "Добавить в {note}",
+    "The default note": "Заметка по умолчанию",
+    "Make it the default note": "Сделать заметкой по умолчанию"
+  },
   "update": {
     "Install updates by themselves when everything is saved and the app is in the background": "Устанавливать обновления самостоятельно, когда всё сохранено, а приложение работает в фоновом режиме",
     "Check for updates": "Проверить обновления",
@@ -284,7 +306,7 @@
   },
   "manifest": {
     "Send to Markdown": "Send to Markdown",
-    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "Отправляет веб-страницу, выделение, ссылку или изображение в заметку Markdown в папке на диске. Редактируйте в боковой панели.",
-    "Send the page or the selection to Markdown": "Отправить страницу или выделение в Markdown"
+    "Markdown Knowledge Base": "Markdown Knowledge Base",
+    "Sends what you select on a web page to your Markdown notes on disk: the default note or one you pick. Edit them in the side panel.": "Отправляет выделенное на странице в заметки Markdown на диске: заметку по умолчанию или другую. Редактируйте в боковой панели."
   }
 }

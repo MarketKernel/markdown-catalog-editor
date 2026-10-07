@@ -9,8 +9,15 @@ import type { Clip } from './clip';
 import type { Language } from './i18n';
 
 export interface PlatformHost {
-  /** A page, a selection, a link or an image sent from the browser, to save as a note. */
-  clip(clip: Clip): void;
+  /**
+   * A page, a selection, a link or an image sent from the browser, to save as a
+   * note; `toDefault`: straight to the default note, with no dialog.
+   */
+  clip(clip: Clip, toDefault: boolean): void;
+  /** Adds to a note of the folder open here, if it is `folder` (a recent folder's record); false when it is not. */
+  append(folder: number, path: string, clip: Clip): Promise<boolean>;
+  /** A note of `folder` was written elsewhere: shown here, it is read again. */
+  changed(folder: number, path: string): void;
 }
 
 export interface Platform {

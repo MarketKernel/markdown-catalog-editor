@@ -27,6 +27,26 @@
       "other": "{count} 文字"
     }
   },
+  "popup": {
+    "Full mode": "フルモード",
+    "Nothing on this tab can be sent.": "このタブには送信できるものがありません。",
+    "The selection on {site}": "{site} 上の選択範囲",
+    "Nothing is selected: the whole page \"{title}\"": "何も選択されていません：ページ全体「{title}」",
+    "A link to \"{title}\"": "「{title}」へのリンク",
+    "There is no knowledge base yet: open a folder of notes in full mode.": "まだナレッジベースがありません：フルモードでノートのフォルダを開いてください。",
+    "Open in full mode": "フルモードで開く",
+    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "「{name}」は閉じています。フルモードで開くと、選択した内容が {note} に送信されます。",
+    "\"{name}\" is closed. Open it in full mode.": "「{name}」は閉じています。フルモードで開いてください。",
+    "Send to Markdown": "Send to Markdown",
+    "To the end of {note}": "{note} の末尾に追加",
+    "(a new note)": "(新規ノート)",
+    "As a new note": "新規ノートとして",
+    "Add to another note": "他のノートに追加",
+    "No notes match": "一致するノートがありません",
+    "Add to {note}": "{note} に追加",
+    "The default note": "既定のノート",
+    "Make it the default note": "既定のノートにする"
+  },
   "toast": {
     "Path copied: {path}": "パスをコピーしました：{path}",
     "No .md files in this folder — create the first note": "このフォルダには .md ファイルがありません — 最初のノートを作成しましょう",
@@ -46,10 +66,10 @@
       "other": "{count} ページを {folder} に書き出しました"
     },
     "Export stopped: {folder} is incomplete": "書き出しを中止しました: {folder} は不完全です",
-    "Export stopped": "書き出しを中止しました"
+    "Export stopped": "書き出しを中止しました",
+    "Finish what is open first, then open the note again": "まず開いている操作を終えてから、もう一度ノートを開いてください"
   },
   "gate": {
-    "Drag a folder, not a single file": "単一のファイルではなく、フォルダをドラッグしてください",
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "このブラウザはディスクにファイルを書き込めません。フォルダは読み取り専用で開かれ、保存時には変更したファイルのダウンロードを提案します。すべての編集機能はパソコンの Chrome、Edge、Arc で利用できます。",
     "local editor · one file": "ローカルエディタ · 単一ファイル",
     "Open a folder": "ノートの",
@@ -61,7 +81,8 @@
     "Open {name}": "「{name}」を開く",
     "Remove from the list": "一覧から削除",
     "The folder \"{name}\" is no longer there, so it was removed from the list": "フォルダ「{name}」は見つからないため、一覧から削除しました",
-    "Version {version}": "バージョン {version}"
+    "Version {version}": "バージョン {version}",
+    "Drag a folder or a note": "フォルダまたはノートをドラッグしてください"
   },
   "dialog": {
     "Note not found": "ノートが見つかりません",
@@ -93,7 +114,8 @@
     "This browser cannot write files": "このブラウザはファイルを書き込めません",
     "\"{name}\" already exists": "「{name}」はすでに存在します",
     "File not found: {path}": "ファイルが見つかりません：{path}",
-    "The browser was not allowed to open the folder": "ブラウザにフォルダを開く許可が与えられませんでした"
+    "The browser was not allowed to open the folder": "ブラウザにフォルダを開く許可が与えられませんでした",
+    "A note opened on its own has no folder around it": "単独で開いたノートには、周囲にフォルダがありません"
   },
   "palette": {
     "Red": "赤",
@@ -269,7 +291,7 @@
   },
   "manifest": {
     "Send to Markdown": "Send to Markdown",
-    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "ウェブページ、選択範囲、リンク、画像をディスク上のフォルダー内の Markdown ノートに送信します。サイドパネルで編集できます。",
-    "Send the page or the selection to Markdown": "ページまたは選択範囲を Markdown に送信"
+    "Markdown Knowledge Base": "Markdown Knowledge Base",
+    "Sends what you select on a web page to your Markdown notes on disk: the default note or one you pick. Edit them in the side panel.": "ウェブページで選択した内容を、ディスク上の Markdown ノート（既定のノートまたは選んだノート）に送信します。サイドパネルで編集できます。"
   }
 }

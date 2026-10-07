@@ -1,0 +1,116 @@
+/* ------------------------------------------------------------------ *
+ * The toolbar button's popup, over the page's styles: Chrome sizes a popup
+ * by its content, up to 800 × 600, so it has a width and a height of its own.
+ * ------------------------------------------------------------------ */
+
+html:has(> body.popup-page), body.popup-page { height: auto; }
+body.popup-page { width: 360px; overflow: hidden; }
+
+.popup {
+  display: flex;
+  flex-direction: column;
+  min-height: 220px;
+  max-height: 580px;
+}
+.popup--busy { opacity: 0.6; pointer-events: none; }
+
+.popup-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 14px 4px;
+  color: var(--muted);
+}
+.popup-head > svg { width: 18px; height: 18px; flex: none; fill: none; stroke: var(--accent); stroke-width: 1.7; stroke-linejoin: round; }
+.popup-base { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text); font-weight: 600; }
+
+.popup-preview { padding: 2px 14px 10px; }
+.popup-what { margin: 0 0 6px; color: var(--muted); font-size: 12.5px; overflow-wrap: anywhere; }
+.popup-markdown {
+  margin: 0;
+  max-height: 104px;
+  overflow: hidden;
+  padding: 8px 10px;
+  border: 1px solid var(--edge);
+  border-radius: 9px;
+  background: var(--panel);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  /* The start of it is enough to recognise; the rest fades out. */
+  mask-image: linear-gradient(to bottom, #000 70%, transparent);
+}
+
+.popup-body { flex: 1; min-height: 0; overflow: auto; overscroll-behavior-y: contain; padding: 0 14px 10px; }
+
+.popup-actions { display: flex; gap: 8px; }
+.popup-send { flex: 1; }
+.popup-target { margin: 6px 0 12px; color: var(--muted); font-size: 12.5px; overflow-wrap: anywhere; }
+.popup-new { color: var(--faint); }
+
+.popup-filter {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--edge);
+  border-radius: 8px;
+  padding: 7px 10px;
+  background: var(--panel);
+  color: inherit;
+  font: inherit;
+  outline: none;
+}
+.popup-filter:focus { border-color: var(--accent); }
+
+.popup-notes { list-style: none; margin: 6px 0 0; padding: 0; }
+.popup-row { display: flex; align-items: center; border-radius: 8px; }
+.popup-row:hover { background: var(--panel); }
+.popup-note {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: none;
+  padding: 6px 8px;
+  text-align: start;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+}
+.popup-note:disabled { cursor: default; opacity: 0.6; }
+.popup-note-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 550; }
+.popup-note-dir { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--faint); font-size: 12px; }
+.popup-row--default .popup-note-name { color: var(--accent); }
+.popup-star { width: 32px; height: 30px; flex: none; }
+.popup-star svg { width: 17px; height: 17px; }
+.popup-star--on svg { fill: var(--accent); stroke: var(--accent); }
+.popup-none { padding: 10px 8px; color: var(--faint); }
+
+.popup-empty, .popup-done {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 16px;
+  color: var(--muted);
+  text-align: center;
+}
+.popup-empty p, .popup-done p { margin: 0; line-height: 1.45; overflow-wrap: anywhere; }
+.popup-empty .button { white-space: normal; }
+.popup-done { flex: 1; justify-content: center; color: var(--text); font-weight: 600; }
+
+.popup-foot {
+  display: flex;
+  justify-content: center;
+  padding: 8px 12px 12px;
+  border-top: 1px solid var(--edge);
+}
+.popup-full { display: inline-flex; align-items: center; gap: 6px; }
+.popup-full svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+.popup-page .toast { bottom: 62px; }

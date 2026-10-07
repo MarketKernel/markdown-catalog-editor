@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "Send to Markdown",
-  "description": "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.",
+  "name": "Markdown Knowledge Base",
+  "description": "Sends what you select on a web page to your Markdown notes on disk: the default note or one you pick. Edit them in the side panel.",
   "minimum_chrome_version": "116",
-  "action": { "default_title": "Send the page or the selection to Markdown" },
+  "action": { "default_title": "Send to Markdown", "default_popup": "popup.html" },
   "side_panel": { "default_path": "panel.html" },
   "background": { "service_worker": "background.js", "type": "module" },
   "permissions": ["sidePanel", "activeTab", "scripting", "contextMenus", "storage"],

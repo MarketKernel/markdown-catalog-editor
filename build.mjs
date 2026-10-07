@@ -9,9 +9,10 @@
  * Pages — a manifest, icons and a service worker that keeps it offline and
  * brings a new version in when the user says so.
  *
- * And build/extension/: "Send to Markdown", the Chrome extension — the same
- * page as its side panel and a service worker that takes a web page, a
- * selection, a link or an image to it; zipped for the Chrome Web Store as
+ * And build/extension/: "Markdown Knowledge Base", the Chrome extension — the
+ * same page as its side panel, a popup for the toolbar button that adds what
+ * is selected on a web page to a note ("Send to Markdown"), and a service
+ * worker for the context menu; zipped for the Chrome Web Store as
  * build/macaed-extension-<version>.zip.
  *
  * The version is package.json's and nowhere else: the page shows it, the
@@ -186,6 +187,10 @@ async function buildPages(html) {
     start_url: './',
     scope: './',
     display: 'standalone',
+    // A .md opens in the app from the Finder or Explorer (Chrome and Edge on a computer), in its
+    // window when one is open: a second window on the same note would overwrite the first one's saves.
+    file_handlers: [{ action: './', accept: { 'text/markdown': ['.md', '.markdown', '.mdown', '.mkd'] } }],
+    launch_handler: { client_mode: 'focus-existing' },
     background_color: '#fbfbfa',
     theme_color: '#6c4ee6',
     icons: [
@@ -334,10 +339,13 @@ function localizeManifest(source, dictionaries) {
 /** build/extension/: the side panel is the page itself, its script a file of its own, as Manifest V3 wants. */
 async function buildExtension(template, styles, iconUri) {
   const dir = at('build', 'extension');
-  const [manifestSource, texts, panelJs, backgroundJs] = await Promise.all([
+  const [manifestSource, texts, popupHtml, popupStyles, panelJs, popupJs, backgroundJs] = await Promise.all([
     readFile(at('src/extension/manifest.json'), 'utf8').then(JSON.parse),
     dictionaries(),
+    readFile(at('src/extension/popup.html'), 'utf8'),
+    readFile(at('src/extension/popup.css'), 'utf8'),
     bundle('src/main.ts', { plugins: [extensionPlatform] }),
+    bundle('src/extension/popup.ts'),
     bundle('src/extension/background.ts', { format: 'esm' }),
   ]);
   // Chrome's version is numbers only; the one with the commit goes where Chrome shows it.
@@ -348,10 +356,15 @@ async function buildExtension(template, styles, iconUri) {
     .replace('<script>/*__APP__*/</script>', '<script src="panel.js"></script>')
     .replaceAll('__ICON__', () => iconUri);
 
+  // The popup: the page's styles, for the same buttons, fields and colours, and its own.
+  const popup = popupHtml.replace('/*__STYLES__*/', () => `${styles}\n${popupStyles}`);
+
   const files = new Map([
     ['manifest.json', `${JSON.stringify(manifest, null, 2)}\n`],
     ['panel.html', panel],
     ['panel.js', panelJs],
+    ['popup.html', popup],
+    ['popup.js', popupJs],
     ['background.js', backgroundJs],
     ...locales,
   ]);

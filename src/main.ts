@@ -23,6 +23,7 @@ import {
   loadSettings,
   resolveLanguage,
   saveSettings,
+  SETTINGS_KEY,
   ZOOM_STEP,
   type Settings,
   type Theme,
@@ -44,14 +45,17 @@ import {
   embedCandidates,
   embedTarget,
   ensureWritable,
+  fileWritable,
   filesFromEntry,
   findEmbed,
-  handleFromDataTransfer,
+  handlesFromDataTransfer,
   imageDirOf,
   isNote,
   join,
+  NoteFilesVault,
   resolvePath,
   type DirHandleLike,
+  type FileHandleLike,
   type TreeEntry,
   type Vault,
 } from './vault';
@@ -339,19 +343,64 @@ document.addEventListener('drop', (event) => {
 async function acceptDrop(event: DragEvent): Promise<void> {
   const transfer = event.dataTransfer;
   if (!transfer) return;
-  const handle = await handleFromDataTransfer(transfer.items);
+  // Asked for before anything is awaited: the drop's items are gone after that.
+  const entries = Array.from(transfer.items, (item) => item.webkitGetAsEntry?.() ?? null);
+  const files = Array.from(transfer.files).filter((file) => isNote(file.name));
+  const handles = await handlesFromDataTransfer(transfer.items);
+  const handle = handles.find((item): item is DirHandleLike => item.kind === 'directory');
   if (handle) {
     await useVault(new DirectoryVault(handle, await ensureWritable(handle)), handle);
     return;
   }
-  for (const item of Array.from(transfer.items)) {
-    const entry = item.webkitGetAsEntry?.();
+  const notes = handles.filter((item): item is FileHandleLike => item.kind === 'file' && isNote(item.name));
+  if (notes.length) {
+    await openNoteFiles(notes);
+    return;
+  }
+  for (const entry of entries) {
     if (entry?.isDirectory) {
       await useVault(new FileListVault(await filesFromEntry(entry), entry.name));
       return;
     }
   }
-  showGateError(new Error(t('gate', 'Drag a folder, not a single file')));
+  // Safari and Firefox hand no handle: the note opens read-only, and saving downloads it.
+  if (files.length) {
+    await useVault(new FileListVault(files, files[0]?.name));
+    return;
+  }
+  showGateError(new Error(t('gate', 'Drag a folder or a note')));
+}
+
+/**
+ * Notes on their own, without their folder: opened from the Finder or Explorer
+ * with the installed app, or dropped on the window. Written in place when the
+ * browser allows it.
+ */
+async function openNoteFiles(handles: FileHandleLike[]): Promise<void> {
+  // The same note opened again: the window that has it keeps it as it is.
+  const [first] = handles;
+  if (first && handles.length === 1 && vault instanceof NoteFilesVault && (await vault.holds(first))) return;
+  const writable = (await Promise.all(handles.map(fileWritable))).every(Boolean);
+  await useVault(new NoteFilesVault(handles, writable));
+  if (!writable) toast(t('toast', 'Read-only access: saving will offer to download the file'), 'error');
+}
+
+/**
+ * A note the system opened with the installed app (the manifest's
+ * file_handlers). With launch_handler "focus-existing" it comes to the window
+ * already open, which then shows it instead of its folder. Not in the middle of
+ * an export or a dialog, which would lose their place.
+ */
+function takeLaunchedNotes(): void {
+  window.launchQueue?.setConsumer((params) => {
+    const notes = params.files.filter((item): item is FileHandleLike => item.kind === 'file' && isNote(item.name));
+    if (!notes.length) return;
+    if (exporting || clipping || document.querySelector('.overlay:not([hidden])')) {
+      toast(t('toast', 'Finish what is open first, then open the note again'), 'error');
+      return;
+    }
+    void openNoteFiles(notes).catch(showGateError);
+  });
 }
 
 
@@ -655,7 +704,7 @@ function saveMeta(): void {
 }
 
 function canTag(): boolean {
-  return Boolean(vault?.writable) && metaWritable;
+  return Boolean(vault?.writable) && !vault?.loose && metaWritable;
 }
 
 /** Tags of notes that are gone from the folder stay in the file but are not shown. */
@@ -893,6 +942,7 @@ function feed<T>(items: readonly T[]): () => T | undefined {
 async function exportHtml(dir: string): Promise<void> {
   const target = vault;
   if (!target || exporting) return;
+  if (vault?.loose) return void toast(t('errors', 'A note opened on its own has no folder around it'), 'error');
   if (!target.writable) return void toast(t('errors', 'The folder is open read-only'), 'error');
   await flushSave();
 
@@ -1056,6 +1106,7 @@ function withExtension(name: string): string {
 }
 
 async function createNote(dir: string): Promise<void> {
+  if (vault?.loose) return void toast(t('errors', 'A note opened on its own has no folder around it'), 'error');
   if (!vault?.writable) return void toast(t('errors', 'The folder is open read-only'), 'error');
   const name = await ask(t('dialog', 'New note'), t('dialog', 'File name'), `${t('dialog', 'Untitled')}.md`);
   if (!name) return;
@@ -1073,6 +1124,7 @@ async function createNote(dir: string): Promise<void> {
 }
 
 async function createFolder(dir: string): Promise<void> {
+  if (vault?.loose) return void toast(t('errors', 'A note opened on its own has no folder around it'), 'error');
   if (!vault?.writable) return void toast(t('errors', 'The folder is open read-only'), 'error');
   const name = await ask(t('dialog', 'New folder'), t('dialog', 'Folder name'), '');
   if (!name) return;
@@ -1436,18 +1488,23 @@ findInput.addEventListener('keydown', (event) => {
  * Sent from the browser: the "Send to Markdown" extension's side panel
  * ------------------------------------------------------------------ */
 
-/** What was sent and is waiting: for a folder to be opened, or for the dialog of the one before. */
-const clips: Clip[] = [];
+/**
+ * What was sent and is waiting: for a folder to be opened, or for the dialog
+ * of the one before. `toDefault`: sent by the popup to the default note while
+ * the knowledge base was closed — it goes there once a folder is open.
+ */
+const clips: { clip: Clip; toDefault: boolean }[] = [];
 let clipping = false;
 
-function receiveClip(clip: Clip): void {
-  clips.push(clip);
+function receiveClip(clip: Clip, toDefault: boolean): void {
+  clips.push({ clip, toDefault });
   void nextClip();
 }
 
 async function nextClip(): Promise<void> {
   if (clipping || clips.length === 0) return;
-  if (!vault) {
+  // A note opened on its own has no folder for a new note, nor a default note to add to.
+  if (!vault || vault.loose) {
     toast(t('clip', 'Open a folder of notes, and what was sent goes into it'));
     return;
   }
@@ -1456,11 +1513,12 @@ async function nextClip(): Promise<void> {
     toast(t('errors', 'The folder is open read-only'), 'error');
     return;
   }
-  const clip = clips.shift();
-  if (!clip) return;
+  const next = clips.shift();
+  if (!next) return;
   clipping = true;
   try {
-    await saveClip(clip);
+    if (next.toDefault) await appendToNote(settings.defaultNote, next.clip).catch(reportSaveError);
+    else await saveClip(next.clip);
   } finally {
     clipping = false;
   }
@@ -1490,16 +1548,7 @@ async function saveClip(clip: Clip): Promise<void> {
   const sent = { ...clip, markdown: choice.markdown };
   try {
     if (choice.append && currentPath) {
-      await flushSave();
-      const path = currentPath;
-      const text = appendClip(editor.getText(), sent);
-      await target.writeText(path, text);
-      editor.load(text);
-      dirty = false;
-      renderState();
-      renderTitle();
-      scroller.scrollTop = scroller.scrollHeight;
-      toast(t('clip', 'Added to the end of {name}', { name: baseOf(path) }));
+      await appendToNote(currentPath, sent);
       return;
     }
     const dir = cleanClipFolder(choice.folder);
@@ -1511,9 +1560,68 @@ async function saveClip(clip: Clip): Promise<void> {
     await openNote(path);
     toast(t('clip', 'Saved as {path}', { path }));
   } catch (error) {
-    toast(t('toast', 'Could not save: {reason}', { reason: error instanceof Error ? error.message : String(error) }), 'error');
+    reportSaveError(error);
   }
 }
+
+function reportSaveError(error: unknown): void {
+  toast(t('toast', 'Could not save: {reason}', { reason: error instanceof Error ? error.message : String(error) }), 'error');
+}
+
+/**
+ * Adds the clip to the end of a note of the open folder — made if it is not
+ * there yet, as the default note may be. The note open in the editor gets it
+ * through the editor, its unsaved changes saved with it; it is shown at its
+ * end.
+ */
+async function appendToNote(path: string, clip: Clip): Promise<void> {
+  const target = vault;
+  if (!target?.writable) throw new Error(t('errors', 'The folder is open read-only'));
+  if (path === currentPath) {
+    await flushSave();
+    const text = appendClip(editor.getText(), clip);
+    await target.writeText(path, text);
+    editor.load(text);
+    dirty = false;
+    renderState();
+    renderTitle();
+    scroller.scrollTop = scroller.scrollHeight;
+  } else {
+    let text = '';
+    const known = tree.find(path);
+    if (known) text = await target.readText(path);
+    await target.writeText(path, appendClip(text, clip));
+    if (!known) await refreshTree();
+  }
+  toast(t('clip', 'Added to the end of {name}', { name: baseOf(path) }));
+}
+
+/** The popup's request, when this panel has the knowledge base open. */
+async function appendFromPopup(folderId: number, path: string, clip: Clip): Promise<boolean> {
+  if (!vault || vault.loose || folder?.id !== folderId) return false;
+  await appendToNote(path, clip);
+  return true;
+}
+
+/** The popup wrote a note of this folder itself: shown here and not being edited, it is read again. */
+async function noteChanged(folderId: number, path: string): Promise<void> {
+  if (!vault || folder?.id !== folderId) return;
+  if (!tree.find(path)) await refreshTree();
+  if (path !== currentPath || dirty) return;
+  try {
+    editor.load(await vault.readText(path));
+    renderTitle();
+  } catch {
+    /* gone meanwhile: the tree says so on its next scan */
+  }
+}
+
+// The popup changes the default note in the settings the panel shares: kept, not written over.
+addEventListener('storage', (event) => {
+  if (event.key !== SETTINGS_KEY) return;
+  const stored = loadSettings();
+  settings.defaultNote = stored.defaultNote;
+});
 
 /* ------------------------------------------------------------------ *
  * Updates of the installed app (update.ts)
@@ -2002,7 +2110,7 @@ async function openServedFolder(): Promise<boolean> {
 
 startUpdates(showUpdate);
 if (justUpdated()) toast(t('update', 'Updated to version {version}.', { version: __APP_VERSION__ }));
-platform.start({ clip: receiveClip });
+platform.start({ clip: receiveClip, append: appendFromPopup, changed: (id, path) => void noteChanged(id, path) });
 
 // The gate stays blank meanwhile, so it does not flash up before the folder opens by itself.
 void (async () => {
@@ -2011,5 +2119,7 @@ void (async () => {
   } finally {
     gate.classList.remove('gate--starting');
     if (!gate.hidden) await renderRecent();
+    // After the last folder has reopened, or a note launched with the app would be replaced by it.
+    takeLaunchedNotes();
   }
 })();

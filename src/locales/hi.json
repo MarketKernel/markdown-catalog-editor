@@ -29,7 +29,28 @@
       "other": "{count} वर्ण"
     }
   },
+  "popup": {
+    "Full mode": "पूरा मोड",
+    "Nothing on this tab can be sent.": "इस टैब में भेजने लायक कुछ नहीं है।",
+    "The selection on {site}": "{site} पर चुना गया भाग",
+    "Nothing is selected: the whole page \"{title}\"": "कुछ चुना नहीं गया: पूरा पृष्ठ “{title}”",
+    "A link to \"{title}\"": "“{title}” का लिंक",
+    "There is no knowledge base yet: open a folder of notes in full mode.": "अभी कोई नॉलेज बेस नहीं है: पूरे मोड में नोट्स का फ़ोल्डर खोलें।",
+    "Open in full mode": "पूरे मोड में खोलें",
+    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "“{name}” बंद है। इसे पूरे मोड में खोलें, तो चुना गया भाग {note} में चला जाएगा।",
+    "\"{name}\" is closed. Open it in full mode.": "“{name}” बंद है। इसे पूरे मोड में खोलें।",
+    "Send to Markdown": "Send to Markdown",
+    "To the end of {note}": "{note} के अंत में",
+    "(a new note)": "(एक नया नोट)",
+    "As a new note": "नए नोट के रूप में",
+    "Add to another note": "किसी और नोट में जोड़ें",
+    "No notes match": "कोई नोट मेल नहीं खाता",
+    "Add to {note}": "{note} में जोड़ें",
+    "The default note": "डिफ़ॉल्ट नोट",
+    "Make it the default note": "इसे डिफ़ॉल्ट नोट बनाएँ"
+  },
   "toast": {
+    "Finish what is open first, then open the note again": "पहले जो खुला है उसे पूरा करें, फिर नोट फिर से खोलें",
     "Path copied: {path}": "पाथ कॉपी हो गया: {path}",
     "No .md files in this folder — create the first note": "इस फ़ोल्डर में कोई .md फ़ाइल नहीं है — पहला नोट बनाएँ",
     "No .md files in this folder": "इस फ़ोल्डर में कोई .md फ़ाइल नहीं है",
@@ -52,7 +73,7 @@
     "Export stopped": "निर्यात रोका गया"
   },
   "gate": {
-    "Drag a folder, not a single file": "फ़ोल्डर खींचें, कोई अकेली फ़ाइल नहीं",
+    "Drag a folder or a note": "फ़ोल्डर या नोट खींचें",
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "यह ब्राउज़र डिस्क पर फ़ाइलें नहीं लिख सकता: फ़ोल्डर केवल पढ़ने के लिए खुलेगा, और सहेजते समय बदली गई फ़ाइल डाउनलोड करने का विकल्प मिलेगा। पूरा संपादन कंप्यूटर पर Chrome, Edge और Arc में काम करता है।",
     "local editor · one file": "लोकल एडिटर · एक फ़ाइल",
     "Open a folder": "अपने नोट्स का",
@@ -96,7 +117,8 @@
     "This browser cannot write files": "यह ब्राउज़र फ़ाइलें नहीं लिख सकता",
     "\"{name}\" already exists": "“{name}” पहले से मौजूद है",
     "File not found: {path}": "फ़ाइल नहीं मिली: {path}",
-    "The browser was not allowed to open the folder": "ब्राउज़र को फ़ोल्डर खोलने की अनुमति नहीं मिली"
+    "The browser was not allowed to open the folder": "ब्राउज़र को फ़ोल्डर खोलने की अनुमति नहीं मिली",
+    "A note opened on its own has no folder around it": "अकेले खोले गए नोट के इर्द-गिर्द कोई फ़ोल्डर नहीं है"
   },
   "palette": {
     "Red": "लाल",
@@ -273,8 +295,8 @@
     "Updated to version {version}.": "वर्शन {version} में अपडेट हो गया।"
   },
   "manifest": {
+    "Markdown Knowledge Base": "Markdown Knowledge Base",
     "Send to Markdown": "Send to Markdown",
-    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "किसी वेब पृष्ठ, चयनित भाग, लिंक या छवि को आपकी डिस्क के फ़ोल्डर में Markdown नोट में भेजता है। साइड पैनल में संपादित करें।",
-    "Send the page or the selection to Markdown": "पृष्ठ या चयनित भाग को Markdown में भेजें"
+    "Sends what you select on a web page to your Markdown notes on disk: the default note or one you pick. Edit them in the side panel.": "वेब पृष्ठ पर चुने गए भाग को डिस्क के Markdown नोट्स में भेजता है: डिफ़ॉल्ट नोट या आपका चुना नोट। साइड पैनल में संपादित करें।"
   }
 }

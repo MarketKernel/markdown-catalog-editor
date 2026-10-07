@@ -49,10 +49,11 @@
       "other": "{count} sayfa {folder} klasörüne aktarıldı"
     },
     "Export stopped: {folder} is incomplete": "Dışa aktarma durduruldu: {folder} eksik",
-    "Export stopped": "Dışa aktarma durduruldu"
+    "Export stopped": "Dışa aktarma durduruldu",
+    "Finish what is open first, then open the note again": "Önce açık olanı bitirin, sonra notu yeniden açın"
   },
   "gate": {
-    "Drag a folder, not a single file": "Tek bir dosya değil, bir klasör sürükleyin",
+    "Drag a folder or a note": "Bir klasör veya not sürükleyin",
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "Bu tarayıcı diske dosya yazamaz: klasör salt okunur olarak açılacak ve kaydederken değiştirilen dosyayı indirmeniz önerilecek. Tam düzenleme bilgisayarda Chrome, Edge ve Arc’ta çalışır.",
     "local editor · one file": "yerel düzenleyici · tek dosya",
     "Open a folder": "Not klasörünüzü",
@@ -96,7 +97,8 @@
     "This browser cannot write files": "Bu tarayıcı dosya yazamaz",
     "\"{name}\" already exists": "“{name}” zaten var",
     "File not found: {path}": "Dosya bulunamadı: {path}",
-    "The browser was not allowed to open the folder": "Tarayıcının klasörü açmasına izin verilmedi"
+    "The browser was not allowed to open the folder": "Tarayıcının klasörü açmasına izin verilmedi",
+    "A note opened on its own has no folder around it": "Tek başına açılan bir notun çevresinde klasör yoktur"
   },
   "palette": {
     "Red": "Kırmızı",
@@ -259,6 +261,26 @@
     "Send the link to Markdown": "Bağlantıyı Markdown'a gönder",
     "Send the image to Markdown": "Görseli Markdown'a gönder"
   },
+  "popup": {
+    "Full mode": "Tam mod",
+    "Nothing on this tab can be sent.": "Bu sekmeden gönderilecek bir şey yok.",
+    "The selection on {site}": "{site} sitesindeki seçim",
+    "Nothing is selected: the whole page \"{title}\"": "Hiçbir şey seçili değil: “{title}” sayfasının tamamı",
+    "A link to \"{title}\"": "“{title}” sayfasına bir bağlantı",
+    "There is no knowledge base yet: open a folder of notes in full mode.": "Henüz bir bilgi tabanı yok: tam modda bir not klasörü açın.",
+    "Open in full mode": "Tam modda aç",
+    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "“{name}” kapalı. Tam modda açın; seçili olan {note} içine eklenecek.",
+    "\"{name}\" is closed. Open it in full mode.": "“{name}” kapalı. Tam modda açın.",
+    "Send to Markdown": "Send to Markdown",
+    "To the end of {note}": "{note} notunun sonuna",
+    "(a new note)": "(yeni bir not)",
+    "As a new note": "Yeni bir not olarak",
+    "Add to another note": "Başka bir nota ekle",
+    "No notes match": "Eşleşen not yok",
+    "Add to {note}": "{note} notuna ekle",
+    "The default note": "Varsayılan not",
+    "Make it the default note": "Varsayılan not yap"
+  },
   "update": {
     "Install updates by themselves when everything is saved and the app is in the background": "Her şey kaydedildiğinde ve uygulama arka planda çalışırken güncellemeleri kendiliğinden yükle",
     "Check for updates": "Güncellemeleri kontrol et",
@@ -274,7 +296,7 @@
   },
   "manifest": {
     "Send to Markdown": "Send to Markdown",
-    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "Bir web sayfasını, seçimi, bağlantıyı veya görseli diskinizdeki bir Markdown notuna gönderir. Kenar panelinde düzenleyin.",
-    "Send the page or the selection to Markdown": "Sayfayı veya seçimi Markdown'a gönder"
+    "Markdown Knowledge Base": "Markdown Knowledge Base",
+    "Sends what you select on a web page to your Markdown notes on disk: the default note or one you pick. Edit them in the side panel.": "Bir web sayfasında seçileni Markdown notlarınıza gönderir: varsayılan not veya seçtiğiniz bir not. Kenar panelinde düzenleyin."
   }
 }

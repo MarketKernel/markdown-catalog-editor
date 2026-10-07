@@ -27,7 +27,28 @@
       "other": "{count}자"
     }
   },
+  "popup": {
+    "Full mode": "전체 모드",
+    "Nothing on this tab can be sent.": "이 탭에서 보낼 수 있는 내용이 없습니다.",
+    "The selection on {site}": "{site}에서 선택한 부분",
+    "Nothing is selected: the whole page \"{title}\"": "선택한 부분이 없습니다: 전체 페이지 “{title}”",
+    "A link to \"{title}\"": "“{title}”로의 링크",
+    "There is no knowledge base yet: open a folder of notes in full mode.": "아직 지식 베이스가 없습니다: 전체 모드에서 노트 폴더를 여세요.",
+    "Open in full mode": "전체 모드에서 열기",
+    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "“{name}”이(가) 닫혀 있습니다. 전체 모드에서 열면 선택한 부분이 {note}(으)로 들어갑니다.",
+    "\"{name}\" is closed. Open it in full mode.": "“{name}”이(가) 닫혀 있습니다. 전체 모드에서 여세요.",
+    "Send to Markdown": "Send to Markdown",
+    "To the end of {note}": "{note}의 끝에",
+    "(a new note)": "(새 노트)",
+    "As a new note": "새 노트로",
+    "Add to another note": "다른 노트에 추가",
+    "No notes match": "일치하는 노트 없음",
+    "Add to {note}": "{note}에 추가",
+    "The default note": "기본 노트",
+    "Make it the default note": "기본 노트로 지정"
+  },
   "toast": {
+    "Finish what is open first, then open the note again": "열려 있는 것을 먼저 끝낸 다음 노트를 다시 여세요",
     "Path copied: {path}": "경로 복사됨: {path}",
     "No .md files in this folder — create the first note": "이 폴더에 .md 파일이 없습니다 — 첫 노트를 만들어 보세요",
     "No .md files in this folder": "이 폴더에 .md 파일이 없습니다",
@@ -49,7 +70,7 @@
     "Export stopped": "내보내기 중지됨"
   },
   "gate": {
-    "Drag a folder, not a single file": "파일 하나가 아니라 폴더를 드래그하세요",
+    "Drag a folder or a note": "폴더나 노트를 드래그하세요",
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "이 브라우저는 디스크에 파일을 쓸 수 없습니다. 폴더는 읽기 전용으로 열리며, 저장하면 수정된 파일을 다운로드하도록 제안합니다. 전체 편집 기능은 컴퓨터의 Chrome, Edge, Arc에서 사용할 수 있습니다.",
     "local editor · one file": "로컬 편집기 · 단일 파일",
     "Open a folder": "노트가 담긴",
@@ -93,7 +114,8 @@
     "This browser cannot write files": "이 브라우저는 파일을 쓸 수 없습니다",
     "\"{name}\" already exists": "\"{name}\"이(가) 이미 있습니다",
     "File not found: {path}": "파일을 찾을 수 없음: {path}",
-    "The browser was not allowed to open the folder": "브라우저가 폴더를 열 수 있는 권한을 받지 못했습니다"
+    "The browser was not allowed to open the folder": "브라우저가 폴더를 열 수 있는 권한을 받지 못했습니다",
+    "A note opened on its own has no folder around it": "단독으로 연 노트에는 주변 폴더가 없습니다"
   },
   "palette": {
     "Red": "빨간색",
@@ -268,8 +290,8 @@
     "Updated to version {version}.": "버전 {version}(으)로 업데이트했습니다."
   },
   "manifest": {
+    "Markdown Knowledge Base": "Markdown Knowledge Base",
     "Send to Markdown": "Send to Markdown",
-    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "웹페이지, 선택한 부분, 링크, 이미지를 디스크 폴더의 Markdown 노트로 보냅니다. 사이드 패널에서 편집하세요.",
-    "Send the page or the selection to Markdown": "페이지 또는 선택한 부분을 Markdown으로 보내기"
+    "Sends what you select on a web page to your Markdown notes on disk: the default note or one you pick. Edit them in the side panel.": "웹페이지에서 선택한 내용을 디스크의 Markdown 노트로 보냅니다: 기본 노트 또는 직접 고른 노트. 사이드 패널에서 편집하세요."
   }
 }

@@ -1,4 +1,24 @@
 {
+  "popup": {
+    "Full mode": "Mode complet",
+    "Nothing on this tab can be sent.": "Rien à envoyer depuis cet onglet.",
+    "The selection on {site}": "La sélection sur {site}",
+    "Nothing is selected: the whole page \"{title}\"": "Rien n’est sélectionné : la page entière « {title} »",
+    "A link to \"{title}\"": "Un lien vers « {title} »",
+    "There is no knowledge base yet: open a folder of notes in full mode.": "Il n’y a pas encore de base de connaissances : ouvrez un dossier de notes en mode complet.",
+    "Open in full mode": "Ouvrir en mode complet",
+    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "« {name} » est fermé. Ouvrez-le en mode complet, et la sélection ira dans {note}.",
+    "\"{name}\" is closed. Open it in full mode.": "« {name} » est fermé. Ouvrez-le en mode complet.",
+    "Send to Markdown": "Send to Markdown",
+    "To the end of {note}": "À la fin de {note}",
+    "(a new note)": "(nouvelle note)",
+    "As a new note": "Comme nouvelle note",
+    "Add to another note": "Ajouter à une autre note",
+    "No notes match": "Aucune note ne correspond",
+    "Add to {note}": "Ajouter à {note}",
+    "The default note": "La note par défaut",
+    "Make it the default note": "En faire la note par défaut"
+  },
   "editor": {
     "Block source text": "Texte source du bloc",
     "Add a row": "Ajouter une ligne",
@@ -52,10 +72,11 @@
       "other": "{count} pages exportées vers {folder}"
     },
     "Export stopped: {folder} is incomplete": "Export arrêté : {folder} est incomplet",
-    "Export stopped": "Export arrêté"
+    "Export stopped": "Export arrêté",
+    "Finish what is open first, then open the note again": "Terminez d’abord ce qui est ouvert, puis rouvrez la note"
   },
   "gate": {
-    "Drag a folder, not a single file": "Faites glisser un dossier, pas un fichier isolé",
+    "Drag a folder or a note": "Faites glisser un dossier ou une note",
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "Ce navigateur ne peut pas écrire de fichiers sur le disque : le dossier s’ouvrira en lecture seule et l’enregistrement proposera de télécharger le fichier modifié. L’édition complète fonctionne dans Chrome, Edge et Arc sur ordinateur.",
     "local editor · one file": "éditeur local · un seul fichier",
     "Open a folder": "Ouvrez un dossier",
@@ -99,7 +120,8 @@
     "This browser cannot write files": "Ce navigateur ne peut pas écrire de fichiers",
     "\"{name}\" already exists": "« {name} » existe déjà",
     "File not found: {path}": "Fichier introuvable : {path}",
-    "The browser was not allowed to open the folder": "Le navigateur n’a pas été autorisé à ouvrir le dossier"
+    "The browser was not allowed to open the folder": "Le navigateur n’a pas été autorisé à ouvrir le dossier",
+    "A note opened on its own has no folder around it": "Une note ouverte seule n’a pas de dossier autour d’elle"
   },
   "palette": {
     "Red": "Rouge",
@@ -279,7 +301,7 @@
   },
   "manifest": {
     "Send to Markdown": "Send to Markdown",
-    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "Envoie page, sélection, lien ou image vers une note Markdown dans un dossier du disque. Modifiez-la dans le panneau latéral.",
-    "Send the page or the selection to Markdown": "Envoyer la page ou la sélection vers Markdown"
+    "Markdown Knowledge Base": "Markdown Knowledge Base",
+    "Sends what you select on a web page to your Markdown notes on disk: the default note or one you pick. Edit them in the side panel.": "Envoie la sélection d’une page vers vos notes Markdown : la note par défaut ou une autre. Modifiez-les dans le panneau latéral."
   }
 }

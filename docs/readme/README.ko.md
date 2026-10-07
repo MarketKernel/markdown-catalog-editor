@@ -30,13 +30,15 @@
 웹 앱)로도 쓸 수 있습니다: 시스템에 설치하면 자체 창과 아이콘을 가진 별도의 앱으로 실행되며,
 오프라인에서도 작동합니다. 컴퓨터에서는 Chrome, Edge, Arc의 주소표시줄에 있는 설치 버튼을
 사용하고, Android에서는 Chrome의 ⋮ 메뉴 → 앱 설치, iOS에서는 Safari나 Chrome에서 공유 →
-홈 화면에 추가를 사용하세요. 그곳에서도 노트는 여러분의 디스크에 그대로 남아 있으며, 설치된
-앱은 여러분이 원할 때 업데이트됩니다 — "[GitHub Pages](#github-pages)" 참고.
+홈 화면에 추가를 사용하세요. 그곳에서도 노트는 여러분의 디스크에 그대로 남아 있고, 설치된
+앱은 Finder나 탐색기에서 `.md`를 바로 열 수 있으며, 여러분이 원할 때 업데이트됩니다 —
+"[GitHub Pages](#github-pages)" 참고.
 
-같은 편집기는 **Send to Markdown**이라는 [Chrome 확장 프로그램](#send-to-markdown-chrome-확장-프로그램)이기도
-합니다: 버튼을 클릭하거나 페이지를 마우스 오른쪽 버튼으로 클릭하면 페이지 — 또는 선택한
-부분, 링크, 이미지 — 가 여러분의 폴더에 있는 노트로 전송되고, 편집기가 Chrome의 사이드
-패널에 페이지와 나란히 열립니다.
+같은 편집기는 **Markdown Knowledge Base**라는
+[Chrome 확장 프로그램](#markdown-knowledge-base-chrome-확장-프로그램)이기도 합니다: 웹
+페이지에서 텍스트를 선택하고 버튼을 누르면 **Send to Markdown**이 그것을 지식 베이스의
+기본 노트에 추가합니다 — 또는 여러분이 고른 다른 노트에도 추가할 수 있습니다. 편집기
+자체는 Chrome의 사이드 패널에 페이지와 나란히 열립니다.
 
 ![노트 폴더가 열린 편집기: 왼쪽에 파일 트리와 태그, 오른쪽에 편집 모드의 노트](../macaed.jpg)
 
@@ -77,7 +79,24 @@ Access가 없고, iOS의 모든 브라우저는 Chrome을 포함해 Safari의 �
 그 옆에 `index.json`이 있어야 하며, 형식은
 `{ "name": "Notes", "files": ["Note.md", "Folder/Other.md"] }`와 같습니다.
 
-## Send to Markdown: Chrome 확장 프로그램
+### 단일 노트
+
+`.md` 파일은 자신의 폴더 없이 단독으로도 열 수 있습니다:
+
+- **Finder나 탐색기에서**, 설치된 앱(컴퓨터의 Chrome이나 Edge)으로: 연결 프로그램 →
+  해당 앱을 선택하거나, `.md`의 기본 앱으로 지정하세요. 앱의 창이 이미 열려 있으면
+  노트가 그 창으로 들어옵니다 — 같은 파일을 창 두 개로 열면 저장이 서로를 덮어쓰게
+  되기 때문입니다 — 그리고 그곳에 표시되던 폴더의 자리를 대신합니다. 같은 노트를 다시
+  열면 그대로 둡니다.
+- **창 위로 드래그**해도, 어떤 브라우저에서든 열립니다.
+
+노트는 폴더에서와 마찬가지로 그 자리에서 읽고 씁니다 — Safari와 Firefox에서는 읽기
+전용이며, `⌘S`를 누르면 다운로드를 제안합니다. 주변에 폴더가 없으므로 그 옆에 만들거나,
+이름을 바꾸거나, 삭제할 것이 없고, 폴더에서 오는 이미지도, 태그도, 내보내기도 없습니다:
+이런 기능들은 폴더를 열어야 따라옵니다. 이렇게 연 노트는 최근 폴더 목록에 추가되지
+않습니다.
+
+## Markdown Knowledge Base: Chrome 확장 프로그램
 
 `npm run build`는 `build/extension/`도 함께 만듭니다: Chrome 확장 프로그램 형태의
 편집기이며, Chrome 웹 스토어용으로 `build/macaed-extension-<version>.zip`도 함께
@@ -85,22 +104,42 @@ Access가 없고, iOS의 모든 브라우저는 Chrome을 포함해 Safari의 �
 모드 → 압축해제된 확장 프로그램을 로드합니다 → `build/extension`(또는 압축을 푼 zip
 파일)을 선택하세요.
 
-편집기 자체는 Chrome의 사이드 패널 안에서, 페이지 옆에 — 패널이 좁기 때문에 휴대폰용
-레이아웃으로 — 자리 잡습니다. 탭을 바꿔도 그대로 남아 있습니다. 폴더는 파일에서와
+**지식 베이스**는 확장 프로그램에서 마지막으로 연 노트 폴더입니다. 편집기 자체 —
+**전체 모드** — 는 Chrome의 사이드 패널 안에서, 페이지 옆에 — 패널이 좁기 때문에
+휴대폰용 레이아웃으로 — 자리 잡으며, 탭을 바꿔도 그대로 남아 있습니다. 폴더는 파일에서와
 마찬가지로 그 안에서 열리며, 최근 폴더도 기억됩니다 — 파일이나 PWA의 것과는 별도로,
-확장 프로그램 자신의 목록입니다. 확장 프로그램이 더해 주는 것은 웹의 내용을 노트로 보내는
-기능입니다:
+확장 프로그램 자신의 목록입니다.
 
-- **툴바 버튼**(또는 `Alt+Shift+M`)은 페이지를 전송합니다: 본문 — 사이트의 메뉴,
-  사이드바, 푸터, 공유 버튼, 폼, 숨겨진 부분을 뺀 본문 기사 — 을 전송하며, 페이지에서
-  무언가 선택되어 있으면 그 선택한 부분만 전송합니다.
-- 페이지의 **컨텍스트 메뉴**에는 **페이지를 Markdown으로 보내기**가 있고, 선택한
-  텍스트에는 **선택한 부분을 Markdown으로 보내기**, 링크에는 **링크를 Markdown으로
-  보내기**, 이미지에는 **이미지를 Markdown으로 보내기**가 있습니다.
+**툴바 버튼**(또는 `Alt+Shift+M`)을 누르면 페이지 위에 작은 창이 열립니다:
 
-둘 중 무엇을 선택하든 사이드 패널이 열리고, 그 안의 대화상자에 전송된 내용 — 페이지,
-선택한 부분, 링크 또는 이미지, 그리고 어느 사이트에서 왔는지 — 이 여전히 수정할 수 있는
-Markdown 형태로 표시되며, 어디에 저장할지 묻습니다:
+- 위쪽에는 페이지에서 선택한 부분이 Markdown 형태로 표시됩니다 — 선택한 것이 없으면
+  대신 페이지의 본문: 사이트의 메뉴, 사이드바, 푸터, 공유 버튼, 폼, 숨겨진 부분을 뺀
+  본문 기사가 표시됩니다.
+- **Send to Markdown**은 그것을 **기본 노트** — 처음에는 지식 베이스 루트의
+  `Inbox.md`이며, 처음 필요할 때 만들어집니다 — 의 끝에 추가합니다. 빈 줄 다음에
+  본문이 오고, 그 뒤에 출처를 링크하는 `— [The page's title](https://…)` 줄이
+  이어집니다. 저장되는 즉시 창이 닫힙니다.
+- **다른 노트에 추가**: 지식 베이스의 노트들이 이름으로 찾을 수 있는 입력란과 함께
+  나열됩니다. 노트를 클릭하면 그 노트에 대신 추가됩니다. 노트 옆의 별 모양은 그
+  노트를 기본값으로 만들며, 기본 노트가 맨 위에 나열됩니다.
+- 선택한 것이 없을 때는 **새 노트로**를 누르면 페이지가 그 자체로 하나의 노트가
+  됩니다(아래 참고).
+- **전체 모드**는 사이드 패널을 엽니다.
+
+**지식 베이스가 닫혀 있을 때** — 브라우저를 다시 시작한 뒤, "항상 허용"을 선택하지
+않았다면 — 페이지는 클릭 전까지는 폴더에 들어갈 수 없습니다: 창은 이를 알리고,
+**전체 모드에서 열기**를 누르면 사이드 패널이 열리며, 그곳에서 폴더를 한 번 클릭하면
+접근 권한을 다시 얻습니다. 폴더가 열리면 선택했던 내용은 저절로 기본 노트로 이어집니다.
+
+사이드 패널에 지식 베이스가 열려 있으면, 노트에 추가하는 일은 패널이 맡습니다 — 패널이
+그 노트를 저장되지 않은 변경 사항과 함께 열어 두고 있을 수 있으며, 뒤에서 몰래 쓰면 그
+변경 사항을 잃게 되기 때문입니다. 패널이 닫혀 있으면 창이 직접 노트를 씁니다.
+
+페이지의 **컨텍스트 메뉴**에는 **페이지를 Markdown으로 보내기**가 있고, 선택한
+텍스트에는 **선택한 부분을 Markdown으로 보내기**, 링크에는 **링크를 Markdown으로
+보내기**, 이미지에는 **이미지를 Markdown으로 보내기**가 있습니다. 어느 것을 선택하든
+사이드 패널이 열리고, 그 안의 대화상자에 전송된 내용 — 그리고 어느 사이트에서
+왔는지 — 이 여전히 수정할 수 있는 Markdown 형태로 표시되며, 어디에 저장할지 묻습니다:
 
 - **새 노트** — 페이지의 기본값입니다: 스크랩 폴더(바꾸지 않는 한 루트의 `Clippings`;
   이 폴더는 기억되며, 비워 두면 루트를 뜻합니다)에, 페이지 제목을 따서 이름이 붙고,
@@ -120,9 +159,8 @@ Markdown 형태로 표시되며, 어디에 저장할지 묻습니다:
   The text…
   ```
 
-- **열려 있는 노트의 끝** — 선택한 부분, 링크, 이미지의 기본값입니다: 빈 줄 다음에
-  출처를 링크하는 `— [The page's title](https://…)` 줄이 이어집니다. 링크는 이 줄이
-  필요 없습니다: 링크 자신이 이미 출처이기 때문입니다.
+- **열려 있는 노트의 끝** — 선택한 부분, 링크, 이미지의 기본값이며, Send to Markdown과
+  같은 방식입니다. 링크는 출처 줄이 필요 없습니다: 링크 자신이 이미 출처이기 때문입니다.
 
 폴더를 열기 전에 전송하면 대기 상태가 됩니다: 패널이 폴더를 요청하고, 폴더가 열리면
 그제서야 대화상자가 나타납니다. 확장 프로그램이 읽을 수 없는 페이지 — Chrome 자체
@@ -142,20 +180,25 @@ Markdown 형태로 표시되며, 어디에 저장할지 묻습니다:
 페이지 안에서 함수를 실행해 텍스트를 복사해 돌려받는 방식입니다. 콘텐츠 스크립트는
 어디에서도 실행되지 않으며, 그 밖의 방법으로는 어떤 사이트에도 접근하지 않습니다:
 `host_permissions`은 없으며, 빌드가 이를 거부합니다. `contextMenus`, `sidePanel`,
-`storage` — 워커는 가져온 내용을 브라우저가 닫히면 사라지는 `chrome.storage.session`을
-통해 해당 창의 패널에 전달하며, 패널의 언어는 메뉴를 위해 `chrome.storage.local`을
-통해 워커로 전달됩니다. 확장 프로그램의 페이지들은 `connect-src 'none'`을 가지고
-있습니다: 편집기는 네트워크의 어떤 것에도 접근하지 않으며, 빌드가 이를 확인하고, 어떤
-페이지에도 인라인 스크립트나 외부 주소가 없는지도 확인합니다.
+`storage` — 사이드 패널로 보내는 내용은 브라우저가 닫히면 사라지는
+`chrome.storage.session`을 통해 해당 창의 패널에 전달되며, 패널의 언어는 메뉴를 위해
+`chrome.storage.local`을 통해 워커로 전달됩니다. 버튼의 창은 `chrome.runtime` 메시지로
+자신의 창의 패널에 노트에 추가해 달라고 요청하며, 패널은 확장 프로그램 자신의
+페이지에서 온 것만 받아들입니다. 확장 프로그램의 페이지들은 `connect-src 'none'`을
+가지고 있습니다: 편집기는 네트워크의 어떤 것에도 접근하지 않으며, 빌드가 이를 확인하고,
+어떤 페이지에도 인라인 스크립트나 외부 주소가 없는지도 확인합니다.
 
 **만들어진 방식.** 패널은 그 자체로 페이지입니다: Manifest V3가 요구하는 대로
 `panel.html`과 그 스크립트인 `panel.js`로 되어 있습니다 — 같은 `src/main.ts`를 쓰되,
 `src/platform.ts` 자리에 `src/extension/extension.ts`를 두며, 그 훅들은 파일 버전과
-PWA에서는 아무 일도 하지 않습니다. 워커인 `background.js`가 버튼, 단축키, 메뉴를
-담당합니다. Chrome은 클릭 핸들러 안에서, 아무것도 기다리기 전에만 사이드 패널을 열 수
-있으므로, 워커는 먼저 패널을 연 다음 탭을 읽습니다(`src/extension/grab.ts`). 패널은 그
-HTML을 Markdown으로 바꾸고(`src/extension/to-markdown.ts`), 편집기는 어디에 저장할지
-묻습니다(`src/clip-ui.ts`, `src/clip.ts`).
+PWA에서는 아무 일도 하지 않습니다. 버튼의 창은 `popup.html`과 `popup.js`
+(`src/extension/popup.ts`)이며, 페이지의 스타일을 그대로 씁니다: 패널과 같은
+IndexedDB에서 지식 베이스의 핸들을 읽고, 브라우저가 여전히 허용하는 동안 그것을 통해
+직접 씁니다. 워커인 `background.js`가 메뉴를 담당합니다. Chrome은 클릭 핸들러 안에서,
+아무것도 기다리기 전에만 사이드 패널을 열 수 있으므로, 패널을 먼저 연 다음 탭을
+읽습니다(`src/extension/take.ts`, `grab.ts`). 그 HTML은
+`src/extension/to-markdown.ts`에서 Markdown으로 바뀌고, 편집기는 그것을 추가하거나
+어디에 저장할지 묻습니다(`src/clip.ts`, `src/clip-ui.ts`).
 
 ## 실시간 미리보기
 
@@ -402,7 +445,7 @@ CSS(`:target`)로 구현되어 스크립트 없이도 작동하며, 스크립트
 - **파일은 여러분의 디스크에만 남습니다.** 노트는 File System Access API를 통해
   그 자리에서 읽고 씁니다. 기억된 폴더는 브라우저의 IndexedDB 안의 핸들일
   뿐, 경로나 내용이 저장되는 일은 없습니다.
-- 확장 프로그램의 권한: "[Send to Markdown](#send-to-markdown-chrome-확장-프로그램)" 참고.
+- 확장 프로그램의 권한: "[Markdown Knowledge Base](#markdown-knowledge-base-chrome-확장-프로그램)" 참고.
 
 ## 기능
 
@@ -443,8 +486,11 @@ CSS(`:target`)로 구현되어 스크립트 없이도 작동하며, 스크립트
   노트와는 별도로 `.meta.json`에 보관됩니다 — "[태그](#태그)" 참고.
 - **HTML로 내보내기**: 폴더 전체 또는 그 하위 폴더 하나를 검색 기능이 있는
   정적 사이트로, 또는 단일 페이지로 내보냅니다 — "[HTML로 내보내기](#html로-내보내기)" 참고.
-- **Send to Markdown**: Chrome에서 페이지, 선택한 부분, 링크, 이미지를
-  Markdown 형태로 노트에 보냅니다 — "[Send to Markdown](#send-to-markdown-chrome-확장-프로그램)" 참고.
+- **단일 노트**를 설치된 앱에서 Finder나 탐색기로 열거나, 창에 드롭해서 엽니다 —
+  "[단일 노트](#단일-노트)" 참고.
+- **Markdown Knowledge Base**: Chrome에서 선택한 부분을 Send to Markdown으로 기본
+  노트나 직접 고른 노트에 보냅니다; 페이지, 링크, 이미지는 노트로 보냅니다 —
+  "[Markdown Knowledge Base](#markdown-knowledge-base-chrome-확장-프로그램)" 참고.
 - **설정**(검색 옆, 오른쪽 위의 톱니바퀴): 인터페이스 언어, 테마(시스템,
   라이트, 다크), 확대/축소 50–200%, 텍스트 너비(가운데 칼럼 또는 전체
   너비), 노트 이름을 제목으로 표시할지 여부, 추가한 이미지가 어디로 갈지:
@@ -540,7 +586,7 @@ npm run check      # typecheck, test, build and test:browser in a row: green mea
 아이콘(data URI)과 함께 `src/template.html`에 대입합니다. 내보내기용
 템플릿과 스타일시트는 문자열로 번들링됩니다. 템플릿의
 Content-Security-Policy는 그 스크립트 하나의 해시값을 갖습니다. 결과물은
-약 620KB인 `build/macaed.html`입니다. 외부 참조가 하나라도 남아 있으면
+약 640KB인 `build/macaed.html`입니다. 외부 참조가 하나라도 남아 있으면
 빌드는 실패합니다.
 
 같은 실행이 `build/pages/`도 만듭니다: 설치 가능한 PWA 형태의 그 페이지 —
@@ -550,7 +596,8 @@ Content-Security-Policy는 그 스크립트 하나의 해시값을 갖습니다.
 `build/macaed.html` 자체는 외부 참조가 전혀 없는 단일 파일로 남습니다.
 
 그리고 `build/extension/`: `panel.html`(템플릿과 그 스크립트인 `panel.js`),
-`background.js`, 아이콘들, `_locales/`, 그리고 `package.json`의 버전을
+`popup.html`(페이지의 스타일과 `popup.css`)과 `popup.js`, `background.js`,
+아이콘들, `_locales/`, 그리고 `package.json`의 버전을
 따르는 `manifest.json`입니다. `build/macaed-extension-<version>.zip`은
 같은 파일들을 고정된 날짜로 담고 있습니다: 같은 소스는 같은 바이트를
 만들어 냅니다.
@@ -561,9 +608,12 @@ Content-Security-Policy는 그 스크립트 하나의 해시값을 갖습니다.
 프로토콜을 통해 확장 프로그램을 로드하고(파이프를 통한
 `Extensions.loadUnpacked`; `--load-extension`은 Chrome 137 버전부터
 사라졌습니다), 사이드 패널에서 폴더를 열고 로컬 서버의 테스트 사이트에서
-페이지, 선택한 부분, 링크, 이미지를 보냅니다. 툴바 버튼도 컨텍스트
-메뉴도 DevTools에서는 클릭할 수 없으므로, 테스트는 워커의 `onClicked`를
-직접 실행시킵니다. 실제 클릭이 없으면 Chrome은 `activeTab`을 부여하지
+페이지, 선택한 부분, 링크, 이미지를 보냅니다. 그다음 버튼의 창이 선택한
+부분을 패널을 통해, 그리고 그 자체로 기본 노트와 고른 노트에 추가하며,
+지식 베이스가 닫혀 있을 때는 전체 모드로 넘깁니다. 컨텍스트 메뉴는
+DevTools에서는 클릭할 수 없으므로, 테스트는 워커의 `onClicked`를 직접
+실행시키고, 버튼의 창을 옆에 둘 탭을 알려 준 채로 독립된 페이지로
+엽니다. 실제 클릭이 없으면 Chrome은 `activeTab`을 부여하지
 않으므로, 테스트 대상 복사본은 호스트 권한으로 테스트 사이트인 `*.test`에
 접근할 수 있습니다.
 
@@ -620,6 +670,14 @@ Chrome, Edge, Arc에서는 주소표시줄의 설치 버튼이 이를 별도의 
 있습니다. 디스크에 고정된 버전을 원한다면, 릴리스에서
 `macaed-<tag>.html`을 받아 `SHA256SUMS.txt`와 비교하세요.
 
+**`.md` 열기.** 매니페스트는 Markdown 파일을 앱이 여는 파일로
+지정하고(`file_handlers`), 한 창으로만 열리게 합니다(`launch_handler`,
+`focus-existing`): "[단일 노트](#단일-노트)" 참고. 페이지는 시작
+과정 — 마지막 폴더를 다시 여는 과정 — 이 끝난 뒤에야 `launchQueue`를
+통해 이를 받으므로, 폴더가 노트를 대체하는 일은 없습니다. 내보내는
+중이거나 대화상자가 열려 있는 동안 들어온 것은 다시 열 때까지
+기다립니다.
+
 설치된 앱은 브라우저에 자신의 저장소를 보존해 달라고 요청합니다
 (`navigator.storage.persist()`): 그렇지 않으면 디스크 공간이 부족할 때
 오프라인 사본과 기억된 폴더들이 함께 사라질 수 있습니다.
@@ -628,7 +686,9 @@ Chrome, Edge, Arc에서는 주소표시줄의 설치 버튼이 이를 별도의 
 서비스 워커가 페이지를 넘겨받고, Chrome은 매니페스트를 설치 가능하다고
 인식하며, 서버가 사라져도 페이지는 여전히 열립니다. 그다음 확인에서는
 아무것도 찾지 못하고, 연결이 없다가, 새 배포가 이루어지며, 이는
-업데이트가 받아들일 때까지 기다립니다.
+업데이트가 받아들일 때까지 기다립니다. 헤드리스 Chrome은 앱에 파일을
+건네주지 않으므로, 대신하는 `launchQueue`가 페이지에 실제 파일 핸들을
+주어, 노트가 단독으로 열리고 편집한 내용이 그 안에 저장됩니다.
 
 ## 레이아웃
 
@@ -636,7 +696,7 @@ Chrome, Edge, Arc에서는 주소표시줄의 설치 버튼이 이를 별도의 
 src/template.html   markup with the __STYLES__/__APP__/__ICON__ placeholders and the CSP
 src/styles.css      palette, light and dark themes, block paired with its source
 src/main.ts         opening a folder, saving, toolbar, search, settings
-src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD
+src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -657,8 +717,9 @@ src/platform.ts     what the page does beyond itself: nothing, except in the ext
 src/clip.ts         what the extension sends, as a note: file name, front matter, the end of a note
 src/clip-ui.ts      the dialog that asks where it goes
 src/pwa/sw.js       the service worker of the Pages build: offline, and a new version waits
-src/extension/      "Send to Markdown": manifest.json; background.ts (button, shortcut, menu);
-                    grab.ts (run in the page: its text or the selection); to-markdown.ts
+src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.html, popup.css
+                    (the button's window: Send to Markdown); background.ts (the menu); take.ts
+                    and grab.ts (run in the page: its text or the selection); to-markdown.ts
                     (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
                     formatting, tags, the export, clippings, dictionaries; in headless Chrome

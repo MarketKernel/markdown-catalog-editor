@@ -55,10 +55,11 @@
       "other": "{count} сторінки експортовано до {folder}"
     },
     "Export stopped: {folder} is incomplete": "Експорт зупинено: теку {folder} заповнено не повністю",
-    "Export stopped": "Експорт зупинено"
+    "Export stopped": "Експорт зупинено",
+    "Finish what is open first, then open the note again": "Спочатку завершіть те, що вже відкрито, потім відкрийте нотатку знову"
   },
   "gate": {
-    "Drag a folder, not a single file": "Перетягніть папку, а не окремий файл",
+    "Drag a folder or a note": "Перетягніть папку або нотатку",
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "Цей браузер не може записувати файли на диск: папку буде відкрито лише для читання, а під час збереження буде запропоновано завантажити змінений файл. Повноцінне редагування працює в Chrome, Edge та Arc на комп’ютері.",
     "local editor · one file": "локальний редактор · один файл",
     "Open a folder": "Відкрийте папку",
@@ -102,7 +103,8 @@
     "This browser cannot write files": "Цей браузер не може записувати файли",
     "\"{name}\" already exists": "«{name}» вже існує",
     "File not found: {path}": "Файл не знайдено: {path}",
-    "The browser was not allowed to open the folder": "Браузеру не дозволили відкрити папку"
+    "The browser was not allowed to open the folder": "Браузеру не дозволили відкрити папку",
+    "A note opened on its own has no folder around it": "У нотатки, відкритої окремо, немає папки навколо"
   },
   "palette": {
     "Red": "Червоний",
@@ -269,6 +271,26 @@
     "Send the link to Markdown": "Надіслати посилання в Markdown",
     "Send the image to Markdown": "Надіслати зображення в Markdown"
   },
+  "popup": {
+    "Full mode": "Повний режим",
+    "Nothing on this tab can be sent.": "На цій вкладці нема чого надіслати.",
+    "The selection on {site}": "Виділення на {site}",
+    "Nothing is selected: the whole page \"{title}\"": "Нічого не виділено: уся сторінка «{title}»",
+    "A link to \"{title}\"": "Посилання на «{title}»",
+    "There is no knowledge base yet: open a folder of notes in full mode.": "Бази знань ще немає: відкрийте папку з нотатками в повному режимі.",
+    "Open in full mode": "Відкрити в повному режимі",
+    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "«{name}» закрита. Відкрийте її в повному режимі, і виділене потрапить до {note}.",
+    "\"{name}\" is closed. Open it in full mode.": "«{name}» закрита. Відкрийте її в повному режимі.",
+    "Send to Markdown": "Send to Markdown",
+    "To the end of {note}": "У кінець {note}",
+    "(a new note)": "(нова нотатка)",
+    "As a new note": "Як нова нотатка",
+    "Add to another note": "Додати до іншої нотатки",
+    "No notes match": "Нотатки не знайдено",
+    "Add to {note}": "Додати до {note}",
+    "The default note": "Нотатка за умовчанням",
+    "Make it the default note": "Зробити нотаткою за умовчанням"
+  },
   "update": {
     "Install updates by themselves when everything is saved and the app is in the background": "Встановлювати оновлення самостійно, коли все збережено, а застосунок працює у фоновому режимі",
     "Check for updates": "Перевірити оновлення",
@@ -284,7 +306,7 @@
   },
   "manifest": {
     "Send to Markdown": "Send to Markdown",
-    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "Надсилає вебсторінку, виділення, посилання або зображення в нотатку Markdown у теці на диску. Редагуйте в бічній панелі.",
-    "Send the page or the selection to Markdown": "Надіслати сторінку або виділення в Markdown"
+    "Markdown Knowledge Base": "Markdown Knowledge Base",
+    "Sends what you select on a web page to your Markdown notes on disk: the default note or one you pick. Edit them in the side panel.": "Надсилає виділене на сторінці в нотатки Markdown на диску: нотатку за умовчанням або іншу. Редагуйте в бічній панелі."
   }
 }

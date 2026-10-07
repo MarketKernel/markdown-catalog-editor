@@ -31,14 +31,15 @@ sous forme de PWA (Progressive Web App) : il peut être installé dans le systè
 comme une application séparée, avec sa propre fenêtre et son icône, et fonctionne hors connexion.
 Sur un ordinateur, dans Chrome, Edge et Arc, utilisez le bouton d'installation dans la barre
 d'adresse ; sur Android, le menu ⋮ de Chrome → Installer l'application ; sur iOS, Partager → Sur
-l'écran d'accueil, dans Safari ou dans Chrome. Vos notes restent là aussi sur votre disque, et
-l'application installée se met à jour quand vous le décidez — voir
-« [GitHub Pages](#github-pages) ».
+l'écran d'accueil, dans Safari ou dans Chrome. Vos notes restent là aussi sur votre disque,
+l'application installée ouvre un `.md` directement depuis le Finder ou l'Explorateur, et elle se
+met à jour quand vous le décidez — voir « [GitHub Pages](#github-pages) ».
 
-Le même éditeur est aussi **Send to Markdown**, une [extension Chrome](#send-to-markdown-lextension-chrome) :
-un clic sur son bouton, ou un clic droit sur une page, envoie la page — ou la sélection, un lien,
-une image — vers une note de votre dossier, et l'éditeur s'ouvre à côté de la page dans le
-panneau latéral de Chrome.
+Le même éditeur est aussi **Markdown Knowledge Base**, une
+[extension Chrome](#markdown-knowledge-base-lextension-chrome) : sélectionnez du texte sur une
+page web, appuyez sur son bouton, et **Send to Markdown** l'ajoute à la note par défaut de votre
+base de connaissances — ou à toute note que vous choisissez. L'éditeur lui-même s'ouvre à côté de
+la page dans le panneau latéral de Chrome.
 
 ![L'éditeur avec un dossier de notes ouvert : l'arborescence des fichiers et les étiquettes à gauche, une note en mode édition à droite](../macaed.jpg)
 
@@ -81,30 +82,68 @@ Si vous placez `macaed.html` à côté de vos notes et le servez en HTTP, la pag
 d'elle-même — à condition qu'un `index.json` se trouve à côté, de la forme
 `{ "name": "Notes", "files": ["Note.md", "Folder/Other.md"] }`.
 
-## Send to Markdown: l'extension Chrome
+### Une seule note
+
+Un fichier `.md` peut être ouvert seul, sans son dossier :
+
+- **Depuis le Finder ou l'Explorateur**, dans l'application installée (Chrome ou Edge sur un
+  ordinateur) : Ouvrir avec → l'application, ou faites-en l'application par défaut pour les
+  fichiers `.md`. La note arrive dans la fenêtre de l'application quand une est ouverte — deux
+  fenêtres sur un même fichier écraseraient les enregistrements l'une de l'autre — et prend la
+  place du dossier qui y était affiché ; ouvrir à nouveau la même note la laisse telle quelle.
+- **Glissée sur la fenêtre**, dans n'importe quel navigateur.
+
+La note est lue et écrite sur place, comme dans un dossier — en lecture seule dans Safari et
+Firefox, `⌘S` proposant alors un téléchargement. Sans dossier autour d'elle, il n'y a rien à
+créer, renommer ou supprimer à côté, et pas d'images de son dossier, d'étiquettes ni d'export :
+cela vient avec l'ouverture du dossier. Une note ouverte ainsi n'est pas ajoutée aux dossiers
+récents.
+
+## Markdown Knowledge Base: l'extension Chrome
 
 `npm run build` écrit aussi `build/extension/` : l'éditeur sous forme d'extension Chrome, et
 `build/macaed-extension-<version>.zip` pour le Chrome Web Store ; une publication (release)
 contient aussi le zip. Pour l'installer : `chrome://extensions` → Mode développeur → Charger
 l'extension non empaquetée → `build/extension` (ou le zip décompressé).
 
-L'éditeur lui-même vit dans le panneau latéral de Chrome, à côté de la page, dans la mise en page
-téléphone, car un panneau est étroit ; il y reste d'un onglet à l'autre. Un dossier s'y ouvre comme
-dans le fichier, et les dossiers récents sont mémorisés — ceux de l'extension elle-même, distincts
-de ceux du fichier ou de la PWA. Ce que l'extension ajoute, c'est l'envoi de contenu depuis le web
-vers vos notes :
+**La base de connaissances** est le dossier de notes ouvert en dernier dans l'extension. L'éditeur
+lui-même — le **mode complet** — vit dans le panneau latéral de Chrome, à côté de la page, dans
+la mise en page téléphone, car un panneau est étroit ; il y reste d'un onglet à l'autre. Un
+dossier s'y ouvre comme dans le fichier, et les dossiers récents sont mémorisés — ceux de
+l'extension elle-même, distincts de ceux du fichier ou de la PWA.
 
-- **Le bouton de la barre d'outils** (ou `Alt+Shift+M`) envoie la page : son texte principal —
-  l'article, sans les menus du site, les barres latérales, le pied de page, les boutons de
-  partage, les formulaires et les parties cachées — ou, quand quelque chose est sélectionné
-  dessus, juste la sélection.
-- **Le menu contextuel** d'une page propose **Envoyer la page vers Markdown** ; sur un texte
-  sélectionné, **Envoyer la sélection vers Markdown** ; sur un lien, **Envoyer le lien vers
-  Markdown** ; sur une image, **Envoyer l’image vers Markdown**.
+**Le bouton de la barre d'outils** (ou `Alt+Shift+M`) ouvre une petite fenêtre par-dessus la
+page :
 
-L'un ou l'autre ouvre le panneau latéral, et une boîte de dialogue y affiche ce qui est arrivé —
-la page, la sélection, le lien ou l'image, et depuis quel site — sous forme de Markdown que vous
-pouvez encore modifier, et demande où cela doit aller :
+- En haut, ce qui est sélectionné sur la page, en Markdown — ou, si rien n'est sélectionné, le
+  texte principal de la page : l'article, sans les menus du site, les barres latérales, le
+  pied de page, les boutons de partage, les formulaires et les parties cachées.
+- **Send to Markdown** l'ajoute à la fin de la **note par défaut** — `Inbox.md` à la racine de
+  la base de connaissances pour commencer, créée la première fois qu'elle est nécessaire. Après
+  une ligne vide vient le texte, puis une ligne « — [Le titre de la page](https://…) » qui
+  renvoie à son origine. La fenêtre se ferme une fois l'écriture faite.
+- **Ajouter à une autre note** : les notes de la base de connaissances, avec un champ pour en
+  trouver une par son nom ; un clic sur une note l'y ajoute à la place. L'étoile à côté d'une
+  note en fait la note par défaut ; la note par défaut est listée en premier.
+- Si rien n'est sélectionné, **Comme nouvelle note** transforme la page en une note à part
+  entière (voir plus bas).
+- **Mode complet** ouvre le panneau latéral.
+
+**Quand la base de connaissances est fermée** — après un redémarrage du navigateur, sauf si vous
+avez choisi « Autoriser à chaque visite » — une page ne peut pas entrer dans un dossier avant que
+vous ne cliquiez : la fenêtre le signale alors, et **Ouvrir en mode complet** ouvre le panneau
+latéral, où un clic sur le dossier redonne l'accès. Ce que vous avez sélectionné part ensuite
+vers la note par défaut une fois le dossier ouvert.
+
+Quand le panneau latéral a la base de connaissances ouverte, c'est lui qui ajoute à la note — il
+peut avoir cette note ouverte avec des modifications pas encore enregistrées, qu'une écriture
+dans son dos ferait perdre. Le panneau fermé, c'est la fenêtre qui écrit la note elle-même.
+
+**Le menu contextuel** d'une page propose **Envoyer la page vers Markdown** ; sur un texte
+sélectionné, **Envoyer la sélection vers Markdown** ; sur un lien, **Envoyer le lien vers
+Markdown** ; sur une image, **Envoyer l’image vers Markdown**. Chacun ouvre le panneau latéral,
+où une boîte de dialogue montre ce qui est arrivé — et depuis quel site — sous forme de Markdown
+que vous pouvez encore modifier, et demande où cela doit aller :
 
 - **Une nouvelle note**, le choix par défaut pour une page : dans le dossier des coupures
   (`Clippings` à la racine sauf si vous le changez ; le dossier est mémorisé, vide signifiant la
@@ -125,9 +164,9 @@ pouvez encore modifier, et demande où cela doit aller :
   The text…
   ```
 
-- **La fin de la note ouverte**, le choix par défaut pour une sélection, un lien ou une image :
-  après une ligne vide, suivie d'une ligne « — [Le titre de la page](https://…) » qui renvoie à
-  son origine. Un lien n'en a pas besoin : il est sa propre source.
+- **La fin de la note ouverte**, le choix par défaut pour une sélection, un lien ou une image,
+  de la même façon que Send to Markdown. Un lien n'a pas besoin de ligne de source : il est sa
+  propre source.
 
 Envoyé avant qu'un dossier soit ouvert, cela attend : le panneau demande un dossier, et la boîte
 de dialogue arrive une fois qu'un dossier est ouvert. Une page que l'extension ne peut pas lire —
@@ -147,21 +186,26 @@ sont laissés de côté.
 l'extension cet onglet-là, et c'est seulement alors qu'elle le lit — avec `scripting`, une
 fonction exécutée dans la page copie son texte et le renvoie. Aucun script de contenu ne
 s'exécute où que ce soit, et il n'y a par ailleurs aucun accès à aucun site : pas de
-`host_permissions`, que la build refuse. `contextMenus`, `sidePanel` et `storage` — le worker
-transmet ce qu'il a récupéré au panneau de sa fenêtre via `chrome.storage.session`, effacé à la
-fermeture du navigateur, et la langue du panneau remonte vers le worker, pour le menu, dans
-`chrome.storage.local`. Les pages de l'extension ont `connect-src 'none'` : l'éditeur ne contacte
+`host_permissions`, que la build refuse. `contextMenus`, `sidePanel` et `storage` — ce qui est envoyé au panneau latéral arrive au
+panneau de sa fenêtre via `chrome.storage.session`, effacé à la fermeture du navigateur, et la
+langue du panneau remonte vers le worker, pour le menu, dans `chrome.storage.local`. La fenêtre
+du bouton demande au panneau de sa fenêtre d'ajouter à une note par un message `chrome.runtime`,
+que le panneau n'accepte que des pages de l'extension elle-même. Les pages de l'extension ont
+`connect-src 'none'` : l'éditeur ne contacte
 rien sur le réseau ; la build le vérifie, tout comme l'absence de script en ligne ou d'adresse
 externe sur n'importe quelle page.
 
 **Comment c'est fait.** Le panneau est la page elle-même : `panel.html` avec son script dans
 `panel.js`, comme le veut le Manifest V3 — le même `src/main.ts`, avec `src/extension/extension.ts`
 à la place de `src/platform.ts`, dont les points d'ancrage (hooks) ne font rien dans le fichier et
-la PWA. Le worker, `background.js`, porte le bouton, le raccourci et le menu. Chrome n'ouvre un
-panneau latéral que dans le gestionnaire du clic lui-même, avant tout `await`, si bien que le
-worker ouvre d'abord le panneau puis lit l'onglet ensuite (`src/extension/grab.ts`) ; le panneau
-transforme ce HTML en Markdown (`src/extension/to-markdown.ts`) et l'éditeur demande où cela va
-(`src/clip-ui.ts`, `src/clip.ts`).
+la PWA. La fenêtre du bouton est `popup.html` et `popup.js` (`src/extension/popup.ts`), avec les
+styles de la page : elle lit le descripteur de la base de connaissances dans le même IndexedDB
+que le panneau, et écrit à travers lui tant que le navigateur le permet encore. Le worker,
+`background.js`, porte le menu. Chrome n'ouvre un panneau latéral que dans le gestionnaire du
+clic lui-même, avant tout `await`, si bien que le panneau est ouvert en premier et l'onglet lu
+ensuite (`src/extension/take.ts`, `grab.ts`) ; son HTML devient du Markdown dans
+`src/extension/to-markdown.ts`, et l'éditeur l'ajoute ou demande où cela va (`src/clip.ts`,
+`src/clip-ui.ts`).
 
 ## Aperçu en direct
 
@@ -414,7 +458,8 @@ le système, et le site se lit et se lie de la même façon.
 - **Les fichiers restent sur votre disque.** Les notes sont lues et écrites sur place via la File
   System Access API ; les dossiers mémorisés sont des descripteurs dans l'IndexedDB du
   navigateur, jamais des chemins ou des contenus.
-- Les permissions de l'extension : voir « [Send to Markdown](#send-to-markdown-lextension-chrome) ».
+- Les permissions de l'extension : voir
+  « [Markdown Knowledge Base](#markdown-knowledge-base-lextension-chrome) ».
 
 ## Fonctionnalités
 
@@ -454,8 +499,12 @@ le système, et le site se lit et se lie de la même façon.
   par étiquette, tenues à l'écart des notes dans `.meta.json` — voir « [Étiquettes](#étiquettes) ».
 - **Exporter en HTML** : le dossier, ou l'un de ses sous-dossiers, en site statique avec
   recherche, ou en une seule page — voir « [Exporter en HTML](#exporter-en-html) ».
-- **Send to Markdown** : une page, une sélection, un lien ou une image depuis Chrome vers une
-  note, en Markdown — voir « [Send to Markdown](#send-to-markdown-lextension-chrome) ».
+- **Une seule note** ouverte depuis le Finder ou l'Explorateur dans l'application installée, ou
+  déposée sur la fenêtre — voir « [Une seule note](#une-seule-note) ».
+- **Markdown Knowledge Base** : ce qui est sélectionné dans Chrome vers la note par défaut, ou
+  vers celle que vous choisissez, avec Send to Markdown ; une page, un lien ou une image vers
+  une note — voir
+  « [Markdown Knowledge Base](#markdown-knowledge-base-lextension-chrome) ».
 - **Paramètres** (l'icône d'engrenage en haut à droite, à côté de la recherche) : langue de
   l'interface, thème (système, clair, sombre), zoom 50–200 %, largeur du texte (une colonne
   centrée ou le panneau plein), si le nom de la note est affiché comme titre, et où vont les
@@ -545,7 +594,7 @@ npm run check      # typecheck, test, build and test:browser in a row: green mea
 `build.mjs` regroupe `src/main.ts` avec esbuild en une IIFE et la substitue, avec les styles et
 l'icône (une URI de données), dans `src/template.html` ; le modèle et la feuille de style de
 l'export sont regroupés sous forme de chaînes. La Content-Security-Policy du modèle reçoit
-l'empreinte (hash) de cet unique script. Le résultat est `build/macaed.html`, environ 620 Ko. La
+l'empreinte (hash) de cet unique script. Le résultat est `build/macaed.html`, environ 640 Ko. La
 build échoue s'il reste ne serait-ce qu'une seule référence externe dedans.
 
 La même exécution écrit `build/pages/` : cette page sous forme de PWA installable —
@@ -554,8 +603,9 @@ page d'enregistrer son worker, `manifest.webmanifest`, les icônes et `sw.js`, q
 cache pour qu'elle s'ouvre hors connexion. `build/macaed.html` lui-même reste un seul fichier sans
 référence externe.
 
-Et `build/extension/` : `panel.html` — le modèle, son script dans `panel.js` — `background.js`,
-les icônes, `_locales/` et `manifest.json`, dont la version est celle de `package.json`.
+Et `build/extension/` : `panel.html` — le modèle, son script dans `panel.js` — `popup.html`
+(avec les styles de la page et `popup.css`) et `popup.js`, `background.js`, les icônes,
+`_locales/` et `manifest.json`, dont la version est celle de `package.json`.
 `build/macaed-extension-<version>.zip` contient les mêmes fichiers avec des dates fixes : les
 mêmes sources donnent les mêmes octets.
 
@@ -564,10 +614,12 @@ lui parlent via le protocole DevTools, sans dépendances ; sans Chrome, ils sont
 `tools/test-extension.mjs` charge l'extension via ce protocole (`Extensions.loadUnpacked` sur un
 pipe ; `--load-extension` a disparu de Chrome depuis la version 137), ouvre un dossier dans le
 panneau latéral et lui envoie des pages, des sélections, des liens et des images depuis des sites
-de test sur un serveur local. Ni le bouton de la barre d'outils ni un menu contextuel ne peuvent
-être cliqués depuis DevTools, donc le test déclenche lui-même le `onClicked` du worker ; sans
-clic réel, Chrome n'accorde pas `activeTab`, si bien que la copie testée peut atteindre les sites
-de test, `*.test`, en tant que permissions d'hôte.
+de test sur un serveur local ; puis la fenêtre du bouton ajoute des sélections à la note par
+défaut et à une note choisie, via le panneau et seule, et, la base de connaissances fermée, les
+confie au mode complet. Un menu contextuel ne peut pas être cliqué depuis DevTools, donc le test
+déclenche lui-même le `onClicked` du worker, et ouvre la fenêtre du bouton comme une page à part,
+informée de l'onglet à côté d'elle ; sans clic réel, Chrome n'accorde pas `activeTab`, si bien
+que la copie testée peut atteindre les sites de test, `*.test`, en tant que permissions d'hôte.
 
 ## Versions et publications
 
@@ -616,6 +668,13 @@ C'est aussi le compromis : une PWA installée exécute ce que le dernier déploi
 tandis qu'un fichier téléchargé reste à la version qu'il est. Pour une version figée sur le
 disque, prenez `macaed-<tag>.html` depuis une publication et comparez-le avec `SHA256SUMS.txt`.
 
+**Ouvrir un `.md`.** Le manifeste déclare les fichiers Markdown comme des fichiers que
+l'application ouvre (`file_handlers`) et les limite à une seule fenêtre (`launch_handler`,
+`focus-existing`) : voir « [Une seule note](#une-seule-note) ». La page les prend en charge via
+`launchQueue`, une fois son démarrage — la réouverture du dernier dossier — terminé, si bien que
+le dossier ne remplace jamais la note ; une note qui arrive pendant un export ou avec une boîte
+de dialogue ouverte attend que vous l'ouvriez à nouveau.
+
 L'application installée demande au navigateur de conserver son stockage
 (`navigator.storage.persist()`) : un disque presque plein pourrait sinon emporter avec lui la
 copie hors connexion et les dossiers mémorisés.
@@ -623,7 +682,10 @@ copie hors connexion et les dossiers mémorisés.
 `npm run test:browser` ouvre aussi `build/pages/` (`tools/test-pwa.mjs`) : le service worker
 prend la page en charge, Chrome trouve le manifeste installable, et une fois le serveur
 disparu, la page se charge quand même ; puis une vérification ne trouve rien, puis pas de
-connexion, puis un nouveau déploiement, qui attend que Mettre à jour le laisse entrer.
+connexion, puis un nouveau déploiement, qui attend que Mettre à jour le laisse entrer. Chrome
+sans interface ne remet aucun fichier à une application, donc un `launchQueue` de substitution
+donne à la page un vrai descripteur de fichier : la note s'ouvre seule et une modification y est
+enregistrée.
 
 ## Organisation
 
@@ -631,7 +693,7 @@ connexion, puis un nouveau déploiement, qui attend que Mettre à jour le laisse
 src/template.html   markup with the __STYLES__/__APP__/__ICON__ placeholders and the CSP
 src/styles.css      palette, light and dark themes, block paired with its source
 src/main.ts         opening a folder, saving, toolbar, search, settings
-src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD
+src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -652,8 +714,9 @@ src/platform.ts     what the page does beyond itself: nothing, except in the ext
 src/clip.ts         what the extension sends, as a note: file name, front matter, the end of a note
 src/clip-ui.ts      the dialog that asks where it goes
 src/pwa/sw.js       the service worker of the Pages build: offline, and a new version waits
-src/extension/      "Send to Markdown": manifest.json; background.ts (button, shortcut, menu);
-                    grab.ts (run in the page: its text or the selection); to-markdown.ts
+src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.html, popup.css
+                    (the button's window: Send to Markdown); background.ts (the menu); take.ts
+                    and grab.ts (run in the page: its text or the selection); to-markdown.ts
                     (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
                     formatting, tags, the export, clippings, dictionaries; in headless Chrome

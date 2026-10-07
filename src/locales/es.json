@@ -52,10 +52,11 @@
       "other": "{count} páginas exportadas a {folder}"
     },
     "Export stopped: {folder} is incomplete": "Exportación detenida: {folder} está incompleta",
-    "Export stopped": "Exportación detenida"
+    "Export stopped": "Exportación detenida",
+    "Finish what is open first, then open the note again": "Termina primero lo que está abierto y vuelve a abrir la nota"
   },
   "gate": {
-    "Drag a folder, not a single file": "Arrastra una carpeta, no un archivo suelto",
+    "Drag a folder or a note": "Arrastra una carpeta o una nota",
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "Este navegador no puede escribir archivos en el disco: la carpeta se abrirá en solo lectura y, al guardar, se ofrecerá descargar el archivo modificado. La edición completa funciona en Chrome, Edge y Arc en el ordenador.",
     "local editor · one file": "editor local · un solo archivo",
     "Open a folder": "Abre una carpeta",
@@ -99,7 +100,8 @@
     "This browser cannot write files": "Este navegador no puede escribir archivos",
     "\"{name}\" already exists": "«{name}» ya existe",
     "File not found: {path}": "Archivo no encontrado: {path}",
-    "The browser was not allowed to open the folder": "No se permitió al navegador abrir la carpeta"
+    "The browser was not allowed to open the folder": "No se permitió al navegador abrir la carpeta",
+    "A note opened on its own has no folder around it": "Una nota abierta por sí sola no tiene una carpeta alrededor"
   },
   "palette": {
     "Red": "Rojo",
@@ -264,6 +266,26 @@
     "Send the link to Markdown": "Enviar el enlace a Markdown",
     "Send the image to Markdown": "Enviar la imagen a Markdown"
   },
+  "popup": {
+    "Full mode": "Modo completo",
+    "Nothing on this tab can be sent.": "No se puede enviar nada de esta pestaña.",
+    "The selection on {site}": "La selección en {site}",
+    "Nothing is selected: the whole page \"{title}\"": "No hay nada seleccionado: la página completa «{title}»",
+    "A link to \"{title}\"": "Un enlace a «{title}»",
+    "There is no knowledge base yet: open a folder of notes in full mode.": "Todavía no hay base de conocimiento: abre una carpeta de notas en modo completo.",
+    "Open in full mode": "Abrir en modo completo",
+    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "«{name}» está cerrada. Ábrela en modo completo, y lo seleccionado irá a {note}.",
+    "\"{name}\" is closed. Open it in full mode.": "«{name}» está cerrada. Ábrela en modo completo.",
+    "Send to Markdown": "Send to Markdown",
+    "To the end of {note}": "Al final de {note}",
+    "(a new note)": "(una nota nueva)",
+    "As a new note": "Como una nota nueva",
+    "Add to another note": "Añadir a otra nota",
+    "No notes match": "Ninguna nota coincide",
+    "Add to {note}": "Añadir a {note}",
+    "The default note": "La nota predeterminada",
+    "Make it the default note": "Hacerla la nota predeterminada"
+  },
   "update": {
     "Install updates by themselves when everything is saved and the app is in the background": "Instalar las actualizaciones por sí solas cuando todo esté guardado y la app esté en segundo plano",
     "Check for updates": "Buscar actualizaciones",
@@ -279,7 +301,7 @@
   },
   "manifest": {
     "Send to Markdown": "Send to Markdown",
-    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "Envía una página, una selección, un enlace o una imagen a una nota Markdown en una carpeta del disco. Edítala en el panel lateral.",
-    "Send the page or the selection to Markdown": "Enviar la página o la selección a Markdown"
+    "Markdown Knowledge Base": "Markdown Knowledge Base",
+    "Sends what you select on a web page to your Markdown notes on disk: the default note or one you pick. Edit them in the side panel.": "Envía lo seleccionado en una web a tus notas Markdown en el disco: la nota predeterminada o la que elijas. Edítalas en el panel."
   }
 }

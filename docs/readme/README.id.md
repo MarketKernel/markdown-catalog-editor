@@ -31,13 +31,15 @@ PWA (Progressive Web App): dapat dipasang ke sistem dan kemudian berjalan sebaga
 terpisah, dengan jendela dan ikonnya sendiri, serta bekerja secara offline. Di komputer, di
 Chrome, Edge, dan Arc, gunakan tombol pasang di bilah alamat; di Android, menu ⋮ Chrome →
 Instal aplikasi; di iOS, Bagikan → Tambahkan ke Layar Utama, di Safari atau di Chrome. Catatan
-Anda tetap berada di disk Anda di sana juga, dan aplikasi yang terpasang diperbarui ketika
-Anda mengizinkannya — lihat "[GitHub Pages](#github-pages)".
+Anda tetap berada di disk Anda di sana juga, aplikasi yang terpasang membuka sebuah `.md`
+langsung dari Finder atau Explorer, dan aplikasi itu diperbarui ketika Anda mengizinkannya —
+lihat "[GitHub Pages](#github-pages)".
 
-Editor yang sama juga merupakan **Send to Markdown**, sebuah [ekstensi Chrome](#send-to-markdown-ekstensi-chrome):
-klik pada tombolnya, atau klik kanan pada sebuah halaman, mengirim halaman — atau pilihan,
-tautan, gambar — ke sebuah catatan di folder Anda, dan editor terbuka di samping halaman
-tersebut di panel samping Chrome.
+Editor yang sama juga merupakan **Markdown Knowledge Base**, sebuah
+[ekstensi Chrome](#markdown-knowledge-base-ekstensi-chrome): pilih teks pada sebuah halaman
+web, tekan tombolnya, dan **Send to Markdown** menambahkannya ke catatan bawaan basis
+pengetahuan Anda — atau ke catatan mana pun yang Anda pilih. Editornya sendiri terbuka di
+samping halaman tersebut di panel samping Chrome.
 
 ![Editor dengan folder catatan yang terbuka: pohon file dan tag di sebelah kiri, sebuah catatan dalam mode edit di sebelah kanan](../macaed.jpg)
 
@@ -81,29 +83,68 @@ Jika Anda meletakkan `macaed.html` di sebelah catatan Anda dan menyajikannya lew
 halaman tersebut akan mengambil folder itu dengan sendirinya — asalkan ada `index.json` di
 sampingnya, dengan bentuk `{ "name": "Notes", "files": ["Note.md", "Folder/Other.md"] }`.
 
-## Send to Markdown: ekstensi Chrome
+### Satu catatan tunggal
+
+Sebuah file `.md` dapat dibuka sendiri, tanpa foldernya:
+
+- **Dari Finder atau Explorer**, dalam aplikasi yang terpasang (Chrome atau Edge di komputer):
+  Open With → aplikasi tersebut, atau jadikan itu aplikasi bawaan untuk `.md`. Catatan itu
+  masuk ke jendela aplikasi yang sedang terbuka — dua jendela pada satu file akan saling
+  menimpa penyimpanannya — dan mengambil tempat folder yang ditampilkan di sana; membuka
+  catatan yang sama lagi membiarkannya apa adanya.
+- **Diseret ke jendela**, di peramban mana pun.
+
+Catatan ini dibaca dan ditulis langsung di tempatnya, seperti dalam sebuah folder — di Safari
+dan Firefox hanya-baca, dengan `⌘S` menawarkan unduhan. Tanpa folder di sekelilingnya, tidak
+ada yang bisa dibuat, diganti namanya, atau dihapus di sampingnya, dan tidak ada gambar dari
+foldernya, tag, atau ekspor: itu semua datang dengan membuka foldernya. Catatan yang dibuka
+dengan cara ini tidak ditambahkan ke folder terbaru.
+
+## Markdown Knowledge Base: ekstensi Chrome
 
 `npm run build` juga menulis `build/extension/`: editor sebagai ekstensi Chrome, dan
 `build/macaed-extension-<version>.zip` miliknya untuk Chrome Web Store; sebuah rilis juga
 menyertakan zip tersebut. Untuk memasangnya: `chrome://extensions` → Mode pengembang → Load
 unpacked → `build/extension` (atau zip yang telah diekstrak).
 
-Editor itu sendiri berada di panel samping Chrome, di sebelah halaman, dalam tata letak
-ponsel, karena panel ini sempit; editor tetap di sana lintas tab. Sebuah folder dibuka di
-dalamnya seperti pada file, dan folder terbaru diingat — milik ekstensi sendiri, terpisah
-dari milik file atau PWA. Yang ditambahkan oleh ekstensi adalah mengirim hal-hal dari web ke
-catatan Anda:
+**Basis pengetahuan** adalah folder catatan yang terakhir dibuka di ekstensi ini. Editornya
+sendiri — **mode penuh** — berada di panel samping Chrome, di sebelah halaman, dalam tata
+letak ponsel, karena panel ini sempit; editor tetap di sana lintas tab. Sebuah folder dibuka
+di dalamnya seperti pada file, dan folder terbaru diingat — milik ekstensi sendiri, terpisah
+dari milik file atau PWA.
 
-- **Tombol bilah alat** (atau `Alt+Shift+M`) mengirim halaman: teks utamanya — artikelnya,
-  tanpa menu, bilah sisi, footer, tombol berbagi, formulir, dan bagian tersembunyi milik
-  situs — atau, ketika ada yang dipilih di dalamnya, hanya bagian yang dipilih itu.
-- **Menu konteks** pada sebuah halaman memiliki **Kirim halaman ke Markdown**; pada teks
-  yang dipilih, **Kirim pilihan ke Markdown**; pada tautan, **Kirim tautan ke Markdown**;
-  pada gambar, **Kirim gambar ke Markdown**.
+**Tombol bilah alat** (atau `Alt+Shift+M`) membuka sebuah jendela kecil di atas halaman:
 
-Keduanya membuka panel samping, dan sebuah dialog di sana menampilkan apa yang datang —
-halaman, pilihan, tautan, atau gambar, dan dari situs mana — sebagai Markdown yang masih
-dapat Anda ubah, serta menanyakan ke mana tujuannya:
+- Di bagian atas, apa yang dipilih pada halaman, sebagai Markdown — atau, jika tidak ada yang
+  dipilih, teks utama halaman: artikelnya, tanpa menu, bilah sisi, footer, tombol berbagi,
+  formulir, dan bagian tersembunyi milik situs.
+- **Send to Markdown** menambahkannya ke akhir **catatan bawaan** — `Inbox.md` di root basis
+  pengetahuan pada mulanya, dibuat saat pertama kali dibutuhkan. Setelah baris kosong muncul
+  teksnya, lalu baris `— [The page's title](https://…)` yang menautkan ke asalnya. Jendela
+  itu menutup begitu selesai ditulis.
+- **Tambahkan ke catatan lain**: catatan-catatan dalam basis pengetahuan, dengan kolom untuk
+  mencari berdasarkan nama; klik pada sebuah catatan menambahkannya di sana. Bintang di
+  samping sebuah catatan menjadikannya bawaan; catatan bawaan terdaftar paling atas.
+- Jika tidak ada yang dipilih, **Sebagai catatan baru** mengubah halaman menjadi catatan
+  tersendiri (di bawah).
+- **Mode penuh** membuka panel samping.
+
+**Ketika basis pengetahuan tertutup** — setelah peramban dimulai ulang, kecuali Anda memilih
+"Izinkan di setiap kunjungan" — sebuah halaman tidak dapat masuk ke folder sampai Anda
+mengklik: jendela itu lalu menyatakannya, dan **Buka dalam mode penuh** membuka panel
+samping, tempat satu klik pada folder mengembalikan aksesnya. Apa yang Anda pilih lalu masuk
+ke catatan bawaan dengan sendirinya begitu folder terbuka.
+
+Ketika panel samping memiliki basis pengetahuan terbuka, panel itulah yang menambahkan ke
+catatan — panel mungkin memiliki catatan itu terbuka dengan perubahan yang belum tersimpan,
+yang akan hilang jika ditulis dari belakang. Dengan panel tertutup, jendela itu sendiri yang
+menulis catatannya.
+
+**Menu konteks** pada sebuah halaman memiliki **Kirim halaman ke Markdown**; pada teks yang
+dipilih, **Kirim pilihan ke Markdown**; pada tautan, **Kirim tautan ke Markdown**; pada
+gambar, **Kirim gambar ke Markdown**. Masing-masing membuka panel samping, tempat sebuah
+dialog menampilkan apa yang datang — dan dari situs mana — sebagai Markdown yang masih dapat
+Anda ubah, serta menanyakan ke mana tujuannya:
 
 - **Catatan baru**, pilihan bawaan untuk sebuah halaman: di folder kliping (`Clippings` di
   root kecuali Anda mengubahnya; folder ini diingat, kosong berarti root), dinamai sesuai
@@ -123,9 +164,9 @@ dapat Anda ubah, serta menanyakan ke mana tujuannya:
   The text…
   ```
 
-- **Akhir catatan yang terbuka**, pilihan bawaan untuk pilihan teks, tautan, atau gambar:
-  setelah baris kosong, diikuti baris `— [The page's title](https://…)` yang menautkan ke
-  asalnya. Sebuah tautan tidak memerlukan itu: ia adalah sumbernya sendiri.
+- **Akhir catatan yang terbuka**, pilihan bawaan untuk pilihan teks, tautan, atau gambar,
+  dengan cara yang sama seperti Send to Markdown. Sebuah tautan tidak memerlukan baris
+  sumber: ia adalah sumbernya sendiri.
 
 Jika dikirim sebelum folder dibuka, ia menunggu: panel meminta sebuah folder, dan dialog
 muncul begitu satu folder terbuka. Halaman yang tidak dapat dibaca oleh ekstensi — halaman
@@ -145,21 +186,25 @@ ke satu tab itu saja, dan baru setelah itu ekstensi membacanya — dengan `scrip
 fungsi dijalankan di halaman yang menyalin teksnya lalu mengembalikannya. Tidak ada content
 script yang berjalan di mana pun, dan tidak ada akses ke situs mana pun selain itu: tidak ada
 `host_permissions`, yang ditolak oleh proses build. `contextMenus`, `sidePanel`, dan
-`storage` — worker menyerahkan apa yang diambilnya ke panel pada jendelanya lewat
+`storage` — apa yang dikirim ke panel samping diteruskan ke panel pada jendelanya lewat
 `chrome.storage.session`, yang hilang saat peramban ditutup, dan bahasa panel diteruskan ke
-worker, untuk menu, lewat `chrome.storage.local`. Halaman-halaman ekstensi memiliki
+worker, untuk menu, lewat `chrome.storage.local`. Jendela tombol meminta panel pada
+jendelanya sendiri untuk menambahkan ke sebuah catatan lewat pesan `chrome.runtime`, yang
+hanya diterima panel dari halaman-halaman ekstensi sendiri. Halaman-halaman ekstensi memiliki
 `connect-src 'none'`: editor tidak menjangkau apa pun di jaringan; proses build memeriksa hal
 ini, dan memastikan tidak ada halaman yang memiliki skrip inline atau alamat luar.
 
 **Cara pembuatannya.** Panel adalah halaman itu sendiri: `panel.html` dengan skripnya di
 `panel.js`, sebagaimana diinginkan Manifest V3 — `src/main.ts` yang sama, dengan
 `src/extension/extension.ts` menggantikan `src/platform.ts`, yang hook-nya tidak melakukan
-apa pun pada file dan PWA. Worker, `background.js`, memiliki tombol, pintasan, dan menu.
-Chrome hanya membuka panel samping di dalam handler klik itu sendiri, sebelum apa pun
-di-await, sehingga worker membuka panel terlebih dahulu lalu membaca tab setelahnya
-(`src/extension/grab.ts`); panel mengubah HTML itu menjadi Markdown
-(`src/extension/to-markdown.ts`) dan editor menanyakan ke mana tujuannya (`src/clip-ui.ts`,
-`src/clip.ts`).
+apa pun pada file dan PWA. Jendela tombol adalah `popup.html` dan `popup.js`
+(`src/extension/popup.ts`), dengan gaya (styles) milik halaman: jendela ini membaca handle
+basis pengetahuan dari IndexedDB yang sama dengan panel, dan menulis lewatnya selama
+peramban masih mengizinkannya. Worker, `background.js`, memiliki menu. Chrome hanya membuka
+panel samping di dalam handler klik itu sendiri, sebelum apa pun di-await, sehingga panel
+dibuka terlebih dahulu lalu tab dibaca setelahnya (`src/extension/take.ts`, `grab.ts`);
+HTML-nya menjadi Markdown di `src/extension/to-markdown.ts`, dan editor menambahkannya atau
+menanyakan ke mana tujuannya (`src/clip.ts`, `src/clip-ui.ts`).
 
 ## Pratinjau langsung
 
@@ -412,7 +457,7 @@ mengikuti sistem, dan situs tetap terbaca dan bertaut dengan cara yang sama.
 - **File tetap berada di disk Anda.** Catatan dibaca dan ditulis langsung di tempatnya lewat
   File System Access API; folder yang diingat adalah handle dalam IndexedDB peramban, bukan
   jalur atau isinya.
-- Izin milik ekstensi: lihat "[Send to Markdown](#send-to-markdown-ekstensi-chrome)".
+- Izin milik ekstensi: lihat "[Markdown Knowledge Base](#markdown-knowledge-base-ekstensi-chrome)".
 
 ## Fitur
 
@@ -453,8 +498,12 @@ mengikuti sistem, dan situs tetap terbaca dan bertaut dengan cara yang sama.
   terpisah dari catatan dalam `.meta.json` — lihat "[Tag](#tag)".
 - **Ekspor ke HTML**: folder, atau salah satu subfoldernya, sebagai situs statis dengan
   pencarian, atau sebagai satu halaman — lihat "[Ekspor ke HTML](#ekspor-ke-html)".
-- **Send to Markdown**: sebuah halaman, pilihan, tautan, atau gambar dari Chrome ke sebuah
-  catatan, sebagai Markdown — lihat "[Send to Markdown](#send-to-markdown-ekstensi-chrome)".
+- **Satu catatan tunggal** yang dibuka dari Finder atau Explorer dalam aplikasi yang
+  terpasang, atau dijatuhkan pada jendela — lihat "[Satu catatan tunggal](#satu-catatan-tunggal)".
+- **Markdown Knowledge Base**: apa yang dipilih di Chrome ke catatan bawaan, atau ke satu
+  yang Anda pilih, dengan Send to Markdown; sebuah halaman, tautan, atau gambar ke sebuah
+  catatan — lihat
+  "[Markdown Knowledge Base](#markdown-knowledge-base-ekstensi-chrome)".
 - **Pengaturan** (ikon roda gigi di kanan atas, di sebelah pencarian): bahasa antarmuka,
   tema (sistem, terang, gelap), zoom 50–200 %, lebar teks (kolom di tengah atau panel penuh),
   apakah nama catatan ditampilkan sebagai judul, dan ke mana gambar yang ditambahkan
@@ -548,7 +597,7 @@ npm run check      # typecheck, test, build and test:browser in a row: green mea
 menyisipkannya, bersama gaya (styles) dan ikon (sebuah data URI), ke dalam
 `src/template.html`; templat dan stylesheet ekspor digabungkan sebagai string.
 Content-Security-Policy pada templat mendapat hash dari satu skrip itu. Hasilnya adalah
-`build/macaed.html`, sekitar 620 KB. Proses build gagal jika bahkan satu referensi eksternal
+`build/macaed.html`, sekitar 640 KB. Proses build gagal jika bahkan satu referensi eksternal
 tertinggal di dalamnya.
 
 Proses yang sama menulis `build/pages/`: halaman itu sebagai PWA yang dapat dipasang —
@@ -557,8 +606,9 @@ tahu halaman untuk mendaftarkan worker-nya, `manifest.webmanifest`, ikon-ikon, d
 yang menyimpan cache halaman agar dapat dibuka secara offline. `build/macaed.html` sendiri
 tetap menjadi satu file tunggal tanpa referensi eksternal.
 
-Dan `build/extension/`: `panel.html` — templatnya, skripnya di `panel.js` — `background.js`,
-ikon-ikon, `_locales/`, dan `manifest.json`, yang versinya mengikuti milik `package.json`.
+Dan `build/extension/`: `panel.html` — templatnya, skripnya di `panel.js` — `popup.html`
+(dengan gaya milik halaman dan `popup.css`) dan `popup.js`, `background.js`, ikon-ikon,
+`_locales/`, dan `manifest.json`, yang versinya mengikuti milik `package.json`.
 `build/macaed-extension-<version>.zip` menyimpan file-file yang sama dengan tanggal yang
 tetap: sumber yang sama menghasilkan byte yang sama.
 
@@ -567,11 +617,13 @@ dan berbicara dengan protokol DevTools ke sana, tanpa dependensi; tanpa Chrome, 
 dilewati. `tools/test-extension.mjs` memuat ekstensi lewat protokol itu
 (`Extensions.loadUnpacked` lewat sebuah pipe; `--load-extension` sudah tidak ada lagi di
 Chrome sejak versi 137), membuka sebuah folder di panel samping, dan mengirimkan halaman,
-pilihan, tautan, dan gambar dari situs uji pada server lokal kepadanya. Baik tombol bilah
-alat maupun menu konteks tidak dapat diklik dari DevTools, sehingga pengujian memicu
-`onClicked` milik worker secara langsung; tanpa klik sungguhan, Chrome tidak memberikan
-`activeTab`, sehingga salinan yang diuji mungkin menjangkau situs uji, `*.test`, sebagai host
-permission.
+pilihan, tautan, dan gambar dari situs uji pada server lokal kepadanya; lalu jendela tombol
+menambahkan pilihan ke catatan bawaan dan ke satu yang dipilih, lewat panel maupun sendiri,
+dan, dengan basis pengetahuan tertutup, menyerahkannya ke mode penuh. Menu konteks tidak
+dapat diklik dari DevTools, sehingga pengujian memicu `onClicked` milik worker secara
+langsung, dan membuka jendela tombol sebagai sebuah halaman tersendiri, diberi tahu tab mana
+yang ada di sampingnya; tanpa klik sungguhan, Chrome tidak memberikan `activeTab`, sehingga
+salinan yang diuji mungkin menjangkau situs uji, `*.test`, sebagai host permission.
 
 ## Versi dan rilis
 
@@ -621,6 +673,13 @@ oleh deploy terakhir, sementara sebuah file yang diunduh tetap pada versinya. Un
 versi yang tetap di disk, ambil `macaed-<tag>.html` dari sebuah rilis dan bandingkan dengan
 `SHA256SUMS.txt`.
 
+**Membuka sebuah `.md`.** Manifest menamai file Markdown sebagai file yang dibuka aplikasi
+ini (`file_handlers`) dan menjaganya tetap pada satu jendela (`launch_handler`,
+`focus-existing`): lihat "[Satu catatan tunggal](#satu-catatan-tunggal)". Halaman ini
+mengambilnya lewat `launchQueue`, begitu permulaannya — membuka kembali folder terakhir —
+selesai, sehingga folder tidak pernah menggantikan catatan; satu yang datang selama ekspor
+atau ketika sebuah dialog terbuka menunggu sampai Anda membukanya lagi.
+
 Aplikasi yang terpasang meminta peramban untuk menjaga penyimpanannya
 (`navigator.storage.persist()`): disk yang hampir penuh jika tidak bisa mengambil salinan
 offline dan folder yang diingat bersamanya.
@@ -628,7 +687,10 @@ offline dan folder yang diingat bersamanya.
 `npm run test:browser` juga membuka `build/pages/` (`tools/test-pwa.mjs`): service worker
 mengambil alih halaman, Chrome mendapati manifestnya dapat dipasang, dan dengan server mati
 halaman tetap dimuat; lalu sebuah pemeriksaan tidak menemukan apa pun, lalu tidak ada
-koneksi, lalu sebuah deploy baru, yang menunggu sampai Perbarui membiarkannya masuk.
+koneksi, lalu sebuah deploy baru, yang menunggu sampai Perbarui membiarkannya masuk. Chrome
+headless tidak memberikan file apa pun ke sebuah aplikasi, sehingga sebuah `launchQueue`
+pengganti memberi halaman sebuah handle file sungguhan: catatan itu terbuka sendiri dan
+sebuah suntingan tersimpan ke dalamnya.
 
 ## Tata letak
 
@@ -636,7 +698,7 @@ koneksi, lalu sebuah deploy baru, yang menunggu sampai Perbarui membiarkannya ma
 src/template.html   markup with the __STYLES__/__APP__/__ICON__ placeholders and the CSP
 src/styles.css      palette, light and dark themes, block paired with its source
 src/main.ts         opening a folder, saving, toolbar, search, settings
-src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD
+src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -657,8 +719,9 @@ src/platform.ts     what the page does beyond itself: nothing, except in the ext
 src/clip.ts         what the extension sends, as a note: file name, front matter, the end of a note
 src/clip-ui.ts      the dialog that asks where it goes
 src/pwa/sw.js       the service worker of the Pages build: offline, and a new version waits
-src/extension/      "Send to Markdown": manifest.json; background.ts (button, shortcut, menu);
-                    grab.ts (run in the page: its text or the selection); to-markdown.ts
+src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.html, popup.css
+                    (the button's window: Send to Markdown); background.ts (the menu); take.ts
+                    and grab.ts (run in the page: its text or the selection); to-markdown.ts
                     (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
                     formatting, tags, the export, clippings, dictionaries; in headless Chrome

@@ -25,6 +25,10 @@ check('free name: numbered past the taken', C.freeName('Note.md', (n) => taken.h
 check('clip folder: cleaned', C.cleanClipFolder(' ../Web//Clips: new/ '), 'Web/Clips- new');
 check('clip folder: the root', C.cleanClipFolder(' / '), '');
 
+check('default note: the path as typed', C.cleanNotePath(' Notes//Inbox '), 'Notes/Inbox.md');
+check('default note: an extension kept', C.cleanNotePath('Daily.markdown'), 'Daily.markdown');
+check('default note: nothing → Inbox.md', C.cleanNotePath(' / ../ '), 'Inbox.md');
+
 check('link text escaped', C.markdownLink('a [b]  c', 'https://x.org/p'), '[a \\[b\\] c](https://x.org/p)');
 check('link: an address with a space or brackets', C.markdownLink('t', 'https://x.org/a b(1)'), '[t](<https://x.org/a%20b(1)>)');
 check('link: no text → the address', C.markdownLink('', 'https://x.org/'), '[https://x.org/](https://x.org/)');

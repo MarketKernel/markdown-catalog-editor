@@ -30,6 +30,7 @@
     }
   },
   "toast": {
+    "Finish what is open first, then open the note again": "প্রথমে খোলা জিনিসটি শেষ করুন, তারপর আবার নোটটি খুলুন",
     "Path copied: {path}": "পাথ কপি হয়েছে: {path}",
     "No .md files in this folder — create the first note": "এই ফোল্ডারে কোনো .md ফাইল নেই — প্রথম নোটটি তৈরি করুন",
     "No .md files in this folder": "এই ফোল্ডারে কোনো .md ফাইল নেই",
@@ -53,7 +54,7 @@
   },
   "gate": {
     "Version {version}": "সংস্করণ {version}",
-    "Drag a folder, not a single file": "একটি ফোল্ডার টেনে আনুন, একক ফাইল নয়",
+    "Drag a folder or a note": "একটি ফোল্ডার বা নোট টেনে আনুন",
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "এই ব্রাউজার ডিস্কে ফাইল লিখতে পারে না: ফোল্ডারটি শুধু পড়ার জন্য খুলবে, আর সংরক্ষণের সময় পরিবর্তিত ফাইলটি ডাউনলোড করার প্রস্তাব দেওয়া হবে। পূর্ণ সম্পাদনা কম্পিউটারে Chrome, Edge ও Arc-এ কাজ করে।",
     "local editor · one file": "লোকাল এডিটর · একটি ফাইল",
     "Open a folder": "আপনার নোটের",
@@ -96,7 +97,8 @@
     "This browser cannot write files": "এই ব্রাউজার ফাইল লিখতে পারে না",
     "\"{name}\" already exists": "“{name}” আগে থেকেই আছে",
     "File not found: {path}": "ফাইল পাওয়া যায়নি: {path}",
-    "The browser was not allowed to open the folder": "ব্রাউজারকে ফোল্ডার খোলার অনুমতি দেওয়া হয়নি"
+    "The browser was not allowed to open the folder": "ব্রাউজারকে ফোল্ডার খোলার অনুমতি দেওয়া হয়নি",
+    "A note opened on its own has no folder around it": "একাকী খোলা নোটের চারপাশে কোনো ফোল্ডার নেই"
   },
   "palette": {
     "Red": "লাল",
@@ -259,6 +261,26 @@
     "Send the link to Markdown": "লিংকটি Markdown-এ পাঠান",
     "Send the image to Markdown": "ছবিটি Markdown-এ পাঠান"
   },
+  "popup": {
+    "Full mode": "পূর্ণ মোড",
+    "Nothing on this tab can be sent.": "এই ট্যাবে পাঠানোর মতো কিছু নেই।",
+    "The selection on {site}": "{site}-এ নির্বাচিত অংশ",
+    "Nothing is selected: the whole page \"{title}\"": "কিছু নির্বাচিত নয়: পুরো পৃষ্ঠা “{title}”",
+    "A link to \"{title}\"": "“{title}”-এর একটি লিংক",
+    "There is no knowledge base yet: open a folder of notes in full mode.": "এখনও কোনো নলেজ বেস নেই: পূর্ণ মোডে নোটের একটি ফোল্ডার খুলুন।",
+    "Open in full mode": "পূর্ণ মোডে খুলুন",
+    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "“{name}” বন্ধ আছে। পূর্ণ মোডে এটি খুলুন, তাহলে নির্বাচিত অংশ {note}-এ যোগ হবে।",
+    "\"{name}\" is closed. Open it in full mode.": "“{name}” বন্ধ আছে। পূর্ণ মোডে এটি খুলুন।",
+    "Send to Markdown": "Send to Markdown",
+    "To the end of {note}": "{note}-এর শেষে",
+    "(a new note)": "(নতুন একটি নোট)",
+    "As a new note": "নতুন নোট হিসেবে",
+    "Add to another note": "অন্য নোটে যোগ করুন",
+    "No notes match": "কোনো নোট মেলেনি",
+    "Add to {note}": "{note}-এ যোগ করুন",
+    "The default note": "ডিফল্ট নোট",
+    "Make it the default note": "এটিকে ডিফল্ট নোট করুন"
+  },
   "update": {
     "Install updates by themselves when everything is saved and the app is in the background": "সবকিছু সংরক্ষিত থাকলে ও অ্যাপ ব্যাকগ্রাউন্ডে থাকলে আপডেট নিজে থেকেই ইনস্টল করুন",
     "Check for updates": "আপডেট পরীক্ষা করুন",
@@ -274,7 +296,7 @@
   },
   "manifest": {
     "Send to Markdown": "Send to Markdown",
-    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "একটি ওয়েব পৃষ্ঠা, নির্বাচিত অংশ, লিংক বা ছবি আপনার ডিস্কের ফোল্ডারে একটি Markdown নোটে পাঠায়। এটি সাইড প্যানেলে সম্পাদনা করুন।",
-    "Send the page or the selection to Markdown": "পৃষ্ঠা বা নির্বাচিত অংশ Markdown-এ পাঠান"
+    "Markdown Knowledge Base": "Markdown Knowledge Base",
+    "Sends what you select on a web page to your Markdown notes on disk: the default note or one you pick. Edit them in the side panel.": "ওয়েব পৃষ্ঠায় নির্বাচিত অংশ আপনার ডিস্কের Markdown নোটে পাঠায়: ডিফল্ট নোট বা বেছে নেওয়া নোট। সাইড প্যানেলে সম্পাদনা করুন।"
   }
 }

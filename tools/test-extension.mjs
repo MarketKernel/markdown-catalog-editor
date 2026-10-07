@@ -98,8 +98,9 @@ try {
   const worker = await chrome.attach(workerTarget.targetId, 'worker');
   await chrome.until(worker, `typeof chrome === 'object' && !!chrome.action && !!chrome.contextMenus`);
   const inWorker = (expression) => chrome.evaluate(worker, expression);
-  check('manifest: name from _locales', await inWorker(`chrome.i18n.getMessage('appName')`), 'Send to Markdown');
-  check('manifest: the button\'s title from _locales', await inWorker(`chrome.action.getTitle({})`), 'Send the page or the selection to Markdown');
+  check('manifest: name from _locales', await inWorker(`chrome.i18n.getMessage('appName')`), 'Markdown Knowledge Base');
+  check('manifest: the button\'s title from _locales', await inWorker(`chrome.action.getTitle({})`), 'Send to Markdown');
+  check('the button opens the popup', await inWorker(`chrome.action.getPopup({})`), `${origin}/popup.html`);
   check('the button does not just open the panel', await inWorker(`chrome.sidePanel.getPanelBehavior().then((b) => b.openPanelOnActionClick)`), false);
 
   // Window A holds the sites and the side panel; window B the extension's own test page.
@@ -149,16 +150,28 @@ try {
 
   // The worker's calls to open the panel, which with no click behind them Chrome refuses.
   await inWorker(`(() => { self.__panelOpened = []; chrome.sidePanel.open = (options) => { self.__panelOpened.push(options); return Promise.resolve(); }; return true; })()`);
-  // `seen`: the address and title a click would let the extension see where it has no host permission.
-  const button = (seen = {}) => inWorker(`chrome.tabs.get(${tabId}).then((tab) => { chrome.action.onClicked.dispatch({ ...tab, ...${JSON.stringify(seen)} }); return true; })`);
-  const menu = (info) => inWorker(`chrome.tabs.get(${tabId}).then((tab) => { chrome.contextMenus.onClicked.dispatch({ frameId: 0, pageUrl: tab.url, ...${JSON.stringify(info)} }, tab); return true; })`);
+  // A click in the context menu, as Chrome reports it. `seen`: the address and title a click would
+  // let the extension see where it has no host permission.
+  const menu = (info, seen = {}) =>
+    inWorker(`chrome.tabs.get(${tabId}).then((tab) => { chrome.contextMenus.onClicked.dispatch({ frameId: 0, pageUrl: tab.url, ...${JSON.stringify(info)} }, { ...tab, ...${JSON.stringify(seen)} }); return true; })`);
 
-  await chrome.evaluate(helper, `chrome.sidePanel.open({ windowId: ${windowA} }).then(() => true)`, true);
-  const panelTarget = await chrome.waitForTarget((t) => t.type === 'page' && t.url === `${origin}/panel.html`);
-  const panel = await chrome.attach(panelTarget.targetId, 'panel');
-  await chrome.send('Page.enable', {}, panel);
-  await chrome.until(panel, `document.readyState === 'complete' && !document.getElementById('gate').classList.contains('gate--starting')`);
-  await chrome.evaluate(panel, `window.showDirectoryPicker = async () => (await navigator.storage.getDirectory()).getDirectoryHandle('Notes'); true`);
+  /** The side panel of window A, opened by a "click" in the extension's own page. */
+  let panel = null;
+  let panelTarget = null;
+  async function openPanel() {
+    await chrome.evaluate(helper, `chrome.sidePanel.open({ windowId: ${windowA} }).then(() => true)`, true);
+    panelTarget = await chrome.waitForTarget((t) => t.type === 'page' && t.url === `${origin}/panel.html`);
+    panel = await chrome.attach(panelTarget.targetId, 'panel');
+    await chrome.send('Page.enable', {}, panel);
+    await chrome.until(panel, `document.readyState === 'complete' && !document.getElementById('gate').classList.contains('gate--starting')`);
+    await chrome.evaluate(panel, `window.showDirectoryPicker = async () => (await navigator.storage.getDirectory()).getDirectoryHandle('Notes'); true`);
+  }
+  async function closePanel() {
+    await chrome.send('Target.closeTarget', { targetId: panelTarget.targetId });
+    await chrome.until(worker, `chrome.runtime.getContexts({ contextTypes: ['SIDE_PANEL'] }).then((c) => c.length === 0)`);
+    panel = null;
+  }
+  await openPanel();
   const inPanel = (expression) => chrome.evaluate(panel, expression);
   const untilPanel = (expression, timeout) => chrome.until(panel, expression, timeout);
   const toast = `(document.querySelector('.toast--shown')?.textContent ?? '')`;
@@ -181,10 +194,10 @@ try {
         markdown: box.querySelector('.clip-markdown').value,
       };
     })()`);
-  const shot = async (name) => {
+  const shot = async (name, session = panel) => {
     if (!SHOTS) return;
     await mkdir(SHOTS, { recursive: true });
-    const { data } = await chrome.send('Page.captureScreenshot', { format: 'png' }, panel);
+    const { data } = await chrome.send('Page.captureScreenshot', { format: 'png' }, session);
     await writeFile(join(SHOTS, `extension-${name}.png`), Buffer.from(data, 'base64'));
   };
   // Clicks through the DOM, not the mouse: a click sent to the side panel as input can be lost
@@ -198,8 +211,8 @@ try {
   check('the panel shows the start screen', await inPanel(`!document.getElementById('gate').hidden`), true);
 
   // Sent before a folder is open: it waits for one
-  await button();
-  check('the button opens the panel of its window', await inWorker(`self.__panelOpened`), [{ windowId: windowA }]);
+  await menu({ menuItemId: 'page' });
+  check('the menu opens the panel of its window', await inWorker(`self.__panelOpened`), [{ windowId: windowA }]);
   check('with no folder, the panel asks for one', await untilPanel(`${toast} === 'Open a folder of notes, and what was sent goes into it'`), true);
   check('the panel took it out of the session storage', await inWorker(`chrome.storage.session.get(null).then((all) => Object.keys(all).length)`), 0);
   await press('#open-folder');
@@ -255,18 +268,113 @@ try {
   check('image: cancelled, nothing written', await fileText('Clippings/The article.md'), before);
 
   // The page again: a name of its own; then a site the extension may not read
-  await button();
+  await menu({ menuItemId: 'page' });
   await dialogShown('page again');
   await press('.clip-dialog input[type=radio]');
   await save();
   check('page again: numbered beside the first', await untilPanel(`${toast} === 'Saved as Clippings/The article 2.md'`), true);
   await visit(site('outside.example', '/page'));
-  await button({ url: site('outside.example', '/page'), title: 'Elsewhere' });
+  await menu({ menuItemId: 'page' }, { url: site('outside.example', '/page'), title: 'Elsewhere' });
   await dialogShown('unreadable site');
   state = await dialogState();
   check('a site it may not read: a link to the page', [state.source, state.markdown], ['A link from outside.example', `[Elsewhere](${site('outside.example', '/page')})`]);
   await press('.clip-dialog [type=button]');
   await untilPanel(`!${dialog}`);
+
+  /* The popup: what is selected, to the default note or to one picked */
+
+  let popup = null;
+  let popupTarget = null;
+  // Opened as a page of its own, in a window of its own: it is told the site's tab is the one beside it.
+  async function openPopup(init = '') {
+    ({ targetId: popupTarget } = await chrome.send('Target.createTarget', { url: 'about:blank', newWindow: true }));
+    popup = await chrome.attach(popupTarget, 'popup');
+    await chrome.send('Page.enable', {}, popup);
+    await chrome.send(
+      'Page.addScriptToEvaluateOnNewDocument',
+      {
+        source: `
+          chrome.tabs.query = () => chrome.tabs.get(${tabId}).then((tab) => [tab]);
+          chrome.windows.getCurrent = () => Promise.resolve({ id: ${windowA} });
+          chrome.sidePanel.open = (options) => { (window.__panel ??= []).push(options); return Promise.resolve(); };
+          window.close = () => { window.__closed = true; };
+          ${init}`,
+      },
+      popup,
+    );
+    await chrome.send('Page.navigate', { url: `${origin}/popup.html` }, popup);
+    await chrome.until(popup, `document.readyState === 'complete' && !!document.querySelector('.popup-preview')`);
+  }
+  async function closePopup() {
+    await chrome.send('Target.closeTarget', { targetId: popupTarget });
+    popup = null;
+  }
+  const inPopup = (expression) => chrome.evaluate(popup, expression);
+  const popupText = (selector) => inPopup(`document.querySelector(${JSON.stringify(selector)})?.textContent ?? null`);
+  const pressPopup = (selector) => inPopup(`document.querySelector(${JSON.stringify(selector)}).click(), true`);
+  const rowOf = (name) => `[...document.querySelectorAll('.popup-row')].find((row) => row.querySelector('.popup-note-name').textContent === ${JSON.stringify(name)})`;
+  const select = () =>
+    chrome.evaluate(siteTab, `(() => { const r = document.createRange(); r.selectNodeContents(document.getElementById('first')); getSelection().removeAllRanges(); getSelection().addRange(r); return true; })()`);
+  const selection = `First paragraph, with [a link](${site('article.test', '/about')}), long enough to be the text of the page and not a menu around it.\n\n— [The article](${site('article.test', '/post')})\n`;
+  const count = async (path, text) => ((await fileText(path)) ?? '').split(text).length - 1;
+
+  await visit(site('article.test', '/post'));
+  await select();
+  await openPopup();
+  await shot('popup', popup);
+  check('popup: the knowledge base is the folder opened last', await popupText('.popup-base'), 'Notes');
+  check('popup: what is selected, and where', await popupText('.popup-what'), 'The selection on article.test');
+  check('popup: as Markdown', await popupText('.popup-markdown'), selection.split('\n\n—')[0]);
+  check('popup: to the default note', await popupText('.popup-target'), 'To the end of Inbox.md');
+  check('popup: the notes to pick from', await inPopup(`[...document.querySelectorAll('.popup-note-name')].map((n) => n.textContent).sort()`), ['Inbox', 'The article', 'The article 2']);
+  check('popup: no page of its own for a selection', await inPopup(`!document.querySelector('.popup-as-note')`), true);
+  await pressPopup('.popup-send');
+  check('popup: done, and it closes', await chrome.until(popup, `window.__closed === true`), true);
+  check('popup: added to the default note, with its source', await fileEnds('Inbox.md', `Something to read.\n\n${selection}`), true);
+  check('popup: through the panel, which has the knowledge base open', await untilPanel(`${toast} === 'Added to the end of Inbox.md'`), true);
+  await closePopup();
+
+  await openPopup();
+  await inPopup(`${rowOf('The article')}.querySelector('.popup-star').click(), true`);
+  check('popup: a star makes the default', await popupText('.popup-target'), 'To the end of Clippings/The article.md');
+  check('popup: and it is remembered', await inPopup(`JSON.parse(localStorage.getItem('markdown-catalog-editor')).defaultNote`), 'Clippings/The article.md');
+  await inPopup(`${rowOf('Inbox')}.querySelector('.popup-note').click(), true`);
+  check('popup: a note picked from the list', await chrome.until(popup, `window.__closed === true`), true);
+  check('popup: gets it at its end', (await count('Inbox.md', 'First paragraph')) === 2 && (await fileEnds('Inbox.md', selection)), true);
+  await closePopup();
+
+  // With the panel closed the popup writes the note itself
+  await closePanel();
+  const clipped = await count('Clippings/The article.md', 'First paragraph');
+  await openPopup();
+  await pressPopup('.popup-send');
+  await chrome.until(popup, `window.__closed === true`);
+  check('popup without the panel: it writes the default note itself', (await count('Clippings/The article.md', 'First paragraph')) === clipped + 1 && (await fileEnds('Clippings/The article.md', selection)), true);
+  await closePopup();
+
+  // The knowledge base closed: full mode, and what is selected goes to the default note there
+  await openPopup(`FileSystemHandle.prototype.queryPermission = async () => 'prompt';`);
+  await shot('popup-closed', popup);
+  check('popup, base closed: it says so', await popupText('.popup-empty p'), '"Notes" is closed. Open it in full mode, and what is selected goes to Clippings/The article.md.');
+  await pressPopup('.popup-empty .button');
+  check('popup: full mode opens the panel of its window', await chrome.until(popup, `window.__closed === true && window.__panel?.[0]?.windowId === ${windowA}`), true);
+  check('popup: what is selected waits for the panel', await inWorker(`chrome.storage.session.get(null).then((all) => Object.values(all).map((sent) => [sent.kind, sent.to]))`), [['selection', 'default']]);
+  await closePopup();
+  await openPanel();
+  check('full mode: the folder reopens', await untilPanel(`!document.getElementById('app').hidden`), true);
+  check('full mode: and the selection goes to the default note', (await fileEnds('Clippings/The article.md', selection)) && (await count('Clippings/The article.md', 'First paragraph')) === clipped + 2, true);
+
+  // Nothing selected: the page, and a note of its own through the panel's dialog
+  await chrome.evaluate(siteTab, `getSelection().removeAllRanges(), true`);
+  await openPopup();
+  check('popup, nothing selected: the page', await popupText('.popup-what'), 'Nothing is selected: the whole page "The article"');
+  await pressPopup('.popup-as-note');
+  await chrome.until(popup, `window.__closed === true`);
+  await dialogShown('page as a note');
+  check('popup: the page as a note, asked in the panel', (await dialogState()).source, 'The page "The article" from article.test');
+  await press('.clip-dialog [type=button]');
+  await untilPanel(`!${dialog}`);
+  await closePopup();
 
   // The panel's language, for the worker's menus
   await press('#settings');

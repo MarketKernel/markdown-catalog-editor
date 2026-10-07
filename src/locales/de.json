@@ -49,10 +49,11 @@
       "other": "{count} Seiten nach {folder} exportiert"
     },
     "Export stopped: {folder} is incomplete": "Export angehalten: {folder} ist unvollständig",
-    "Export stopped": "Export angehalten"
+    "Export stopped": "Export angehalten",
+    "Finish what is open first, then open the note again": "Schließen Sie zuerst das Geöffnete ab, und öffnen Sie die Notiz dann erneut"
   },
   "gate": {
-    "Drag a folder, not a single file": "Ziehen Sie einen Ordner, keine einzelne Datei",
+    "Drag a folder or a note": "Ziehen Sie einen Ordner oder eine Notiz",
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "Dieser Browser kann keine Dateien auf die Festplatte schreiben: Der Ordner wird schreibgeschützt geöffnet, und beim Speichern wird angeboten, die geänderte Datei herunterzuladen. Volle Bearbeitung funktioniert in Chrome, Edge und Arc auf dem Computer.",
     "local editor · one file": "lokaler Editor · eine Datei",
     "Open a folder": "Öffnen Sie einen Ordner",
@@ -96,7 +97,8 @@
     "This browser cannot write files": "Dieser Browser kann keine Dateien schreiben",
     "\"{name}\" already exists": "„{name}“ existiert bereits",
     "File not found: {path}": "Datei nicht gefunden: {path}",
-    "The browser was not allowed to open the folder": "Der Browser durfte den Ordner nicht öffnen"
+    "The browser was not allowed to open the folder": "Der Browser durfte den Ordner nicht öffnen",
+    "A note opened on its own has no folder around it": "Eine einzeln geöffnete Notiz hat keinen Ordner um sich herum"
   },
   "palette": {
     "Red": "Rot",
@@ -259,6 +261,26 @@
     "Send the link to Markdown": "Link an Markdown senden",
     "Send the image to Markdown": "Bild an Markdown senden"
   },
+  "popup": {
+    "Full mode": "Vollmodus",
+    "Nothing on this tab can be sent.": "Von diesem Tab kann nichts gesendet werden.",
+    "The selection on {site}": "Die Auswahl auf {site}",
+    "Nothing is selected: the whole page \"{title}\"": "Nichts ist ausgewählt: die ganze Seite „{title}“",
+    "A link to \"{title}\"": "Ein Link zu „{title}“",
+    "There is no knowledge base yet: open a folder of notes in full mode.": "Es gibt noch keine Wissensdatenbank: Öffnen Sie einen Ordner mit Notizen im Vollmodus.",
+    "Open in full mode": "Im Vollmodus öffnen",
+    "\"{name}\" is closed. Open it in full mode, and what is selected goes to {note}.": "„{name}“ ist geschlossen. Öffnen Sie es im Vollmodus, dann geht die Auswahl an {note}.",
+    "\"{name}\" is closed. Open it in full mode.": "„{name}“ ist geschlossen. Öffnen Sie es im Vollmodus.",
+    "Send to Markdown": "Send to Markdown",
+    "To the end of {note}": "An das Ende von {note}",
+    "(a new note)": "(eine neue Notiz)",
+    "As a new note": "Als neue Notiz",
+    "Add to another note": "Zu einer anderen Notiz hinzufügen",
+    "No notes match": "Keine passenden Notizen",
+    "Add to {note}": "Zu {note} hinzufügen",
+    "The default note": "Die Standardnotiz",
+    "Make it the default note": "Als Standardnotiz festlegen"
+  },
   "update": {
     "Install updates by themselves when everything is saved and the app is in the background": "Updates von selbst installieren, wenn alles gespeichert ist und die App im Hintergrund läuft",
     "Check for updates": "Nach Updates suchen",
@@ -274,7 +296,7 @@
   },
   "manifest": {
     "Send to Markdown": "Send to Markdown",
-    "Sends a web page, a selection, a link or an image to a Markdown note in a folder on your disk. Edit it in the side panel.": "Sendet eine Webseite, Auswahl, einen Link oder ein Bild an eine Markdown-Notiz auf Ihrer Festplatte. Im Seitenbereich bearbeiten.",
-    "Send the page or the selection to Markdown": "Seite oder Auswahl an Markdown senden"
+    "Markdown Knowledge Base": "Markdown Knowledge Base",
+    "Sends what you select on a web page to your Markdown notes on disk: the default note or one you pick. Edit them in the side panel.": "Sendet die Auswahl einer Webseite an Ihre Markdown-Notizen: die Standardnotiz oder eine gewählte. Im Seitenbereich bearbeiten."
   }
 }

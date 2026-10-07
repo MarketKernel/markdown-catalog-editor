@@ -1,6 +1,6 @@
 /** Language, theme, zoom, images and clippings folders, updates and panel state, remembered in localStorage between sessions. */
 
-import { cleanClipFolder, DEFAULT_CLIP_FOLDER } from './clip';
+import { cleanClipFolder, cleanNotePath, DEFAULT_CLIP_FOLDER, DEFAULT_NOTE } from './clip';
 import { detectLanguage, isLanguage, type Language } from './i18n';
 import { cleanImageFolder, DEFAULT_IMAGES, type ImageSettings } from './vault';
 
@@ -39,11 +39,13 @@ export interface Settings {
   images: ImageSettings;
   /** Where the extension's pages become notes, from the root of the folder; '' → the root itself. */
   clipFolder: string;
+  /** The knowledge base's default note, where "Send to Markdown" adds what is selected. */
+  defaultNote: string;
   /** The installed app lets a new version in by itself while nothing is unsaved and it is out of sight. */
   autoUpdate: boolean;
 }
 
-const KEY = 'markdown-catalog-editor';
+export const SETTINGS_KEY = 'markdown-catalog-editor';
 
 export const ZOOM_MIN = 50;
 export const ZOOM_MAX = 200;
@@ -69,12 +71,13 @@ const DEFAULTS: Settings = {
   exportSite: true,
   images: DEFAULT_IMAGES,
   clipFolder: DEFAULT_CLIP_FOLDER,
+  defaultNote: DEFAULT_NOTE,
   autoUpdate: false,
 };
 
 export function loadSettings(): Settings {
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = localStorage.getItem(SETTINGS_KEY);
     if (!raw) return { ...DEFAULTS };
     const stored = JSON.parse(raw) as Partial<Settings>;
     return {
@@ -93,6 +96,7 @@ export function loadSettings(): Settings {
         perNote: stored.images?.perNote !== false,
       },
       clipFolder: typeof stored.clipFolder === 'string' ? cleanClipFolder(stored.clipFolder) : DEFAULT_CLIP_FOLDER,
+      defaultNote: typeof stored.defaultNote === 'string' ? cleanNotePath(stored.defaultNote) : DEFAULT_NOTE,
       autoUpdate: stored.autoUpdate === true,
     };
   } catch {
@@ -102,7 +106,7 @@ export function loadSettings(): Settings {
 
 export function saveSettings(settings: Settings): void {
   try {
-    localStorage.setItem(KEY, JSON.stringify(settings));
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
   } catch {
     /* private mode or a full quota — the editor works either way */
   }

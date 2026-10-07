@@ -29,11 +29,13 @@
 的形式提供：可以将其安装到系统中，之后作为一个独立的应用运行，拥有自己的窗口和图标，并可离线使
 用。在电脑上，Chrome、Edge 和 Arc 可使用地址栏中的安装按钮；在 Android 上，使用 Chrome 的 ⋮
 菜单 → 安装应用；在 iOS 上，在 Safari 或 Chrome 中使用“分享”→“添加到主屏幕”。你的笔记同样留
-在你自己的磁盘上，已安装的应用会在你确认时更新——参见“[GitHub Pages](#github-pages)”。
+在你自己的磁盘上，已安装的应用可以直接从 Finder 或资源管理器打开 `.md` 文件，并会在你确认时
+更新——参见“[GitHub Pages](#github-pages)”。
 
-同一款编辑器也是 **Send to Markdown**，一个 [Chrome 扩展程序](#send-to-markdown-chrome-扩展程序)：
-点击它的按钮，或在页面上右键，即可将页面——或选中内容、链接、图片——发送到你文件夹中的一篇笔
-记，编辑器随即在 Chrome 的侧边栏中、页面旁边打开。
+同一款编辑器也是 **Markdown Knowledge Base**，一个
+[Chrome 扩展程序](#markdown-knowledge-base-chrome-扩展程序)：在网页上选中文字，点击它的按
+钮，**Send to Markdown** 就会把内容添加到你知识库的默认笔记——或你选择的任意一篇笔记。编辑
+器本身会在 Chrome 的侧边栏中、页面旁边打开。
 
 ![编辑器中打开了一个笔记文件夹：左侧是文件树和标签，右侧是处于编辑模式的笔记](../macaed.jpg)
 
@@ -70,25 +72,56 @@ iOS 上的所有浏览器，包括 Chrome 在内，都运行在 Safari 的引擎
 如果你把 `macaed.html` 放在笔记旁边，并通过 HTTP 提供服务，页面会自动识别该文件夹——前提是同
 一目录下有一个 `index.json`，形如 `{ "name": "Notes", "files": ["Note.md", "Folder/Other.md"] }`。
 
-## Send to Markdown: Chrome 扩展程序
+### 单篇笔记
+
+`.md` 文件可以在没有其所在文件夹的情况下单独打开：
+
+- **从 Finder 或资源管理器打开**，在已安装的应用中（电脑上的 Chrome 或 Edge）：选择“打开方
+  式”→ 该应用，或将其设为 `.md` 的默认应用。如果应用已有一个窗口打开，笔记会进入该窗口——同
+  一个文件若由两个窗口打开，保存时会相互覆盖——并取代那里原本显示的文件夹；再次打开同一篇笔
+  记时，窗口会保持原样。
+- **拖放到窗口上**，在任意浏览器中均可。
+
+笔记会像在文件夹中一样被原地读取和写入——在 Safari 和 Firefox 中为只读，`⌘S` 会提供下载选
+项。由于周围没有文件夹，也就没有可以新建、重命名或删除的内容，也没有来自其文件夹的图片、标
+签或导出：这些功能都需要打开文件夹才能使用。以这种方式打开的笔记不会被加入最近使用的文件夹列
+表。
+
+## Markdown Knowledge Base: Chrome 扩展程序
 
 `npm run build` 还会写出 `build/extension/`：以 Chrome 扩展程序形式呈现的编辑器，以及供 Chrome
 网上应用店使用的 `build/macaed-extension-<version>.zip`；发布版本中也包含这个 zip 包。安装方法：
 `chrome://extensions` → 开发者模式 → 加载已解压的扩展程序 → `build/extension`（或解压后的
 zip）。
 
-编辑器本身位于 Chrome 的侧边栏中，在页面旁边，采用手机版布局，因为侧边栏比较窄；它会在各个标
-签页之间保持不变。在其中打开文件夹的方式与在单文件版本中相同，最近使用过的文件夹也会被记住——
-这是扩展程序自己的记录，与单文件版本或 PWA 的记录相互独立。扩展程序增加的功能，是把网页上的内
-容发送到你的笔记中：
+**知识库** 是扩展程序中最近一次打开的笔记文件夹。编辑器本身——即 **完整模式**——位于 Chrome
+的侧边栏中，在页面旁边，采用手机版布局，因为侧边栏比较窄；它会在各个标签页之间保持不变。在其
+中打开文件夹的方式与在单文件版本中相同，最近使用过的文件夹也会被记住——这是扩展程序自己的记
+录，与单文件版本或 PWA 的记录相互独立。
 
-- **工具栏按钮**（或 `Alt+Shift+M`）发送整个页面：它的正文内容——文章本身，不含网站的菜单、
-  侧边栏、页脚、分享按钮、表单和隐藏部分——如果页面上选中了内容，则只发送选中部分。
-- 页面的**右键菜单**中有**将页面发送到 Markdown**；选中文字时，有**将选中内容发送到
-  Markdown**；在链接上，有**将链接发送到 Markdown**；在图片上，有**将图片发送到 Markdown**。
+**工具栏按钮**（或 `Alt+Shift+M`）会在页面上方打开一个小窗口：
 
-这两种方式都会打开侧边栏，其中的对话框会显示收到的内容——页面、选中内容、链接或图片，以及来
-自哪个网站——以 Markdown 形式呈现，你仍可以修改它，并会询问要保存到哪里：
+- 顶部显示页面上被选中的内容，以 Markdown 形式呈现——如果没有选中任何内容，则显示页面的主
+  要文本：文章本身，不含网站的菜单、侧边栏、页脚、分享按钮、表单和隐藏部分。
+- **Send to Markdown** 会把内容添加到 **默认笔记** 的末尾——最初是知识库根目录下的
+  `Inbox.md`，在首次需要时创建。在一个空行之后是正文，然后是一行
+  `— [The page's title](https://…)`，链接到内容的来源。写入完成后窗口会关闭。
+- **添加到其他笔记**：显示知识库中的笔记，并带有按名称查找的字段；点击某篇笔记会改为添加到
+  那里。笔记旁边的星标可以把它设为默认笔记；默认笔记排在最前面。
+- 没有选中任何内容时，**作为新笔记** 会把整个页面变成一篇独立的笔记（见下文）。
+- **完整模式** 会打开侧边栏。
+
+**当知识库处于关闭状态时**——浏览器重启之后，除非你曾选择过“每次访问都允许”——页面在你点击
+之前无法进入文件夹：此时窗口会说明这一点，**在完整模式中打开** 会打开侧边栏，在那里点击一
+下文件夹即可重新获得访问权限。一旦文件夹打开，你选中的内容会自动发送到默认笔记。
+
+当侧边栏中打开着知识库时，是侧边栏在向笔记中添加内容——它可能已经打开了那篇笔记，并带有尚未
+保存的更改，背着它写入会丢失这些更改。侧边栏关闭时，则由窗口自己写入笔记。
+
+页面的**右键菜单**中有**将页面发送到 Markdown**；选中文字时，有**将选中内容发送到
+Markdown**；在链接上，有**将链接发送到 Markdown**；在图片上，有**将图片发送到 Markdown**。
+点击后都会打开侧边栏，其中的对话框会显示收到的内容——以及来自哪个网站——以 Markdown 形式呈
+现，你仍可以修改它，并会询问要保存到哪里：
 
 - **新建笔记**，页面的默认选项：保存在剪藏文件夹中（默认是根目录下的 `Clippings`，可自行更
   改；该文件夹会被记住，留空表示根目录），以页面标题命名，文件名中不允许出现的字符会被去掉。
@@ -107,8 +140,8 @@ zip）。
   The text…
   ```
 
-- **当前打开笔记的末尾**，选中内容、链接或图片的默认选项：在一个空行之后，跟着一行
-  `— [The page's title](https://…)`，链接到内容的来源。链接本身不需要这个——它自己就是来源。
+- **当前打开笔记的末尾**，选中内容、链接或图片的默认选项，方式与 Send to Markdown 相同。链
+  接不需要来源行——它自己就是来源。
 
 如果在打开文件夹之前就发送了内容，它会先等待：侧边栏会要求你打开一个文件夹，对话框会在文件夹
 打开后出现。扩展程序无法读取的页面——Chrome 自身的页面、网上应用店、PDF——会以指向它的链接形
@@ -124,18 +157,22 @@ zip）。
 **权限。** `activeTab`：点击按钮、菜单项或快捷键，才会把那一个标签页授予扩展程序，也只有这时
 扩展程序才会读取它——通过 `scripting`，在页面中运行一个函数，复制其文本并返回。扩展程序在任
 何地方都不运行内容脚本，也没有其他方式访问任何网站：没有 `host_permissions`，构建流程会拒绝它
-的出现。`contextMenus`、`sidePanel` 和 `storage`——后台工作进程通过 `chrome.storage.session`
-（浏览器关闭即清空）把取得的内容交给所在窗口的侧边栏，而侧边栏的语言则通过
-`chrome.storage.local` 传给后台工作进程，供菜单使用。扩展程序的页面带有 `connect-src 'none'`：
-编辑器不会在网络上访问任何东西；构建流程会检查这一点，以及是否有页面包含内联脚本或外部地址。
+的出现。`contextMenus`、`sidePanel` 和 `storage`——发送到侧边栏的内容会通过
+`chrome.storage.session`（浏览器关闭即清空）交给所在窗口的侧边栏，而侧边栏的语言则通过
+`chrome.storage.local` 传给后台工作进程，供菜单使用。按钮的窗口会通过 `chrome.runtime` 消息，
+请求所在窗口的侧边栏把内容添加到一篇笔记中，而侧边栏只会接受来自扩展程序自身页面的这类消息。
+扩展程序的页面带有 `connect-src 'none'`：编辑器不会在网络上访问任何东西；构建流程会检查这一
+点，以及是否有页面包含内联脚本或外部地址。
 
 **实现方式。** 侧边栏本身就是这个页面：`panel.html`，其脚本在 `panel.js` 中，这是 Manifest V3
 的要求——同样的 `src/main.ts`，只是用 `src/extension/extension.ts` 取代了 `src/platform.ts`，
-后者的钩子在单文件版本和 PWA 中什么都不做。后台工作进程 `background.js` 负责按钮、快捷键和菜
-单。Chrome 只允许在点击事件自身的处理函数内部、且在任何 await 之前打开侧边栏，因此后台工作进
-程会先打开侧边栏，之后再读取标签页内容（`src/extension/grab.ts`）；侧边栏把这段 HTML 转换为
-Markdown（`src/extension/to-markdown.ts`），编辑器再询问它要保存到哪里（`src/clip-ui.ts`、
-`src/clip.ts`）。
+后者的钩子在单文件版本和 PWA 中什么都不做。按钮的窗口是 `popup.html` 和 `popup.js`
+（`src/extension/popup.ts`），带有与该页面相同的样式：它从与侧边栏相同的 IndexedDB 中读取知
+识库的句柄，并在浏览器仍然允许的情况下通过它写入。后台工作进程 `background.js` 负责菜单。
+Chrome 只允许在点击事件自身的处理函数内部、且在任何 await 之前打开侧边栏，因此会先打开侧边
+栏，之后再读取标签页内容（`src/extension/take.ts`、`grab.ts`）；其 HTML 会在
+`src/extension/to-markdown.ts` 中转换为 Markdown，编辑器再将其添加进去，或询问它要保存到哪
+里（`src/clip.ts`、`src/clip-ui.ts`）。
 
 ## 实时预览
 
@@ -333,7 +370,7 @@ Markdown。
   `Referer`。
 - **文件始终留在你的磁盘上。** 笔记通过 File System Access API 被原地读取和写入；被记住的文
   件夹是浏览器 IndexedDB 中的句柄，绝不是路径或内容本身。
-- 扩展程序的权限：参见“[Send to Markdown](#send-to-markdown-chrome-扩展程序)”。
+- 扩展程序的权限：参见“[Markdown Knowledge Base](#markdown-knowledge-base-chrome-扩展程序)”。
 
 ## 功能
 
@@ -364,8 +401,11 @@ Markdown。
   `.meta.json` 中——参见“[标签](#标签)”。
 - **导出为 HTML**：将文件夹或其中某个子文件夹导出为带搜索功能的静态网站，或导出为单独一个
   页面——参见“[导出为 HTML](#导出为-html)”。
-- **Send to Markdown**：把 Chrome 中的页面、选中内容、链接或图片，以 Markdown 形式发送到一
-  篇笔记——参见“[Send to Markdown](#send-to-markdown-chrome-扩展程序)”。
+- **单篇笔记**：可以从 Finder 或资源管理器在已安装的应用中打开，也可以拖放到窗口上——参见
+  “[单篇笔记](#单篇笔记)”。
+- **Markdown Knowledge Base**：通过 Send to Markdown，把 Chrome 中选中的内容发送到默认笔
+  记，或发送到你选择的笔记；页面、链接或图片也可以发送到笔记中——参见
+  “[Markdown Knowledge Base](#markdown-knowledge-base-chrome-扩展程序)”。
 - **设置**（右上角、搜索旁边的齿轮图标）：界面语言、主题（跟随系统、浅色、深色）、
   50%–200% 的缩放、文本宽度（居中栏或全宽）、是否将笔记名称显示为标题，以及新增图片的去
   向：笔记旁边的图片文件夹（默认是 `assets`），以及是否为每篇笔记在其中建立专属子文件夹；如
@@ -445,7 +485,7 @@ npm run check      # typecheck, test, build and test:browser in a row: green mea
 
 `build.mjs` 使用 esbuild 把 `src/main.ts` 打包成一个 IIFE，并将其与样式和图标（一个 data
 URI）一起替换进 `src/template.html`；导出功能所用的模板和样式表则作为字符串打包进去。模板的
-内容安全策略会写入这一个脚本的哈希值。最终结果是 `build/macaed.html`，大约 620 KB。只要其中
+内容安全策略会写入这一个脚本的哈希值。最终结果是 `build/macaed.html`，大约 640 KB。只要其中
 留有哪怕一个外部引用，构建就会失败。
 
 同一次运行还会写出 `build/pages/`：将那个页面做成一个可安装的 PWA——带有清单链接和
@@ -453,8 +493,9 @@ URI）一起替换进 `src/template.html`；导出功能所用的模板和样式
 `manifest.webmanifest`、各个图标，以及用来缓存页面以便离线打开的 `sw.js`。`build/macaed.html`
 本身依旧是一个不含任何外部引用的单一文件。
 
-还有 `build/extension/`：`panel.html`——模板本身，其脚本位于 `panel.js`——`background.js`、
-各个图标、`_locales/` 以及 `manifest.json`，其版本号取自 `package.json`。
+还有 `build/extension/`：`panel.html`——模板本身，其脚本位于 `panel.js`——`popup.html`
+（带有该页面的样式和 `popup.css`）及 `popup.js`、`background.js`、各个图标、`_locales/` 以
+及 `manifest.json`，其版本号取自 `package.json`。
 `build/macaed-extension-<version>.zip` 包含同样的文件，并带有固定的日期：相同的源码总是产生
 相同的字节。
 
@@ -462,9 +503,11 @@ URI）一起替换进 `src/template.html`；导出功能所用的模板和样式
 协议与其通信，不依赖任何其他组件；如果没有 Chrome，这些测试会被跳过。
 `tools/test-extension.mjs` 通过该协议加载扩展程序（通过管道调用 `Extensions.loadUnpacked`；
 `--load-extension` 自 Chrome 137 版起已被移除），在侧边栏中打开一个文件夹，并向它发送来自本
-地服务器上测试网站的页面、选中内容、链接和图片。工具栏按钮和右键菜单都无法从 DevTools 中点
-击，因此测试会自行触发后台工作进程的 `onClicked`；由于没有真实的点击，Chrome 不会授予
-`activeTab`，因此被测试的这一份扩展程序可能需要把测试网站 `*.test` 作为主机权限才能访问。
+地服务器上测试网站的页面、选中内容、链接和图片；随后按钮的窗口会通过侧边栏以及独立地，把选
+中内容添加到默认笔记和指定笔记中，并在知识库关闭的情况下，把内容交给完整模式处理。右键菜单
+无法从 DevTools 中点击，因此测试会自行触发后台工作进程的 `onClicked`，并把按钮的窗口作为一个
+独立页面打开，告知它旁边是哪一个标签页；由于没有真实的点击，Chrome 不会授予 `activeTab`，因
+此被测试的这一份扩展程序可能需要把测试网站 `*.test` 作为主机权限才能访问。
 
 ## 版本和发布
 
@@ -508,12 +551,20 @@ git push --follow-tags      # the tag starts .github/workflows/release.yml
 版本不变。如果需要一个固定在磁盘上的版本，可以从某个发布版本中获取 `macaed-<tag>.html`，并
 用 `SHA256SUMS.txt` 进行校验。
 
+**打开一个 `.md` 文件。** 清单（manifest）把 Markdown 文件列为该应用可以打开的文件类型
+（`file_handlers`），并让它们只出现在一个窗口中（`launch_handler`，`focus-existing`）：参见
+“[单篇笔记](#单篇笔记)”。页面会在其启动流程——重新打开上次的文件夹——结束后，通过
+`launchQueue` 接收这些文件，因此文件夹不会取代笔记；如果文件是在导出过程中或对话框打开时到
+达的，会等到你再次打开它。
+
 已安装的应用会请求浏览器保留其存储空间（`navigator.storage.persist()`）：否则在磁盘空间不
 足时，离线副本和被记住的文件夹都可能被一并清除。
 
 `npm run test:browser` 也会打开 `build/pages/`（`tools/test-pwa.mjs`）：Service Worker 接管
 页面，Chrome 认为该清单可以安装，即使服务器关闭，页面依然能加载；随后依次测试检查更新无结
-果、无网络连接，以及一次新的部署——该部署会一直等待，直到“更新”把它放行。
+果、无网络连接，以及一次新的部署——该部署会一直等待，直到“更新”把它放行。无头 Chrome 不会
+向应用传递真实文件，因此一个替代的 `launchQueue` 会给页面一个真实的文件句柄：笔记会单独打
+开，而编辑会被保存进去。
 
 ## 布局
 
@@ -521,7 +572,7 @@ git push --follow-tags      # the tag starts .github/workflows/release.yml
 src/template.html   markup with the __STYLES__/__APP__/__ICON__ placeholders and the CSP
 src/styles.css      palette, light and dark themes, block paired with its source
 src/main.ts         opening a folder, saving, toolbar, search, settings
-src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD
+src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -542,8 +593,9 @@ src/platform.ts     what the page does beyond itself: nothing, except in the ext
 src/clip.ts         what the extension sends, as a note: file name, front matter, the end of a note
 src/clip-ui.ts      the dialog that asks where it goes
 src/pwa/sw.js       the service worker of the Pages build: offline, and a new version waits
-src/extension/      "Send to Markdown": manifest.json; background.ts (button, shortcut, menu);
-                    grab.ts (run in the page: its text or the selection); to-markdown.ts
+src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.html, popup.css
+                    (the button's window: Send to Markdown); background.ts (the menu); take.ts
+                    and grab.ts (run in the page: its text or the selection); to-markdown.ts
                     (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
                     formatting, tags, the export, clippings, dictionaries; in headless Chrome

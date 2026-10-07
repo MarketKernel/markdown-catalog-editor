@@ -31,13 +31,15 @@
 ウとアイコンを持つ別アプリとして動作し、オフラインでも使えます。パソコンでは、Chrome、
 Edge、Arc でアドレスバーのインストールボタンを使用します。Android では、Chrome の ⋮ メニュー
 → アプリをインストール。iOS では、Safari または Chrome で「共有」→「ホーム画面に追加」で
-す。そちらでもあなたのノートはあなたのディスクに留まり、インストールしたアプリはあなたが指
-示したときに更新されます——「[GitHub Pages](#github-pages)」を参照してください。
+す。そちらでもあなたのノートはあなたのディスクに留まり、インストールしたアプリは Finder や
+エクスプローラーから直接 `.md` を開くことができ、あなたが指示したときに更新されます——
+「[GitHub Pages](#github-pages)」を参照してください。
 
-同じエディタは **Send to Markdown** でもあります。これは [Chrome 拡張機能](#send-to-markdown-chrome-拡張機能)
-で、そのボタンのクリック、またはページ上での右クリックによって、ページ——あるいは選択範囲、
-リンク、画像——をあなたのフォルダ内のノートへ送ることができ、エディタはページの横、Chrome の
-サイドパネルの中に開きます。
+同じエディタは **Markdown Knowledge Base** でもあります。これは
+[Chrome 拡張機能](#markdown-knowledge-base-chrome-拡張機能) で、ウェブページ上でテキストを
+選択してそのボタンを押すと、**Send to Markdown** がそれをあなたのナレッジベースの既定のノー
+トへ——あるいはあなたが選んだ任意のノートへ——追加します。エディタ自体はページの横、Chrome
+のサイドパネルの中に開きます。
 
 ![ノートフォルダが開かれたエディタ：左側にファイルツリーとタグ、右側に編集モードのノート](../macaed.jpg)
 
@@ -79,29 +81,66 @@ Firefox ではフォルダは読み取り専用で開かれ、`⌘S` は変更�
 す——ただし同じ場所に `{ "name": "Notes", "files": ["Note.md", "Folder/Other.md"] }` という形
 式の `index.json` が必要です。
 
-## Send to Markdown: Chrome 拡張機能
+### 単独のノート
+
+`.md` ファイルは、そのフォルダなしに単独で開くこともできます。
+
+- **Finder やエクスプローラーから**、インストール済みのアプリで（パソコンの Chrome または
+  Edge）：「このアプリケーションで開く」→ そのアプリを選ぶか、`.md` の既定のアプリにしま
+  す。アプリのウィンドウがすでに開いている場合、ノートはそのウィンドウに入ります——同じファ
+  イルを 2 つのウィンドウで開くと、保存が互いを上書きしてしまうためです——そしてそこに表示さ
+  れていたフォルダの代わりになります。同じノートを再度開いても、ウィンドウはそのままです。
+- **ウィンドウへのドラッグ＆ドロップ**、どのブラウザでも可能です。
+
+ノートはフォルダの場合と同じようにその場で読み書きされます——Safari と Firefox では読み取り
+専用で、`⌘S` はダウンロードを提案します。周囲にフォルダがないため、新規作成や名前変更、削除
+するものもなく、フォルダ内の画像、タグ、書き出しもありません。それらはフォルダを開くことで
+利用できます。この方法で開いたノートは、最近使ったフォルダの一覧には加わりません。
+
+## Markdown Knowledge Base: Chrome 拡張機能
 
 `npm run build` は `build/extension/` も出力します。Chrome 拡張機能としてのエディタと、
 Chrome ウェブストア向けの `build/macaed-extension-<version>.zip` です。リリースにもこの zip
 が含まれます。インストール方法：`chrome://extensions` → デベロッパーモード → パッケージ化さ
 れていない拡張機能を読み込む → `build/extension`（または展開した zip）。
 
-エディタ自体は Chrome のサイドパネルの中、ページの横に存在し、パネルが狭いためスマートフォ
-ン向けのレイアウトで表示されます。タブをまたいでもそこに留まります。フォルダを開く方法はファ
-イル版と同じで、最近使ったフォルダも記憶されます——これは拡張機能自身の記録であり、ファイル
-版や PWA のものとは別です。拡張機能が追加するのは、ウェブ上のものをあなたのノートへ送る機能
-です。
+**ナレッジベース** とは、拡張機能の中で最後に開いたノートのフォルダのことです。エディタ
+自体——**フルモード**——は Chrome のサイドパネルの中、ページの横に存在し、パネルが狭いためス
+マートフォン向けのレイアウトで表示されます。タブをまたいでもそこに留まります。フォルダを開く
+方法はファイル版と同じで、最近使ったフォルダも記憶されます——これは拡張機能自身の記録であり、
+ファイル版や PWA のものとは別です。
 
-- **ツールバーのボタン**（または `Alt+Shift+M`）はページを送信します。その本文——記事部
-  分、サイトのメニューやサイドバー、フッター、共有ボタン、フォーム、隠れた要素を除いたもの
-  ——を送ります。ページ上で何かが選択されている場合は、選択範囲のみを送ります。
-- ページの**右クリックメニュー**には **ページを Markdown に送信** があります。選択したテキ
-  スト上では **選択範囲を Markdown に送信**、リンク上では **リンクを Markdown に送信**、画
-  像上では **画像を Markdown に送信** があります。
+**ツールバーのボタン**（または `Alt+Shift+M`）は、ページの上に小さなウィンドウを開きます。
 
-どちらの方法でもサイドパネルが開き、そこに表示されるダイアログには、届いた内容——ページ、選
-択範囲、リンク、画像、そしてどのサイトからのものか——が、まだ編集可能な Markdown として表示
-され、どこに保存するかを尋ねられます。
+- 上部には、ページ上で選択されている内容が Markdown として表示されます——何も選択されてい
+  ない場合は、ページの主要なテキスト：記事部分、サイトのメニューやサイドバー、フッター、共
+  有ボタン、フォーム、隠れた要素を除いたものです。
+- **Send to Markdown** は、それを **既定のノート** の末尾に追加します——最初はナレッジベー
+  スのルートにある `Inbox.md` で、初めて必要になったときに作成されます。空行の後に本文が続
+  き、その後に送信元へのリンクとなる `— [The page's title](https://…)` という行が入りま
+  す。書き込みが終わるとウィンドウは閉じます。
+- **他のノートに追加**：ナレッジベースのノートが、名前で検索できる欄とともに表示されます。
+  ノートをクリックすると、代わりにそこへ追加されます。ノートの横にある星印はそれを既定のノー
+  トにします。既定のノートは一覧の先頭に表示されます。
+- 何も選択されていない場合、**新規ノートとして** はページをそれ自体のノートに変えます（下記
+  参照）。
+- **フルモード** はサイドパネルを開きます。
+
+**ナレッジベースが閉じている場合**——ブラウザの再起動後、「アクセスのたびに許可」を選んでい
+ない限り——ページは、あなたがクリックするまでフォルダに入ることができません。このときウィン
+ドウはその旨を伝え、**フルモードで開く** がサイドパネルを開き、そこでフォルダを一度クリック
+するとアクセスが戻ります。フォルダが開かれると、選択していた内容は自動的に既定のノートへ送ら
+れます。
+
+サイドパネルがナレッジベースを開いているときは、ノートへの追加を行うのはそのパネルです——そ
+のノートはまだ保存されていない変更を抱えたまま開かれている場合があり、陰で書き込むとそれが
+失われてしまうためです。パネルが閉じている場合は、ウィンドウ自体がノートを書き込みます。
+
+ページの **右クリックメニュー** には **ページを Markdown に送信** があります。選択したテキ
+スト上では **選択範囲を Markdown に送信**、リンク上では **リンクを Markdown に送信**、画
+像上では **画像を Markdown に送信** があります。いずれもサイドパネルを開き、そこに表示され
+るダイアログには、届いた内容——そしてどのサイトからのものか——が、まだ編集可能な Markdown と
+して表示され、どこに保存するかを尋ねられます。
 
 - **新規ノート**、ページの場合のデフォルト：クリップ用フォルダ内に（デフォルトではルートの
   `Clippings`、変更も可能です。このフォルダは記憶され、空欄はルートを意味します）、ページの
@@ -121,9 +160,9 @@ Chrome ウェブストア向けの `build/macaed-extension-<version>.zip` です
   The text…
   ```
 
-- **開いているノートの末尾**、選択範囲・リンク・画像の場合のデフォルト：空行の後に、送信元
-  へのリンクとなる `— [The page's title](https://…)` という行が続きます。リンクの場合はこれ
-  は不要です。リンク自体がそのソースだからです。
+- **開いているノートの末尾**、選択範囲・リンク・画像の場合のデフォルトで、Send to
+  Markdown と同じ方法です。リンクの場合は送信元の行は不要です——リンク自体がそのソースだから
+  です。
 
 フォルダを開く前に送信された場合は、待機します。パネルはフォルダを求め、フォルダが開かれた時
 点でダイアログが表示されます。拡張機能が読み取れないページ——Chrome 自体のページ、ウェブスト
@@ -142,22 +181,26 @@ Chrome ウェブストア向けの `build/macaed-extension-<version>.zip` です
 だけが拡張機能に許可され、そこで初めて読み取りが行われます——`scripting` を使って、ページ内
 でテキストをコピーして返す関数が実行されます。コンテンツスクリプトはどこでも実行されず、他に
 いかなるサイトへのアクセスもありません。`host_permissions` は存在せず、ビルドはこれを拒否し
-ます。`contextMenus`、`sidePanel`、`storage`——バックグラウンドのワーカーは取得した内容を、
-`chrome.storage.session`（ブラウザを閉じると消えます）を通じてそのウィンドウのパネルに渡
-し、パネルの言語はメニューのために `chrome.storage.local` を通じてワーカーに渡されます。拡
-張機能のページには `connect-src 'none'` が設定されています。エディタはネットワーク上の何に
-も到達しません。ビルドはこれを確認し、またどのページにもインラインスクリプトや外部アドレスが
-ないことも確認します。
+ます。`contextMenus`、`sidePanel`、`storage`——サイドパネルへ送られる内容は、
+`chrome.storage.session`（ブラウザを閉じると消えます）を通じてそのウィンドウのパネルに渡さ
+れ、パネルの言語はメニューのために `chrome.storage.local` を通じてワーカーに渡されます。ボタ
+ンのウィンドウは `chrome.runtime` メッセージによって、そのウィンドウのパネルにノートへの追
+加を依頼し、パネルは拡張機能自身のページからのものだけを受け取ります。拡張機能のページには
+`connect-src 'none'` が設定されています。エディタはネットワーク上の何にも到達しません。ビル
+ドはこれを確認し、またどのページにもインラインスクリプトや外部アドレスがないことも確認しま
+す。
 
 **実装方法。** パネルはそのページ自体です。`panel.html` とそのスクリプトである `panel.js`
 で、これは Manifest V3 が求める形です——同じ `src/main.ts` を使い、`src/platform.ts` の代わ
 りに `src/extension/extension.ts` を使います。`src/platform.ts` のフックは、ファイル版と
-PWA では何もしません。ワーカーである `background.js` がボタン、ショートカット、メニューを担
-当します。Chrome はクリックのハンドラ自体の中で、何かを await する前にしかサイドパネルを開
-けないため、ワーカーは先にパネルを開いてから、その後でタブを読み取ります
-（`src/extension/grab.ts`）。パネルはその HTML を Markdown に変換し
-（`src/extension/to-markdown.ts`）、エディタはそれをどこに保存するか尋ねます
-（`src/clip-ui.ts`、`src/clip.ts`）。
+PWA では何もしません。ボタンのウィンドウは `popup.html` と `popup.js`
+（`src/extension/popup.ts`）で、そのページと同じスタイルを持ち、パネルと同じ IndexedDB から
+ナレッジベースのハンドルを読み取り、ブラウザがまだ許可している間はそれを通じて書き込みま
+す。ワーカーである `background.js` はメニューを担当します。Chrome はクリックのハンドラ自体
+の中で、何かを await する前にしかサイドパネルを開けないため、まずパネルが開かれ、その後でタ
+ブが読み取られます（`src/extension/take.ts`、`grab.ts`）。その HTML は
+`src/extension/to-markdown.ts` で Markdown に変換され、エディタはそれを追加するか、どこに保
+存するか尋ねます（`src/clip.ts`、`src/clip-ui.ts`）。
 
 ## ライブプレビュー
 
@@ -404,7 +447,7 @@ Markdown は元のまま保たれ、フォルダの全タグはノートの隣�
 - **ファイルは常にあなたのディスク上にあります。** ノートは File System Access API を通じ
   てその場で読み書きされます。記憶されたフォルダはブラウザの IndexedDB 内のハンドルであり、
   パスや内容そのものではありません。
-- 拡張機能の権限については、「[Send to Markdown](#send-to-markdown-chrome-拡張機能)」を参
+- 拡張機能の権限については、「[Markdown Knowledge Base](#markdown-knowledge-base-chrome-拡張機能)」を参
   照してください。
 
 ## 機能
@@ -445,8 +488,12 @@ Markdown は元のまま保たれ、フォルダの全タグはノートの隣�
 - **HTML に書き出す**：フォルダ、またはそのサブフォルダの一つを、検索付きの静的サイトとし
   て、あるいは単一ページとして書き出します——「[HTML に書き出す](#html-に書き出す)」を参照
   してください。
-- **Send to Markdown**：Chrome 上のページ、選択範囲、リンク、画像を Markdown としてノート
-  へ送ります——「[Send to Markdown](#send-to-markdown-chrome-拡張機能)」を参照してくださ
+- **単独のノート** は Finder やエクスプローラーからインストール済みのアプリで開く、あるい
+  はウィンドウへドロップすることで開けます——「[単独のノート](#単独のノート)」を参照してく
+  ださい。
+- **Markdown Knowledge Base**：Send to Markdown によって、Chrome で選択した内容を既定のノー
+  トへ、またはあなたが選んだノートへ送ります。ページ、リンク、画像もノートへ送れます——
+  「[Markdown Knowledge Base](#markdown-knowledge-base-chrome-拡張機能)」を参照してくださ
   い。
 - **設定**（右上、検索の隣にある歯車アイコン）：インターフェース言語、テーマ（システム、ラ
   イト、ダーク）、50〜200% のズーム、テキストの幅（中央寄せのカラムか全幅か）、ノート名をタ
@@ -537,7 +584,7 @@ npm run check      # typecheck, test, build and test:browser in a row: green mea
 ン（data URI）とともに `src/template.html` に埋め込みます。書き出し機能のテンプレートとス
 タイルシートは文字列としてバンドルされます。テンプレートのコンテンツセキュリティポリシー
 は、その 1 つのスクリプトのハッシュ値を得ます。結果として得られるのが `build/macaed.html`
-で、約 620 KB です。外部参照が 1 つでも残っていれば、ビルドは失敗します。
+で、約 640 KB です。外部参照が 1 つでも残っていれば、ビルドは失敗します。
 
 同じ実行で `build/pages/` も書き出されます。そのページをインストール可能な PWA にしたも
 の——マニフェストへのリンクと、ページにワーカーの登録を伝える `<meta
@@ -546,7 +593,8 @@ name="service-worker">` を持つ `index.html`、`manifest.webmanifest`、各ア
 照を一切持たない単一ファイルのままです。
 
 そして `build/extension/`：`panel.html`——テンプレート本体、そのスクリプトは
-`panel.js`——`background.js`、各アイコン、`_locales/`、そして `manifest.json`（バージョンは
+`panel.js`——`popup.html`（そのページのスタイルと `popup.css` を含む）と `popup.js`、
+`background.js`、各アイコン、`_locales/`、そして `manifest.json`（バージョンは
 `package.json` のものです）。`build/macaed-extension-<version>.zip` は同じファイルを固定日
 時で保持します。同じソースからは常に同じバイト列が生成されます。
 
@@ -555,10 +603,12 @@ name="service-worker">` を持つ `index.html`、`manifest.webmanifest`、各ア
 `tools/test-extension.mjs` は、そのプロトコルを通じて拡張機能を読み込み（パイプ越しの
 `Extensions.loadUnpacked`。`--load-extension` は Chrome 137 以降廃止されています）、サイド
 パネルでフォルダを開き、ローカルサーバー上のテストサイトからページ、選択範囲、リンク、画像
-を送信します。ツールバーのボタンも右クリックメニューも DevTools からクリックすることはでき
-ないため、テストはワーカーの `onClicked` を自ら発火させます。実際のクリックがないため
-Chrome は `activeTab` を付与しません。そのため、テスト対象のコピーはテストサイト
-`*.test` にホスト権限としてアクセスする場合があります。
+を送信します。続いてボタンのウィンドウが、パネルを通じて、または単独で、選択内容を既定のノー
+トと指定したノートへ追加し、ナレッジベースが閉じている場合はそれをフルモードに渡します。右ク
+リックメニューは DevTools からクリックできないため、テストはワーカーの `onClicked` を自ら発
+火させ、ボタンのウィンドウを独立したページとして開き、どのタブが隣にあるかを伝えます。実際の
+クリックがないため Chrome は `activeTab` を付与しません。そのため、テスト対象のコピーはテス
+トサイト `*.test` にホスト権限としてアクセスする場合があります。
 
 ## バージョンとリリース
 
@@ -607,6 +657,13 @@ iOS では「共有」→「ホーム画面に追加」です。フォルダは�
 固定されたバージョンが必要な場合は、リリースから `macaed-<tag>.html` を取得し、
 `SHA256SUMS.txt` と照合してください。
 
+**`.md` を開く。** マニフェストは Markdown ファイルをこのアプリが開くファイルとして指定し
+（`file_handlers`）、それらを 1 つのウィンドウにまとめます（`launch_handler`、
+`focus-existing`）：「[単独のノート](#単独のノート)」を参照してください。ページはその起動処
+理——最後のフォルダを再び開く処理——が終わった後に `launchQueue` を通じてそれらを受け取るた
+め、フォルダがノートを置き換えることはありません。書き出し中やダイアログが開いている間に届い
+たものは、あなたが再度開くまで待機します。
+
 インストール済みのアプリは、ブラウザにそのストレージを保持するよう求めます
 （`navigator.storage.persist()`）。そうしないと、ディスク容量が逼迫したときに、オフライン
 のコピーと記憶されたフォルダが一緒に失われることがあります。
@@ -614,7 +671,9 @@ iOS では「共有」→「ホーム画面に追加」です。フォルダは�
 `npm run test:browser` は `build/pages/` も開きます（`tools/test-pwa.mjs`）。サービスワー
 カーがページを引き継ぎ、Chrome はマニフェストをインストール可能と判断し、サーバーがなくなっ
 てもページは読み込まれ続けます。続いて、更新なしの確認、接続なし、そして新しいデプロイの順
-でテストされ、最後のものは「更新」がそれを通すまで待機します。
+でテストされ、最後のものは「更新」がそれを通すまで待機します。ヘッドレス Chrome はアプリ
+にファイルを渡さないため、代わりとなる `launchQueue` がページに実際のファイルハンドルを与え
+ます：ノートは単独で開き、編集はそこに保存されます。
 
 ## レイアウト
 
@@ -622,7 +681,7 @@ iOS では「共有」→「ホーム画面に追加」です。フォルダは�
 src/template.html   markup with the __STYLES__/__APP__/__ICON__ placeholders and the CSP
 src/styles.css      palette, light and dark themes, block paired with its source
 src/main.ts         opening a folder, saving, toolbar, search, settings
-src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD
+src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -643,8 +702,9 @@ src/platform.ts     what the page does beyond itself: nothing, except in the ext
 src/clip.ts         what the extension sends, as a note: file name, front matter, the end of a note
 src/clip-ui.ts      the dialog that asks where it goes
 src/pwa/sw.js       the service worker of the Pages build: offline, and a new version waits
-src/extension/      "Send to Markdown": manifest.json; background.ts (button, shortcut, menu);
-                    grab.ts (run in the page: its text or the selection); to-markdown.ts
+src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.html, popup.css
+                    (the button's window: Send to Markdown); background.ts (the menu); take.ts
+                    and grab.ts (run in the page: its text or the selection); to-markdown.ts
                     (HTML → Markdown); extension.ts (in the place of platform.ts); messages.ts
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
                     formatting, tags, the export, clippings, dictionaries; in headless Chrome
