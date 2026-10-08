@@ -70,7 +70,10 @@
       "other": "{count}개 페이지를 {folder}에 내보냈습니다"
     },
     "Export stopped: {folder} is incomplete": "내보내기 중지됨: {folder}이(가) 완전하지 않습니다",
-    "Export stopped": "내보내기 중지됨"
+    "Export stopped": "내보내기 중지됨",
+    "\"{name}\" is copied into this browser": "\"{name}\"이(가) 이 브라우저에 복사되었습니다",
+    "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "\"{name}\"이(가) 이 브라우저에 복사되어 있습니다. 공간이 부족해지면 지워질 수 있으니 가끔 설정에서 ZIP 파일을 다운로드하세요",
+    "Could not make the ZIP archive: {reason}": "ZIP 파일을 만들 수 없습니다: {reason}"
   },
   "gate": {
     "Drag a folder or a note": "폴더나 노트를 드래그하세요",
@@ -86,7 +89,13 @@
     "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "Chrome이 물으면 “방문할 때마다 허용”을 선택하세요: 그러면 패널을 닫아도 폴더가 계속 열려 있습니다.",
     "Remove from the list": "목록에서 제거",
     "The folder \"{name}\" is no longer there, so it was removed from the list": "“{name}” 폴더가 더 이상 없어 목록에서 제거했습니다",
-    "Version {version}": "버전 {version}"
+    "Version {version}": "버전 {version}",
+    "In this browser": "이 브라우저의 폴더",
+    "Delete from this browser": "이 브라우저에서 삭제",
+    "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "이 브라우저는 디스크의 폴더에 쓸 수 없어 노트를 브라우저 안에 보관합니다: 여는 폴더나 ZIP 파일은 브라우저에 복사되고, 편집 내용은 그 안에 저장됩니다. 어떤 데이터도 전송되지 않습니다. 노트를 꺼내려면 설정에서 ZIP 파일을 다운로드하세요. 브라우저의 사이트 데이터를 지우면 노트도 삭제됩니다.",
+    "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "Safari도 에디터를 홈 화면에 추가하지 않는 한 7일간 방문이 없으면 이를 삭제합니다.",
+    "Open ZIP archive": "ZIP 파일 열기",
+    "or drag a folder or a ZIP archive here": "또는 폴더나 ZIP 파일을 여기로 드래그하세요"
   },
   "dialog": {
     "Note not found": "노트를 찾을 수 없음",
@@ -107,7 +116,9 @@
     "Done": "완료",
     "Close folder": "폴더 닫기",
     "The note has unsaved changes. Close the folder anyway?": "노트에 저장되지 않은 변경 사항이 있습니다. 그래도 폴더를 닫을까요?",
-    "Close": "닫기"
+    "Close": "닫기",
+    "Delete from this browser": "이 브라우저에서 삭제",
+    "Delete \"{name}\" and all its notes from this browser? This cannot be undone: to keep a copy, open it and download a ZIP archive from the settings first.": "\"{name}\"과(와) 그 안의 모든 노트를 이 브라우저에서 삭제할까요? 이 작업은 되돌릴 수 없습니다: 복사본을 남기려면 먼저 열어서 설정에서 ZIP 파일을 다운로드하세요."
   },
   "doc": {
     "no such file: {path}": "파일 없음: {path}",
@@ -116,10 +127,19 @@
   "errors": {
     "The folder is open read-only": "폴더가 읽기 전용으로 열려 있습니다",
     "This browser cannot write files": "이 브라우저는 파일을 쓸 수 없습니다",
+    "The folder is no longer in this browser": "폴더가 더 이상 이 브라우저에 없습니다",
     "\"{name}\" already exists": "\"{name}\"이(가) 이미 있습니다",
+    "This name cannot be used here: {name}": "이 이름은 여기서 사용할 수 없습니다: {name}",
     "File not found: {path}": "파일을 찾을 수 없음: {path}",
     "The browser was not allowed to open the folder": "브라우저가 폴더를 열 수 있는 권한을 받지 못했습니다",
-    "A note opened on its own has no folder around it": "단독으로 연 노트에는 주변 폴더가 없습니다"
+    "A note opened on its own has no folder around it": "단독으로 연 노트에는 주변 폴더가 없습니다",
+    "The ZIP archive has no notes": "ZIP 파일에 노트가 없습니다",
+    "Too many files for a ZIP archive": "ZIP 파일에 담기에는 파일이 너무 많습니다",
+    "Too much for a ZIP archive: over 4 GB": "ZIP 파일에 담기에는 너무 큽니다: 4GB 초과",
+    "This is not a ZIP archive, or it is damaged": "ZIP 파일이 아니거나 손상되었습니다",
+    "The ZIP archive is too large: over 4 GB or 65 535 files": "ZIP 파일이 너무 큽니다: 4GB 또는 65,535개 파일을 초과했습니다",
+    "The ZIP archive is encrypted: {path}": "ZIP 파일이 암호화되어 있습니다: {path}",
+    "The ZIP archive is compressed in a way this editor cannot read: {path}": "ZIP 파일이 이 편집기가 읽을 수 없는 방식으로 압축되어 있습니다: {path}"
   },
   "palette": {
     "Red": "빨간색",
@@ -151,7 +171,10 @@
     "Images": "이미지",
     "Images folder": "이미지 폴더",
     "A subfolder named after the note": "노트 이름으로 된 하위 폴더",
-    "Version {version}": "버전 {version}"
+    "Version {version}": "버전 {version}",
+    "Download ZIP": "ZIP 다운로드",
+    "Kept in this browser": "이 브라우저에 보관됨",
+    "The whole folder": "폴더 전체"
   },
   "app": {
     "Notes editor": "노트 편집기"

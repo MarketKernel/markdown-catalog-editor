@@ -33,7 +33,9 @@ Arc'ta, adres çubuğundaki kurulum düğmesini kullanın; Android'de Chrome'un 
 Uygulamayı yükle; iOS'ta Paylaş → Ana Ekrana Ekle, Safari'de veya Chrome'da. Notlarınız
 orada da diskinizde kalır, kurulu uygulama bir `.md` dosyasını doğrudan Finder veya
 Explorer'dan açar, ve siz söylediğinizde güncellenir — bkz.
-„[GitHub Pages](#github-pages)“.
+„[GitHub Pages](#github-pages)“. Bir tarayıcı diske yazamadığında — Safari, Firefox, bir
+iPad veya bir telefon — notlar tarayıcının içinde tutulur ve bir ZIP dosyası olarak içeri ve
+dışarı çıkar: bkz. „[Tarayıcıda tutulan notlar](#tarayıcıda-tutulan-notlar)“.
 
 Aynı düzenleyici aynı zamanda **Markdown Knowledge Base**'dir, bir
 [Chrome uzantısı](#markdown-knowledge-base-chrome-uzantısı): bir web sayfasında metin seçin,
@@ -64,10 +66,10 @@ yanında açılır.
 
 Chrome, Edge ve Arc'ta klasör, File System Access API üzerinden açılır: notlar doğrudan
 yerinde okunur ve yazılır, ve dosya ile klasör oluşturma, yeniden adlandırma ve silme
-işlemlerinin hepsi çalışır. Safari ve Firefox'ta klasör salt okunur olarak açılır, ve `⌘S`
-değiştirilen dosyayı indirmeyi önerir — telefonlarda da böyledir: Android'de Chrome'da File
-System Access yoktur, ve iOS'taki her tarayıcı, Chrome dahil, Safari'nin motoru üzerinde
-çalışır.
+işlemlerinin hepsi çalışır. Safari ve Firefox diske bir klasör yazamaz, telefonlar ve
+iPad'ler de yazamaz: Android'de Chrome'da File System Access yoktur, ve iOS ve iPadOS'taki
+her tarayıcı, Chrome dahil, Safari'nin motoru üzerinde çalışır. Orada notlar tarayıcının
+içinde tutulur — bkz. „[Tarayıcıda tutulan notlar](#tarayıcıda-tutulan-notlar)“.
 
 Düzenleyici orada açılan son altı klasörü hatırlar (bir sayfa bir klasörün yolunu asla
 öğrenmez, bu yüzden klasörün tanıtıcısını tarayıcının IndexedDB'sinde saklar), ve her
@@ -82,6 +84,44 @@ ayarlardaki „Klasörü kapat“a tıklayın; × bir klasörü listeden kaldır
 kendiliğinden fark eder — yanında `{ "name": "Notes", "files": ["Note.md",
 "Folder/Other.md"] }` biçiminde bir `index.json` bulunması koşuluyla.
 
+### Tarayıcıda tutulan notlar
+
+Tarayıcı diske bir klasör yazamadığında — Safari, Firefox, bir telefondaki veya iPad'deki
+herhangi bir tarayıcı — başlangıç ekranı bunu belirtir ve girmek için iki yol sunar:
+**Klasör aç** ve **ZIP dosyası aç** (veya ikisinden birini pencereye sürükleyin). Açtığınız
+şey tarayıcının IndexedDB'sine kopyalanır, ve o andan itibaren düzenleyici o kopyayı okur ve
+yazar: otomatik kayıt, yeni notlar ve klasörler, yeniden adlandırma, silme, görseller,
+etiketler — hepsi bir diskteymiş gibi çalışır. Hiçbir şey cihazdan çıkmaz.
+
+- **Geri çıkış yolu** bir ZIP dosyasıdır: ayarlarda → **ZIP indir**, tüm klasörü — notları,
+  görselleri, `.meta.json`'ı — Finder veya Explorer'da sıkıştırılmış bir klasörün olacağı
+  gibi, adını taşıyan tek bir klasörün altında paketler. Yeniden bir dosya olarak
+  açıldığında, olduğu gibi geri gelir. Düğme, diskteki bir klasörle de, onun hızlı bir
+  kopyası olarak oradadır.
+- **Finder, Explorer veya `zip` tarafından oluşturulan bir dosya**, içindeki tek klasör
+  olarak açılır (veya, üstte dosyalar varsa, dosyanın adı altında). Yalnızca
+  düzenleyicinin gösterdiği şey kopyalanır — notlar, görseller ve ekler, `.meta.json`;
+  gizli klasörler, `node_modules`, `output/` ve Mac'in `__MACOSX`'i dışarıda kalır. Hiçbir
+  klasör seçiciye ihtiyaç duymaz, ki bu da Safari'si bir klasör seçemeyen daha eski bir
+  iPad'in tam olarak ihtiyaç duyduğu şeydir.
+- **Başlangıç ekranı**, bu tarayıcıda tutulan klasörleri, en yeniden eskiye, listeler, ve
+  sonuncusu bir sonraki başlangıçta kendiliğinden açılır. Aynı klasörü veya dosyayı tekrar
+  açmak, ilkindeki düzenlemelerin üzerine yazmak yerine, ilkinin yanına ikinci bir kopya
+  ekler („Notes 2“). × bir kopyayı, sorduktan sonra, tarayıcıdan siler — tek kopya o
+  olabilir.
+- **HTML'ye dışa aktarma**, siteyi `output/`'a yazmak yerine bir ZIP dosyası olarak
+  indirir.
+- **Ne kadar süre kaldıkları**: tarayıcıdan sitenin verilerini kalıcı olarak saklaması
+  istenir (`navigator.storage.persist()`) — Firefox size sorar, Chrome ve Safari kendi
+  başlarına karar verir, kurulu bir uygulama için daha kolay. Hayır diyen bir tarayıcı,
+  disk alanı azaldığında notları temizleyebilir, ve Safari, Ana Ekrana eklenmediği sürece,
+  yedi gündür Safari'de ziyaret edilmemiş bir sitenin verilerini temizler. Sitenin
+  verilerini veya tarayıcının geçmişini temizlemek onları herhangi bir tarayıcıda siler. Bu
+  yüzden arada bir bir ZIP dosyası indirin — tarayıcının dışındaki tek kopya odur.
+
+IndexedDB kapalıyken (bazı gizli pencerelerde), bir klasör önceki gibi salt okunur açılır,
+ve `⌘S` değiştirilen notu indirmeyi önerir.
+
 ### Tek bir not
 
 Bir `.md` dosyası, klasörü olmadan tek başına da açılabilir:
@@ -94,7 +134,8 @@ Bir `.md` dosyası, klasörü olmadan tek başına da açılabilir:
 - **Pencereye sürüklenerek**, herhangi bir tarayıcıda.
 
 Not, bir klasördeki gibi yerinde okunur ve yazılır — Safari ve Firefox'ta salt okunur, `⌘S`
-bir indirme önerir. Çevresinde bir klasör olmadan yanında oluşturulacak, yeniden
+bir indirme önerir (bir not tarayıcıya kopyalanmaz; klasörü kopyalanabilir). Çevresinde bir
+klasör olmadan yanında oluşturulacak, yeniden
 adlandırılacak veya silinecek bir şey yoktur, ve klasöründen görseller, etiketler veya dışa
 aktarma yoktur: bunlar klasörü açmakla gelir. Bu şekilde açılan bir not, son kullanılan
 klasörlere eklenmez.
@@ -463,7 +504,9 @@ sistemi izler, ve site aynı şekilde okunur ve bağlantı verir.
   taşımaz.
 - **Dosyalar diskinizde kalır.** Notlar, File System Access API üzerinden doğrudan yerinde
   okunur ve yazılır; hatırlanan klasörler tarayıcının IndexedDB'sinde tanıtıcılardır, asla
-  yollar veya içerikler değildir.
+  yollar veya içerikler değildir. Bir tarayıcı diske yazamadığında, açtığınız klasörler
+  yalnızca bu cihazda onun IndexedDB'sine kopyalanır, ve oradan yalnızca indirdiğiniz bir
+  ZIP dosyası olarak çıkar — bkz. „[Tarayıcıda tutulan notlar](#tarayıcıda-tutulan-notlar)“.
 - Uzantının izinleri: bkz. „[Markdown Knowledge Base](#markdown-knowledge-base-chrome-uzantısı)“.
 
 ## Özellikler
@@ -507,6 +550,10 @@ sistemi izler, ve site aynı şekilde okunur ve bağlantı verir.
   aktarma](#htmlye-dışa-aktarma)“.
 - **Tek bir not**, kurulu uygulamada Finder veya Explorer'dan açılan, veya pencereye
   bırakılan — bkz. „[Tek bir not](#tek-bir-not)“.
+- **Tarayıcıda tutulan notlar**, diske yazamadığında — Safari, Firefox, telefonlar,
+  iPad'ler — bir ZIP dosyası olarak içeri ve dışarı çıkar; herhangi bir klasör ayarlardan
+  bir tane olarak indirilir — bkz. „[Tarayıcıda tutulan
+  notlar](#tarayıcıda-tutulan-notlar)“.
 - **Markdown Knowledge Base**: Chrome'da seçilenin varsayılan nota veya seçtiğiniz bir
   nota, Send to Markdown ile; bir sayfanın, bağlantının veya görselin bir nota — bkz.
   „[Markdown Knowledge Base](#markdown-knowledge-base-chrome-uzantısı)“.
@@ -515,7 +562,8 @@ sistemi izler, ve site aynı şekilde okunur ve bağlantı verir.
   not adının başlık olarak gösterilip gösterilmediği, ve eklenen görsellerin nereye
   gideceği: notun yanındaki görsel klasörü (varsayılan olarak `assets`) ve her notun
   içinde kendi alt klasörünü alıp almayacağı; böyle biri yoksa, tüm görseller doğrudan
-  klasöre gider. En altta sürüm — ve kurulu uygulamada, güncellemelerin denetlenmesi ve
+  klasöre gider. Ardından açık klasör: Klasörü kapat, ve tamamını bir dosya olarak ZIP
+  indir. En altta sürüm — ve kurulu uygulamada, güncellemelerin denetlenmesi ve
   kendiliğinden yüklenip yüklenmeyeceği.
 - **Diller**: İngilizce ve 16 tane daha — 中文, हिन्दी, Español, Français, العربية, বাংলা,
   Português, Русский, اردو, Bahasa Indonesia, Deutsch, 日本語, Türkçe, 한국어, Italiano,
@@ -696,6 +744,8 @@ src/template.html   markup with the __STYLES__/__APP__/__ICON__ placeholders and
 src/styles.css      palette, light and dark themes, block paired with its source
 src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
+src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
+src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -723,7 +773,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/
@@ -738,7 +788,9 @@ build/extension/    the Chrome extension, and build/macaed-extension-<version>.z
 - Telefonda düzen okuma için yapılmıştır: ağacın bağlam menüsü, iOS'un böylesine
   dönüştürmediği uzun bir basış gerektirir, ve tablolar üzerine gelindiğinde beliren
   çubuklarla genişletilir.
-- Yalnızca Chromium tabanlı tarayıcılar dosya yazabilir.
+- Yalnızca bir bilgisayardaki Chromium tabanlı tarayıcılar diskteki bir klasöre dosya
+  yazabilir; başka yerlerde notlar tarayıcıda tutulur ve bir ZIP dosyası olarak dışarı
+  çıkarılır.
 - Uzantı Chrome içindir (ve onun üzerine kurulu, yan paneli olan Edge gibi tarayıcılar
   için); henüz Chrome Web Mağazası'nda değildir. Görselleri klasöre indirmek yerine web'de
   tutar: bu, her siteye erişim gerektirirdi.

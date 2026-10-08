@@ -56,7 +56,10 @@
     },
     "Export stopped: {folder} is incomplete": "Експорт зупинено: теку {folder} заповнено не повністю",
     "Export stopped": "Експорт зупинено",
-    "Finish what is open first, then open the note again": "Спочатку завершіть те, що вже відкрито, потім відкрийте нотатку знову"
+    "Finish what is open first, then open the note again": "Спочатку завершіть те, що вже відкрито, потім відкрийте нотатку знову",
+    "\"{name}\" is copied into this browser": "Папку «{name}» скопійовано в цей браузер",
+    "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "Папку «{name}» скопійовано в цей браузер, а він може видалити її, коли бракує місця: час від часу завантажуйте ZIP-архів у налаштуваннях",
+    "Could not make the ZIP archive: {reason}": "Не вдалося створити ZIP-архів: {reason}"
   },
   "gate": {
     "Drag a folder or a note": "Перетягніть папку або нотатку",
@@ -72,7 +75,13 @@
     "Remove from the list": "Прибрати зі списку",
     "The folder \"{name}\" is no longer there, so it was removed from the list": "Папки «{name}» більше немає, її прибрано зі списку",
     "Version {version}": "Версія {version}",
-    "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "Коли Chrome запитає, виберіть «Дозволити при кожному відвідуванні»: тоді папка залишатиметься відкритою після закриття панелі."
+    "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "Коли Chrome запитає, виберіть «Дозволити при кожному відвідуванні»: тоді папка залишатиметься відкритою після закриття панелі.",
+    "In this browser": "У цьому браузері",
+    "Delete from this browser": "Видалити з цього браузера",
+    "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "Цей браузер не може записувати файли в папку на диску, тому нотатки зберігаються всередині нього: відкриті папка або ZIP-архів копіюються в браузер, а зміни зберігаються там же. Нічого нікуди не надсилається. Щоб забрати нотатки, завантажте ZIP-архів у налаштуваннях. Очищення даних сайту в браузері видаляє їх.",
+    "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "Safari також видаляє їх через сім днів без відвідування, якщо редактор не додано на Початковий екран.",
+    "Open ZIP archive": "Відкрити ZIP-архів",
+    "or drag a folder or a ZIP archive here": "або перетягніть папку або ZIP-архів сюди"
   },
   "dialog": {
     "Note not found": "Нотатку не знайдено",
@@ -93,7 +102,9 @@
     "Done": "Готово",
     "Close folder": "Закрити папку",
     "The note has unsaved changes. Close the folder anyway?": "У нотатці є незбережені зміни. Усе одно закрити папку?",
-    "Close": "Закрити"
+    "Close": "Закрити",
+    "Delete from this browser": "Видалити з цього браузера",
+    "Delete \"{name}\" and all its notes from this browser? This cannot be undone: to keep a copy, open it and download a ZIP archive from the settings first.": "Видалити папку «{name}» і всі її нотатки з цього браузера? Цю дію не можна скасувати: щоб зберегти копію, спочатку відкрийте її та завантажте ZIP-архів у налаштуваннях."
   },
   "doc": {
     "no such file: {path}": "файл не знайдено: {path}",
@@ -102,10 +113,19 @@
   "errors": {
     "The folder is open read-only": "Папку відкрито лише для читання",
     "This browser cannot write files": "Цей браузер не може записувати файли",
+    "The folder is no longer in this browser": "Папки більше немає у цьому браузері",
     "\"{name}\" already exists": "«{name}» вже існує",
+    "This name cannot be used here: {name}": "Цю назву не можна використати тут: {name}",
     "File not found: {path}": "Файл не знайдено: {path}",
     "The browser was not allowed to open the folder": "Браузеру не дозволили відкрити папку",
-    "A note opened on its own has no folder around it": "У нотатки, відкритої окремо, немає папки навколо"
+    "A note opened on its own has no folder around it": "У нотатки, відкритої окремо, немає папки навколо",
+    "The ZIP archive has no notes": "У ZIP-архіві немає нотаток",
+    "Too many files for a ZIP archive": "Забагато файлів для ZIP-архіву",
+    "Too much for a ZIP archive: over 4 GB": "Забагато даних для ZIP-архіву: понад 4 ГБ",
+    "This is not a ZIP archive, or it is damaged": "Це не ZIP-архів або він пошкоджений",
+    "The ZIP archive is too large: over 4 GB or 65 535 files": "ZIP-архів завеликий: понад 4 ГБ або 65 535 файлів",
+    "The ZIP archive is encrypted: {path}": "ZIP-архів зашифрований: {path}",
+    "The ZIP archive is compressed in a way this editor cannot read: {path}": "ZIP-архів стиснутий способом, який редактор не може прочитати: {path}"
   },
   "palette": {
     "Red": "Червоний",
@@ -137,7 +157,10 @@
     "Images": "Зображення",
     "Images folder": "Тека зображень",
     "A subfolder named after the note": "Підтека з назвою нотатки",
-    "Version {version}": "Версія {version}"
+    "Version {version}": "Версія {version}",
+    "Download ZIP": "Завантажити ZIP",
+    "Kept in this browser": "Зберігається в цьому браузері",
+    "The whole folder": "Уся папка"
   },
   "app": {
     "Notes editor": "Редактор нотаток"

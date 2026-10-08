@@ -85,7 +85,10 @@
       "other": "صُدِّرت {count} صفحة إلى {folder}"
     },
     "Export stopped: {folder} is incomplete": "توقف التصدير: {folder} غير مكتمل",
-    "Export stopped": "توقف التصدير"
+    "Export stopped": "توقف التصدير",
+    "\"{name}\" is copied into this browser": "نُسخ «{name}» إلى هذا المتصفح",
+    "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "نُسخ «{name}» إلى هذا المتصفح، وقد يمسحه عند نفاد المساحة: نزّل أرشيف ZIP من الإعدادات بين الحين والآخر",
+    "Could not make the ZIP archive: {reason}": "تعذّر إنشاء أرشيف ZIP: {reason}"
   },
   "gate": {
     "Version {version}": "الإصدار {version}",
@@ -101,7 +104,13 @@
     "Recent folders": "المجلدات الأخيرة",
     "Open {name}": "فتح «{name}»",
     "Remove from the list": "إزالة من القائمة",
-    "The folder \"{name}\" is no longer there, so it was removed from the list": "لم يعد المجلد «{name}» موجودًا، لذا أُزيل من القائمة"
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "لم يعد المجلد «{name}» موجودًا، لذا أُزيل من القائمة",
+    "In this browser": "في هذا المتصفح",
+    "Delete from this browser": "حذف من هذا المتصفح",
+    "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "لا يستطيع هذا المتصفح الكتابة في مجلد على القرص، لذا تُحفظ الملاحظات داخله: أي مجلد أو أرشيف ZIP تفتحه يُنسخ إلى المتصفح، وتُحفظ فيه التعديلات. لا يُرسَل أي شيء إلى أي مكان. لإخراج الملاحظات، نزّل أرشيف ZIP من الإعدادات. مسح بيانات الموقع في المتصفح يحذفها.",
+    "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "يحذفها Safari أيضًا بعد سبعة أيام بدون زيارة، ما لم يُضَف المحرر إلى الشاشة الرئيسية.",
+    "Open ZIP archive": "فتح أرشيف ZIP",
+    "or drag a folder or a ZIP archive here": "أو اسحب مجلدًا أو أرشيف ZIP إلى هنا"
   },
   "dialog": {
     "Note not found": "الملاحظة غير موجودة",
@@ -122,7 +131,9 @@
     "Done": "تم",
     "Close folder": "إغلاق المجلد",
     "The note has unsaved changes. Close the folder anyway?": "في الملاحظة تغييرات غير محفوظة. هل تريد إغلاق المجلد على أي حال؟",
-    "Close": "إغلاق"
+    "Close": "إغلاق",
+    "Delete from this browser": "حذف من هذا المتصفح",
+    "Delete \"{name}\" and all its notes from this browser? This cannot be undone: to keep a copy, open it and download a ZIP archive from the settings first.": "حذف «{name}» وكل ملاحظاته من هذا المتصفح؟ لا يمكن التراجع عن ذلك: للاحتفاظ بنسخة، افتحه ونزّل أرشيف ZIP من الإعدادات أولًا."
   },
   "doc": {
     "no such file: {path}": "لا يوجد ملف: {path}",
@@ -131,10 +142,19 @@
   "errors": {
     "The folder is open read-only": "المجلد مفتوح للقراءة فقط",
     "This browser cannot write files": "لا يستطيع هذا المتصفح كتابة الملفات",
+    "The folder is no longer in this browser": "لم يعد المجلد في هذا المتصفح",
     "\"{name}\" already exists": "«{name}» موجود بالفعل",
+    "This name cannot be used here: {name}": "لا يمكن استخدام هذا الاسم هنا: {name}",
     "File not found: {path}": "الملف غير موجود: {path}",
     "The browser was not allowed to open the folder": "لم يُسمح للمتصفح بفتح المجلد",
-    "A note opened on its own has no folder around it": "الملاحظة المفتوحة بمفردها لا يحيط بها مجلد"
+    "A note opened on its own has no folder around it": "الملاحظة المفتوحة بمفردها لا يحيط بها مجلد",
+    "The ZIP archive has no notes": "أرشيف ZIP لا يحتوي على ملاحظات",
+    "Too many files for a ZIP archive": "عدد الملفات أكبر من أن يسعه أرشيف ZIP",
+    "Too much for a ZIP archive: over 4 GB": "الحجم أكبر من أن يسعه أرشيف ZIP: يتجاوز 4 جيجابايت",
+    "This is not a ZIP archive, or it is damaged": "هذا ليس أرشيف ZIP، أو أنه تالف",
+    "The ZIP archive is too large: over 4 GB or 65 535 files": "أرشيف ZIP كبير جدًا: يتجاوز 4 جيجابايت أو 65535 ملفًا",
+    "The ZIP archive is encrypted: {path}": "أرشيف ZIP مشفّر: {path}",
+    "The ZIP archive is compressed in a way this editor cannot read: {path}": "أرشيف ZIP مضغوط بطريقة لا يستطيع هذا المحرر قراءتها: {path}"
   },
   "palette": {
     "Red": "أحمر",
@@ -166,7 +186,10 @@
     "Images": "الصور",
     "Images folder": "مجلد الصور",
     "A subfolder named after the note": "مجلد فرعي باسم الملاحظة",
-    "Version {version}": "الإصدار {version}"
+    "Version {version}": "الإصدار {version}",
+    "Download ZIP": "تنزيل ZIP",
+    "Kept in this browser": "محفوظ في هذا المتصفح",
+    "The whole folder": "المجلد كاملًا"
   },
   "app": {
     "Notes editor": "محرر الملاحظات"

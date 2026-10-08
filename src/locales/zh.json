@@ -70,7 +70,10 @@
     },
     "Export stopped: {folder} is incomplete": "导出已停止：{folder} 不完整",
     "Export stopped": "导出已停止",
-    "Finish what is open first, then open the note again": "先完成当前打开的操作，再重新打开笔记"
+    "Finish what is open first, then open the note again": "先完成当前打开的操作，再重新打开笔记",
+    "\"{name}\" is copied into this browser": "“{name}”已复制到此浏览器中",
+    "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "“{name}”已复制到此浏览器中，空间不足时可能会被清除：请不时从设置中下载 ZIP 压缩包",
+    "Could not make the ZIP archive: {reason}": "无法生成 ZIP 压缩包：{reason}"
   },
   "gate": {
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "此浏览器无法将文件写入磁盘：文件夹将以只读方式打开，保存时会下载修改后的文件。电脑上的 Chrome、Edge 和 Arc 支持完整编辑。",
@@ -86,7 +89,13 @@
     "The folder \"{name}\" is no longer there, so it was removed from the list": "文件夹“{name}”已不存在，已从列表中移除",
     "Version {version}": "版本 {version}",
     "Drag a folder or a note": "拖入一个文件夹或一篇笔记",
-    "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "当 Chrome 询问时，选择“每次访问都允许”：这样面板关闭后文件夹仍会保持打开。"
+    "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "当 Chrome 询问时，选择“每次访问都允许”：这样面板关闭后文件夹仍会保持打开。",
+    "In this browser": "此浏览器中的文件夹",
+    "Delete from this browser": "从此浏览器中删除",
+    "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "此浏览器无法写入磁盘上的文件夹，因此笔记保存在浏览器内部：打开的文件夹或 ZIP 压缩包会被复制到浏览器中，修改也保存在那里。不会向任何地方发送数据。要取出笔记，请从设置中下载 ZIP 压缩包。清除浏览器的网站数据会将它们删除。",
+    "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "Safari 也会在七天无人访问后删除它们，除非编辑器已添加到主屏幕。",
+    "Open ZIP archive": "打开 ZIP 压缩包",
+    "or drag a folder or a ZIP archive here": "或将文件夹或 ZIP 压缩包拖到此处"
   },
   "dialog": {
     "Note not found": "未找到笔记",
@@ -107,7 +116,9 @@
     "Done": "完成",
     "Close folder": "关闭文件夹",
     "The note has unsaved changes. Close the folder anyway?": "笔记有未保存的更改。仍要关闭文件夹吗？",
-    "Close": "关闭"
+    "Close": "关闭",
+    "Delete from this browser": "从此浏览器中删除",
+    "Delete \"{name}\" and all its notes from this browser? This cannot be undone: to keep a copy, open it and download a ZIP archive from the settings first.": "从此浏览器中删除“{name}”及其所有笔记？此操作无法撤销：如需保留副本，请先打开它，并从设置中下载 ZIP 压缩包。"
   },
   "doc": {
     "no such file: {path}": "文件不存在：{path}",
@@ -116,10 +127,19 @@
   "errors": {
     "The folder is open read-only": "文件夹以只读方式打开",
     "This browser cannot write files": "此浏览器无法写入文件",
+    "The folder is no longer in this browser": "文件夹已不在此浏览器中",
     "\"{name}\" already exists": "“{name}”已存在",
+    "This name cannot be used here: {name}": "此名称不能在这里使用：{name}",
     "File not found: {path}": "未找到文件：{path}",
     "The browser was not allowed to open the folder": "浏览器未获准打开该文件夹",
-    "A note opened on its own has no folder around it": "单独打开的笔记周围没有文件夹"
+    "A note opened on its own has no folder around it": "单独打开的笔记周围没有文件夹",
+    "The ZIP archive has no notes": "ZIP 压缩包中没有笔记",
+    "Too many files for a ZIP archive": "文件太多，无法生成 ZIP 压缩包",
+    "Too much for a ZIP archive: over 4 GB": "超出 ZIP 压缩包的限制：超过 4 GB",
+    "This is not a ZIP archive, or it is damaged": "这不是 ZIP 压缩包，或已损坏",
+    "The ZIP archive is too large: over 4 GB or 65 535 files": "ZIP 压缩包过大：超过 4 GB 或 65,535 个文件",
+    "The ZIP archive is encrypted: {path}": "ZIP 压缩包已加密：{path}",
+    "The ZIP archive is compressed in a way this editor cannot read: {path}": "ZIP 压缩包的压缩方式此编辑器无法读取：{path}"
   },
   "palette": {
     "Red": "红色",
@@ -151,7 +171,10 @@
     "Images": "图片",
     "Images folder": "图片文件夹",
     "A subfolder named after the note": "以笔记命名的子文件夹",
-    "Version {version}": "版本 {version}"
+    "Version {version}": "版本 {version}",
+    "Download ZIP": "下载 ZIP",
+    "Kept in this browser": "保存在此浏览器中",
+    "The whole folder": "整个文件夹"
   },
   "app": {
     "Notes editor": "笔记编辑器"

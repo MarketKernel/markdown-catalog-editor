@@ -34,7 +34,10 @@ Adressleiste; auf Android über Chromes ⋮-Menü → App installieren; auf iOS 
 Home-Bildschirm, in Safari oder in Chrome. Auch dort bleiben Ihre Notizen auf Ihrer
 Festplatte, die installierte App öffnet eine `.md`-Datei direkt aus dem Finder oder
 Explorer, und sie aktualisiert sich, wenn Sie es sagen — siehe
-„[GitHub Pages](#github-pages)“.
+„[GitHub Pages](#github-pages)“. Wo ein Browser nicht auf eine Festplatte schreiben kann —
+Safari, Firefox, ein iPad oder ein Telefon —, werden die Notizen im Browser aufbewahrt und
+gehen als ZIP-Archiv hinein und hinaus: siehe
+„[Im Browser aufbewahrte Notizen](#im-browser-aufbewahrte-notizen)“.
 
 Derselbe Editor ist auch **Markdown Knowledge Base**, eine
 [Chrome-Erweiterung](#markdown-knowledge-base-die-chrome-erweiterung): Markieren Sie Text auf
@@ -65,10 +68,11 @@ Editor selbst öffnet sich neben der Seite in Chromes Seitenleiste.
 
 In Chrome, Edge und Arc wird der Ordner über die File System Access API geöffnet: Notizen
 werden direkt an Ort und Stelle gelesen und geschrieben, und das Erstellen, Umbenennen und
-Löschen von Dateien und Ordnern funktioniert vollständig. In Safari und Firefox öffnet sich
-der Ordner schreibgeschützt, und `⌘S` bietet an, die geänderte Datei herunterzuladen —
-ebenso auf dem Telefon: Chrome auf Android hat kein File System Access, und jeder Browser
-auf iOS, Chrome eingeschlossen, läuft auf Safaris Engine.
+Löschen von Dateien und Ordnern funktioniert vollständig. Safari und Firefox können nicht auf
+einen Ordner auf der Festplatte schreiben, ebenso wenig Telefone und iPads: Chrome auf Android
+hat kein File System Access, und jeder Browser auf iOS und iPadOS, Chrome eingeschlossen, läuft
+auf Safaris Engine. Dort werden die Notizen im Browser aufbewahrt — siehe „[Im Browser
+aufbewahrte Notizen](#im-browser-aufbewahrte-notizen)“.
 
 Der Editor merkt sich die letzten sechs dort geöffneten Ordner (eine Seite erfährt nie den
 Pfad eines Ordners, daher speichert sie das Handle des Ordners in der IndexedDB des
@@ -84,6 +88,45 @@ Wenn Sie `macaed.html` neben Ihre Notizen legen und über HTTP bereitstellen, er
 Seite den Ordner von selbst — vorausgesetzt, eine `index.json` liegt daneben, in der Form
 `{ "name": "Notes", "files": ["Note.md", "Folder/Other.md"] }`.
 
+### Im Browser aufbewahrte Notizen
+
+Wo der Browser nicht auf einen Ordner auf der Festplatte schreiben kann — Safari, Firefox, jeder
+Browser auf einem Telefon oder einem iPad —, sagt der Startbildschirm das und bietet zwei Wege
+hinein: **Ordner öffnen** und **ZIP-Archiv öffnen** (oder eines von beiden auf das Fenster
+ziehen). Was Sie öffnen, wird in die IndexedDB des Browsers kopiert, und von da an liest und
+schreibt der Editor diese Kopie: automatisches Speichern, neue Notizen und Ordner, Umbenennen,
+Löschen, Bilder, Tags — alles funktioniert wie auf einer Festplatte. Nichts verlässt das Gerät.
+
+- **Der Weg zurück hinaus** ist ein ZIP-Archiv: Einstellungen → **ZIP herunterladen** packt den
+  gesamten Ordner — Notizen, Bilder, `.meta.json` — in einen Ordner mit seinem Namen, so wie ein
+  im Finder oder Explorer komprimierter Ordner es wäre. Wieder als Archiv geöffnet, kommt er
+  zurück, wie er war. Die Schaltfläche steht auch bei einem Ordner auf der Festplatte zur
+  Verfügung, als schnelle Kopie davon.
+- **Ein Archiv**, das vom Finder, Explorer oder `zip` erstellt wurde, öffnet sich als der eine
+  darin enthaltene Ordner (oder, wenn Dateien oben liegen, unter dem Namen des Archivs). Nur was
+  der Editor zeigt, wird kopiert — Notizen, Bilder und Anhänge, `.meta.json`; Punktordner,
+  `node_modules`, `output/` und der `__MACOSX` des Mac bleiben außen vor. Es braucht überhaupt
+  keine Ordnerauswahl, was genau das ist, was ein älteres iPad braucht, dessen Safari keinen
+  Ordner auswählen kann.
+- **Der Startbildschirm listet die Ordner auf**, die in diesem Browser aufbewahrt werden, neueste
+  zuerst, und der letzte öffnet sich beim nächsten Start von selbst. Wird derselbe Ordner oder
+  dasselbe Archiv erneut geöffnet, kommt eine zweite Kopie neben die erste hinzu („Notes 2“),
+  statt die Änderungen in der ersten zu überschreiben. × löscht eine Kopie aus dem Browser, nach
+  Rückfrage — sie könnte die einzige sein.
+- **Als HTML exportieren** lädt die Website als ZIP-Archiv herunter, statt sie nach `output/` zu
+  schreiben.
+- **Wie lange sie bleiben**: Der Browser wird gebeten, die Daten der Website dauerhaft zu
+  behalten (`navigator.storage.persist()`) — Firefox fragt Sie, Chrome und Safari entscheiden
+  selbst, williger für eine installierte App. Ein Browser, der Nein sagt, kann die Notizen
+  löschen, wenn die Festplatte knapp wird, und Safari löscht die Daten einer Website, die sieben
+  Tage der Safari-Nutzung lang nicht besucht wurde, sofern sie nicht zum Home-Bildschirm
+  hinzugefügt ist. Das Löschen der Website-Daten oder des Browser-Verlaufs löscht sie in jedem
+  Browser. Laden Sie also hin und wieder ein ZIP-Archiv herunter — es ist die einzige Kopie
+  außerhalb des Browsers.
+
+Wo IndexedDB aus ist (in manchen privaten Fenstern), öffnet sich ein Ordner schreibgeschützt, wie
+zuvor, und `⌘S` bietet an, die geänderte Notiz herunterzuladen.
+
 ### Eine einzelne Notiz
 
 Eine `.md`-Datei lässt sich auch für sich allein öffnen, ohne ihren Ordner:
@@ -96,7 +139,8 @@ Eine `.md`-Datei lässt sich auch für sich allein öffnen, ohne ihren Ordner:
 - **Auf das Fenster gezogen**, in jedem Browser.
 
 Die Notiz wird an Ort und Stelle gelesen und geschrieben, wie in einem Ordner — in Safari und
-Firefox schreibgeschützt, wobei `⌘S` einen Download anbietet. Ohne einen Ordner darum herum
+Firefox schreibgeschützt, wobei `⌘S` einen Download anbietet (eine Notiz wird nicht in den
+Browser kopiert; ihr Ordner kann es werden). Ohne einen Ordner darum herum
 gibt es nichts daneben zu erstellen, umzubenennen oder zu löschen, und keine Bilder aus ihrem
 Ordner, Tags oder Export: Das kommt mit dem Öffnen des Ordners. Eine so geöffnete Notiz wird
 nicht zu den zuletzt verwendeten Ordnern hinzugefügt.
@@ -497,7 +541,10 @@ das Design folgt dem System, und die Website liest und verlinkt genauso.
   `Referer`.
 - **Dateien bleiben auf Ihrer Festplatte.** Notizen werden direkt an Ort und Stelle über die
   File System Access API gelesen und geschrieben; die gespeicherten Ordner sind Handles in
-  der IndexedDB des Browsers, nie Pfade oder Inhalte.
+  der IndexedDB des Browsers, nie Pfade oder Inhalte. Wo ein Browser nicht auf eine Festplatte
+  schreiben kann, werden die geöffneten Ordner in seine IndexedDB kopiert, nur auf diesem Gerät,
+  und verlassen sie nur als ZIP-Archiv, das Sie herunterladen — siehe
+  „[Im Browser aufbewahrte Notizen](#im-browser-aufbewahrte-notizen)“.
 - Die Berechtigungen der Erweiterung: siehe „[Markdown Knowledge Base](#markdown-knowledge-base-die-chrome-erweiterung)“.
 
 ## Funktionen
@@ -542,6 +589,10 @@ das Design folgt dem System, und die Website liest und verlinkt genauso.
   mit Suche, oder als eine einzelne Seite — siehe „[Export nach HTML](#export-nach-html)“.
 - **Eine einzelne Notiz**, geöffnet aus dem Finder oder Explorer in der installierten App,
   oder auf das Fenster gezogen — siehe „[Eine einzelne Notiz](#eine-einzelne-notiz)“.
+- **Im Browser aufbewahrte Notizen**, wo er nicht auf eine Festplatte schreiben kann — Safari,
+  Firefox, Telefone, iPads —, hinein und heraus als ZIP-Archiv; jeder Ordner lädt sich aus den
+  Einstellungen als eines herunter — siehe
+  „[Im Browser aufbewahrte Notizen](#im-browser-aufbewahrte-notizen)“.
 - **Markdown Knowledge Base**: was in Chrome ausgewählt ist, an die Standardnotiz oder an
   eine, die Sie wählen, mit Send to Markdown; eine Seite, ein Link oder ein Bild an eine
   Notiz — siehe
@@ -551,8 +602,9 @@ das Design folgt dem System, und die Website liest und verlinkt genauso.
   volle Breite), ob der Notizname als Titel angezeigt wird, und wohin hinzugefügte Bilder
   gehen: der Bilderordner neben der Notiz (standardmäßig `assets`) und ob jede Notiz darin
   einen eigenen Unterordner erhält; ohne einen solchen gehen alle Bilder direkt in den
-  Ordner. Unten die Version — und in der installierten App eine Suche nach Updates sowie,
-  ob sie von selbst installiert werden sollen.
+  Ordner. Dann der geöffnete Ordner: Ordner schließen und ZIP herunterladen, um ihn ganz als
+  Archiv zu laden. Unten die Version — und in der installierten App eine Suche nach Updates
+  sowie, ob sie von selbst installiert werden sollen.
 - **Sprachen**: Englisch und 16 weitere — 中文, हिन्दी, Español, Français, العربية, বাংলা,
   Português, Русский, اردو, Bahasa Indonesia, Deutsch, 日本語, Türkçe, 한국어, Italiano,
   Українська. Standardmäßig folgt die Oberfläche der Sprache des Browsers. Im Arabischen
@@ -747,6 +799,8 @@ src/template.html   markup with the __STYLES__/__APP__/__ICON__ placeholders and
 src/styles.css      palette, light and dark themes, block paired with its source
 src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
+src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
+src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -774,7 +828,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/
@@ -790,7 +844,9 @@ build/extension/    the Chrome extension, and build/macaed-extension-<version>.z
 - Auf dem Telefon ist das Layout zum Lesen gedacht: Das Kontextmenü des Baums benötigt
   einen langen Druck, den iOS nicht in einen solchen umwandelt, und Tabellen werden mit
   Leisten erweitert, die bei Hover erscheinen.
-- Nur Chromium-basierte Browser können Dateien schreiben.
+- Nur Chromium-basierte Browser auf einem Computer können Dateien in einen Ordner auf der
+  Festplatte schreiben; anderswo werden die Notizen im Browser aufbewahrt und als ZIP-Archiv
+  herausgeholt.
 - Die Erweiterung ist für Chrome (und darauf aufbauende Browser mit Seitenleiste, wie
   Edge); sie ist noch nicht im Chrome Web Store. Sie behält Bilder im Web, statt sie in den
   Ordner herunterzuladen: Das würde Zugriff auf jede Website erfordern.

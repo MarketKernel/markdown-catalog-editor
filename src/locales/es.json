@@ -32,6 +32,9 @@
     }
   },
   "toast": {
+    "\"{name}\" is copied into this browser": "«{name}» se ha copiado en este navegador",
+    "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "«{name}» se ha copiado en este navegador, que puede borrarla cuando falte espacio: descarga de vez en cuando un archivo ZIP desde los ajustes",
+    "Could not make the ZIP archive: {reason}": "No se pudo crear el archivo ZIP: {reason}",
     "Path copied: {path}": "Ruta copiada: {path}",
     "No .md files in this folder — create the first note": "No hay archivos .md en esta carpeta — crea la primera nota",
     "No .md files in this folder": "No hay archivos .md en esta carpeta",
@@ -56,6 +59,12 @@
     "Finish what is open first, then open the note again": "Termina primero lo que está abierto y vuelve a abrir la nota"
   },
   "gate": {
+    "In this browser": "En este navegador",
+    "Delete from this browser": "Eliminar de este navegador",
+    "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "Este navegador no puede escribir en una carpeta del disco, así que las notas se guardan dentro de él: una carpeta o un archivo ZIP que abras se copia en el navegador, y los cambios se guardan ahí. No se envía nada a ningún sitio. Para sacar las notas, descarga un archivo ZIP desde los ajustes. Borrar los datos del sitio en el navegador las elimina.",
+    "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "Safari también las elimina tras siete días sin ninguna visita, a menos que el editor se añada a la pantalla de inicio.",
+    "Open ZIP archive": "Abrir archivo ZIP",
+    "or drag a folder or a ZIP archive here": "o arrastra aquí una carpeta o un archivo ZIP",
     "Drag a folder or a note": "Arrastra una carpeta o una nota",
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "Este navegador no puede escribir archivos en el disco: la carpeta se abrirá en solo lectura y, al guardar, se ofrecerá descargar el archivo modificado. La edición completa funciona en Chrome, Edge y Arc en el ordenador.",
     "local editor · one file": "editor local · un solo archivo",
@@ -72,6 +81,8 @@
     "Version {version}": "Versión {version}"
   },
   "dialog": {
+    "Delete from this browser": "Eliminar de este navegador",
+    "Delete \"{name}\" and all its notes from this browser? This cannot be undone: to keep a copy, open it and download a ZIP archive from the settings first.": "¿Eliminar «{name}» y todas sus notas de este navegador? Esta acción no se puede deshacer: para conservar una copia, ábrela primero y descarga un archivo ZIP desde los ajustes.",
     "Note not found": "Nota no encontrada",
     "Create \"{name}\"?": "¿Crear «{name}»?",
     "Create": "Crear",
@@ -97,9 +108,18 @@
     "Pick a note on the left, or create a new one.": "Elige una nota a la izquierda o crea una nueva."
   },
   "errors": {
+    "The ZIP archive has no notes": "El archivo ZIP no tiene notas",
+    "Too many files for a ZIP archive": "Demasiados archivos para un archivo ZIP",
+    "Too much for a ZIP archive: over 4 GB": "Demasiado grande para un archivo ZIP: más de 4 GB",
+    "This is not a ZIP archive, or it is damaged": "Esto no es un archivo ZIP, o está dañado",
+    "The ZIP archive is too large: over 4 GB or 65 535 files": "El archivo ZIP es demasiado grande: más de 4 GB o 65 535 archivos",
+    "The ZIP archive is encrypted: {path}": "El archivo ZIP está cifrado: {path}",
+    "The ZIP archive is compressed in a way this editor cannot read: {path}": "El archivo ZIP está comprimido de una forma que este editor no puede leer: {path}",
     "The folder is open read-only": "La carpeta está abierta en solo lectura",
     "This browser cannot write files": "Este navegador no puede escribir archivos",
+    "The folder is no longer in this browser": "La carpeta ya no está en este navegador",
     "\"{name}\" already exists": "«{name}» ya existe",
+    "This name cannot be used here: {name}": "Este nombre no se puede usar aquí: {name}",
     "File not found: {path}": "Archivo no encontrado: {path}",
     "The browser was not allowed to open the folder": "No se permitió al navegador abrir la carpeta",
     "A note opened on its own has no folder around it": "Una nota abierta por sí sola no tiene una carpeta alrededor"
@@ -116,6 +136,9 @@
     "Clear formatting": "Borrar formato"
   },
   "settings": {
+    "Download ZIP": "Descargar ZIP",
+    "Kept in this browser": "Guardada en este navegador",
+    "The whole folder": "Toda la carpeta",
     "System": "Sistema",
     "Centred column": "Columna centrada",
     "Full width": "Ancho completo",

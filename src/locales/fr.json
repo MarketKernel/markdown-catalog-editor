@@ -76,7 +76,10 @@
     },
     "Export stopped: {folder} is incomplete": "Export arrêté : {folder} est incomplet",
     "Export stopped": "Export arrêté",
-    "Finish what is open first, then open the note again": "Terminez d’abord ce qui est ouvert, puis rouvrez la note"
+    "Finish what is open first, then open the note again": "Terminez d’abord ce qui est ouvert, puis rouvrez la note",
+    "\"{name}\" is copied into this browser": "« {name} » est copié dans ce navigateur",
+    "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "« {name} » est copié dans ce navigateur, qui peut l’effacer en cas de manque de place : téléchargez de temps en temps une archive ZIP depuis les paramètres",
+    "Could not make the ZIP archive: {reason}": "Impossible de créer l’archive ZIP : {reason}"
   },
   "gate": {
     "Drag a folder or a note": "Faites glisser un dossier ou une note",
@@ -92,7 +95,13 @@
     "Open {name}": "Ouvrir « {name} »",
     "Remove from the list": "Retirer de la liste",
     "The folder \"{name}\" is no longer there, so it was removed from the list": "Le dossier « {name} » n’existe plus, il a été retiré de la liste",
-    "Version {version}": "Version {version}"
+    "Version {version}": "Version {version}",
+    "In this browser": "Dans ce navigateur",
+    "Delete from this browser": "Supprimer de ce navigateur",
+    "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "Ce navigateur ne peut pas écrire un dossier sur le disque, les notes sont donc conservées à l’intérieur : un dossier ou une archive ZIP que vous ouvrez est copié dans le navigateur, et les modifications y sont enregistrées. Rien n’est envoyé nulle part. Pour récupérer les notes, téléchargez une archive ZIP depuis les paramètres. Effacer les données du site dans le navigateur les supprime.",
+    "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "Safari les supprime aussi après sept jours sans visite, sauf si l’éditeur est ajouté à l’écran d’accueil.",
+    "Open ZIP archive": "Ouvrir une archive ZIP",
+    "or drag a folder or a ZIP archive here": "ou faites glisser un dossier ou une archive ZIP ici"
   },
   "dialog": {
     "Note not found": "Note introuvable",
@@ -113,7 +122,9 @@
     "Done": "Terminé",
     "Close folder": "Fermer le dossier",
     "The note has unsaved changes. Close the folder anyway?": "La note contient des modifications non enregistrées. Fermer le dossier quand même ?",
-    "Close": "Fermer"
+    "Close": "Fermer",
+    "Delete from this browser": "Supprimer de ce navigateur",
+    "Delete \"{name}\" and all its notes from this browser? This cannot be undone: to keep a copy, open it and download a ZIP archive from the settings first.": "Supprimer « {name} » et toutes ses notes de ce navigateur ? Cette action est irréversible : pour en garder une copie, ouvrez-le d’abord et téléchargez une archive ZIP depuis les paramètres."
   },
   "doc": {
     "no such file: {path}": "fichier introuvable : {path}",
@@ -122,10 +133,19 @@
   "errors": {
     "The folder is open read-only": "Le dossier est ouvert en lecture seule",
     "This browser cannot write files": "Ce navigateur ne peut pas écrire de fichiers",
+    "The folder is no longer in this browser": "Le dossier n’est plus dans ce navigateur",
     "\"{name}\" already exists": "« {name} » existe déjà",
+    "This name cannot be used here: {name}": "Ce nom ne peut pas être utilisé ici : {name}",
     "File not found: {path}": "Fichier introuvable : {path}",
     "The browser was not allowed to open the folder": "Le navigateur n’a pas été autorisé à ouvrir le dossier",
-    "A note opened on its own has no folder around it": "Une note ouverte seule n’a pas de dossier autour d’elle"
+    "A note opened on its own has no folder around it": "Une note ouverte seule n’a pas de dossier autour d’elle",
+    "The ZIP archive has no notes": "L’archive ZIP ne contient aucune note",
+    "Too many files for a ZIP archive": "Trop de fichiers pour une archive ZIP",
+    "Too much for a ZIP archive: over 4 GB": "Trop volumineux pour une archive ZIP : plus de 4 Go",
+    "This is not a ZIP archive, or it is damaged": "Ce n’est pas une archive ZIP, ou elle est endommagée",
+    "The ZIP archive is too large: over 4 GB or 65 535 files": "L’archive ZIP est trop volumineuse : plus de 4 Go ou 65 535 fichiers",
+    "The ZIP archive is encrypted: {path}": "L’archive ZIP est chiffrée : {path}",
+    "The ZIP archive is compressed in a way this editor cannot read: {path}": "L’archive ZIP est compressée d’une manière que l’éditeur ne peut pas lire : {path}"
   },
   "palette": {
     "Red": "Rouge",
@@ -157,7 +177,10 @@
     "Images": "Images",
     "Images folder": "Dossier des images",
     "A subfolder named after the note": "Un sous-dossier au nom de la note",
-    "Version {version}": "Version {version}"
+    "Version {version}": "Version {version}",
+    "Download ZIP": "Télécharger le ZIP",
+    "Kept in this browser": "Conservé dans ce navigateur",
+    "The whole folder": "Tout le dossier"
   },
   "app": {
     "Notes editor": "Éditeur de notes"

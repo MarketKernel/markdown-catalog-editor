@@ -32,7 +32,9 @@
 사용하고, Android에서는 Chrome의 ⋮ 메뉴 → 앱 설치, iOS에서는 Safari나 Chrome에서 공유 →
 홈 화면에 추가를 사용하세요. 그곳에서도 노트는 여러분의 디스크에 그대로 남아 있고, 설치된
 앱은 Finder나 탐색기에서 `.md`를 바로 열 수 있으며, 여러분이 원할 때 업데이트됩니다 —
-"[GitHub Pages](#github-pages)" 참고.
+"[GitHub Pages](#github-pages)" 참고. 브라우저가 디스크에 쓸 수 없는 경우 — Safari,
+Firefox, 휴대폰이나 iPad — 노트는 브라우저 안에 보관되며 ZIP 파일로 드나듭니다: "[브라우저에
+보관되는 노트](#브라우저에-보관되는-노트)" 참고.
 
 같은 편집기는 **Markdown Knowledge Base**라는
 [Chrome 확장 프로그램](#markdown-knowledge-base-chrome-확장-프로그램)이기도 합니다: 웹
@@ -63,9 +65,10 @@
 
 Chrome, Edge, Arc에서는 File System Access API를 통해 폴더가 열립니다: 노트를 그 자리에서
 읽고 쓸 수 있으며, 파일과 폴더를 만들고 이름을 바꾸고 삭제하는 기능도 모두 작동합니다.
-Safari와 Firefox에서는 폴더가 읽기 전용으로 열리며, `⌘S`를 누르면 수정된 파일을
-다운로드하도록 제안합니다 — 휴대폰에서도 마찬가지입니다: Android의 Chrome에는 File System
-Access가 없고, iOS의 모든 브라우저는 Chrome을 포함해 Safari의 엔진으로 동작하기 때문입니다.
+Safari와 Firefox는 디스크의 폴더에 쓸 수 없으며, 휴대폰과 iPad도 마찬가지입니다: Android의
+Chrome에는 File System Access가 없고, iOS와 iPadOS의 모든 브라우저는 Chrome을 포함해
+Safari의 엔진으로 동작하기 때문입니다. 그곳에서는 노트가 브라우저 안에 보관됩니다 —
+"[브라우저에 보관되는 노트](#브라우저에-보관되는-노트)" 참고.
 
 편집기는 그곳에서 열었던 최근 폴더 여섯 개를 기억하며(페이지는 폴더의 경로를 알지 못하므로,
 브라우저의 IndexedDB에 폴더의 핸들만 보관합니다), 각 폴더에서 마지막으로 열려 있던 노트도
@@ -79,6 +82,40 @@ Access가 없고, iOS의 모든 브라우저는 Chrome을 포함해 Safari의 �
 그 옆에 `index.json`이 있어야 하며, 형식은
 `{ "name": "Notes", "files": ["Note.md", "Folder/Other.md"] }`와 같습니다.
 
+### 브라우저에 보관되는 노트
+
+브라우저가 디스크의 폴더에 쓸 수 없는 경우 — Safari, Firefox, 휴대폰이나 iPad의 모든
+브라우저 — 시작 화면이 이를 알리고 들어가는 방법 두 가지를 제공합니다: **폴더 열기**와
+**ZIP 파일 열기**입니다(둘 중 하나를 창에 끌어다 놓아도 됩니다). 여러분이 여는 것은
+브라우저의 IndexedDB에 복사되고, 그 이후로 편집기는 그 복사본을 읽고 씁니다: 자동 저장,
+새 노트와 폴더, 이름 변경, 삭제, 이미지, 태그 — 모든 것이 디스크에서와 똑같이 작동합니다.
+어떤 것도 기기 밖으로 나가지 않습니다.
+
+- **빠져나가는 방법**은 ZIP 파일입니다: 설정에서 **ZIP 다운로드**를 누르면 폴더 전체 —
+  노트, 이미지, `.meta.json` — 를 Finder나 탐색기에서 압축한 폴더처럼, 그 이름의 폴더 하나
+  안에 담아 줍니다. 다시 아카이브로 열면 원래 모습 그대로 돌아옵니다. 이 버튼은 디스크에
+  있는 폴더에도 있어서, 그것의 빠른 복사본을 만드는 데에도 쓸 수 있습니다.
+- **아카이브**는 Finder, 탐색기, `zip` 명령으로 만든 것으로, 그 안의 폴더 하나로 열립니다
+  (파일이 최상위에 있으면 아카이브의 이름으로 된 폴더로). 편집기가 보여 주는 것만 복사됩니다
+  — 노트, 이미지와 첨부 파일, `.meta.json`; 점으로 시작하는 폴더, `node_modules`,
+  `output/`, Mac의 `__MACOSX`는 제외됩니다. 폴더 선택 기능이 전혀 필요 없어서, 폴더를 고를
+  수 없는 구형 iPad의 Safari에 필요한 방식입니다.
+- **시작 화면은 폴더 목록을 보여 줍니다** — 이 브라우저에 보관된 것을 최신순으로. 가장
+  최근 것은 다음 시작 때 저절로 열립니다. 같은 폴더나 아카이브를 다시 열면 첫 번째의
+  수정 내용을 덮어쓰는 대신 그 옆에 두 번째 복사본이 추가됩니다("Notes 2"). ×는 확인을
+  거친 뒤 브라우저에서 복사본을 삭제합니다 — 그것이 유일한 복사본일 수도 있기 때문입니다.
+- **HTML로 내보내기**는 사이트를 `output/`에 쓰는 대신 ZIP 파일로 다운로드합니다.
+- **얼마나 오래 보관되는가**: 브라우저에 사이트의 데이터를 영구히 보관해 달라고 요청합니다
+  (`navigator.storage.persist()`) — Firefox는 여러분에게 묻고, Chrome과 Safari는 스스로
+  판단하며, 설치된 앱에는 더 쉽게 허락합니다. 이를 거부한 브라우저는 디스크 여유 공간이
+  부족해지면 노트를 지울 수 있고, Safari는 홈 화면에 추가되지 않은 한 7일 동안 사용하지
+  않은 사이트의 데이터를 지웁니다. 사이트의 데이터나 브라우저의 기록을 지우면 어떤
+  브라우저에서든 사라집니다. 그러니 가끔 ZIP 파일을 다운로드해 두세요 — 그것이 브라우저
+  밖에 있는 유일한 복사본입니다.
+
+IndexedDB가 꺼져 있으면(일부 비공개 창) 폴더는 이전처럼 읽기 전용으로 열리고, `⌘S`는
+수정된 노트를 다운로드하도록 제안합니다.
+
 ### 단일 노트
 
 `.md` 파일은 자신의 폴더 없이 단독으로도 열 수 있습니다:
@@ -91,7 +128,8 @@ Access가 없고, iOS의 모든 브라우저는 Chrome을 포함해 Safari의 �
 - **창 위로 드래그**해도, 어떤 브라우저에서든 열립니다.
 
 노트는 폴더에서와 마찬가지로 그 자리에서 읽고 씁니다 — Safari와 Firefox에서는 읽기
-전용이며, `⌘S`를 누르면 다운로드를 제안합니다. 주변에 폴더가 없으므로 그 옆에 만들거나,
+전용이며, `⌘S`를 누르면 다운로드를 제안합니다(노트 자체는 브라우저에 복사되지 않지만, 그
+폴더는 복사될 수 있습니다). 주변에 폴더가 없으므로 그 옆에 만들거나,
 이름을 바꾸거나, 삭제할 것이 없고, 폴더에서 오는 이미지도, 태그도, 내보내기도 없습니다:
 이런 기능들은 폴더를 열어야 따라옵니다. 이렇게 연 노트는 최근 폴더 목록에 추가되지
 않습니다.
@@ -459,7 +497,10 @@ CSS(`:target`)로 구현되어 스크립트 없이도 작동하며, 스크립트
   `Referer`가 실리지 않습니다.
 - **파일은 여러분의 디스크에만 남습니다.** 노트는 File System Access API를 통해
   그 자리에서 읽고 씁니다. 기억된 폴더는 브라우저의 IndexedDB 안의 핸들일
-  뿐, 경로나 내용이 저장되는 일은 없습니다.
+  뿐, 경로나 내용이 저장되는 일은 없습니다. 브라우저가 디스크에 쓸 수 없는 경우,
+  여러분이 여는 폴더는 이 기기에서만 브라우저의 IndexedDB에 복사되며, 다운로드하는
+  ZIP 파일로만 그곳을 벗어납니다 — "[브라우저에 보관되는 노트](#브라우저에-보관되는-노트)"
+  참고.
 - 확장 프로그램의 권한: "[Markdown Knowledge Base](#markdown-knowledge-base-chrome-확장-프로그램)" 참고.
 
 ## 기능
@@ -503,6 +544,9 @@ CSS(`:target`)로 구현되어 스크립트 없이도 작동하며, 스크립트
   정적 사이트로, 또는 단일 페이지로 내보냅니다 — "[HTML로 내보내기](#html로-내보내기)" 참고.
 - **단일 노트**를 설치된 앱에서 Finder나 탐색기로 열거나, 창에 드롭해서 엽니다 —
   "[단일 노트](#단일-노트)" 참고.
+- **브라우저에 보관되는 노트**는 디스크에 쓸 수 없는 경우에 쓰입니다 — Safari, Firefox,
+  휴대폰, iPad — ZIP 파일로 드나들며, 어떤 폴더든 설정에서 하나의 아카이브로 다운로드할 수
+  있습니다 — "[브라우저에 보관되는 노트](#브라우저에-보관되는-노트)" 참고.
 - **Markdown Knowledge Base**: Chrome에서 선택한 부분을 Send to Markdown으로 기본
   노트나 직접 고른 노트에 보냅니다; 페이지, 링크, 이미지는 노트로 보냅니다 —
   "[Markdown Knowledge Base](#markdown-knowledge-base-chrome-확장-프로그램)" 참고.
@@ -511,8 +555,9 @@ CSS(`:target`)로 구현되어 스크립트 없이도 작동하며, 스크립트
   너비), 노트 이름을 제목으로 표시할지 여부, 추가한 이미지가 어디로 갈지:
   노트 옆의 이미지 폴더(기본값 `assets`)와 노트마다 그 안에 자신의 하위
   폴더를 가질지 여부 — 하위 폴더가 없으면 모든 이미지는 그 폴더에 바로
-  들어갑니다. 아래쪽에는 버전이 있고, 설치된 앱에서는 업데이트 확인 여부와
-  자동 설치 여부도 있습니다.
+  들어갑니다. 이어서 열려 있는 폴더에 관해: "폴더 닫기"와, 폴더 전체를 아카이브로
+  받는 "ZIP 다운로드"가 있습니다. 아래쪽에는 버전이 있고, 설치된 앱에서는 업데이트 확인
+  여부와 자동 설치 여부도 있습니다.
 - **언어**: 영어를 포함해 16개 언어를 더 지원합니다 — 中文, हिन्दी, Español,
   Français, العربية, বাংলা, Português, Русский, اردو, Bahasa Indonesia,
   Deutsch, 日本語, Türkçe, 한국어, Italiano, Українська. 기본적으로
@@ -713,6 +758,8 @@ src/template.html   markup with the __STYLES__/__APP__/__ICON__ placeholders and
 src/styles.css      palette, light and dark themes, block paired with its source
 src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
+src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
+src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -740,7 +787,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/
@@ -755,7 +802,8 @@ build/extension/    the Chrome extension, and build/macaed-extension-<version>.z
 - 휴대폰에서는 레이아웃이 읽기 위주로 되어 있습니다: 트리의 컨텍스트 메뉴에는
   길게 누르기가 필요한데 iOS는 이를 길게 누르기로 인식하지 않으며, 표는 호버
   시 나타나는 막대로 확장됩니다.
-- Chromium 기반 브라우저만 파일을 쓸 수 있습니다.
+- 컴퓨터의 Chromium 기반 브라우저만 디스크의 폴더에 파일을 쓸 수 있습니다. 그 외에는
+  노트가 브라우저 안에 보관되며 ZIP 파일로 꺼낼 수 있습니다.
 - 확장 프로그램은 Chrome용입니다(그리고 Edge처럼 사이드 패널을 가진, Chrome
   기반 브라우저에서도 사용 가능합니다). 아직 Chrome 웹 스토어에는 등록되어
   있지 않습니다. 이미지를 폴더로 내려받지 않고 웹에 그대로 두는데, 그렇게

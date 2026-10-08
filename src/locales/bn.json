@@ -50,7 +50,10 @@
       "other": "{count}টি পৃষ্ঠা {folder}-এ রপ্তানি হয়েছে"
     },
     "Export stopped: {folder} is incomplete": "রপ্তানি থামানো হয়েছে: {folder} অসম্পূর্ণ",
-    "Export stopped": "রপ্তানি থামানো হয়েছে"
+    "Export stopped": "রপ্তানি থামানো হয়েছে",
+    "\"{name}\" is copied into this browser": "“{name}” এই ব্রাউজারে কপি হয়েছে",
+    "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "“{name}” এই ব্রাউজারে কপি হয়েছে, জায়গা কম পড়লে ব্রাউজার এটি মুছে দিতে পারে: মাঝে মাঝে সেটিংস থেকে একটি ZIP আর্কাইভ ডাউনলোড করে নিন",
+    "Could not make the ZIP archive: {reason}": "ZIP আর্কাইভ তৈরি করা যায়নি: {reason}"
   },
   "gate": {
     "Version {version}": "সংস্করণ {version}",
@@ -66,7 +69,13 @@
     "Recent folders": "সাম্প্রতিক ফোল্ডার",
     "Open {name}": "“{name}” খুলুন",
     "Remove from the list": "তালিকা থেকে সরান",
-    "The folder \"{name}\" is no longer there, so it was removed from the list": "“{name}” ফোল্ডারটি আর নেই, তাই তালিকা থেকে সরানো হয়েছে"
+    "The folder \"{name}\" is no longer there, so it was removed from the list": "“{name}” ফোল্ডারটি আর নেই, তাই তালিকা থেকে সরানো হয়েছে",
+    "In this browser": "এই ব্রাউজারে",
+    "Delete from this browser": "এই ব্রাউজার থেকে মুছুন",
+    "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "এই ব্রাউজার ডিস্কের কোনো ফোল্ডারে লিখতে পারে না, তাই নোটগুলো এর ভেতরেই রাখা হয়: আপনি যে ফোল্ডার বা ZIP আর্কাইভ খোলেন তা ব্রাউজারে কপি হয়ে যায়, আর পরিবর্তনগুলো সেখানেই সংরক্ষিত হয়। কিছুই কোথাও পাঠানো হয় না। নোটগুলো বের করে নিতে, সেটিংস থেকে একটি ZIP আর্কাইভ ডাউনলোড করুন। ব্রাউজারে সাইটের ডেটা মুছে ফেললে এগুলোও মুছে যায়।",
+    "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "সাত দিন কোনো ভিজিট না হলে Safari-ও এগুলো মুছে ফেলে, যদি না এডিটরটি হোম স্ক্রিনে যোগ করা থাকে।",
+    "Open ZIP archive": "ZIP আর্কাইভ খুলুন",
+    "or drag a folder or a ZIP archive here": "অথবা এখানে একটি ফোল্ডার বা ZIP আর্কাইভ টেনে আনুন"
   },
   "dialog": {
     "Note not found": "নোট পাওয়া যায়নি",
@@ -87,7 +96,9 @@
     "Done": "সম্পন্ন",
     "Close folder": "ফোল্ডার বন্ধ করুন",
     "The note has unsaved changes. Close the folder anyway?": "নোটে অসংরক্ষিত পরিবর্তন আছে। তবুও ফোল্ডার বন্ধ করবেন?",
-    "Close": "বন্ধ করুন"
+    "Close": "বন্ধ করুন",
+    "Delete from this browser": "এই ব্রাউজার থেকে মুছুন",
+    "Delete \"{name}\" and all its notes from this browser? This cannot be undone: to keep a copy, open it and download a ZIP archive from the settings first.": "“{name}” ও এর সব নোট এই ব্রাউজার থেকে মুছবেন? এটি আর ফেরানো যাবে না: একটি কপি রাখতে, আগে এটি খুলে সেটিংস থেকে একটি ZIP আর্কাইভ ডাউনলোড করুন।"
   },
   "doc": {
     "no such file: {path}": "এমন কোনো ফাইল নেই: {path}",
@@ -96,10 +107,19 @@
   "errors": {
     "The folder is open read-only": "ফোল্ডারটি শুধু পড়ার জন্য খোলা",
     "This browser cannot write files": "এই ব্রাউজার ফাইল লিখতে পারে না",
+    "The folder is no longer in this browser": "ফোল্ডারটি আর এই ব্রাউজারে নেই",
     "\"{name}\" already exists": "“{name}” আগে থেকেই আছে",
+    "This name cannot be used here: {name}": "এই নাম এখানে ব্যবহার করা যাবে না: {name}",
     "File not found: {path}": "ফাইল পাওয়া যায়নি: {path}",
     "The browser was not allowed to open the folder": "ব্রাউজারকে ফোল্ডার খোলার অনুমতি দেওয়া হয়নি",
-    "A note opened on its own has no folder around it": "একাকী খোলা নোটের চারপাশে কোনো ফোল্ডার নেই"
+    "A note opened on its own has no folder around it": "একাকী খোলা নোটের চারপাশে কোনো ফোল্ডার নেই",
+    "The ZIP archive has no notes": "ZIP আর্কাইভে কোনো নোট নেই",
+    "Too many files for a ZIP archive": "ZIP আর্কাইভের জন্য ফাইল বেশি হয়ে গেছে",
+    "Too much for a ZIP archive: over 4 GB": "ZIP আর্কাইভের জন্য আকার বেশি হয়ে গেছে: 4 GB-র বেশি",
+    "This is not a ZIP archive, or it is damaged": "এটি ZIP আর্কাইভ নয়, অথবা এটি নষ্ট হয়ে গেছে",
+    "The ZIP archive is too large: over 4 GB or 65 535 files": "ZIP আর্কাইভটি অনেক বড়: 4 GB বা 65535 ফাইলের বেশি",
+    "The ZIP archive is encrypted: {path}": "ZIP আর্কাইভটি এনক্রিপ্ট করা: {path}",
+    "The ZIP archive is compressed in a way this editor cannot read: {path}": "ZIP আর্কাইভটি এমনভাবে সংকুচিত যা এই এডিটর পড়তে পারে না: {path}"
   },
   "palette": {
     "Red": "লাল",
@@ -131,7 +151,10 @@
     "Images": "ছবি",
     "Images folder": "ছবির ফোল্ডার",
     "A subfolder named after the note": "নোটের নামে একটি সাবফোল্ডার",
-    "Version {version}": "সংস্করণ {version}"
+    "Version {version}": "সংস্করণ {version}",
+    "Download ZIP": "ZIP ডাউনলোড করুন",
+    "Kept in this browser": "এই ব্রাউজারে রাখা আছে",
+    "The whole folder": "পুরো ফোল্ডার"
   },
   "app": {
     "Notes editor": "নোট এডিটর"

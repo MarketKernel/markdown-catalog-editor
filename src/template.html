@@ -21,15 +21,21 @@
     <img class="gate-logo" src="__ICON__" alt="">
     <p class="eyebrow" data-i18n="gate">local editor · one file</p>
     <h1><span data-i18n="gate">Open a folder</span><br><em data-i18n="gate">of notes</em></h1>
-    <p class="gate-copy" data-i18n="gate">
+    <p id="gate-copy" class="gate-copy" data-i18n="gate">
       Pick a folder with <code data-slot="ext">.md</code> files. Nothing is sent anywhere:
       files are read and saved straight on your own disk.
     </p>
     <p id="browser-note" class="gate-note" hidden></p>
     <div id="recent" class="recent" hidden></div>
-    <button id="open-folder" class="button button--primary" type="button"><span data-i18n="gate">Open folder</span> <span class="arrow">&rarr;</span></button>
-    <p class="gate-hint" data-i18n="gate">or drag a folder here</p>
+    <div class="gate-actions">
+      <button id="open-folder" class="button button--primary" type="button"><span data-i18n="gate">Open folder</span> <span class="arrow">&rarr;</span></button>
+      <!-- Where notes are kept inside the browser (stored.ts): main.ts shows it. -->
+      <button id="open-zip" class="button" type="button" hidden><span data-i18n="gate">Open ZIP archive</span></button>
+    </div>
+    <p id="gate-hint" class="gate-hint" data-i18n="gate">or drag a folder here</p>
+    <p id="gate-hint-zip" class="gate-hint" data-i18n="gate" hidden>or drag a folder or a ZIP archive here</p>
     <input id="folder-picker" type="file" webkitdirectory multiple hidden>
+    <input id="zip-picker" type="file" accept=".zip,application/zip" hidden>
     <p id="gate-error" class="gate-error" aria-live="polite"></p>
     <p class="gate-version" data-i18n="gate">Version <span id="version" data-slot="version"></span></p>
     <!-- The installed app, when a new version is waiting: main.ts fills it in. -->

@@ -33,7 +33,10 @@ conexión. En un ordenador, en Chrome, Edge y Arc, usa el botón de instalación
 direcciones; en Android, el menú ⋮ de Chrome → Instalar app; en iOS, Compartir → Añadir a
 pantalla de inicio, en Safari o en Chrome. Ahí también tus notas se quedan en tu disco, la
 app instalada abre un `.md` directamente desde el Finder o el Explorador, y se actualiza
-cuando tú lo decides — ver "[GitHub Pages](#github-pages)".
+cuando tú lo decides — ver "[GitHub Pages](#github-pages)". Donde un navegador no puede
+escribir en un disco — Safari, Firefox, un iPad o un teléfono — las notas se guardan dentro
+del navegador y entran y salen como un archivo ZIP: ver "[Notas guardadas en el
+navegador](#notas-guardadas-en-el-navegador)".
 
 El mismo editor es también **Markdown Knowledge Base**, una
 [extensión de Chrome](#markdown-knowledge-base-la-extensión-de-chrome): selecciona texto en
@@ -65,10 +68,11 @@ página en el panel lateral de Chrome.
 
 En Chrome, Edge y Arc la carpeta se abre mediante la File System Access API: las notas se
 leen y se escriben en su sitio, y crear, renombrar y eliminar archivos y carpetas, todo
-funciona. En Safari y Firefox la carpeta se abre en modo de solo lectura, y `⌘S` ofrece
-descargar el archivo modificado — y lo mismo pasa en los teléfonos: Chrome en Android no
-tiene File System Access, y todos los navegadores en iOS, Chrome incluido, funcionan sobre
-el motor de Safari.
+funciona. Safari y Firefox no pueden escribir en una carpeta del disco, y tampoco pueden los
+teléfonos ni los iPad: Chrome en Android no tiene File System Access, y todos los navegadores
+en iOS y iPadOS, Chrome incluido, funcionan sobre el motor de Safari. Ahí las notas se
+guardan dentro del navegador — ver "[Notas guardadas en el
+navegador](#notas-guardadas-en-el-navegador)".
 
 El editor recuerda las últimas seis carpetas abiertas ahí (una página nunca llega a conocer
 la ruta de una carpeta, así que guarda el identificador de la carpeta en el IndexedDB del
@@ -84,6 +88,45 @@ Si colocas `macaed.html` junto a tus notas y lo sirves por HTTP, la página reco
 carpeta por sí sola — siempre que haya un `index.json` junto a él, con la forma
 `{ "name": "Notes", "files": ["Note.md", "Folder/Other.md"] }`.
 
+### Notas guardadas en el navegador
+
+Donde el navegador no puede escribir en una carpeta del disco — Safari, Firefox, cualquier
+navegador en un teléfono o un iPad — la pantalla de inicio lo indica y ofrece dos formas de
+entrar: **Abrir carpeta** y **Abrir archivo ZIP** (o arrastra cualquiera de los dos a la
+ventana). Lo que abres se copia en el IndexedDB del navegador, y a partir de entonces el
+editor lee y escribe esa copia: autoguardado, notas y carpetas nuevas, renombrar, eliminar,
+imágenes, etiquetas — todo funciona como en un disco. Nada sale del dispositivo.
+
+- **El camino de vuelta** es un archivo ZIP: en los ajustes → **Descargar ZIP** empaqueta
+  toda la carpeta — notas, imágenes, `.meta.json` — bajo una sola carpeta con su nombre,
+  como lo haría una carpeta comprimida en el Finder o el Explorador. Abierto de nuevo como
+  archivo, vuelve tal como estaba. El botón también está presente con una carpeta en el
+  disco, como una copia rápida de ella.
+- **Un archivo** creado por el Finder, el Explorador o `zip` se abre como la única carpeta
+  que contiene (o, con archivos sueltos arriba, bajo el nombre del archivo). Solo se copia lo
+  que el editor muestra — notas, imágenes y adjuntos, `.meta.json`; las carpetas ocultas,
+  `node_modules`, `output/` y el `__MACOSX` del Mac se quedan fuera. No necesita ningún
+  selector de carpeta, que es justo lo que necesita un iPad antiguo, cuyo Safari no puede
+  elegir una carpeta.
+- **La pantalla de inicio enumera las carpetas** guardadas en este navegador, las más
+  recientes primero, y la última se abre por sí sola en el siguiente inicio. Abrir la misma
+  carpeta o archivo otra vez añade una segunda copia junto a la primera ("Notes 2") en lugar
+  de sobrescribir las ediciones de la primera. × elimina una copia del navegador, tras
+  preguntar — puede ser la única.
+- **Exportar a HTML** descarga el sitio como un archivo ZIP en lugar de escribirlo en
+  `output/`.
+- **Cuánto tiempo se quedan**: se le pide al navegador que conserve los datos del sitio de
+  forma permanente (`navigator.storage.persist()`) — Firefox te lo pregunta, Chrome y Safari
+  deciden por sí solos, con más facilidad para una app instalada. Un navegador que dice que
+  no puede borrar las notas cuando el disco anda escaso, y Safari borra los datos de un
+  sitio no visitado en siete días de uso de Safari, a menos que esté añadido a la pantalla
+  de inicio. Borrar los datos del sitio o el historial del navegador los elimina en
+  cualquier navegador. Así que descarga un archivo ZIP de vez en cuando — es la única copia
+  fuera del navegador.
+
+Donde el IndexedDB está desactivado (algunas ventanas privadas), una carpeta se abre de solo
+lectura, como antes, y `⌘S` ofrece descargar la nota modificada.
+
 ### Una sola nota
 
 Un archivo `.md` se puede abrir por sí solo, sin su carpeta:
@@ -96,7 +139,8 @@ Un archivo `.md` se puede abrir por sí solo, sin su carpeta:
 - **Arrastrada a la ventana**, en cualquier navegador.
 
 La nota se lee y se escribe en su sitio, como en una carpeta — en Safari y Firefox de solo
-lectura, con `⌘S` ofreciendo una descarga. Sin una carpeta alrededor no hay nada que crear,
+lectura, con `⌘S` ofreciendo una descarga (una nota no se copia en el navegador; su carpeta
+sí puede). Sin una carpeta alrededor no hay nada que crear,
 renombrar o eliminar junto a ella, ni imágenes de su carpeta, etiquetas o exportación: eso
 viene con abrir la carpeta. Una nota abierta así no se añade a las carpetas recientes.
 
@@ -485,7 +529,10 @@ simplemente no están, el tema sigue al sistema, y el sitio se lee y enlaza igua
   elección de la nota, no del editor. Esas solicitudes no llevan ningún `Referer`.
 - **Los archivos se quedan en tu disco.** Las notas se leen y se escriben en su sitio
   mediante la File System Access API; las carpetas recordadas son identificadores en el
-  IndexedDB del navegador, nunca rutas ni contenidos.
+  IndexedDB del navegador, nunca rutas ni contenidos. Donde un navegador no puede escribir
+  en un disco, las carpetas que abres se copian en su IndexedDB, solo en este dispositivo, y
+  solo salen de él como un archivo ZIP que descargas — ver "[Notas guardadas en el
+  navegador](#notas-guardadas-en-el-navegador)".
 - Los permisos de la extensión: ver
   "[Markdown Knowledge Base](#markdown-knowledge-base-la-extensión-de-chrome)".
 
@@ -532,6 +579,10 @@ simplemente no están, el tema sigue al sistema, y el sitio se lee y enlaza igua
   búsqueda, o como una sola página — ver "[Exportar a HTML](#exportar-a-html)".
 - **Una sola nota** abierta desde el Finder o el Explorador en la app instalada, o soltada
   sobre la ventana — ver "[Una sola nota](#una-sola-nota)".
+- **Notas guardadas en el navegador** donde no puede escribir en un disco — Safari, Firefox,
+  teléfonos, iPad — entran y salen como un archivo ZIP; cualquier carpeta se descarga como
+  uno desde los ajustes — ver "[Notas guardadas en el
+  navegador](#notas-guardadas-en-el-navegador)".
 - **Markdown Knowledge Base**: lo que se selecciona en Chrome a la nota predeterminada, o a
   la que elijas, con Send to Markdown; una página, un enlace o una imagen a una nota — ver
   "[Markdown Knowledge Base](#markdown-knowledge-base-la-extensión-de-chrome)".
@@ -540,7 +591,8 @@ simplemente no están, el tema sigue al sistema, y el sitio se lee y enlaza igua
   centrada o el panel completo), si el nombre de la nota se muestra como título, y adónde
   van las imágenes añadidas: la carpeta de imágenes junto a la nota (`assets` por defecto)
   y si cada nota recibe su propia subcarpeta en ella; sin una, todas las imágenes van
-  directamente a la carpeta. Al final, la versión — y en la app instalada, buscar
+  directamente a la carpeta. Luego la carpeta abierta: Cerrar carpeta, y Descargar ZIP para
+  todo ello como un archivo. Al final, la versión — y en la app instalada, buscar
   actualizaciones y si instalarlas por sí solas.
 - **Idiomas**: inglés y 16 más — 中文, हिन्दी, Español, Français, العربية, বাংলা,
   Português, Русский, اردو, Bahasa Indonesia, Deutsch, 日本語, Türkçe, 한국어, Italiano,
@@ -733,6 +785,8 @@ src/template.html   markup with the __STYLES__/__APP__/__ICON__ placeholders and
 src/styles.css      palette, light and dark themes, block paired with its source
 src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
+src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
+src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -760,7 +814,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/
@@ -776,7 +830,9 @@ build/extension/    the Chrome extension, and build/macaed-extension-<version>.z
 - En un teléfono, la disposición está pensada para leer: el menú contextual del árbol
   necesita una pulsación larga que iOS no convierte en tal, y las tablas se amplían con
   barras que aparecen al pasar el cursor.
-- Solo los navegadores basados en Chromium pueden escribir archivos.
+- Solo los navegadores basados en Chromium en un ordenador pueden escribir archivos en una
+  carpeta del disco; en cualquier otro caso las notas se guardan en el navegador y se sacan
+  como un archivo ZIP.
 - La extensión es para Chrome (y navegadores construidos sobre él con panel lateral, como
   Edge); todavía no está en la Chrome Web Store. Mantiene las imágenes en la web en lugar
   de descargarlas a la carpeta: eso necesitaría acceso a cualquier sitio.

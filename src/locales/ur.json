@@ -73,7 +73,10 @@
       "other": "{count} صفحات {folder} میں برآمد ہوئے"
     },
     "Export stopped: {folder} is incomplete": "برآمد روک دی گئی: {folder} نامکمل ہے",
-    "Export stopped": "برآمد روک دی گئی"
+    "Export stopped": "برآمد روک دی گئی",
+    "\"{name}\" is copied into this browser": "\"{name}\" اس براؤزر میں کاپی ہو گیا",
+    "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "\"{name}\" اس براؤزر میں کاپی ہو گیا، جگہ کم ہونے پر براؤزر اسے مٹا سکتا ہے: وقتاً فوقتاً ترتیبات سے ZIP آرکائیو ڈاؤن لوڈ کرتے رہیں",
+    "Could not make the ZIP archive: {reason}": "ZIP آرکائیو نہیں بن سکا: {reason}"
   },
   "gate": {
     "Version {version}": "ورژن {version}",
@@ -89,7 +92,13 @@
     "Open {name}": "«{name}» کھولیں",
     "Remove from the list": "فہرست سے ہٹائیں",
     "The folder \"{name}\" is no longer there, so it was removed from the list": "فولڈر «{name}» اب موجود نہیں، اس لیے اسے فہرست سے ہٹا دیا گیا",
-    "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "جب Chrome پوچھے تو \"ہر وزٹ پر اجازت دیں\" منتخب کریں: اس کے بعد پینل بند ہونے پر بھی فولڈر کھلا رہتا ہے۔"
+    "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "جب Chrome پوچھے تو \"ہر وزٹ پر اجازت دیں\" منتخب کریں: اس کے بعد پینل بند ہونے پر بھی فولڈر کھلا رہتا ہے۔",
+    "In this browser": "اس براؤزر میں",
+    "Delete from this browser": "اس براؤزر سے حذف کریں",
+    "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "یہ براؤزر ڈسک پر فولڈر میں لکھ نہیں سکتا، اس لیے نوٹس اسی کے اندر رکھے جاتے ہیں: جو فولڈر یا ZIP آرکائیو آپ کھولتے ہیں وہ براؤزر میں کاپی ہو جاتا ہے، اور ترمیمیں وہیں محفوظ ہوتی ہیں۔ کچھ بھی کہیں نہیں بھیجا جاتا۔ نوٹس باہر لے جانے کے لیے، ترتیبات سے ZIP آرکائیو ڈاؤن لوڈ کریں۔ براؤزر میں سائٹ کا ڈیٹا صاف کرنے سے یہ حذف ہو جاتے ہیں۔",
+    "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "Safari بھی سات دن تک کوئی وزٹ نہ ہونے پر انہیں حذف کر دیتا ہے، جب تک ایڈیٹر کو ہوم اسکرین میں شامل نہ کیا جائے۔",
+    "Open ZIP archive": "ZIP آرکائیو کھولیں",
+    "or drag a folder or a ZIP archive here": "یا کوئی فولڈر یا ZIP آرکائیو یہاں گھسیٹیں"
   },
   "dialog": {
     "Note not found": "نوٹ نہیں ملا",
@@ -110,7 +119,9 @@
     "Done": "ہو گیا",
     "Close folder": "فولڈر بند کریں",
     "The note has unsaved changes. Close the folder anyway?": "نوٹ میں غیر محفوظ تبدیلیاں ہیں۔ پھر بھی فولڈر بند کریں؟",
-    "Close": "بند کریں"
+    "Close": "بند کریں",
+    "Delete from this browser": "اس براؤزر سے حذف کریں",
+    "Delete \"{name}\" and all its notes from this browser? This cannot be undone: to keep a copy, open it and download a ZIP archive from the settings first.": "\"{name}\" اور اس کے تمام نوٹس اس براؤزر سے حذف کریں؟ اسے واپس نہیں کیا جا سکتا: ایک کاپی رکھنے کے لیے، پہلے اسے کھولیں اور ترتیبات سے ZIP آرکائیو ڈاؤن لوڈ کریں۔"
   },
   "doc": {
     "no such file: {path}": "ایسی کوئی فائل نہیں: {path}",
@@ -119,10 +130,19 @@
   "errors": {
     "The folder is open read-only": "فولڈر صرف پڑھنے کے لیے کھلا ہے",
     "This browser cannot write files": "یہ براؤزر فائلیں نہیں لکھ سکتا",
+    "The folder is no longer in this browser": "فولڈر اب اس براؤزر میں موجود نہیں",
     "\"{name}\" already exists": "\"{name}\" پہلے سے موجود ہے",
+    "This name cannot be used here: {name}": "یہ نام یہاں استعمال نہیں کیا جا سکتا: {name}",
     "File not found: {path}": "فائل نہیں ملی: {path}",
     "The browser was not allowed to open the folder": "براؤزر کو فولڈر کھولنے کی اجازت نہیں ملی",
-    "A note opened on its own has no folder around it": "اکیلا کھلا نوٹ کسی فولڈر کے بغیر ہے"
+    "A note opened on its own has no folder around it": "اکیلا کھلا نوٹ کسی فولڈر کے بغیر ہے",
+    "The ZIP archive has no notes": "ZIP آرکائیو میں کوئی نوٹ نہیں",
+    "Too many files for a ZIP archive": "ZIP آرکائیو کے لیے فائلیں بہت زیادہ ہیں",
+    "Too much for a ZIP archive: over 4 GB": "ZIP آرکائیو کے لیے حجم بہت زیادہ ہے: 4 GB سے زیادہ",
+    "This is not a ZIP archive, or it is damaged": "یہ ZIP آرکائیو نہیں ہے، یا خراب ہے",
+    "The ZIP archive is too large: over 4 GB or 65 535 files": "ZIP آرکائیو بہت بڑا ہے: 4 GB یا 65535 فائلوں سے زیادہ",
+    "The ZIP archive is encrypted: {path}": "ZIP آرکائیو خفیہ کاری شدہ ہے: {path}",
+    "The ZIP archive is compressed in a way this editor cannot read: {path}": "ZIP آرکائیو ایسے طریقے سے کمپریس کیا گیا ہے جسے یہ ایڈیٹر نہیں پڑھ سکتا: {path}"
   },
   "palette": {
     "Red": "سرخ",
@@ -154,7 +174,10 @@
     "Images": "تصاویر",
     "Images folder": "تصاویر کا فولڈر",
     "A subfolder named after the note": "نوٹ کے نام کا ذیلی فولڈر",
-    "Version {version}": "ورژن {version}"
+    "Version {version}": "ورژن {version}",
+    "Download ZIP": "ZIP ڈاؤن لوڈ کریں",
+    "Kept in this browser": "اس براؤزر میں محفوظ",
+    "The whole folder": "پورا فولڈر"
   },
   "app": {
     "Notes editor": "نوٹس ایڈیٹر"

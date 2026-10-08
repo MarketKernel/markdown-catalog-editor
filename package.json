@@ -1,6 +1,6 @@
 {
   "name": "markdown-catalog-editor",
-  "version": "0.12.2",
+  "version": "0.13.0",
   "private": true,
   "description": "A Markdown editor for a local folder of notes — one standalone HTML file, a PWA that opens .md files, and Markdown Knowledge Base, a Chrome extension that sends what you select to your notes",
   "license": "MIT",
@@ -12,7 +12,7 @@
     "build": "node build.mjs",
     "watch": "node build.mjs --watch",
     "typecheck": "tsc --noEmit",
-    "test": "node tools/test-blocks.mjs && node tools/test-format.mjs && node tools/test-table.mjs && node tools/test-markdown.mjs && node tools/test-meta.mjs && node tools/test-vault.mjs && node tools/test-export.mjs && node tools/test-clip.mjs && node tools/test-i18n.mjs",
+    "test": "node tools/test-blocks.mjs && node tools/test-format.mjs && node tools/test-table.mjs && node tools/test-markdown.mjs && node tools/test-meta.mjs && node tools/test-vault.mjs && node tools/test-zip.mjs && node tools/test-export.mjs && node tools/test-clip.mjs && node tools/test-i18n.mjs",
     "test:browser": "npm run test:editor && npm run test:convert && npm run test:pwa && npm run test:extension",
     "test:editor": "node --experimental-websocket tools/test-editor.mjs",
     "test:convert": "node tools/test-convert.mjs",

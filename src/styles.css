@@ -216,6 +216,7 @@ button, input, textarea, select {
   text-align: start;
   margin: 0 0 18px;
 }
+.gate-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
 .gate-hint { color: var(--faint); margin: 12px 0 0; }
 .gate-error { color: var(--danger); min-height: 1.4em; margin: 12px 0 0; }
 .gate-version { color: var(--faint); font-size: 12px; margin: 14px 0 0; }
@@ -1160,6 +1161,17 @@ details.callout[open] > summary.callout-title::after { transform: rotate(45deg);
   font-size: 13px;
 }
 .export-folder-row .export-folder { margin: 0; border-radius: 0 8px 8px 0; font-family: var(--mono); font-size: 13px; }
+.export-folder-suffix {
+  padding: 8px 10px 8px 4px;
+  border: 1px solid var(--edge);
+  border-left: 0;
+  border-radius: 0 8px 8px 0;
+  background: var(--panel-2);
+  color: var(--faint);
+  font-family: var(--mono);
+  font-size: 13px;
+}
+.export-folder-row--zip .export-folder { border-radius: 8px 0 0 8px; }
 .export-check { padding: 0 0 12px; align-items: flex-start; }
 .export-check input { margin-top: 2px; }
 .export-check-hint { display: block; color: var(--faint); font-size: 12px; line-height: 1.45; margin-top: 2px; }
@@ -1304,6 +1316,7 @@ details.callout[open] > summary.callout-title::after { transform: rotate(45deg);
 .settings-folder { margin-top: 8px; padding-top: 12px; border-top: 1px solid var(--edge); }
 .settings-folder-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
 .settings-close-folder { flex: none; }
+.settings-folder-note { min-width: 0; color: var(--muted); }
 .settings-select {
   max-width: 190px;
   border: 1px solid var(--edge);

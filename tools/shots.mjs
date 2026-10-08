@@ -3,7 +3,8 @@
  * builds, then opens build/macaed.html in headless Chrome beside a small
  * folder of notes (served with an index.json, so it opens by itself) — the
  * start screen, a note to read and to edit, the settings, the dark theme,
- * Arabic right to left, a phone with the file panel shut and open — and runs
+ * Arabic right to left, a phone with the file panel shut and open, the start
+ * screen where the notes are kept in the browser — and runs
  * the extension's test with --shots for its side panel.
  *
  *   npm run shots                  # -> shots/
@@ -112,6 +113,17 @@ try {
   await chrome.evaluate(s, `document.getElementById('toggle-sidebar').click(), true`);
   await sleep(300);
   await shot('7b-phone-files');
+
+  // Without a folder picker — Safari, Firefox, a phone — the gate offers to keep the notes in the browser.
+  state.notes = false;
+  const { identifier } = await chrome.send('Page.addScriptToEvaluateOnNewDocument', { source: 'delete Window.prototype.showDirectoryPicker; delete window.showDirectoryPicker;' }, s);
+  await viewport(1200, 800);
+  await open({ language: 'en' });
+  await shot('1b-gate-browser');
+  await viewport(390, 844, true);
+  await open({ language: 'en' });
+  await shot('7c-phone-gate-browser');
+  await chrome.send('Page.removeScriptToEvaluateOnNewDocument', { identifier }, s);
 } finally {
   await chrome.close();
   server.close();

@@ -30,6 +30,9 @@
     }
   },
   "toast": {
+    "\"{name}\" is copied into this browser": "“{name}” bu tarayıcıya kopyalandı",
+    "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "“{name}” bu tarayıcıya kopyalandı; alan azaldığında tarayıcı bunu silebilir, bu yüzden arada bir ayarlardan bir ZIP dosyası indirin",
+    "Could not make the ZIP archive: {reason}": "ZIP dosyası oluşturulamadı: {reason}",
     "Path copied: {path}": "Yol kopyalandı: {path}",
     "No .md files in this folder — create the first note": "Bu klasörde .md dosyası yok — ilk notu oluşturun",
     "No .md files in this folder": "Bu klasörde .md dosyası yok",
@@ -53,6 +56,12 @@
     "Finish what is open first, then open the note again": "Önce açık olanı bitirin, sonra notu yeniden açın"
   },
   "gate": {
+    "In this browser": "Bu tarayıcıda",
+    "Delete from this browser": "Bu tarayıcıdan sil",
+    "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "Bu tarayıcı diske bir klasör yazamaz, bu yüzden notlar tarayıcının içinde tutulur: açtığınız bir klasör veya ZIP dosyası tarayıcıya kopyalanır ve değişiklikler orada kaydedilir. Hiçbir şey hiçbir yere gönderilmez. Notları dışarı almak için ayarlardan bir ZIP dosyası indirin. Tarayıcıdaki site verilerini temizlemek onları siler.",
+    "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "Düzenleyici Ana Ekran’a eklenmedikçe Safari da onları yedi gün ziyaret edilmeden sonra siler.",
+    "Open ZIP archive": "ZIP dosyası aç",
+    "or drag a folder or a ZIP archive here": "veya bir klasörü ya da ZIP dosyasını buraya sürükleyin",
     "Drag a folder or a note": "Bir klasör veya not sürükleyin",
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "Bu tarayıcı diske dosya yazamaz: klasör salt okunur olarak açılacak ve kaydederken değiştirilen dosyayı indirmeniz önerilecek. Tam düzenleme bilgisayarda Chrome, Edge ve Arc’ta çalışır.",
     "local editor · one file": "yerel düzenleyici · tek dosya",
@@ -69,6 +78,8 @@
     "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "Chrome sorduğunda “Her ziyarette izin ver” seçeneğini seçin: panel kapandığında klasör açık kalır."
   },
   "dialog": {
+    "Delete from this browser": "Bu tarayıcıdan sil",
+    "Delete \"{name}\" and all its notes from this browser? This cannot be undone: to keep a copy, open it and download a ZIP archive from the settings first.": "“{name}” ve tüm notları bu tarayıcıdan silinsin mi? Bu işlem geri alınamaz: bir kopyasını saklamak için önce açın ve ayarlardan bir ZIP dosyası indirin.",
     "Note not found": "Not bulunamadı",
     "Create \"{name}\"?": "“{name}” oluşturulsun mu?",
     "Create": "Oluştur",
@@ -94,9 +105,18 @@
     "Pick a note on the left, or create a new one.": "Soldan bir not seçin veya yeni bir not oluşturun."
   },
   "errors": {
+    "The ZIP archive has no notes": "ZIP dosyasında not yok",
+    "Too many files for a ZIP archive": "Bir ZIP dosyası için çok fazla dosya var",
+    "Too much for a ZIP archive: over 4 GB": "Bir ZIP dosyası için çok büyük: 4 GB'den fazla",
+    "This is not a ZIP archive, or it is damaged": "Bu bir ZIP dosyası değil ya da bozuk",
+    "The ZIP archive is too large: over 4 GB or 65 535 files": "ZIP dosyası çok büyük: 4 GB'den veya 65 535 dosyadan fazla",
+    "The ZIP archive is encrypted: {path}": "ZIP dosyası şifreli: {path}",
+    "The ZIP archive is compressed in a way this editor cannot read: {path}": "ZIP dosyası, bu düzenleyicinin okuyamayacağı bir biçimde sıkıştırılmış: {path}",
     "The folder is open read-only": "Klasör salt okunur olarak açık",
     "This browser cannot write files": "Bu tarayıcı dosya yazamaz",
+    "The folder is no longer in this browser": "Klasör artık bu tarayıcıda yok",
     "\"{name}\" already exists": "“{name}” zaten var",
+    "This name cannot be used here: {name}": "Bu ad burada kullanılamaz: {name}",
     "File not found: {path}": "Dosya bulunamadı: {path}",
     "The browser was not allowed to open the folder": "Tarayıcının klasörü açmasına izin verilmedi",
     "A note opened on its own has no folder around it": "Tek başına açılan bir notun çevresinde klasör yoktur"
@@ -113,6 +133,9 @@
     "Clear formatting": "Biçimlendirmeyi temizle"
   },
   "settings": {
+    "Download ZIP": "ZIP indir",
+    "Kept in this browser": "Bu tarayıcıda tutuluyor",
+    "The whole folder": "Tüm klasör",
     "System": "Sistem",
     "Centred column": "Ortalanmış sütun",
     "Full width": "Tam genişlik",

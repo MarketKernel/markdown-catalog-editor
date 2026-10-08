@@ -33,7 +33,10 @@ Sur un ordinateur, dans Chrome, Edge et Arc, utilisez le bouton d'installation d
 d'adresse ; sur Android, le menu ⋮ de Chrome → Installer l'application ; sur iOS, Partager → Sur
 l'écran d'accueil, dans Safari ou dans Chrome. Vos notes restent là aussi sur votre disque,
 l'application installée ouvre un `.md` directement depuis le Finder ou l'Explorateur, et elle se
-met à jour quand vous le décidez — voir « [GitHub Pages](#github-pages) ».
+met à jour quand vous le décidez — voir « [GitHub Pages](#github-pages) ». Là où un navigateur ne
+peut pas écrire sur un disque — Safari, Firefox, un iPad ou un téléphone —, les notes sont
+conservées dans le navigateur et entrent et sortent sous forme d'archive ZIP : voir
+« [Notes conservées dans le navigateur](#notes-conservées-dans-le-navigateur) ».
 
 Le même éditeur est aussi **Markdown Knowledge Base**, une
 [extension Chrome](#markdown-knowledge-base-lextension-chrome) : sélectionnez du texte sur une
@@ -65,9 +68,10 @@ la page dans le panneau latéral de Chrome.
 
 Dans Chrome, Edge et Arc le dossier s'ouvre via la File System Access API : les notes sont lues et
 écrites sur place, et créer, renommer et supprimer des fichiers et des dossiers fonctionnent tous.
-Dans Safari et Firefox le dossier s'ouvre en lecture seule, et `⌘S` propose de télécharger le
-fichier modifié — tout comme sur téléphone : Chrome sur Android n'a pas de File System Access, et
-tout navigateur sur iOS, Chrome compris, tourne sur le moteur de Safari.
+Safari et Firefox ne peuvent pas écrire dans un dossier sur le disque, pas plus que les
+téléphones et les iPad : Chrome sur Android n'a pas de File System Access, et tout navigateur sur
+iOS et iPadOS, Chrome compris, tourne sur le moteur de Safari. Là, les notes sont conservées dans
+le navigateur — voir « [Notes conservées dans le navigateur](#notes-conservées-dans-le-navigateur) ».
 
 L'éditeur se souvient des six derniers dossiers ouverts (une page n'apprend jamais le chemin d'un
 dossier, elle conserve donc le descripteur du dossier dans l'IndexedDB du navigateur), et de la
@@ -82,6 +86,45 @@ Si vous placez `macaed.html` à côté de vos notes et le servez en HTTP, la pag
 d'elle-même — à condition qu'un `index.json` se trouve à côté, de la forme
 `{ "name": "Notes", "files": ["Note.md", "Folder/Other.md"] }`.
 
+### Notes conservées dans le navigateur
+
+Là où le navigateur ne peut pas écrire dans un dossier sur le disque — Safari, Firefox, tout
+navigateur sur un téléphone ou un iPad —, l'écran de démarrage le signale et propose deux façons
+d'entrer : **Ouvrir un dossier** et **Ouvrir une archive ZIP** (ou glisser l'un ou l'autre sur la
+fenêtre). Ce que vous ouvrez est copié dans l'IndexedDB du navigateur, et dès lors l'éditeur lit
+et écrit cette copie : enregistrement automatique, nouvelles notes et nouveaux dossiers,
+renommage, suppression, images, étiquettes — tout fonctionne comme sur un disque. Rien ne quitte
+l'appareil.
+
+- **Le chemin de retour** est une archive ZIP : paramètres → **Télécharger le ZIP** regroupe tout
+  le dossier — notes, images, `.meta.json` — sous un dossier de son nom, comme le serait un
+  dossier compressé dans le Finder ou l'Explorateur. Rouvert comme archive, il revient tel qu'il
+  était. Le bouton est là aussi pour un dossier sur disque, comme une copie rapide de celui-ci.
+- **Une archive** créée par le Finder, l'Explorateur ou `zip` s'ouvre comme l'unique dossier
+  qu'elle contient (ou, si les fichiers sont à la racine, sous le nom de l'archive). Seul ce que
+  montre l'éditeur est copié — notes, images et pièces jointes, `.meta.json` ; les dossiers
+  pointés, `node_modules`, `output/` et le `__MACOSX` du Mac restent de côté. Cela ne nécessite
+  aucun sélecteur de dossier, ce dont a justement besoin un iPad plus ancien, dont Safari ne peut
+  pas choisir de dossier.
+- **L'écran de démarrage liste les dossiers** conservés dans ce navigateur, les plus récents
+  d'abord, et le dernier s'ouvre de lui-même au démarrage suivant. Rouvrir le même dossier ou la
+  même archive ajoute une seconde copie à côté de la première (« Notes 2 ») plutôt que d'écraser
+  les modifications de la première. × supprime une copie du navigateur, après confirmation — ce
+  pourrait être la seule.
+- **Exporter en HTML** télécharge le site sous forme d'archive ZIP au lieu de l'écrire dans
+  `output/`.
+- **Combien de temps ils restent** : le navigateur est prié de conserver les données du site pour
+  de bon (`navigator.storage.persist()`) — Firefox vous le demande, Chrome et Safari décident
+  d'eux-mêmes, plus volontiers pour une application installée. Un navigateur qui refuse peut
+  effacer les notes quand le disque manque de place, et Safari efface les données d'un site non
+  visité depuis sept jours d'utilisation de Safari, à moins qu'il ne soit ajouté à l'écran
+  d'accueil. Effacer les données du site ou l'historique du navigateur les supprime dans tous les
+  cas. Téléchargez donc une archive ZIP de temps en temps — c'est la seule copie en dehors du
+  navigateur.
+
+Là où l'IndexedDB est désactivé (certaines fenêtres privées), un dossier s'ouvre en lecture
+seule, comme avant, et `⌘S` propose de télécharger la note modifiée.
+
 ### Une seule note
 
 Un fichier `.md` peut être ouvert seul, sans son dossier :
@@ -94,7 +137,8 @@ Un fichier `.md` peut être ouvert seul, sans son dossier :
 - **Glissée sur la fenêtre**, dans n'importe quel navigateur.
 
 La note est lue et écrite sur place, comme dans un dossier — en lecture seule dans Safari et
-Firefox, `⌘S` proposant alors un téléchargement. Sans dossier autour d'elle, il n'y a rien à
+Firefox, `⌘S` proposant alors un téléchargement (une note n'est pas copiée dans le navigateur ;
+son dossier peut l'être). Sans dossier autour d'elle, il n'y a rien à
 créer, renommer ou supprimer à côté, et pas d'images de son dossier, d'étiquettes ni d'export :
 cela vient avec l'ouverture du dossier. Une note ouverte ainsi n'est pas ajoutée aux dossiers
 récents.
@@ -475,7 +519,10 @@ le système, et le site se lit et se lie de la même façon.
   `Referer`.
 - **Les fichiers restent sur votre disque.** Les notes sont lues et écrites sur place via la File
   System Access API ; les dossiers mémorisés sont des descripteurs dans l'IndexedDB du
-  navigateur, jamais des chemins ou des contenus.
+  navigateur, jamais des chemins ou des contenus. Là où un navigateur ne peut pas écrire sur un
+  disque, les dossiers que vous ouvrez sont copiés dans son IndexedDB, uniquement sur cet
+  appareil, et n'en ressortent que sous forme d'archive ZIP que vous téléchargez — voir
+  « [Notes conservées dans le navigateur](#notes-conservées-dans-le-navigateur) ».
 - Les permissions de l'extension : voir
   « [Markdown Knowledge Base](#markdown-knowledge-base-lextension-chrome) ».
 
@@ -519,6 +566,10 @@ le système, et le site se lit et se lie de la même façon.
   recherche, ou en une seule page — voir « [Exporter en HTML](#exporter-en-html) ».
 - **Une seule note** ouverte depuis le Finder ou l'Explorateur dans l'application installée, ou
   déposée sur la fenêtre — voir « [Une seule note](#une-seule-note) ».
+- **Notes conservées dans le navigateur**, là où il ne peut pas écrire sur un disque — Safari,
+  Firefox, téléphones, iPad —, entrant et sortant sous forme d'archive ZIP ; n'importe quel
+  dossier se télécharge comme tel depuis les paramètres — voir
+  « [Notes conservées dans le navigateur](#notes-conservées-dans-le-navigateur) ».
 - **Markdown Knowledge Base** : ce qui est sélectionné dans Chrome vers la note par défaut, ou
   vers celle que vous choisissez, avec Send to Markdown ; une page, un lien ou une image vers
   une note — voir
@@ -528,8 +579,9 @@ le système, et le site se lit et se lie de la même façon.
   centrée ou le panneau plein), si le nom de la note est affiché comme titre, et où vont les
   images ajoutées : le dossier d'images à côté de la note (`assets` par défaut) et si chaque note
   reçoit son propre sous-dossier à l'intérieur ; sans cela, toutes les images vont directement
-  dans le dossier. En bas, la version — et dans l'application installée, une recherche de mises à
-  jour et le choix de les installer d'elles-mêmes.
+  dans le dossier. Puis le dossier ouvert : Fermer le dossier, et Télécharger le ZIP pour tout
+  télécharger comme archive. En bas, la version — et dans l'application installée, une recherche
+  de mises à jour et le choix de les installer d'elles-mêmes.
 - **Langues** : l'anglais et 16 autres — 中文, हिन्दी, Español, Français, العربية, বাংলা,
   Português, Русский, اردو, Bahasa Indonesia, Deutsch, 日本語, Türkçe, 한국어, Italiano,
   Українська. Par défaut, l'interface suit la langue du navigateur. En arabe et en ourdou,
@@ -714,6 +766,8 @@ src/template.html   markup with the __STYLES__/__APP__/__ICON__ placeholders and
 src/styles.css      palette, light and dark themes, block paired with its source
 src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
+src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
+src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -741,7 +795,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/
@@ -757,7 +811,9 @@ build/extension/    the Chrome extension, and build/macaed-extension-<version>.z
 - Sur un téléphone, la mise en page est conçue pour la lecture : le menu contextuel de
   l'arborescence nécessite un appui long qu'iOS ne transforme pas en un, et les tableaux sont
   étendus avec des barres qui apparaissent au survol.
-- Seuls les navigateurs basés sur Chromium peuvent écrire des fichiers.
+- Seuls les navigateurs basés sur Chromium sur un ordinateur peuvent écrire des fichiers dans un
+  dossier sur le disque ; ailleurs, les notes sont conservées dans le navigateur et en sortent
+  sous forme d'archive ZIP.
 - L'extension est pour Chrome (et les navigateurs construits dessus avec un panneau latéral,
   comme Edge) ; elle n'est pas encore dans le Chrome Web Store. Elle garde les images sur le web
   plutôt que de les télécharger dans le dossier : cela nécessiterait un accès à tous les sites.

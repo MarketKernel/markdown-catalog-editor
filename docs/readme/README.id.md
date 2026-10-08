@@ -33,7 +33,9 @@ Chrome, Edge, dan Arc, gunakan tombol pasang di bilah alamat; di Android, menu �
 Instal aplikasi; di iOS, Bagikan → Tambahkan ke Layar Utama, di Safari atau di Chrome. Catatan
 Anda tetap berada di disk Anda di sana juga, aplikasi yang terpasang membuka sebuah `.md`
 langsung dari Finder atau Explorer, dan aplikasi itu diperbarui ketika Anda mengizinkannya —
-lihat "[GitHub Pages](#github-pages)".
+lihat "[GitHub Pages](#github-pages)". Ketika sebuah peramban tidak dapat menulis ke disk —
+Safari, Firefox, sebuah iPad atau ponsel — catatan disimpan di dalam peramban dan keluar-masuk
+sebagai sebuah arsip ZIP: lihat "[Catatan yang disimpan di peramban](#catatan-yang-disimpan-di-peramban)".
 
 Editor yang sama juga merupakan **Markdown Knowledge Base**, sebuah
 [ekstensi Chrome](#markdown-knowledge-base-ekstensi-chrome): pilih teks pada sebuah halaman
@@ -64,10 +66,10 @@ samping halaman tersebut di panel samping Chrome.
 
 Di Chrome, Edge, dan Arc, folder dibuka melalui File System Access API: catatan dibaca dan
 ditulis langsung di tempatnya, dan membuat, mengganti nama, serta menghapus file dan folder
-semuanya berfungsi. Di Safari dan Firefox folder dibuka hanya-baca, dan `⌘S` menawarkan untuk
-mengunduh file yang telah diubah — begitu juga di ponsel: Chrome di Android tidak memiliki
-File System Access, dan setiap peramban di iOS, termasuk Chrome, berjalan di atas mesin
-Safari.
+semuanya berfungsi. Safari dan Firefox tidak dapat menulis ke sebuah folder di disk, begitu
+pula ponsel dan iPad: Chrome di Android tidak memiliki File System Access, dan setiap peramban
+di iOS dan iPadOS, termasuk Chrome, berjalan di atas mesin Safari. Di sana catatan disimpan di
+dalam peramban — lihat "[Catatan yang disimpan di peramban](#catatan-yang-disimpan-di-peramban)".
 
 Editor mengingat enam folder terakhir yang dibuka di sana (sebuah halaman tidak pernah
 mengetahui jalur sebuah folder, sehingga ia menyimpan handle folder itu di IndexedDB
@@ -83,6 +85,45 @@ Jika Anda meletakkan `macaed.html` di sebelah catatan Anda dan menyajikannya lew
 halaman tersebut akan mengambil folder itu dengan sendirinya — asalkan ada `index.json` di
 sampingnya, dengan bentuk `{ "name": "Notes", "files": ["Note.md", "Folder/Other.md"] }`.
 
+### Catatan yang disimpan di peramban
+
+Ketika peramban tidak dapat menulis ke sebuah folder di disk — Safari, Firefox, peramban mana
+pun di ponsel atau iPad — layar awal menyatakan hal itu dan menawarkan dua cara masuk: **Buka
+folder** dan **Buka arsip ZIP** (atau seret salah satunya ke jendela). Apa yang Anda buka
+disalin ke dalam IndexedDB peramban, dan sejak itu editor membaca dan menulis salinan itu:
+penyimpanan otomatis, catatan dan folder baru, mengganti nama, menghapus, gambar, tag — semua
+berfungsi seperti pada disk. Tidak ada yang keluar dari perangkat.
+
+- **Cara untuk keluar lagi** adalah sebuah arsip ZIP: pada pengaturan → **Unduh ZIP** mengemas
+  seluruh folder — catatan, gambar, `.meta.json` — ke dalam satu folder dengan namanya, seperti
+  sebuah folder yang dikompresi oleh Finder atau Explorer. Dibuka lagi sebagai arsip, folder
+  itu kembali seperti semula. Tombol itu ada juga pada folder di disk, sebagai salinan cepat
+  darinya.
+- **Sebuah arsip** yang dibuat oleh Finder, Explorer, atau `zip` terbuka sebagai satu folder di
+  dalamnya (atau, jika file-nya ada di tingkat atas, sebagai folder bernama sesuai arsip itu).
+  Hanya yang ditampilkan editor yang disalin — catatan, gambar dan lampiran, `.meta.json`;
+  folder bertitik, `node_modules`, `output/`, dan `__MACOSX` milik Mac tetap di luar. Ini sama
+  sekali tidak membutuhkan pemilih folder, yang justru dibutuhkan oleh iPad lama yang
+  Safari-nya tidak bisa memilih folder.
+- **Layar awal mencantumkan folder-folder** yang disimpan di peramban ini, yang terbaru lebih
+  dulu, dan yang terakhir terbuka dengan sendirinya pada permulaan berikutnya. Membuka folder
+  atau arsip yang sama lagi menambahkan salinan kedua di sebelah yang pertama ("Notes 2"),
+  bukannya menimpa suntingan pada yang pertama. × menghapus sebuah salinan dari peramban,
+  setelah bertanya — itu mungkin satu-satunya.
+- **Ekspor ke HTML** mengunduh situs sebagai sebuah arsip ZIP, bukan menuliskannya ke
+  `output/`.
+- **Berapa lama mereka bertahan**: peramban diminta untuk menyimpan data situs itu untuk
+  selamanya (`navigator.storage.persist()`) — Firefox akan bertanya kepada Anda, Chrome dan
+  Safari memutuskan sendiri, lebih mudah mengizinkan untuk aplikasi yang terpasang. Peramban
+  yang menolak mungkin menghapus catatan saat disk hampir penuh, dan Safari menghapus data
+  situs yang tidak dikunjungi selama tujuh hari pemakaian Safari, kecuali jika situs itu
+  ditambahkan ke Layar Utama. Menghapus data situs atau riwayat peramban menghapusnya di
+  peramban mana pun. Jadi unduhlah sebuah arsip ZIP dari waktu ke waktu — itulah satu-satunya
+  salinan di luar peramban.
+
+Ketika IndexedDB nonaktif (beberapa jendela privat), sebuah folder terbuka hanya-baca, seperti
+sebelumnya, dan `⌘S` menawarkan untuk mengunduh catatan yang diubah.
+
 ### Satu catatan tunggal
 
 Sebuah file `.md` dapat dibuka sendiri, tanpa foldernya:
@@ -95,8 +136,9 @@ Sebuah file `.md` dapat dibuka sendiri, tanpa foldernya:
 - **Diseret ke jendela**, di peramban mana pun.
 
 Catatan ini dibaca dan ditulis langsung di tempatnya, seperti dalam sebuah folder — di Safari
-dan Firefox hanya-baca, dengan `⌘S` menawarkan unduhan. Tanpa folder di sekelilingnya, tidak
-ada yang bisa dibuat, diganti namanya, atau dihapus di sampingnya, dan tidak ada gambar dari
+dan Firefox hanya-baca, dengan `⌘S` menawarkan unduhan (sebuah catatan tidak disalin ke dalam
+peramban; foldernya bisa). Tanpa folder di sekelilingnya, tidak ada yang bisa dibuat, diganti
+namanya, atau dihapus di sampingnya, dan tidak ada gambar dari
 foldernya, tag, atau ekspor: itu semua datang dengan membuka foldernya. Catatan yang dibuka
 dengan cara ini tidak ditambahkan ke folder terbaru.
 
@@ -473,7 +515,10 @@ mengikuti sistem, dan situs tetap terbaca dan bertaut dengan cara yang sama.
   `Referer`.
 - **File tetap berada di disk Anda.** Catatan dibaca dan ditulis langsung di tempatnya lewat
   File System Access API; folder yang diingat adalah handle dalam IndexedDB peramban, bukan
-  jalur atau isinya.
+  jalur atau isinya. Ketika peramban tidak dapat menulis ke disk, folder yang Anda buka
+  disalin ke dalam IndexedDB-nya, hanya pada perangkat ini, dan hanya bisa keluar darinya
+  sebagai arsip ZIP yang Anda unduh — lihat
+  "[Catatan yang disimpan di peramban](#catatan-yang-disimpan-di-peramban)".
 - Izin milik ekstensi: lihat "[Markdown Knowledge Base](#markdown-knowledge-base-ekstensi-chrome)".
 
 ## Fitur
@@ -517,6 +562,10 @@ mengikuti sistem, dan situs tetap terbaca dan bertaut dengan cara yang sama.
   pencarian, atau sebagai satu halaman — lihat "[Ekspor ke HTML](#ekspor-ke-html)".
 - **Satu catatan tunggal** yang dibuka dari Finder atau Explorer dalam aplikasi yang
   terpasang, atau dijatuhkan pada jendela — lihat "[Satu catatan tunggal](#satu-catatan-tunggal)".
+- **Catatan yang disimpan di peramban** ketika tidak bisa menulis ke disk — Safari, Firefox,
+  ponsel, iPad — masuk dan keluar sebagai arsip ZIP; folder mana pun dapat diunduh sebagai satu
+  arsip dari pengaturan — lihat
+  "[Catatan yang disimpan di peramban](#catatan-yang-disimpan-di-peramban)".
 - **Markdown Knowledge Base**: apa yang dipilih di Chrome ke catatan bawaan, atau ke satu
   yang Anda pilih, dengan Send to Markdown; sebuah halaman, tautan, atau gambar ke sebuah
   catatan — lihat
@@ -526,7 +575,8 @@ mengikuti sistem, dan situs tetap terbaca dan bertaut dengan cara yang sama.
   apakah nama catatan ditampilkan sebagai judul, dan ke mana gambar yang ditambahkan
   disimpan: folder gambar di samping catatan (`assets` secara bawaan) dan apakah setiap
   catatan mendapat subfoldernya sendiri di dalamnya; tanpa itu, semua gambar langsung masuk
-  ke folder tersebut. Di bagian bawah, versinya — dan pada aplikasi yang terpasang,
+  ke folder tersebut. Lalu folder yang terbuka: Tutup folder, dan Unduh ZIP untuk mengunduh
+  semuanya sebagai arsip. Di bagian bawah, versinya — dan pada aplikasi yang terpasang,
   pemeriksaan pembaruan dan apakah akan memasangnya secara otomatis.
 - **Bahasa**: Inggris dan 16 lainnya — 中文, हिन्दी, Español, Français, العربية, বাংলা,
   Português, Русский, اردو, Bahasa Indonesia, Deutsch, 日本語, Türkçe, 한국어, Italiano,
@@ -719,6 +769,8 @@ src/template.html   markup with the __STYLES__/__APP__/__ICON__ placeholders and
 src/styles.css      palette, light and dark themes, block paired with its source
 src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
+src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
+src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -746,7 +798,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/
@@ -761,7 +813,8 @@ build/extension/    the Chrome extension, and build/macaed-extension-<version>.z
 - Pada ponsel, tata letak dibuat untuk membaca: menu konteks pada pohon file membutuhkan
   tekan lama yang tidak dipicu oleh iOS, dan tabel diperluas dengan bilah yang muncul saat
   diarahkan kursor (hover).
-- Hanya peramban berbasis Chromium yang dapat menulis file.
+- Hanya peramban berbasis Chromium di komputer yang dapat menulis file ke folder pada disk; di
+  tempat lain, catatan disimpan di dalam peramban dan dikeluarkan sebagai arsip ZIP.
 - Ekstensi ini untuk Chrome (dan peramban yang dibangun di atasnya dengan panel samping,
   seperti Edge); belum tersedia di Chrome Web Store. Ekstensi ini membiarkan gambar tetap di
   web alih-alih mengunduhnya ke dalam folder: itu akan membutuhkan akses ke setiap situs.

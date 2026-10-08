@@ -12,7 +12,7 @@ import { h, openModal } from './ui';
 import { OUTPUT_DIR } from './vault';
 
 export interface ExportChoice {
-  /** The folder inside `output/` the site is written to. */
+  /** The folder inside `output/` the site is written to, or the name of the ZIP archive it is downloaded as. */
   folder: string;
   template: string;
   includeTags: boolean;
@@ -28,6 +28,8 @@ export interface ExportDialogOptions {
   template: string;
   includeTags: boolean;
   site: boolean;
+  /** The folder is kept in the browser: the site is downloaded as a ZIP archive, not written to `output/`. */
+  zipped?: boolean;
 }
 
 export interface ExportRun {
@@ -119,7 +121,9 @@ export function exportDialog(options: ExportDialogOptions, run: (choice: ExportC
       'label',
       { class: 'dialog-label' },
       t('export', 'Folder'),
-      h('span', { class: 'export-folder-row' }, h('span', { class: 'export-folder-prefix', text: `${OUTPUT_DIR}/` }), folder),
+      options.zipped
+        ? h('span', { class: 'export-folder-row export-folder-row--zip' }, folder, h('span', { class: 'export-folder-suffix', text: '.zip' }))
+        : h('span', { class: 'export-folder-row' }, h('span', { class: 'export-folder-prefix', text: `${OUTPUT_DIR}/` }), folder),
     ),
     h(
       'label',

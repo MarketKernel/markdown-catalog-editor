@@ -32,6 +32,9 @@
     }
   },
   "toast": {
+    "\"{name}\" is copied into this browser": "“{name}” foi copiada para este navegador",
+    "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "“{name}” foi copiada para este navegador, que pode apagá-la quando o espaço acabar: baixe um arquivo ZIP pelas configurações de vez em quando",
+    "Could not make the ZIP archive: {reason}": "Não foi possível criar o arquivo ZIP: {reason}",
     "Path copied: {path}": "Caminho copiado: {path}",
     "No .md files in this folder — create the first note": "Nenhum arquivo .md nesta pasta — crie a primeira nota",
     "No .md files in this folder": "Nenhum arquivo .md nesta pasta",
@@ -56,6 +59,12 @@
     "Finish what is open first, then open the note again": "Termine primeiro o que está aberto e abra a nota novamente"
   },
   "gate": {
+    "In this browser": "Neste navegador",
+    "Delete from this browser": "Excluir deste navegador",
+    "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "Este navegador não consegue gravar em uma pasta no disco, por isso as notas são mantidas dentro dele: uma pasta ou um arquivo ZIP que você abrir é copiado para o navegador, e as alterações são salvas ali. Nada é enviado a lugar nenhum. Para tirar as notas de lá, baixe um arquivo ZIP pelas configurações. Limpar os dados do site no navegador as exclui.",
+    "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "O Safari também as exclui após sete dias sem visita, a menos que o editor seja adicionado à Tela de Início.",
+    "Open ZIP archive": "Abrir arquivo ZIP",
+    "or drag a folder or a ZIP archive here": "ou arraste uma pasta ou um arquivo ZIP para cá",
     "Drag a folder or a note": "Arraste uma pasta ou uma nota",
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "Este navegador não consegue gravar arquivos no disco: a pasta será aberta somente para leitura e, ao salvar, será oferecido o download do arquivo modificado. A edição completa funciona no Chrome, Edge e Arc no computador.",
     "local editor · one file": "editor local · um único arquivo",
@@ -72,6 +81,8 @@
     "Version {version}": "Versão {version}"
   },
   "dialog": {
+    "Delete from this browser": "Excluir deste navegador",
+    "Delete \"{name}\" and all its notes from this browser? This cannot be undone: to keep a copy, open it and download a ZIP archive from the settings first.": "Excluir “{name}” e todas as suas notas deste navegador? Esta ação não pode ser desfeita: para manter uma cópia, abra-a primeiro e baixe um arquivo ZIP pelas configurações.",
     "Note not found": "Nota não encontrada",
     "Create \"{name}\"?": "Criar “{name}”?",
     "Create": "Criar",
@@ -97,9 +108,18 @@
     "Pick a note on the left, or create a new one.": "Escolha uma nota à esquerda ou crie uma nova."
   },
   "errors": {
+    "The ZIP archive has no notes": "O arquivo ZIP não tem notas",
+    "Too many files for a ZIP archive": "Arquivos demais para um arquivo ZIP",
+    "Too much for a ZIP archive: over 4 GB": "Grande demais para um arquivo ZIP: mais de 4 GB",
+    "This is not a ZIP archive, or it is damaged": "Isto não é um arquivo ZIP, ou está danificado",
+    "The ZIP archive is too large: over 4 GB or 65 535 files": "O arquivo ZIP é grande demais: mais de 4 GB ou 65 535 arquivos",
+    "The ZIP archive is encrypted: {path}": "O arquivo ZIP está criptografado: {path}",
+    "The ZIP archive is compressed in a way this editor cannot read: {path}": "O arquivo ZIP está compactado de um jeito que este editor não consegue ler: {path}",
     "The folder is open read-only": "A pasta está aberta somente para leitura",
     "This browser cannot write files": "Este navegador não consegue gravar arquivos",
+    "The folder is no longer in this browser": "A pasta não existe mais neste navegador",
     "\"{name}\" already exists": "“{name}” já existe",
+    "This name cannot be used here: {name}": "Este nome não pode ser usado aqui: {name}",
     "File not found: {path}": "Arquivo não encontrado: {path}",
     "The browser was not allowed to open the folder": "O navegador não teve permissão para abrir a pasta",
     "A note opened on its own has no folder around it": "Uma nota aberta sozinha não tem uma pasta ao redor"
@@ -116,6 +136,9 @@
     "Clear formatting": "Limpar formatação"
   },
   "settings": {
+    "Download ZIP": "Baixar ZIP",
+    "Kept in this browser": "Mantida neste navegador",
+    "The whole folder": "A pasta inteira",
     "System": "Sistema",
     "Centred column": "Coluna centralizada",
     "Full width": "Largura total",

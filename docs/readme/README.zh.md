@@ -30,7 +30,9 @@
 用。在电脑上，Chrome、Edge 和 Arc 可使用地址栏中的安装按钮；在 Android 上，使用 Chrome 的 ⋮
 菜单 → 安装应用；在 iOS 上，在 Safari 或 Chrome 中使用“分享”→“添加到主屏幕”。你的笔记同样留
 在你自己的磁盘上，已安装的应用可以直接从 Finder 或资源管理器打开 `.md` 文件，并会在你确认时
-更新——参见“[GitHub Pages](#github-pages)”。
+更新——参见“[GitHub Pages](#github-pages)”。当浏览器无法写入磁盘时——Safari、Firefox、iPad
+或手机——笔记会保存在浏览器内部，并以 ZIP 压缩包的形式进出：参见“[保存在浏览器中的笔
+记](#保存在浏览器中的笔记)”。
 
 同一款编辑器也是 **Markdown Knowledge Base**，一个
 [Chrome 扩展程序](#markdown-knowledge-base-chrome-扩展程序)：在网页上选中文字，点击它的按
@@ -58,9 +60,10 @@
 3. 顶部的 **阅读 / 编辑** 切换开关，或 `⌘E`。
 
 在 Chrome、Edge 和 Arc 中，文件夹通过 File System Access API 打开：笔记会被原地读取和写入，新
-建、重命名和删除文件及文件夹都能正常使用。在 Safari 和 Firefox 中，文件夹以只读方式打开，`⌘S`
-会提供下载修改后文件的选项——手机上也是如此：Android 上的 Chrome 没有 File System Access，而
-iOS 上的所有浏览器，包括 Chrome 在内，都运行在 Safari 的引擎之上。
+建、重命名和删除文件及文件夹都能正常使用。Safari 和 Firefox 无法写入磁盘上的文件夹，手机和
+iPad 也是如此：Android 上的 Chrome 没有 File System Access，而 iOS 和 iPadOS 上的所有浏览
+器，包括 Chrome 在内，都运行在 Safari 的引擎之上。那里的笔记会保存在浏览器内部——参见“[保存
+在浏览器中的笔记](#保存在浏览器中的笔记)”。
 
 编辑器会记住最近在此打开过的六个文件夹（页面从不获知文件夹的路径，而是把文件夹的句柄保存在浏
 览器的 IndexedDB 中），以及每个文件夹中最后打开的笔记。下次启动时，如果浏览器仍然允许，上次的
@@ -71,6 +74,36 @@ iOS 上的所有浏览器，包括 Chrome 在内，都运行在 Safari 的引擎
 
 如果你把 `macaed.html` 放在笔记旁边，并通过 HTTP 提供服务，页面会自动识别该文件夹——前提是同
 一目录下有一个 `index.json`，形如 `{ "name": "Notes", "files": ["Note.md", "Folder/Other.md"] }`。
+
+### 保存在浏览器中的笔记
+
+当浏览器无法写入磁盘上的文件夹时——Safari、Firefox，以及手机或 iPad 上的任何浏览器——起始
+界面会说明这一点，并提供两种进入方式：**打开文件夹**和**打开 ZIP 压缩包**（也可以把其中任意
+一个拖进窗口）。你打开的内容会被复制到浏览器的 IndexedDB 中，此后编辑器读取和写入的都是这份
+副本：自动保存、新建笔记和文件夹、重命名、删除、图片、标签——一切都像在磁盘上一样工作。任
+何内容都不会离开这台设备。
+
+- **出去的方式**是一个 ZIP 压缩包：设置中的**下载 ZIP**会把整个文件夹——笔记、图片、
+  `.meta.json`——打包进以其名称命名的一个文件夹里，就像在 Finder 或资源管理器中压缩一个文
+  件夹那样。再次作为压缩包打开时，会恢复成原来的样子。这个按钮在磁盘上的文件夹里也有，可以
+  用来快速制作一份它的副本。
+- **压缩包**若是由 Finder、资源管理器或 `zip` 制作的，会作为其中的那一个文件夹打开（如果文
+  件直接在顶层，则作为以压缩包名称命名的文件夹打开）。只有编辑器会显示的内容才会被复制——笔
+  记、图片和附件、`.meta.json`；点号开头的文件夹、`node_modules`、`output/` 以及 Mac 的
+  `__MACOSX` 都会被排除在外。它完全不需要文件夹选择器，这正是较旧的 iPad——其 Safari 无法
+  选择文件夹——所需要的。
+- **起始界面会列出**保存在这个浏览器中的文件夹，最新的排在最前，最近一个会在下次启动时自动
+  打开。再次打开同一个文件夹或压缩包，会在第一份旁边新增第二份副本（“Notes 2”），而不是覆盖
+  第一份中的修改。× 会在确认后从浏览器中删除一份副本——因为它可能是唯一的一份。
+- **导出为 HTML** 会把站点下载为一个 ZIP 压缩包，而不是写入 `output/`。
+- **它们能保存多久**：浏览器会被要求永久保留该站点的数据（`navigator.storage.persist()`）
+  ——Firefox 会询问你，Chrome 和 Safari 则自行决定，对已安装的应用更愿意同意。拒绝的浏览器
+  可能会在磁盘空间不足时清除这些笔记，而 Safari 会清除连续七天未使用 Safari 访问过的网站的
+  数据，除非它已被添加到主屏幕。清除网站数据或浏览器历史记录，在任何浏览器中都会把它们删
+  除。所以请时常下载一份 ZIP 压缩包——它是浏览器之外唯一的副本。
+
+当 IndexedDB 被关闭时（某些隐私窗口），文件夹会像以前一样以只读方式打开，`⌘S` 会提供下载修
+改后笔记的选项。
 
 ### 单篇笔记
 
@@ -83,7 +116,8 @@ iOS 上的所有浏览器，包括 Chrome 在内，都运行在 Safari 的引擎
 - **拖放到窗口上**，在任意浏览器中均可。
 
 笔记会像在文件夹中一样被原地读取和写入——在 Safari 和 Firefox 中为只读，`⌘S` 会提供下载选
-项。由于周围没有文件夹，也就没有可以新建、重命名或删除的内容，也没有来自其文件夹的图片、标
+项（笔记本身不会被复制到浏览器中；但它所在的文件夹可以）。由于周围没有文件夹，也就没有可以
+新建、重命名或删除的内容，也没有来自其文件夹的图片、标
 签或导出：这些功能都需要打开文件夹才能使用。以这种方式打开的笔记不会被加入最近使用的文件夹列
 表。
 
@@ -384,7 +418,9 @@ Markdown。
   就像在任何 Markdown 查看器中一样——这是笔记自身的选择，而非编辑器的选择。此类请求不会携带
   `Referer`。
 - **文件始终留在你的磁盘上。** 笔记通过 File System Access API 被原地读取和写入；被记住的文
-  件夹是浏览器 IndexedDB 中的句柄，绝不是路径或内容本身。
+  件夹是浏览器 IndexedDB 中的句柄，绝不是路径或内容本身。当浏览器无法写入磁盘时，你打开的文
+  件夹只会被复制到该浏览器的 IndexedDB 中，仅保存在本设备上，离开它的唯一方式是你下载的 ZIP
+  压缩包——参见“[保存在浏览器中的笔记](#保存在浏览器中的笔记)”。
 - 扩展程序的权限：参见“[Markdown Knowledge Base](#markdown-knowledge-base-chrome-扩展程序)”。
 
 ## 功能
@@ -418,14 +454,18 @@ Markdown。
   页面——参见“[导出为 HTML](#导出为-html)”。
 - **单篇笔记**：可以从 Finder 或资源管理器在已安装的应用中打开，也可以拖放到窗口上——参见
   “[单篇笔记](#单篇笔记)”。
+- **保存在浏览器中的笔记**，用于无法写入磁盘的情况——Safari、Firefox、手机、iPad——以 ZIP
+  压缩包的形式进出；任何文件夹都可以从设置中下载为一个压缩包——参见
+  “[保存在浏览器中的笔记](#保存在浏览器中的笔记)”。
 - **Markdown Knowledge Base**：通过 Send to Markdown，把 Chrome 中选中的内容发送到默认笔
   记，或发送到你选择的笔记；页面、链接或图片也可以发送到笔记中——参见
   “[Markdown Knowledge Base](#markdown-knowledge-base-chrome-扩展程序)”。
 - **设置**（右上角、搜索旁边的齿轮图标）：界面语言、主题（跟随系统、浅色、深色）、
   50%–200% 的缩放、文本宽度（居中栏或全宽）、是否将笔记名称显示为标题，以及新增图片的去
   向：笔记旁边的图片文件夹（默认是 `assets`），以及是否为每篇笔记在其中建立专属子文件夹；如
-  果不建立，所有图片就直接放入该文件夹。底部是版本号——在已安装的应用中，还有检查更新的入
-  口，以及是否自动安装更新的选项。
+  果不建立，所有图片就直接放入该文件夹。接着是已打开的文件夹：“关闭文件夹”，以及将整个文件
+  夹下载为压缩包的“下载 ZIP”。底部是版本号——在已安装的应用中，还有检查更新的入口，以及是
+  否自动安装更新的选项。
 - **语言**：英语以及另外 16 种语言——中文、हिन्दी、Español、Français、العربية、বাংলা、
   Português、Русский、اردو、Bahasa Indonesia、Deutsch、日本語、Türkçe、한국어、
   Italiano、Українська。默认情况下，界面会跟随浏览器的语言。在阿拉伯语和乌尔都语中，界面外
@@ -589,6 +629,8 @@ src/template.html   markup with the __STYLES__/__APP__/__ICON__ placeholders and
 src/styles.css      palette, light and dark themes, block paired with its source
 src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
+src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
+src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -616,7 +658,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/
@@ -630,7 +672,8 @@ build/extension/    the Chrome extension, and build/macaed-extension-<version>.z
 - 不支持协作编辑、插件、同步和链接关系图。
 - 在手机上，布局是为阅读而设计的：文件树的右键菜单需要长按触发，而 iOS 不会把普通的触摸转
   换成长按；表格的扩展操作栏则是在悬停时才会出现。
-- 只有基于 Chromium 的浏览器才能写入文件。
+- 只有电脑上基于 Chromium 的浏览器才能把文件写入磁盘上的文件夹；其他情况下，笔记会保存在浏
+  览器中，并以 ZIP 压缩包的形式取出。
 - 该扩展程序面向 Chrome（以及基于它构建、带有侧边栏的浏览器，例如 Edge）；目前尚未上架
   Chrome 网上应用店。它会把图片留在网络上，而不是下载到文件夹中：那样做将需要访问每一个网站
   的权限。

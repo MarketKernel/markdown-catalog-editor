@@ -5,7 +5,7 @@
  * drag-and-drop `getAsFileSystemHandle`), which reads *and* writes. Everywhere
  * else we only get a flat `File[]` from `<input webkitdirectory>` or the legacy
  * drag-and-drop entry tree, so the vault is read-only and saving falls back to
- * downloading the file.
+ * downloading the file — unless it is copied into the browser (stored.ts).
  */
 
 import { t } from './i18n';
@@ -26,6 +26,8 @@ export interface Vault {
   readonly writable: boolean;
   /** Notes opened on their own, without their folder: no new files, images, tags or export. */
   readonly loose?: boolean;
+  /** Kept inside the browser, not on a disk (stored.ts): the HTML export is a ZIP to download. */
+  readonly stored?: boolean;
   scan(): Promise<TreeEntry[]>;
   readText(path: string): Promise<string>;
   /** Images and other binaries; null when the vault has no such file. */
@@ -73,9 +75,35 @@ function isAsset(name: string): boolean {
   return ASSET_EXTENSIONS.some((ext) => lower.endsWith(ext));
 }
 
-/** Dot-folders and dependency dumps would bury the tree in noise; so would the exported sites. */
+/**
+ * Dot-folders and dependency dumps would bury the tree in noise; so would the
+ * exported sites, and the copies of resource forks a Mac puts into a ZIP.
+ */
 function skipDir(name: string, atRoot = false): boolean {
-  return name.startsWith('.') || name === 'node_modules' || (atRoot && name === OUTPUT_DIR);
+  return name.startsWith('.') || name === 'node_modules' || name === '__MACOSX' || (atRoot && name === OUTPUT_DIR);
+}
+
+/**
+ * Whether a file read from a list — a picked folder, an archive — belongs in
+ * the vault: a note, an image or attachment, or `.meta.json`, and not inside a
+ * folder the tree leaves out. `._name` files are a Mac's resource forks.
+ */
+export function keptFile(path: string): boolean {
+  const parts = path.split('/');
+  const name = parts[parts.length - 1] ?? '';
+  if (parts.some((part, index) => index < parts.length - 1 && skipDir(part, index === 0))) return false;
+  if (name.startsWith('._')) return false;
+  return isNote(name) || isAsset(name) || path === META_FILE;
+}
+
+/**
+ * The error for a file that is not there, named as the File System Access API
+ * names its own: the editor tells "not there" from "could not be read" by it.
+ */
+export function notFound(path: string): Error {
+  const error = new Error(t('errors', 'File not found: {path}', { path }));
+  error.name = 'NotFoundError';
+  return error;
 }
 
 export function dirOf(path: string): string {
@@ -181,6 +209,23 @@ export function findEmbed(
 
 function unique(paths: string[]): string[] {
   return [...new Set(paths)];
+}
+
+/** The tree of `files`, with the folders on their way; `dirs` adds folders that may be empty. */
+export function treeOf(files: Iterable<string>, dirs: Iterable<string> = []): TreeEntry[] {
+  const root: TreeEntry[] = [];
+  const made = new Map<string, TreeEntry[]>([['', root]]);
+  const dir = (path: string): TreeEntry[] => {
+    const existing = made.get(path);
+    if (existing) return existing;
+    const children: TreeEntry[] = [];
+    dir(dirOf(path)).push({ kind: 'dir', name: baseOf(path), path, children });
+    made.set(path, children);
+    return children;
+  };
+  for (const path of dirs) dir(path);
+  for (const path of files) dir(dirOf(path)).push({ kind: 'file', name: baseOf(path), path });
+  return sortEntries(root);
 }
 
 /** Sorts folders before files, then by name the way a file manager would. */
@@ -443,9 +488,7 @@ export class FileListVault implements Vault {
       if (!root && parts.length > 1) root = parts[0] ?? '';
       // Drop the picked folder's own name so paths match what the tree shows.
       const path = parts.length > 1 ? parts.slice(1).join('/') : relative;
-      if (path.split('/').some((part, index, all) => index < all.length - 1 && skipDir(part, index === 0))) continue;
-      if (!isNote(file.name) && !isAsset(file.name) && path !== META_FILE) continue;
-      this.files.set(path, file);
+      if (keptFile(path)) this.files.set(path, file);
     }
     this.name = root || 'Notes';
   }
@@ -455,29 +498,12 @@ export class FileListVault implements Vault {
   }
 
   async scan(): Promise<TreeEntry[]> {
-    const rootEntries: TreeEntry[] = [];
-    const dirs = new Map<string, TreeEntry[]>([['', rootEntries]]);
-
-    const ensureDir = (path: string): TreeEntry[] => {
-      const existing = dirs.get(path);
-      if (existing) return existing;
-      const parent = ensureDir(dirOf(path));
-      const children: TreeEntry[] = [];
-      parent.push({ kind: 'dir', name: baseOf(path), path, children });
-      dirs.set(path, children);
-      return children;
-    };
-
-    for (const path of this.files.keys()) {
-      if (path === META_FILE) continue;
-      ensureDir(dirOf(path)).push({ kind: 'file', name: baseOf(path), path });
-    }
-    return sortEntries(rootEntries);
+    return treeOf([...this.files.keys()].filter((path) => path !== META_FILE));
   }
 
   async readText(path: string): Promise<string> {
     const file = this.files.get(path);
-    if (!file) throw new Error(t('errors', 'File not found: {path}', { path }));
+    if (!file) throw notFound(path);
     return file.text();
   }
 

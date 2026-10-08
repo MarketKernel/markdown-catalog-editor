@@ -73,7 +73,10 @@
       "other": "{count} पृष्ठ {folder} में निर्यात किए गए"
     },
     "Export stopped: {folder} is incomplete": "निर्यात रोका गया: {folder} अधूरा है",
-    "Export stopped": "निर्यात रोका गया"
+    "Export stopped": "निर्यात रोका गया",
+    "\"{name}\" is copied into this browser": "“{name}” इस ब्राउज़र में कॉपी हो गया",
+    "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "“{name}” इस ब्राउज़र में कॉपी हो गया है, जगह कम पड़ने पर ब्राउज़र इसे मिटा सकता है: समय-समय पर सेटिंग्स से एक ZIP आर्काइव डाउनलोड करते रहें",
+    "Could not make the ZIP archive: {reason}": "ZIP आर्काइव नहीं बन सका: {reason}"
   },
   "gate": {
     "Drag a folder or a note": "फ़ोल्डर या नोट खींचें",
@@ -89,7 +92,13 @@
     "Open {name}": "“{name}” खोलें",
     "Remove from the list": "सूची से हटाएँ",
     "The folder \"{name}\" is no longer there, so it was removed from the list": "फ़ोल्डर “{name}” अब मौजूद नहीं है, इसलिए उसे सूची से हटा दिया गया",
-    "Version {version}": "वर्शन {version}"
+    "Version {version}": "वर्शन {version}",
+    "In this browser": "इस ब्राउज़र में",
+    "Delete from this browser": "इस ब्राउज़र से हटाएँ",
+    "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "यह ब्राउज़र डिस्क पर किसी फ़ोल्डर में नहीं लिख सकता, इसलिए नोट्स इसके भीतर रखे जाते हैं: आप जो फ़ोल्डर या ZIP आर्काइव खोलते हैं वह ब्राउज़र में कॉपी हो जाता है, और बदलाव वहीं सहेजे जाते हैं। कुछ भी कहीं नहीं भेजा जाता। नोट्स बाहर निकालने के लिए, सेटिंग्स से एक ZIP आर्काइव डाउनलोड करें। ब्राउज़र में साइट का डेटा साफ़ करने से ये मिट जाते हैं।",
+    "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "Safari भी सात दिन तक कोई विज़िट न होने पर इन्हें मिटा देता है, जब तक एडिटर को होम स्क्रीन में न जोड़ा गया हो।",
+    "Open ZIP archive": "ZIP आर्काइव खोलें",
+    "or drag a folder or a ZIP archive here": "या यहाँ कोई फ़ोल्डर या ZIP आर्काइव खींचें"
   },
   "dialog": {
     "Note not found": "नोट नहीं मिला",
@@ -110,7 +119,9 @@
     "Done": "हो गया",
     "Close folder": "फ़ोल्डर बंद करें",
     "The note has unsaved changes. Close the folder anyway?": "नोट में बिना सहेजे बदलाव हैं। फिर भी फ़ोल्डर बंद करें?",
-    "Close": "बंद करें"
+    "Close": "बंद करें",
+    "Delete from this browser": "इस ब्राउज़र से हटाएँ",
+    "Delete \"{name}\" and all its notes from this browser? This cannot be undone: to keep a copy, open it and download a ZIP archive from the settings first.": "“{name}” और उसके सभी नोट्स इस ब्राउज़र से हटाएँ? इसे पूर्ववत नहीं किया जा सकता: एक प्रति रखने के लिए, पहले इसे खोलकर सेटिंग्स से एक ZIP आर्काइव डाउनलोड करें।"
   },
   "doc": {
     "no such file: {path}": "ऐसी कोई फ़ाइल नहीं: {path}",
@@ -119,10 +130,19 @@
   "errors": {
     "The folder is open read-only": "फ़ोल्डर केवल पढ़ने के लिए खुला है",
     "This browser cannot write files": "यह ब्राउज़र फ़ाइलें नहीं लिख सकता",
+    "The folder is no longer in this browser": "फ़ोल्डर अब इस ब्राउज़र में नहीं है",
     "\"{name}\" already exists": "“{name}” पहले से मौजूद है",
+    "This name cannot be used here: {name}": "इस नाम का उपयोग यहाँ नहीं किया जा सकता: {name}",
     "File not found: {path}": "फ़ाइल नहीं मिली: {path}",
     "The browser was not allowed to open the folder": "ब्राउज़र को फ़ोल्डर खोलने की अनुमति नहीं मिली",
-    "A note opened on its own has no folder around it": "अकेले खोले गए नोट के इर्द-गिर्द कोई फ़ोल्डर नहीं है"
+    "A note opened on its own has no folder around it": "अकेले खोले गए नोट के इर्द-गिर्द कोई फ़ोल्डर नहीं है",
+    "The ZIP archive has no notes": "ZIP आर्काइव में कोई नोट नहीं है",
+    "Too many files for a ZIP archive": "ZIP आर्काइव के लिए फ़ाइलें बहुत ज़्यादा हैं",
+    "Too much for a ZIP archive: over 4 GB": "ZIP आर्काइव के लिए आकार बहुत बड़ा है: 4 GB से अधिक",
+    "This is not a ZIP archive, or it is damaged": "यह ZIP आर्काइव नहीं है, या यह खराब है",
+    "The ZIP archive is too large: over 4 GB or 65 535 files": "ZIP आर्काइव बहुत बड़ा है: 4 GB या 65535 फ़ाइलों से अधिक",
+    "The ZIP archive is encrypted: {path}": "ZIP आर्काइव एन्क्रिप्टेड है: {path}",
+    "The ZIP archive is compressed in a way this editor cannot read: {path}": "ZIP आर्काइव ऐसे तरीके से संपीड़ित है जिसे यह एडिटर पढ़ नहीं सकता: {path}"
   },
   "palette": {
     "Red": "लाल",
@@ -154,7 +174,10 @@
     "Images": "चित्र",
     "Images folder": "चित्रों का फ़ोल्डर",
     "A subfolder named after the note": "नोट के नाम का एक सबफ़ोल्डर",
-    "Version {version}": "वर्शन {version}"
+    "Version {version}": "वर्शन {version}",
+    "Download ZIP": "ZIP डाउनलोड करें",
+    "Kept in this browser": "इस ब्राउज़र में रखा गया",
+    "The whole folder": "पूरा फ़ोल्डर"
   },
   "app": {
     "Notes editor": "नोट्स एडिटर"

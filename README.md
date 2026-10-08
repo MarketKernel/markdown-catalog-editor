@@ -32,7 +32,9 @@ separate app, with its own window and icon, and works offline. On a computer, in
 Edge and Arc, use the install button in the address bar; on Android, Chrome's ⋮ menu →
 Install app; on iOS, Share → Add to Home Screen, in Safari or in Chrome. Your notes stay on
 your disk there too, the installed app opens a `.md` straight from the Finder or Explorer,
-and it updates when you say so — see "[GitHub Pages](#github-pages)".
+and it updates when you say so — see "[GitHub Pages](#github-pages)". Where a browser cannot
+write to a disk — Safari, Firefox, an iPad or a phone — the notes are kept inside the browser
+and go in and out as a ZIP archive: see "[Notes kept in the browser](#notes-kept-in-the-browser)".
 
 The same editor is also **Markdown Knowledge Base**, a
 [Chrome extension](#markdown-knowledge-base-the-chrome-extension): select text on a web page,
@@ -62,9 +64,10 @@ or to any note you pick. The editor itself opens beside the page in Chrome's sid
 
 In Chrome, Edge and Arc the folder is opened through the File System Access API: notes are
 read and written in place, and creating, renaming and deleting files and folders all work.
-In Safari and Firefox the folder opens read-only, and `⌘S` offers to download the modified
-file — and so it does on phones: Chrome on Android has no File System Access, and every
-browser on iOS, Chrome included, runs on Safari's engine.
+Safari and Firefox cannot write to a folder on disk, nor can phones and iPads: Chrome on
+Android has no File System Access, and every browser on iOS and iPadOS, Chrome included, runs
+on Safari's engine. There the notes are kept inside the browser — see
+"[Notes kept in the browser](#notes-kept-in-the-browser)".
 
 The editor remembers the last six folders opened there (a page never learns a folder's path,
 so it keeps the folder's handle in the browser's IndexedDB), and the note last open in each.
@@ -78,6 +81,40 @@ If you put `macaed.html` next to your notes and serve it over HTTP, the page pic
 up by itself — provided an `index.json` sits alongside it, of the form
 `{ "name": "Notes", "files": ["Note.md", "Folder/Other.md"] }`.
 
+### Notes kept in the browser
+
+Where the browser cannot write to a folder on disk — Safari, Firefox, any browser on a phone
+or an iPad — the start screen says so and offers two ways in: **Open folder** and **Open ZIP
+archive** (or drag either onto the window). What you open is copied into the browser's
+IndexedDB, and from then on the editor reads and writes that copy: autosave, new notes and
+folders, renaming, deleting, images, tags — everything works as on a disk. Nothing leaves the
+device.
+
+- **The way back out** is a ZIP archive: settings → **Download ZIP** packs the whole folder
+  — notes, images, `.meta.json` — under one folder of its name, as a folder compressed in the
+  Finder or Explorer would be. Opened again as an archive, it comes back as it was. The
+  button is there with a folder on disk too, as a quick copy of it.
+- **An archive** made by the Finder, Explorer or `zip` opens as the one folder inside it (or,
+  with files at the top, under the archive's name). Only what the editor shows is copied —
+  notes, images and attachments, `.meta.json`; dot-folders, `node_modules`, `output/` and the
+  Mac's `__MACOSX` stay out. It needs no folder picker at all, which is what an older iPad,
+  whose Safari cannot pick a folder, needs.
+- **The start screen lists the folders** kept in this browser, newest first, and the last one
+  opens by itself on the next start. Opening the same folder or archive again adds a second
+  copy beside the first ("Notes 2") rather than overwriting the edits in the first. × deletes
+  a copy from the browser, after asking — it may be the only one.
+- **Export to HTML** downloads the site as a ZIP archive instead of writing it to `output/`.
+- **How long they stay**: the browser is asked to keep the site's data for good
+  (`navigator.storage.persist()`) — Firefox asks you, Chrome and Safari decide by themselves,
+  more readily for an installed app. A browser that says no may clear the notes when the
+  disk runs low, and Safari clears the data of a site not visited in seven days of using
+  Safari, unless it is added to the Home Screen. Clearing the site's data or the browser's history deletes them
+  in any browser. So download a ZIP archive now and then — it is the only copy outside the
+  browser.
+
+Where IndexedDB is off (some private windows), a folder opens read-only, as before, and
+`⌘S` offers to download the modified note.
+
 ### A single note
 
 A `.md` file can be opened on its own, without its folder:
@@ -89,7 +126,7 @@ A `.md` file can be opened on its own, without its folder:
 - **Dragged onto the window**, in any browser.
 
 The note is read and written in place, as in a folder — in Safari and Firefox read-only, with
-`⌘S` offering a download. With no folder around it there is nothing to create, rename or
+`⌘S` offering a download (a note is not copied into the browser; its folder can be). With no folder around it there is nothing to create, rename or
 delete beside it, and no images from its folder, tags or export: those come with opening the
 folder. A note opened this way is not added to the recent folders.
 
@@ -437,7 +474,9 @@ follows the system, and the site reads and links the same.
   the editor's. Such requests carry no `Referer`.
 - **Files stay on your disk.** Notes are read and written in place through the File System
   Access API; the remembered folders are handles in the browser's IndexedDB, never paths or
-  contents.
+  contents. Where a browser cannot write to a disk, the folders you open are copied into its
+  IndexedDB, on this device only, and leave it only as a ZIP archive you download — see
+  "[Notes kept in the browser](#notes-kept-in-the-browser)".
 - The extension's permissions: see "[Markdown Knowledge Base](#markdown-knowledge-base-the-chrome-extension)".
 
 ## Features
@@ -478,6 +517,9 @@ follows the system, and the site reads and links the same.
   or as one page — see "[Export to HTML](#export-to-html)".
 - **A single note** opened from the Finder or Explorer in the installed app, or dropped on the
   window — see "[A single note](#a-single-note)".
+- **Notes kept in the browser** where it cannot write to a disk — Safari, Firefox, phones,
+  iPads — in and out as a ZIP archive; any folder downloads as one from the settings — see
+  "[Notes kept in the browser](#notes-kept-in-the-browser)".
 - **Markdown Knowledge Base**: what is selected in Chrome to the default note, or to one you
   pick, with Send to Markdown; a page, a link or an image to a note — see
   "[Markdown Knowledge Base](#markdown-knowledge-base-the-chrome-extension)".
@@ -485,7 +527,8 @@ follows the system, and the site reads and links the same.
   (system, light, dark), zoom 50–200 %, text width (a centred column or the full pane),
   whether the note name is shown as a title, and where added images go: the images folder
   beside the note (`assets` by default) and whether each note gets a subfolder of its own
-  in it; without one, all the images go straight into the folder. At the bottom, the version
+  in it; without one, all the images go straight into the folder. Then the open folder:
+  Close folder, and Download ZIP for all of it as an archive. At the bottom, the version
   — and in the installed app, a check for updates and whether to install them by themselves.
 - **Languages**: English and 16 more — 中文, हिन्दी, Español, Français, العربية, বাংলা,
   Português, Русский, اردو, Bahasa Indonesia, Deutsch, 日本語, Türkçe, 한국어, Italiano,
@@ -662,6 +705,8 @@ src/template.html   markup with the __STYLES__/__APP__/__ICON__ placeholders and
 src/styles.css      palette, light and dark themes, block paired with its source
 src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
+src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
+src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -689,7 +734,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/
@@ -703,7 +748,8 @@ build/extension/    the Chrome extension, and build/macaed-extension-<version>.z
 - Collaborative editing, plugins, sync and a link graph are not supported.
 - On a phone the layout is made for reading: the tree's context menu needs a long press
   that iOS does not turn into one, and tables are extended with bars that appear on hover.
-- Only Chromium-based browsers can write files.
+- Only Chromium-based browsers on a computer can write files to a folder on disk; elsewhere
+  the notes are kept in the browser and brought out as a ZIP archive.
 - The extension is for Chrome (and browsers built on it with a side panel, such as Edge); it
   is not in the Chrome Web Store yet. It keeps images on the web rather than downloading them
   into the folder: that would need access to every site.

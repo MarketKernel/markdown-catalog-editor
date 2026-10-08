@@ -56,7 +56,10 @@
     },
     "Export stopped: {folder} is incomplete": "Экспорт остановлен: папка {folder} заполнена не полностью",
     "Export stopped": "Экспорт остановлен",
-    "Finish what is open first, then open the note again": "Сначала завершите то, что уже открыто, затем откройте заметку заново"
+    "Finish what is open first, then open the note again": "Сначала завершите то, что уже открыто, затем откройте заметку заново",
+    "\"{name}\" is copied into this browser": "Папка «{name}» скопирована в этот браузер",
+    "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "Папка «{name}» скопирована в этот браузер, а он может удалить её при нехватке места: время от времени скачивайте ZIP-архив в настройках",
+    "Could not make the ZIP archive: {reason}": "Не удалось создать ZIP-архив: {reason}"
   },
   "gate": {
     "Drag a folder or a note": "Перетащите папку или заметку",
@@ -72,7 +75,13 @@
     "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "Когда Chrome спросит, выберите «Разрешать при каждом посещении»: тогда папка останется открытой и после закрытия панели.",
     "Remove from the list": "Убрать из списка",
     "The folder \"{name}\" is no longer there, so it was removed from the list": "Папки «{name}» больше нет, она убрана из списка",
-    "Version {version}": "Версия {version}"
+    "Version {version}": "Версия {version}",
+    "In this browser": "В этом браузере",
+    "Delete from this browser": "Удалить из этого браузера",
+    "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "Этот браузер не умеет записывать файлы в папку на диске, поэтому заметки хранятся внутри него: открытые папка или ZIP-архив копируются в браузер, и изменения сохраняются там же. Ничего никуда не отправляется. Чтобы забрать заметки, скачайте ZIP-архив в настройках. Очистка данных сайта в браузере удаляет их.",
+    "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "Safari также удаляет их через семь дней без посещения, если редактор не добавлен на экран «Домой».",
+    "Open ZIP archive": "Открыть ZIP-архив",
+    "or drag a folder or a ZIP archive here": "или перетащите папку или ZIP-архив сюда"
   },
   "dialog": {
     "Note not found": "Заметка не найдена",
@@ -93,7 +102,9 @@
     "Done": "Готово",
     "Close folder": "Закрыть папку",
     "The note has unsaved changes. Close the folder anyway?": "В заметке есть несохранённые изменения. Всё равно закрыть папку?",
-    "Close": "Закрыть"
+    "Close": "Закрыть",
+    "Delete from this browser": "Удалить из этого браузера",
+    "Delete \"{name}\" and all its notes from this browser? This cannot be undone: to keep a copy, open it and download a ZIP archive from the settings first.": "Удалить папку «{name}» и все её заметки из этого браузера? Это действие нельзя отменить: чтобы сохранить копию, сначала откройте папку и скачайте ZIP-архив в настройках."
   },
   "doc": {
     "no such file: {path}": "файл не найден: {path}",
@@ -102,10 +113,19 @@
   "errors": {
     "The folder is open read-only": "Папка открыта только для чтения",
     "This browser cannot write files": "Этот браузер не умеет записывать файлы",
+    "The folder is no longer in this browser": "Папки больше нет в этом браузере",
     "\"{name}\" already exists": "«{name}» уже существует",
+    "This name cannot be used here: {name}": "Это имя нельзя использовать здесь: {name}",
     "File not found: {path}": "Файл не найден: {path}",
     "The browser was not allowed to open the folder": "Браузеру не разрешили открыть папку",
-    "A note opened on its own has no folder around it": "У заметки, открытой отдельно, нет папки вокруг"
+    "A note opened on its own has no folder around it": "У заметки, открытой отдельно, нет папки вокруг",
+    "The ZIP archive has no notes": "В ZIP-архиве нет заметок",
+    "Too many files for a ZIP archive": "Слишком много файлов для ZIP-архива",
+    "Too much for a ZIP archive: over 4 GB": "Слишком много данных для ZIP-архива: больше 4 ГБ",
+    "This is not a ZIP archive, or it is damaged": "Это не ZIP-архив или он повреждён",
+    "The ZIP archive is too large: over 4 GB or 65 535 files": "ZIP-архив слишком большой: больше 4 ГБ или 65 535 файлов",
+    "The ZIP archive is encrypted: {path}": "ZIP-архив зашифрован: {path}",
+    "The ZIP archive is compressed in a way this editor cannot read: {path}": "ZIP-архив сжат способом, который редактор не может прочитать: {path}"
   },
   "palette": {
     "Red": "Красный",
@@ -137,7 +157,10 @@
     "Images": "Рисунки",
     "Images folder": "Папка рисунков",
     "A subfolder named after the note": "Подпапка с именем заметки",
-    "Version {version}": "Версия {version}"
+    "Version {version}": "Версия {version}",
+    "Download ZIP": "Скачать ZIP",
+    "Kept in this browser": "Хранится в этом браузере",
+    "The whole folder": "Вся папка"
   },
   "app": {
     "Notes editor": "Редактор заметок"

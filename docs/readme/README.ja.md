@@ -33,7 +33,10 @@ Edge、Arc でアドレスバーのインストールボタンを使用します
 → アプリをインストール。iOS では、Safari または Chrome で「共有」→「ホーム画面に追加」で
 す。そちらでもあなたのノートはあなたのディスクに留まり、インストールしたアプリは Finder や
 エクスプローラーから直接 `.md` を開くことができ、あなたが指示したときに更新されます——
-「[GitHub Pages](#github-pages)」を参照してください。
+「[GitHub Pages](#github-pages)」を参照してください。ブラウザがディスクに書き込めない場合
+——Safari、Firefox、iPad やスマートフォン——ノートはブラウザの内部に保持され、ZIP アーカイ
+ブとして出し入れされます:「[ブラウザに保持されるノート](#ブラウザに保持されるノート)」を参
+照してください。
 
 同じエディタは **Markdown Knowledge Base** でもあります。これは
 [Chrome 拡張機能](#markdown-knowledge-base-chrome-拡張機能) で、ウェブページ上でテキストを
@@ -64,9 +67,11 @@ Edge、Arc でアドレスバーのインストールボタンを使用します
 
 Chrome、Edge、Arc では、フォルダは File System Access API を通じて開かれます。ノートはその
 場で読み書きされ、ファイルやフォルダの作成、名前変更、削除もすべて機能します。Safari と
-Firefox ではフォルダは読み取り専用で開かれ、`⌘S` は変更したファイルのダウンロードを提案しま
-す——スマートフォンでも同様です。Android の Chrome には File System Access がなく、iOS 上の
-すべてのブラウザ（Chrome を含む）は Safari のエンジン上で動いているためです。
+Firefox はディスク上のフォルダに書き込むことができず、スマートフォンや iPad も同様です:
+Android の Chrome には File System Access がなく、iOS と iPadOS 上のすべてのブラウザ
+（Chrome を含む）は Safari のエンジン上で動いているためです。そこではノートはブラウザの内部
+に保持されます——「[ブラウザに保持されるノート](#ブラウザに保持されるノート)」を参照してく
+ださい。
 
 エディタはそこで最近開いた 6 個のフォルダ（ページはフォルダのパスを知ることが一切なく、ブラ
 ウザの IndexedDB にフォルダのハンドルを保持します）と、それぞれのフォルダで最後に開いていた
@@ -81,6 +86,42 @@ Firefox ではフォルダは読み取り専用で開かれ、`⌘S` は変更�
 す——ただし同じ場所に `{ "name": "Notes", "files": ["Note.md", "Folder/Other.md"] }` という形
 式の `index.json` が必要です。
 
+### ブラウザに保持されるノート
+
+ブラウザがディスク上のフォルダに書き込めない場合——Safari、Firefox、スマートフォンや iPad の
+どのブラウザでも——開始画面はそのことを伝え、入る方法を二つ提供します:**フォルダを開く**と
+**ZIP アーカイブを開く**です(どちらもウィンドウへドラッグしても構いません)。開いたものはブラ
+ウザの IndexedDB にコピーされ、以降エディタはそのコピーを読み書きします:自動保存、新しいノ
+ートやフォルダの作成、名前変更、削除、画像、タグ——すべてディスク上と同じように機能します。
+デバイスの外には何も出ていきません。
+
+- **出て行く方法**は ZIP アーカイブです:設定の**ZIP をダウンロード**がフォルダ全体——ノー
+  ト、画像、`.meta.json`——を、Finder やエクスプローラーで圧縮したフォルダと同じように、その
+  名前のフォルダ一つにまとめます。アーカイブとして再度開くと、元のとおりに戻ります。このボ
+  タンは、ディスク上のフォルダに対しても、その手早いコピーとして使えます。
+- **アーカイブ**は Finder やエクスプローラー、`zip` コマンドで作られたもので、その中の一つ
+  のフォルダとして開かれます(ファイルが直下にある場合は、アーカイブの名前のフォルダとして)。
+  コピーされるのはエディタが表示するものだけです——ノート、画像や添付ファイル、
+  `.meta.json`——ドットフォルダ、`node_modules`、`output/`、Mac の `__MACOSX` は除外されま
+  す。フォルダピッカーをまったく必要としないため、フォルダを選べない古い iPad の Safari にも
+  適しています。
+- **開始画面はフォルダを一覧表示します**——このブラウザに保持されているものを新しい順に。最
+  後のものは次回の起動時に自動的に開きます。同じフォルダやアーカイブを再度開くと、最初のもの
+  を上書きするのではなく、二つ目のコピーが並んで追加されます(「Notes 2」)。× はブラウザから
+  コピーを削除します、確認の上で——それが唯一のコピーの場合があるからです。
+- **HTML に書き出す**は、サイトを `output/` に書き込む代わりに、ZIP アーカイブとしてダウン
+  ロードします。
+- **どれくらいの間保持されるか**:ブラウザにはサイトのデータを永続的に保持するよう依頼しま
+  す(`navigator.storage.persist()`)——Firefox はあなたに尋ね、Chrome と Safari は自分で判断
+  します、インストール済みのアプリに対してはより積極的に。これを拒否したブラウザは、ディスク
+  の空き容量が少なくなるとノートを消去することがあり、Safari は 7 日間 Safari を使っても訪
+  れていないサイトのデータを消去します、ホーム画面に追加されている場合を除きます。サイトの
+  データやブラウザの履歴を消去すると、どのブラウザでも消えてしまいます。そのため、ときどき
+  ZIP アーカイブをダウンロードしてください——それがブラウザの外にある唯一のコピーです。
+
+IndexedDB がオフになっている場合(一部のプライベートウィンドウ)、フォルダは以前と同じく読み
+取り専用で開かれ、`⌘S` が変更したノートのダウンロードを提案します。
+
 ### 単独のノート
 
 `.md` ファイルは、そのフォルダなしに単独で開くこともできます。
@@ -93,7 +134,8 @@ Firefox ではフォルダは読み取り専用で開かれ、`⌘S` は変更�
 - **ウィンドウへのドラッグ＆ドロップ**、どのブラウザでも可能です。
 
 ノートはフォルダの場合と同じようにその場で読み書きされます——Safari と Firefox では読み取り
-専用で、`⌘S` はダウンロードを提案します。周囲にフォルダがないため、新規作成や名前変更、削除
+専用で、`⌘S` はダウンロードを提案します（ノート自体はブラウザにコピーされません。そのフォル
+ダはコピーされることがあります）。周囲にフォルダがないため、新規作成や名前変更、削除
 するものもなく、フォルダ内の画像、タグ、書き出しもありません。それらはフォルダを開くことで
 利用できます。この方法で開いたノートは、最近使ったフォルダの一覧には加わりません。
 
@@ -464,7 +506,10 @@ Markdown は元のまま保たれ、フォルダの全タグはノートの隣�
   ません。
 - **ファイルは常にあなたのディスク上にあります。** ノートは File System Access API を通じ
   てその場で読み書きされます。記憶されたフォルダはブラウザの IndexedDB 内のハンドルであり、
-  パスや内容そのものではありません。
+  パスや内容そのものではありません。ブラウザがディスクに書き込めない場合、開いたフォルダは
+  このデバイス上でのみブラウザの IndexedDB にコピーされ、ダウンロードする ZIP アーカイブと
+  してのみそこから出ていきます——
+  「[ブラウザに保持されるノート](#ブラウザに保持されるノート)」を参照してください。
 - 拡張機能の権限については、「[Markdown Knowledge Base](#markdown-knowledge-base-chrome-拡張機能)」を参
   照してください。
 
@@ -509,6 +554,10 @@ Markdown は元のまま保たれ、フォルダの全タグはノートの隣�
 - **単独のノート** は Finder やエクスプローラーからインストール済みのアプリで開く、あるい
   はウィンドウへドロップすることで開けます——「[単独のノート](#単独のノート)」を参照してく
   ださい。
+- **ブラウザに保持されるノート** はディスクに書き込めない場合に使われます——Safari、
+  Firefox、スマートフォン、iPad——ZIP アーカイブとして出し入れされ、どのフォルダも設定から
+  ひとつのアーカイブとしてダウンロードできます——
+  「[ブラウザに保持されるノート](#ブラウザに保持されるノート)」を参照してください。
 - **Markdown Knowledge Base**：Send to Markdown によって、Chrome で選択した内容を既定のノー
   トへ、またはあなたが選んだノートへ送ります。ページ、リンク、画像もノートへ送れます——
   「[Markdown Knowledge Base](#markdown-knowledge-base-chrome-拡張機能)」を参照してくださ
@@ -517,8 +566,10 @@ Markdown は元のまま保たれ、フォルダの全タグはノートの隣�
   イト、ダーク）、50〜200% のズーム、テキストの幅（中央寄せのカラムか全幅か）、ノート名をタ
   イトルとして表示するかどうか、追加した画像の保存先——ノートの隣の画像フォルダ（デフォルト
   は `assets`）と、ノートごとに専用のサブフォルダを作るかどうか。作らない場合、すべての画像
-  はそのフォルダに直接入ります。下部にはバージョン——そしてインストール済みのアプリでは、更
-  新の確認と、更新を自動的にインストールするかどうかの設定があります。
+  はそのフォルダに直接入ります。続いて、開いているフォルダについて:「フォルダを閉じる」と、
+  フォルダ全体をアーカイブとしてダウンロードする「ZIP をダウンロード」があります。下部には
+  バージョン——そしてインストール済みのアプリでは、更新の確認と、更新を自動的にインストール
+  するかどうかの設定があります。
 - **言語**：英語と、さらに 16 の言語——中文、हिन्दी、Español、Français、العربية、বাংলা、
   Português、Русский、اردو、Bahasa Indonesia、Deutsch、日本語、Türkçe、한국어、Italiano、
   Українська。デフォルトでは、インターフェースはブラウザの言語に従います。アラビア語とウル
@@ -703,6 +754,8 @@ src/template.html   markup with the __STYLES__/__APP__/__ICON__ placeholders and
 src/styles.css      palette, light and dark themes, block paired with its source
 src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
+src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
+src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -730,7 +783,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/
@@ -745,7 +798,8 @@ build/extension/    the Chrome extension, and build/macaed-extension-<version>.z
 - スマートフォンでは、レイアウトは閲覧向けに作られています。ツリーの右クリックメニューには
   長押しが必要ですが、iOS はこれを長押しとして扱いません。また、表の拡張用バーはホバー時に
   のみ表示されます。
-- ファイルを書き込めるのは Chromium ベースのブラウザのみです。
+- パソコン上の Chromium ベースのブラウザだけが、ディスク上のフォルダにファイルを書き込めま
+  す。それ以外ではノートはブラウザ内に保持され、ZIP アーカイブとして持ち出されます。
 - この拡張機能は Chrome（および Edge のような、サイドパネルを持つ Chromium ベースのブラウ
   ザ）向けです。まだ Chrome ウェブストアには掲載されていません。画像はフォルダにダウンロー
   ドするのではなく、ウェブ上に置いたままにします。ダウンロードするにはすべてのサイトへのア

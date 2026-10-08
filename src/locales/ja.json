@@ -70,7 +70,10 @@
     },
     "Export stopped: {folder} is incomplete": "書き出しを中止しました: {folder} は不完全です",
     "Export stopped": "書き出しを中止しました",
-    "Finish what is open first, then open the note again": "まず開いている操作を終えてから、もう一度ノートを開いてください"
+    "Finish what is open first, then open the note again": "まず開いている操作を終えてから、もう一度ノートを開いてください",
+    "\"{name}\" is copied into this browser": "「{name}」はこのブラウザにコピーされました",
+    "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "「{name}」はこのブラウザにコピーされています。容量が不足すると消去されることがあるため、ときどき設定から ZIP アーカイブをダウンロードしてください",
+    "Could not make the ZIP archive: {reason}": "ZIP アーカイブを作成できませんでした：{reason}"
   },
   "gate": {
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "このブラウザはディスクにファイルを書き込めません。フォルダは読み取り専用で開かれ、保存時には変更したファイルのダウンロードを提案します。すべての編集機能はパソコンの Chrome、Edge、Arc で利用できます。",
@@ -86,7 +89,13 @@
     "Remove from the list": "一覧から削除",
     "The folder \"{name}\" is no longer there, so it was removed from the list": "フォルダ「{name}」は見つからないため、一覧から削除しました",
     "Version {version}": "バージョン {version}",
-    "Drag a folder or a note": "フォルダまたはノートをドラッグしてください"
+    "Drag a folder or a note": "フォルダまたはノートをドラッグしてください",
+    "In this browser": "このブラウザ内のフォルダ",
+    "Delete from this browser": "このブラウザから削除",
+    "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "このブラウザはディスク上のフォルダに書き込めないため、ノートはブラウザの中に保存されます：開いたフォルダや ZIP アーカイブはブラウザにコピーされ、編集内容はそこに保存されます。データはどこにも送信されません。ノートを取り出すには、設定から ZIP アーカイブをダウンロードしてください。ブラウザのサイトデータを消去すると、ノートも削除されます。",
+    "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "エディターをホーム画面に追加していない場合、Safari は7日間アクセスがないとノートを削除します。",
+    "Open ZIP archive": "ZIP アーカイブを開く",
+    "or drag a folder or a ZIP archive here": "またはフォルダか ZIP アーカイブをここにドラッグ"
   },
   "dialog": {
     "Note not found": "ノートが見つかりません",
@@ -107,7 +116,9 @@
     "Done": "完了",
     "Close folder": "フォルダを閉じる",
     "The note has unsaved changes. Close the folder anyway?": "ノートに未保存の変更があります。それでもフォルダを閉じますか？",
-    "Close": "閉じる"
+    "Close": "閉じる",
+    "Delete from this browser": "このブラウザから削除",
+    "Delete \"{name}\" and all its notes from this browser? This cannot be undone: to keep a copy, open it and download a ZIP archive from the settings first.": "「{name}」とそのすべてのノートをこのブラウザから削除しますか？この操作は取り消せません：コピーを残すには、先に開いて設定から ZIP アーカイブをダウンロードしてください。"
   },
   "doc": {
     "no such file: {path}": "ファイルがありません：{path}",
@@ -116,10 +127,19 @@
   "errors": {
     "The folder is open read-only": "フォルダは読み取り専用で開かれています",
     "This browser cannot write files": "このブラウザはファイルを書き込めません",
+    "The folder is no longer in this browser": "フォルダはもうこのブラウザにありません",
     "\"{name}\" already exists": "「{name}」はすでに存在します",
+    "This name cannot be used here: {name}": "この名前はここでは使えません：{name}",
     "File not found: {path}": "ファイルが見つかりません：{path}",
     "The browser was not allowed to open the folder": "ブラウザにフォルダを開く許可が与えられませんでした",
-    "A note opened on its own has no folder around it": "単独で開いたノートには、周囲にフォルダがありません"
+    "A note opened on its own has no folder around it": "単独で開いたノートには、周囲にフォルダがありません",
+    "The ZIP archive has no notes": "ZIP アーカイブにノートがありません",
+    "Too many files for a ZIP archive": "ZIP アーカイブに含めるにはファイルが多すぎます",
+    "Too much for a ZIP archive: over 4 GB": "ZIP アーカイブに含めるには大きすぎます：4 GB を超えています",
+    "This is not a ZIP archive, or it is damaged": "ZIP アーカイブではないか、破損しています",
+    "The ZIP archive is too large: over 4 GB or 65 535 files": "ZIP アーカイブが大きすぎます：4 GB または 65,535 ファイルを超えています",
+    "The ZIP archive is encrypted: {path}": "ZIP アーカイブは暗号化されています：{path}",
+    "The ZIP archive is compressed in a way this editor cannot read: {path}": "ZIP アーカイブがこのエディターで読み取れない方式で圧縮されています：{path}"
   },
   "palette": {
     "Red": "赤",
@@ -151,7 +171,10 @@
     "Images": "画像",
     "Images folder": "画像フォルダー",
     "A subfolder named after the note": "ノート名のサブフォルダー",
-    "Version {version}": "バージョン {version}"
+    "Version {version}": "バージョン {version}",
+    "Download ZIP": "ZIP をダウンロード",
+    "Kept in this browser": "このブラウザに保存",
+    "The whole folder": "フォルダ全体"
   },
   "app": {
     "Notes editor": "ノートエディタ"

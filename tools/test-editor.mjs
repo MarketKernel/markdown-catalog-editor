@@ -14,6 +14,7 @@ import { spawn } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { load } from './load.mjs';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const APP = join(root, 'build', 'macaed.html');
@@ -1070,6 +1071,153 @@ await scenario(null, async (b) => {
     shown: true, recent: [], primary: true, error: 'The folder "Notes" is no longer there, so it was removed from the list',
   });
 }, {}, originFolders);
+
+/* ------------------------------------------------------------------ *
+ * Notes kept in the browser
+ * ------------------------------------------------------------------ */
+
+/**
+ * Chrome without its folder picker is what Safari, Firefox and a phone are:
+ * the folder or archive opened is copied into IndexedDB and edited there.
+ */
+const Z = await load('zip');
+const noPicker = `delete Window.prototype.showDirectoryPicker; delete window.showDirectoryPicker;`;
+const enc = (text) => new TextEncoder().encode(text);
+const archive = Buffer.from(await (await Z.zip([
+  { path: 'Notes/A.md', data: enc('# A\n\nAlpha\n\n![[dot.png]]\n') },
+  { path: 'Notes/sub/B.md', data: enc('B text\n') },
+  { path: 'Notes/assets/A/dot.png', data: PIXEL },
+  { path: 'Notes/.meta.json', data: enc(JSON.stringify({ notes: { 'sub/B.md': { tags: ['idea'] } } })) },
+  { path: '__MACOSX/Notes/._A.md', data: enc('fork') },
+])).arrayBuffer()).toString('base64');
+const unpack = async (base64) => Object.fromEntries((await Z.unzip(Buffer.from(base64, 'base64'))).map((file) => [file.path, Buffer.from(file.data).toString()]));
+
+await scenario(null, async (b) => {
+  const gate = () => b.evaluate(`({
+    note: document.getElementById('browser-note').textContent.slice(0, 49),
+    zip: !document.getElementById('open-zip').hidden,
+    copy: !document.getElementById('gate-copy').hidden,
+    stored: [...document.querySelectorAll('.recent-name')].map((n) => n.textContent),
+    title: document.getElementById('recent').hidden ? null : document.querySelector('.recent-title').textContent,
+  })`);
+  const status = `[document.getElementById('vault-label').textContent, document.getElementById('status-path').textContent, document.getElementById('status-state').textContent]`;
+  const pickZip = async () => {
+    await b.evaluate(`(() => {
+      const bytes = Uint8Array.from(atob(${JSON.stringify(archive)}), (c) => c.charCodeAt(0));
+      const data = new DataTransfer();
+      data.items.add(new File([bytes], 'Notes.zip', { type: 'application/zip' }));
+      const input = document.getElementById('zip-picker');
+      input.files = data.files;
+      input.dispatchEvent(new Event('change'));
+    })()`);
+    await b.until(`document.getElementById('gate').hidden`);
+    await b.sleep(300);
+  };
+  const lastBlob = () => b.evaluate(`window.__lastBlob.arrayBuffer().then((buffer) => { let s = ''; for (const c of new Uint8Array(buffer)) s += String.fromCharCode(c); return btoa(s); })`);
+  const clickRow = (selector, text) => b.evaluate(`[...document.querySelectorAll(${JSON.stringify(selector)})].find((n) => n.textContent.includes(${JSON.stringify(text)})).click()`);
+
+  eq('without a folder picker the gate says the notes stay in the browser and offers an archive', await gate(), {
+    note: 'This browser cannot write to a folder on disk, so', zip: true, copy: false, stored: [], title: null,
+  });
+
+  await pickZip();
+  eq('an archive opens as the folder inside it, at its first note', JSON.parse(JSON.stringify(await b.evaluate(status))), ['Notes', 'sub/B.md', 'saved']);
+  eq('the toast says where it went', (await b.evaluate(`document.querySelector('.toast').textContent`)).startsWith('"Notes" is copied into this browser'), true);
+  eq('its tags came along in .meta.json', await b.evaluate(`[...document.querySelectorAll('#tag-tree .tree-item')].map((n) => n.textContent)`), ['#idea1']);
+  eq('the Mac\'s fork did not', await b.evaluate(`[...document.querySelectorAll('#tree .tree-item')].map((n) => n.dataset.path)`), ['assets', 'sub', 'sub/B.md', 'A.md']);
+  await clickRow('#tree .tree-item', 'A');
+  await b.until(`document.getElementById('status-path').textContent === 'A.md'`);
+  await b.until(`document.querySelector('#doc img')?.naturalWidth > 0`);
+  eq('the image of the note shows', await b.evaluate(`document.querySelector('#doc img')?.naturalWidth`), 1);
+
+  await b.click('#doc > .block--paragraph');
+  await b.type(' edited');
+  await b.until(`document.getElementById('status-state').textContent === 'saved'`, 4000);
+  eq('an edit is saved by itself', await b.evaluate(`document.getElementById('status-state').textContent`), 'saved');
+
+  await b.reload();
+  await b.until(`document.getElementById('gate').hidden`);
+  await b.sleep(300);
+  eq('a new visit opens the folder again, at its note', JSON.parse(JSON.stringify(await b.evaluate(status))), ['Notes', 'A.md', 'saved']);
+  eq('with the edit in it', await b.evaluate(`document.getElementById('doc').textContent.includes('Alpha edited')`), true);
+
+  await b.evaluate(`document.querySelector('#tree .tree-item[data-path="sub"]').dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, clientX: 50, clientY: 50 }))`);
+  await clickRow('.context-item', 'Rename');
+  await b.evaluate(`(() => { const input = document.querySelector('.dialog-input'); input.value = 'moved'; input.form.requestSubmit(); })()`);
+  await b.sleep(300);
+  eq('a folder is renamed with its notes', await b.evaluate(`[...document.querySelectorAll('#tree .tree-item')].map((n) => n.dataset.path)`), ['assets', 'moved', 'moved/B.md', 'A.md']);
+
+  await b.evaluate(`document.getElementById('settings').click()`);
+  await b.sleep(150);
+  eq('the settings say where the folder is kept', await b.evaluate(`document.querySelector('.settings-folder-note').textContent`), 'Kept in this browser');
+  await b.evaluate(`window.__lastBlob = null; [...document.querySelectorAll('.popover button')].find((n) => n.textContent === 'Download ZIP').click()`);
+  await b.until(`window.__lastBlob !== null`);
+  const out = await unpack(await lastBlob());
+  eq('the folder downloads as a ZIP archive, everything under its name', Object.keys(out).sort(), ['Notes/.meta.json', 'Notes/A.md', 'Notes/assets/A/dot.png', 'Notes/moved/B.md']);
+  eq('with the edit', out['Notes/A.md'].includes('Alpha edited'), true);
+  eq('and the tags moved along with the folder', JSON.parse(out['Notes/.meta.json']).notes, { 'moved/B.md': { tags: ['idea'] } });
+  await b.press('Escape');
+
+  await b.evaluate(`window.__lastBlob = null; document.getElementById('export').click()`);
+  await b.sleep(150);
+  eq('the export names a ZIP archive, not a folder in output/', await b.evaluate(`[!!document.querySelector('.export-folder-suffix'), !!document.querySelector('.export-folder-prefix')]`), [true, false]);
+  await b.evaluate(`(() => { const input = document.querySelector('.export-folder'); input.value = 'site'; input.form.requestSubmit(); })()`);
+  await b.until(`window.__lastBlob !== null`, 5000);
+  const site = Object.keys(await unpack(await lastBlob()));
+  eq('the site is downloaded as a ZIP archive of its folder', site.includes('site/index.html') && site.every((path) => path.startsWith('site/')), true);
+  eq('and nothing is written into the folder in the browser', await b.evaluate(`[...document.querySelectorAll('#tree .tree-item')].length`), 4);
+  await b.sleep(300);
+
+  await b.evaluate(`document.getElementById('vault-name').click()`);
+  await b.sleep(300);
+  eq('the gate lists the folder as kept in this browser', await gate(), {
+    note: 'This browser cannot write to a folder on disk, so', zip: true, copy: false, stored: ['Notes'], title: 'In this browser',
+  });
+  await pickZip();
+  eq('the same archive again is a second copy beside the first', await b.evaluate(`document.getElementById('vault-label').textContent`), 'Notes 2');
+  await b.evaluate(`document.getElementById('vault-name').click()`);
+  await b.sleep(300);
+  eq('newest first', (await gate()).stored, ['Notes 2', 'Notes']);
+
+  await b.evaluate(`document.querySelectorAll('.recent-forget')[0].click()`);
+  await b.sleep(100);
+  eq('× asks before it deletes', await b.evaluate(`document.querySelector('.dialog h2')?.textContent`), 'Delete from this browser');
+  await b.evaluate(`document.querySelector('.dialog').requestSubmit()`);
+  await b.sleep(300);
+  eq('and deletes the copy', (await gate()).stored, ['Notes']);
+  await b.evaluate(`document.querySelectorAll('.recent-open')[0].click()`);
+  await b.until(`document.getElementById('gate').hidden`);
+  await b.sleep(300);
+  eq('the other one is untouched', await b.evaluate(`document.getElementById('doc').textContent.includes('Alpha edited')`), true);
+
+  await b.evaluate(`document.querySelector('#tree .tree-item[data-path="moved"]').dispatchEvent(new MouseEvent('contextmenu', { bubbles: true, clientX: 50, clientY: 50 }))`);
+  await clickRow('.context-item', 'Rename');
+  await b.evaluate(`(() => { const input = document.querySelector('.dialog-input'); input.value = '.hidden'; input.form.requestSubmit(); })()`);
+  await b.sleep(300);
+  eq('a name that would hide the folder, and keep it out of the ZIP archive, is refused', await b.evaluate(`document.querySelector('.toast').textContent`), 'This name cannot be used here: .hidden');
+  eq('the folder stays', await b.evaluate(`!!document.querySelector('#tree .tree-item[data-path="moved"]')`), true);
+
+  // Deleted from the start screen of another tab, while this one still has it open.
+  await b.evaluate(`new Promise((resolve) => {
+    const open = indexedDB.open('markdown-catalog-editor-notes');
+    open.onsuccess = () => {
+      const store = open.result.transaction('folders', 'readwrite').objectStore('folders');
+      store.getAll().onsuccess = (event) => {
+        const id = event.target.result.find((folder) => folder.name === 'Notes').id;
+        store.delete(id).onsuccess = () => { open.result.close(); resolve(); };
+      };
+    };
+  })`);
+  await b.click('#doc > .block--paragraph');
+  await b.type(' lost?');
+  await b.until(`document.querySelector('.toast')?.textContent.includes('no longer')`, 4000);
+  eq('a save into a folder deleted elsewhere fails and says so', await b.evaluate(`[document.querySelector('.toast').textContent, document.getElementById('status-state').textContent]`), [
+    'Could not save: The folder is no longer in this browser', 'unsaved',
+  ]);
+  await clickRow('#tree .tree-item', 'B');
+  await b.sleep(300);
+  eq('and the note with the unsaved text stays open rather than give way to another', await b.evaluate(`[document.getElementById('status-path').textContent, [...document.querySelectorAll('#doc > *')].some((n) => (n.value ?? n.textContent).includes('lost?'))]`), ['A.md', true]);
+}, {}, noPicker);
 
 await scenario('# Note\n\nText\n', async (b) => {
   const layout = () =>

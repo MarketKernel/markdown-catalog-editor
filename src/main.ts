@@ -28,6 +28,7 @@ import {
   type Settings,
   type Theme,
 } from './settings';
+import { canStore, forgetStored, keepStored, packFolder, storedFolders, storeFolder, StoredVault, touchStored, unpackFolder, type StoredFolder } from './stored';
 import { renderTagBar, renderTagPage, TagTree } from './tags';
 import { FileTree, stripExtension } from './tree';
 import { ask, confirmAsk, h, popover, toast } from './ui';
@@ -58,7 +59,9 @@ import {
   type FileHandleLike,
   type TreeEntry,
   type Vault,
+  type VaultWriter,
 } from './vault';
+import { bytesOf, zip } from './zip';
 
 const AUTOSAVE_DELAY = 1000;
 
@@ -85,6 +88,13 @@ const statusState = el('status-state');
 const statusCount = el('status-count');
 
 let vault: Vault | null = null;
+/**
+ * No folder on disk to write to — Safari, Firefox, any browser on a phone or
+ * an iPad — and the browser lets the page keep files: a folder or a ZIP archive
+ * is then copied into the browser and edited there (stored.ts). Settled at the
+ * start, before the last folder reopens.
+ */
+let storing = false;
 /** The open folder's entry among the recent ones; null for a folder opened without a handle. */
 let folder: RecentFolder | null = null;
 let currentPath: string | null = null;
@@ -161,9 +171,14 @@ tagTree.setCollapsed(settings.collapsedTags);
 
 const gateError = el('gate-error');
 
-/** `handle` → the folder is remembered, to be offered — or reopened at once — next time. */
-async function useVault(next: Vault, handle: DirHandleLike | null = null): Promise<void> {
+/**
+ * `handle` → the folder is remembered, to be offered — or reopened at once —
+ * next time. False when it stayed where it was: the open note could not be
+ * saved, which was said, and its text is not dropped for another folder.
+ */
+async function useVault(next: Vault, handle: DirHandleLike | null = null): Promise<boolean> {
   await flushSave();
+  if (dirty && vault?.writable) return false;
   // Scanned first: a folder that is gone leaves the open one, or the gate, as it was.
   const entries = await next.scan();
   vault = next;
@@ -188,7 +203,7 @@ async function useVault(next: Vault, handle: DirHandleLike | null = null): Promi
   if (notes.length === 0) {
     toast(next.writable ? t('toast', 'No .md files in this folder — create the first note') : t('toast', 'No .md files in this folder'), 'error');
   } else {
-    const last = folder ? folder.lastPath : settings.lastPath;
+    const last = folder ? folder.lastPath : next instanceof StoredVault ? next.lastPath : settings.lastPath;
     const remembered = last && notes.some((note) => note.path === last) ? last : notes[0]!.path;
     await openNote(remembered);
   }
@@ -196,6 +211,7 @@ async function useVault(next: Vault, handle: DirHandleLike | null = null): Promi
   // the note is open, or it would be read before the end is added.
   opened();
   void nextClip();
+  return true;
 }
 
 async function pickFolder(): Promise<void> {
@@ -224,25 +240,17 @@ function showGateError(error: unknown): void {
 
 async function renderRecent(): Promise<void> {
   const box = el('recent');
+  if (storing) return renderStored(box);
   const recent = await recentFolders();
   box.hidden = recent.length === 0;
   // With folders to go back to, picking a new one is no longer the main thing to do.
   el('open-folder').classList.toggle('button--primary', recent.length === 0);
   box.replaceChildren(h('div', { class: 'recent-title', text: t('gate', 'Recent folders') }));
   for (const item of recent) {
-    const open = h(
-      'button',
-      { type: 'button', class: 'recent-open', title: t('gate', 'Open {name}', { name: item.name }) },
-      folderIcon(),
-      h('span', { class: 'recent-name', text: item.name }),
-    );
-    open.addEventListener('click', () => void openRecent(item));
-    const forget = h('button', { type: 'button', class: 'recent-forget', title: t('gate', 'Remove from the list'), 'aria-label': t('gate', 'Remove from the list'), text: '×' });
-    forget.addEventListener('click', async () => {
+    box.append(listItem(item.name, () => void openRecent(item), t('gate', 'Remove from the list'), async () => {
       await forgetFolder(item.id);
       await renderRecent();
-    });
-    box.append(h('div', { class: 'recent-item' }, open, forget));
+    }));
   }
   // The extension's panel: Chrome takes the access back once it closes, unless allowed for good.
   if (recent.length && location.protocol === 'chrome-extension:') {
@@ -250,6 +258,73 @@ async function renderRecent(): Promise<void> {
   }
   // Enter goes straight back to the last folder.
   if (!gate.hidden) box.querySelector<HTMLButtonElement>('.recent-open')?.focus();
+}
+
+/** A line of the gate's list: the folder, and × to take it off. */
+function listItem(name: string, open: () => void, forgetLabel: string, forget: () => void): HTMLElement {
+  const button = h(
+    'button',
+    { type: 'button', class: 'recent-open', title: t('gate', 'Open {name}', { name }) },
+    folderIcon(),
+    h('span', { class: 'recent-name', text: name }),
+  );
+  button.addEventListener('click', open);
+  const cross = h('button', { type: 'button', class: 'recent-forget', title: forgetLabel, 'aria-label': forgetLabel, text: '×' });
+  cross.addEventListener('click', forget);
+  return h('div', { class: 'recent-item' }, button, cross);
+}
+
+/** The folders kept in this browser, in place of the recent ones where there is no disk to write to. */
+async function renderStored(box: HTMLElement): Promise<void> {
+  const stored = await storedFolders();
+  box.hidden = stored.length === 0;
+  el('open-folder').classList.toggle('button--primary', stored.length === 0);
+  box.replaceChildren(h('div', { class: 'recent-title', text: t('gate', 'In this browser') }));
+  for (const item of stored) {
+    box.append(listItem(item.name, () => void openStored(item).catch(showGateError), t('gate', 'Delete from this browser'), () => void deleteStored(item)));
+  }
+  if (!gate.hidden) box.querySelector<HTMLButtonElement>('.recent-open')?.focus();
+}
+
+/** Unlike a recent folder, this is the only copy: it goes only when the user says so twice. */
+async function deleteStored(item: StoredFolder): Promise<void> {
+  const sure = await confirmAsk(
+    t('dialog', 'Delete from this browser'),
+    t('dialog', 'Delete "{name}" and all its notes from this browser? This cannot be undone: to keep a copy, open it and download a ZIP archive from the settings first.', { name: item.name }),
+  );
+  if (!sure) return;
+  try {
+    await forgetStored(item.id);
+  } catch (error) {
+    showGateError(error);
+  }
+  await renderRecent();
+}
+
+/** A folder kept in the browser: there is no access to ask for, so it opens at once. */
+async function openStored(item: StoredFolder): Promise<boolean> {
+  gateError.textContent = '';
+  if (!(await useVault(new StoredVault(item)))) return false;
+  void touchStored(item.id);
+  return true;
+}
+
+/**
+ * A folder or a ZIP archive copied into the browser, then opened there. The
+ * browser is asked to keep it first, while the click still counts: Firefox
+ * asks the user, and only right after one.
+ */
+async function storeAndOpen(source: Vault | Promise<Vault>): Promise<void> {
+  gateError.textContent = '';
+  const keeping = keepStored();
+  const item = await storeFolder(await source);
+  if (!(await openStored(item))) return;
+  if (await keeping) toast(t('toast', '"{name}" is copied into this browser', { name: item.name }));
+  else toast(t('toast', '"{name}" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then', { name: item.name }), 'error');
+}
+
+function openZip(file: File): Promise<void> {
+  return storeAndOpen(unpackFolder(file).then(({ name, files }) => new FileListVault(files, name)));
 }
 
 function folderIcon(): SVGSVGElement {
@@ -311,6 +386,16 @@ async function closeFolder(): Promise<void> {
 
 /** The last folder, straight away — when the browser still lets the page into it without a click. */
 async function reopenLast(): Promise<boolean> {
+  if (storing) {
+    const [stored] = await storedFolders();
+    if (!stored) return false;
+    try {
+      await openStored(stored);
+      return true;
+    } catch {
+      return false;
+    }
+  }
   const [last] = await recentFolders();
   if (!last || !(await isGranted(last.handle))) return false;
   try {
@@ -326,9 +411,21 @@ el('open-folder').addEventListener('click', () => void pickFolder());
 el('vault-name').addEventListener('click', () => void closeFolder());
 
 el<HTMLInputElement>('folder-picker').addEventListener('change', (event) => {
-  const files = Array.from((event.target as HTMLInputElement).files ?? []);
+  const input = event.target as HTMLInputElement;
+  const files = Array.from(input.files ?? []);
+  // Emptied, so that the same folder picked again is taken again.
+  input.value = '';
   if (files.length === 0) return;
-  void useVault(new FileListVault(files)).catch(showGateError);
+  const source = new FileListVault(files);
+  void (storing ? storeAndOpen(source) : useVault(source)).catch(showGateError);
+});
+
+el('open-zip').addEventListener('click', () => el<HTMLInputElement>('zip-picker').click());
+el<HTMLInputElement>('zip-picker').addEventListener('change', (event) => {
+  const input = event.target as HTMLInputElement;
+  const [file] = Array.from(input.files ?? []);
+  input.value = '';
+  if (file) void openZip(file).catch(showGateError);
 });
 
 for (const type of ['dragover', 'dragenter']) {
@@ -353,6 +450,7 @@ async function acceptDrop(event: DragEvent): Promise<void> {
   // Asked for before anything is awaited: the drop's items are gone after that.
   const entries = Array.from(transfer.items, (item) => item.webkitGetAsEntry?.() ?? null);
   const files = Array.from(transfer.files).filter((file) => isNote(file.name));
+  const archive = Array.from(transfer.files).find((file) => file.name.toLowerCase().endsWith('.zip'));
   const handles = await handlesFromDataTransfer(transfer.items);
   const handle = handles.find((item): item is DirHandleLike => item.kind === 'directory');
   if (handle) {
@@ -364,9 +462,11 @@ async function acceptDrop(event: DragEvent): Promise<void> {
     await openNoteFiles(notes);
     return;
   }
+  if (storing && archive) return openZip(archive);
   for (const entry of entries) {
     if (entry?.isDirectory) {
-      await useVault(new FileListVault(await filesFromEntry(entry), entry.name));
+      const source = new FileListVault(await filesFromEntry(entry), entry.name);
+      await (storing ? storeAndOpen(source) : useVault(source));
       return;
     }
   }
@@ -436,6 +536,8 @@ async function readNote(path: string): Promise<void> {
   if (!vault) return;
   if (path === currentPath) return;
   await flushSave();
+  // The save failed and said so: another note would take the place of the text.
+  if (dirty && vault.writable) return;
   try {
     const text = await vault.readText(path);
     currentPath = path;
@@ -463,6 +565,7 @@ function rememberPath(path: string): void {
     folder.lastPath = path;
     void rememberNote(folder.id, path);
   }
+  if (vault instanceof StoredVault) vault.remember(path);
 }
 
 async function openRelative(href: string): Promise<void> {
@@ -701,10 +804,15 @@ imagePicker.addEventListener('change', () => {
 async function loadMeta(next: Vault): Promise<void> {
   meta = Meta.empty();
   metaWritable = true;
+  if (next.loose) return;
   let text: string;
   try {
     text = await next.readText(META_FILE);
-  } catch {
+  } catch (error) {
+    if ((error as Error)?.name === 'NotFoundError') return;
+    // There but unreadable: tags written now would replace every tag in it.
+    metaWritable = false;
+    toast(t('toast', 'Could not read {name}, so tags cannot be changed: {reason}', { name: META_FILE, reason: error instanceof Error ? error.message : String(error) }), 'error');
     return;
   }
   try {
@@ -904,19 +1012,45 @@ async function save(): Promise<boolean> {
   }
 }
 
-function download(name: string, text: string): void {
-  const url = URL.createObjectURL(new Blob([text], { type: 'text/markdown;charset=utf-8' }));
+function download(name: string, data: string | Blob): void {
+  const url = URL.createObjectURL(typeof data === 'string' ? new Blob([data], { type: 'text/markdown;charset=utf-8' }) : data);
   const link = document.createElement('a');
   link.href = url;
   link.download = name;
   link.click();
-  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  // Safari on an iPad first asks where the file goes, and needs the address until then.
+  window.setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
+
+/**
+ * The whole folder as a ZIP archive to download: the way out of the browser
+ * for a folder kept in it, and a copy of any other.
+ */
+async function downloadZip(button: HTMLButtonElement): Promise<void> {
+  const target = vault;
+  if (!target || target.loose) return;
+  button.disabled = true;
+  try {
+    await flushSave();
+    const open = currentPath ? { path: currentPath, text: editor.getText() } : undefined;
+    download(`${target.name}.zip`, await packFolder(target, open));
+  } catch (error) {
+    toast(t('toast', 'Could not make the ZIP archive: {reason}', { reason: error instanceof Error ? error.message : String(error) }), 'error');
+  } finally {
+    button.disabled = false;
+  }
 }
 
 el('save').addEventListener('click', () => {
   dirty = true;
   void save();
 });
+
+// Safari on an iPad has no beforeunload: a page sent to the background may be closed without a word.
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') void flushSave();
+});
+window.addEventListener('pagehide', () => void flushSave());
 
 window.addEventListener('beforeunload', (event) => {
   if (!dirty) return;
@@ -993,6 +1127,7 @@ async function exportHtml(dir: string): Promise<void> {
       template: settings.exportTemplate ?? DEFAULT_TEMPLATE,
       includeTags: settings.exportTags,
       site: settings.exportSite,
+      zipped: target.stored,
     },
     async (choice, { report, signal }) => {
       settings.exportTemplate = choice.template === DEFAULT_TEMPLATE ? null : choice.template;
@@ -1022,7 +1157,14 @@ interface SiteJob {
 async function writeSite(target: Vault, choice: ExportChoice, job: SiteJob): Promise<void> {
   const { report, signal } = job;
   const out = join(OUTPUT_DIR, choice.folder);
-  const writer = target.writer();
+  // A folder kept in the browser has no disk for the site to land on: it is downloaded as a ZIP archive.
+  const packed = target.stored ? new Map<string, string | Blob>() : null;
+  const writer: VaultWriter = packed
+    ? {
+        write: async (path, data) => void packed.set(path, data),
+        list: async (dir) => [...packed.keys()].filter((path) => path.startsWith(`${dir}/`)),
+      }
+    : target.writer();
   /** Every file written, as a vault path — read back at the end to be sure it is there. */
   const written: string[] = [];
   const write = async (path: string, data: string | Blob): Promise<void> => {
@@ -1094,7 +1236,7 @@ async function writeSite(target: Vault, choice: ExportChoice, job: SiteJob): Pro
   }
 
   if (signal.aborted) {
-    toast(written.length ? t('toast', 'Export stopped: {folder} is incomplete', { folder: out }) : t('toast', 'Export stopped'), 'error');
+    toast(written.length && !packed ? t('toast', 'Export stopped: {folder} is incomplete', { folder: out }) : t('toast', 'Export stopped'), 'error');
     return;
   }
 
@@ -1104,8 +1246,14 @@ async function writeSite(target: Vault, choice: ExportChoice, job: SiteJob): Pro
   if (missing.length) {
     throw new Error(tn('export', '{count} file did not reach the disk, {path} among them', '{count} files did not reach the disk, {path} among them', missing.length, { path: missing[0]! }));
   }
+  let folder = out;
+  if (packed) {
+    folder = `${baseOf(choice.folder)}.zip`;
+    const files = await Promise.all([...packed].map(async ([path, data]) => ({ path: path.slice(OUTPUT_DIR.length + 1), data: await bytesOf(data) })));
+    download(folder, await zip(files));
+  }
   const count = choice.site ? job.notePaths.length : 1;
-  toast(tn('toast', '{count} page exported to {folder}', '{count} pages exported to {folder}', count, { folder: out }));
+  toast(tn('toast', '{count} page exported to {folder}', '{count} pages exported to {folder}', count, { folder }));
 }
 
 /** `notes` in the order of `paths`. */
@@ -1843,7 +1991,7 @@ function openSettings(): void {
     row(t('settings', 'Text width'), width),
     h('label', { class: 'settings-row settings-row--check' }, title, h('span', { text: t('settings', 'Show the note name as a title') })),
     ...imageRows(),
-    folderRow(),
+    ...folderRows(),
     ...autoUpdateRow(),
     versionLine(),
   );
@@ -1889,16 +2037,23 @@ function setImages(images: Settings['images']): void {
   if (editor.getMode() === 'read') editor.refresh();
 }
 
-/** The open folder, and the way out of it to the list of recent ones. */
-function folderRow(): HTMLElement {
+/** The open folder, the way out of it to the list of recent ones, and all of it as a ZIP archive. */
+function folderRows(): HTMLElement[] {
   const close = h('button', { class: 'button settings-close-folder', type: 'button', text: t('settings', 'Close folder') });
   close.addEventListener('click', () => void closeFolder());
-  return h(
+  const rows = [h(
     'div',
     { class: 'settings-row settings-folder' },
     h('span', { class: 'settings-folder-name', text: vault?.name ?? '' }),
     close,
-  );
+  )];
+  if (vault && !vault.loose) {
+    const pack = h('button', { class: 'button settings-close-folder', type: 'button', text: t('settings', 'Download ZIP') });
+    pack.addEventListener('click', () => void downloadZip(pack));
+    const label = vault.stored ? t('settings', 'Kept in this browser') : t('settings', 'The whole folder');
+    rows.push(h('div', { class: 'settings-row' }, h('span', { class: 'settings-folder-note', text: label }), pack));
+  }
+  return rows;
 }
 
 settingsButton.addEventListener('click', () => (closeSettings ? closeSettings() : openSettings()));
@@ -1927,11 +2082,33 @@ function applyLanguage(): void {
   platform.languageChanged(currentLanguage());
   translatePage();
   translateTableTools(doc);
+  renderGateNote();
+}
+
+/**
+ * Safari, or any browser on an iPhone or iPad (all are Safari underneath), in a
+ * tab: there the site's data goes after seven days of Safari without a visit.
+ * An app on the Home Screen keeps it.
+ */
+function safariTab(): boolean {
+  const installed = matchMedia('(display-mode: standalone)').matches || (navigator as { standalone?: boolean }).standalone === true;
+  return navigator.vendor === 'Apple Computer, Inc.' && !installed;
+}
+
+/** What the gate says about where the notes go: on the disk, inside the browser, or nowhere. */
+function renderGateNote(): void {
   const note = el('browser-note');
   note.hidden = Boolean(window.showDirectoryPicker);
   note.textContent = note.hidden
     ? ''
-    : t('gate', 'This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.');
+    : storing
+      ? t('gate', 'This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.') +
+        (safariTab() ? ` ${t('gate', 'Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.')}` : '')
+      : t('gate', 'This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.');
+  el('gate-copy').hidden = storing;
+  el('open-zip').hidden = !storing;
+  el('gate-hint').hidden = storing;
+  el('gate-hint-zip').hidden = !storing;
 }
 
 function setTheme(theme: Theme): void {
@@ -2151,6 +2328,8 @@ platform.start({ clip: receiveClip, append: appendFromPopup, changed: (id, path)
 // The gate stays blank meanwhile, so it does not flash up before the folder opens by itself.
 void (async () => {
   try {
+    storing = !window.showDirectoryPicker && (await canStore());
+    renderGateNote();
     if (!(await openServedFolder())) await reopenLast();
   } finally {
     gate.classList.remove('gate--starting');
