@@ -79,7 +79,8 @@
     "Finish what is open first, then open the note again": "Terminez d’abord ce qui est ouvert, puis rouvrez la note",
     "\"{name}\" is copied into this browser": "« {name} » est copié dans ce navigateur",
     "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "« {name} » est copié dans ce navigateur, qui peut l’effacer en cas de manque de place : téléchargez de temps en temps une archive ZIP depuis les paramètres",
-    "Could not make the ZIP archive: {reason}": "Impossible de créer l’archive ZIP : {reason}"
+    "Could not make the ZIP archive: {reason}": "Impossible de créer l’archive ZIP : {reason}",
+    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "Le navigateur peut effacer les notes en cas de manque de place : téléchargez de temps en temps une archive ZIP depuis les paramètres"
   },
   "gate": {
     "Drag a folder or a note": "Faites glisser un dossier ou une note",
@@ -101,7 +102,9 @@
     "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "Ce navigateur ne peut pas écrire un dossier sur le disque, les notes sont donc conservées à l’intérieur : un dossier ou une archive ZIP que vous ouvrez est copié dans le navigateur, et les modifications y sont enregistrées. Rien n’est envoyé nulle part. Pour récupérer les notes, téléchargez une archive ZIP depuis les paramètres. Effacer les données du site dans le navigateur les supprime.",
     "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "Safari les supprime aussi après sept jours sans visite, sauf si l’éditeur est ajouté à l’écran d’accueil.",
     "Open ZIP archive": "Ouvrir une archive ZIP",
-    "or drag a folder or a ZIP archive here": "ou faites glisser un dossier ou une archive ZIP ici"
+    "or drag a folder or a ZIP archive here": "ou faites glisser un dossier ou une archive ZIP ici",
+    "New folder": "Nouveau dossier",
+    "Notes": "Notes"
   },
   "dialog": {
     "Note not found": "Note introuvable",

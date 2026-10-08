@@ -76,7 +76,8 @@
     "Export stopped": "برآمد روک دی گئی",
     "\"{name}\" is copied into this browser": "\"{name}\" اس براؤزر میں کاپی ہو گیا",
     "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "\"{name}\" اس براؤزر میں کاپی ہو گیا، جگہ کم ہونے پر براؤزر اسے مٹا سکتا ہے: وقتاً فوقتاً ترتیبات سے ZIP آرکائیو ڈاؤن لوڈ کرتے رہیں",
-    "Could not make the ZIP archive: {reason}": "ZIP آرکائیو نہیں بن سکا: {reason}"
+    "Could not make the ZIP archive: {reason}": "ZIP آرکائیو نہیں بن سکا: {reason}",
+    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "جگہ کم ہونے پر براؤزر نوٹس مٹا سکتا ہے: وقتاً فوقتاً ترتیبات سے ZIP آرکائیو ڈاؤن لوڈ کرتے رہیں"
   },
   "gate": {
     "Version {version}": "ورژن {version}",
@@ -98,7 +99,9 @@
     "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "یہ براؤزر ڈسک پر فولڈر میں لکھ نہیں سکتا، اس لیے نوٹس اسی کے اندر رکھے جاتے ہیں: جو فولڈر یا ZIP آرکائیو آپ کھولتے ہیں وہ براؤزر میں کاپی ہو جاتا ہے، اور ترمیمیں وہیں محفوظ ہوتی ہیں۔ کچھ بھی کہیں نہیں بھیجا جاتا۔ نوٹس باہر لے جانے کے لیے، ترتیبات سے ZIP آرکائیو ڈاؤن لوڈ کریں۔ براؤزر میں سائٹ کا ڈیٹا صاف کرنے سے یہ حذف ہو جاتے ہیں۔",
     "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "Safari بھی سات دن تک کوئی وزٹ نہ ہونے پر انہیں حذف کر دیتا ہے، جب تک ایڈیٹر کو ہوم اسکرین میں شامل نہ کیا جائے۔",
     "Open ZIP archive": "ZIP آرکائیو کھولیں",
-    "or drag a folder or a ZIP archive here": "یا کوئی فولڈر یا ZIP آرکائیو یہاں گھسیٹیں"
+    "or drag a folder or a ZIP archive here": "یا کوئی فولڈر یا ZIP آرکائیو یہاں گھسیٹیں",
+    "New folder": "نیا فولڈر",
+    "Notes": "نوٹس"
   },
   "dialog": {
     "Note not found": "نوٹ نہیں ملا",

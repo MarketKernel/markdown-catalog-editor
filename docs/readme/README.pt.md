@@ -88,11 +88,14 @@ pasta sozinha — desde que um `index.json` esteja ao lado dele, no formato
 ### Notas mantidas no navegador
 
 Onde o navegador não consegue gravar em uma pasta no disco — Safari, Firefox, qualquer
-navegador em um celular ou em um iPad — a tela inicial avisa isso e oferece duas formas de
-entrar: **Abrir pasta** e **Abrir arquivo ZIP** (ou arraste um dos dois para a janela). O
-que você abrir é copiado para o IndexedDB do navegador, e a partir daí o editor lê e grava
-essa cópia: salvamento automático, notas e pastas novas, renomear, excluir, imagens,
-etiquetas — tudo funciona como em um disco. Nada sai do dispositivo.
+navegador em um celular ou em um iPad — a tela inicial avisa isso e oferece três formas de
+entrar: **Nova pasta** começa com uma pasta vazia, direto em uma primeira nota para escrever;
+**Abrir pasta** e **Abrir arquivo ZIP** (ou arraste um dos dois para a janela) copiam o que
+você abrir para o IndexedDB do navegador. A partir daí o editor lê e grava essa cópia:
+salvamento automático, notas e pastas novas, renomear, excluir, imagens, etiquetas — tudo
+funciona como em um disco. Nada sai do dispositivo. Em um iPad sem nada ainda para trazer, Nova
+pasta é o caminho de entrada: o Safari dele não consegue escolher uma pasta, e um arquivo chega
+depois, a partir de Baixar ZIP.
 
 - **O caminho de volta** é um arquivo ZIP: nas configurações → **Baixar ZIP** empacota a
   pasta inteira — notas, imagens, `.meta.json` — dentro de uma única pasta com o nome dela,

@@ -90,12 +90,15 @@ Seite den Ordner von selbst — vorausgesetzt, eine `index.json` liegt daneben, 
 
 ### Im Browser aufbewahrte Notizen
 
-Wo der Browser nicht auf einen Ordner auf der Festplatte schreiben kann — Safari, Firefox, jeder
-Browser auf einem Telefon oder einem iPad —, sagt der Startbildschirm das und bietet zwei Wege
-hinein: **Ordner öffnen** und **ZIP-Archiv öffnen** (oder eines von beiden auf das Fenster
-ziehen). Was Sie öffnen, wird in die IndexedDB des Browsers kopiert, und von da an liest und
-schreibt der Editor diese Kopie: automatisches Speichern, neue Notizen und Ordner, Umbenennen,
-Löschen, Bilder, Tags — alles funktioniert wie auf einer Festplatte. Nichts verlässt das Gerät.
+Wo der Browser nicht auf einen Ordner auf der Festplatte schreiben kann — Safari, Firefox,
+jeder Browser auf einem Telefon oder einem iPad —, sagt der Startbildschirm das und bietet drei
+Wege hinein: **Neuer Ordner** beginnt mit einem leeren, gleich bei einer ersten Notiz zum
+Schreiben; **Ordner öffnen** und **ZIP-Archiv öffnen** (oder eines von beiden auf das Fenster
+ziehen) kopieren, was Sie öffnen, in die IndexedDB des Browsers. Von da an liest und schreibt
+der Editor diese Kopie: automatisches Speichern, neue Notizen und Ordner, Umbenennen, Löschen,
+Bilder, Tags — alles funktioniert wie auf einer Festplatte. Nichts verlässt das Gerät. Auf
+einem iPad, wo noch nichts mitzubringen ist, ist Neuer Ordner der Weg hinein: sein Safari kann
+keinen Ordner auswählen, und ein Archiv kommt erst später, über ZIP herunterladen.
 
 - **Der Weg zurück hinaus** ist ein ZIP-Archiv: Einstellungen → **ZIP herunterladen** packt den
   gesamten Ordner — Notizen, Bilder, `.meta.json` — in einen Ordner mit seinem Namen, so wie ein

@@ -53,7 +53,8 @@
     "Finish what is open first, then open the note again": "Schließen Sie zuerst das Geöffnete ab, und öffnen Sie die Notiz dann erneut",
     "\"{name}\" is copied into this browser": "„{name}“ wurde in diesen Browser kopiert",
     "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "„{name}“ wurde in diesen Browser kopiert, der ihn bei Platzmangel löschen kann: Laden Sie von Zeit zu Zeit ein ZIP-Archiv in den Einstellungen herunter.",
-    "Could not make the ZIP archive: {reason}": "Das ZIP-Archiv konnte nicht erstellt werden: {reason}"
+    "Could not make the ZIP archive: {reason}": "Das ZIP-Archiv konnte nicht erstellt werden: {reason}",
+    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "Der Browser kann die Notizen bei Platzmangel löschen: Laden Sie von Zeit zu Zeit ein ZIP-Archiv in den Einstellungen herunter."
   },
   "gate": {
     "Drag a folder or a note": "Ziehen Sie einen Ordner oder eine Notiz",
@@ -75,7 +76,9 @@
     "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "Dieser Browser kann keinen Ordner auf die Festplatte schreiben, daher werden die Notizen darin aufbewahrt: Ein geöffneter Ordner oder ein ZIP-Archiv wird in den Browser kopiert, und Änderungen werden dort gespeichert. Nichts wird irgendwohin gesendet. Um die Notizen herauszuholen, laden Sie ein ZIP-Archiv in den Einstellungen herunter. Das Löschen der Website-Daten im Browser löscht sie.",
     "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "Safari löscht sie außerdem nach sieben Tagen ohne Besuch, es sei denn, der Editor wurde zum Home-Bildschirm hinzugefügt.",
     "Open ZIP archive": "ZIP-Archiv öffnen",
-    "or drag a folder or a ZIP archive here": "oder ziehen Sie einen Ordner oder ein ZIP-Archiv hierher"
+    "or drag a folder or a ZIP archive here": "oder ziehen Sie einen Ordner oder ein ZIP-Archiv hierher",
+    "New folder": "Neuer Ordner",
+    "Notes": "Notizen"
   },
   "dialog": {
     "Note not found": "Notiz nicht gefunden",

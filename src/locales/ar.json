@@ -88,7 +88,8 @@
     "Export stopped": "توقف التصدير",
     "\"{name}\" is copied into this browser": "نُسخ «{name}» إلى هذا المتصفح",
     "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "نُسخ «{name}» إلى هذا المتصفح، وقد يمسحه عند نفاد المساحة: نزّل أرشيف ZIP من الإعدادات بين الحين والآخر",
-    "Could not make the ZIP archive: {reason}": "تعذّر إنشاء أرشيف ZIP: {reason}"
+    "Could not make the ZIP archive: {reason}": "تعذّر إنشاء أرشيف ZIP: {reason}",
+    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "قد يمسح المتصفح الملاحظات عند نفاد المساحة: نزّل أرشيف ZIP من الإعدادات بين الحين والآخر"
   },
   "gate": {
     "Version {version}": "الإصدار {version}",
@@ -110,7 +111,9 @@
     "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "لا يستطيع هذا المتصفح الكتابة في مجلد على القرص، لذا تُحفظ الملاحظات داخله: أي مجلد أو أرشيف ZIP تفتحه يُنسخ إلى المتصفح، وتُحفظ فيه التعديلات. لا يُرسَل أي شيء إلى أي مكان. لإخراج الملاحظات، نزّل أرشيف ZIP من الإعدادات. مسح بيانات الموقع في المتصفح يحذفها.",
     "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "يحذفها Safari أيضًا بعد سبعة أيام بدون زيارة، ما لم يُضَف المحرر إلى الشاشة الرئيسية.",
     "Open ZIP archive": "فتح أرشيف ZIP",
-    "or drag a folder or a ZIP archive here": "أو اسحب مجلدًا أو أرشيف ZIP إلى هنا"
+    "or drag a folder or a ZIP archive here": "أو اسحب مجلدًا أو أرشيف ZIP إلى هنا",
+    "New folder": "مجلد جديد",
+    "Notes": "الملاحظات"
   },
   "dialog": {
     "Note not found": "الملاحظة غير موجودة",

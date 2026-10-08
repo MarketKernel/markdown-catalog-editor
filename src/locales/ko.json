@@ -73,7 +73,8 @@
     "Export stopped": "내보내기 중지됨",
     "\"{name}\" is copied into this browser": "\"{name}\"이(가) 이 브라우저에 복사되었습니다",
     "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "\"{name}\"이(가) 이 브라우저에 복사되어 있습니다. 공간이 부족해지면 지워질 수 있으니 가끔 설정에서 ZIP 파일을 다운로드하세요",
-    "Could not make the ZIP archive: {reason}": "ZIP 파일을 만들 수 없습니다: {reason}"
+    "Could not make the ZIP archive: {reason}": "ZIP 파일을 만들 수 없습니다: {reason}",
+    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "공간이 부족해지면 브라우저가 노트를 지울 수 있으니 가끔 설정에서 ZIP 파일을 다운로드하세요"
   },
   "gate": {
     "Drag a folder or a note": "폴더나 노트를 드래그하세요",
@@ -95,7 +96,9 @@
     "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "이 브라우저는 디스크의 폴더에 쓸 수 없어 노트를 브라우저 안에 보관합니다: 여는 폴더나 ZIP 파일은 브라우저에 복사되고, 편집 내용은 그 안에 저장됩니다. 어떤 데이터도 전송되지 않습니다. 노트를 꺼내려면 설정에서 ZIP 파일을 다운로드하세요. 브라우저의 사이트 데이터를 지우면 노트도 삭제됩니다.",
     "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "Safari도 에디터를 홈 화면에 추가하지 않는 한 7일간 방문이 없으면 이를 삭제합니다.",
     "Open ZIP archive": "ZIP 파일 열기",
-    "or drag a folder or a ZIP archive here": "또는 폴더나 ZIP 파일을 여기로 드래그하세요"
+    "or drag a folder or a ZIP archive here": "또는 폴더나 ZIP 파일을 여기로 드래그하세요",
+    "New folder": "새 폴더",
+    "Notes": "노트"
   },
   "dialog": {
     "Note not found": "노트를 찾을 수 없음",

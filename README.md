@@ -84,11 +84,13 @@ up by itself — provided an `index.json` sits alongside it, of the form
 ### Notes kept in the browser
 
 Where the browser cannot write to a folder on disk — Safari, Firefox, any browser on a phone
-or an iPad — the start screen says so and offers two ways in: **Open folder** and **Open ZIP
-archive** (or drag either onto the window). What you open is copied into the browser's
-IndexedDB, and from then on the editor reads and writes that copy: autosave, new notes and
-folders, renaming, deleting, images, tags — everything works as on a disk. Nothing leaves the
-device.
+or an iPad — the start screen says so and offers three ways in: **New folder** starts an empty
+one, at a first note to write in; **Open folder** and **Open ZIP archive** (or dragging either
+onto the window) copy what you open into the browser's IndexedDB. From then on the editor reads
+and writes that copy: autosave, new notes and folders, renaming, deleting, images, tags —
+everything works as on a disk. Nothing leaves the device. On an iPad with nothing to bring
+along yet, New folder is the way in: its Safari cannot pick a folder, and an archive comes
+later, from Download ZIP.
 
 - **The way back out** is a ZIP archive: settings → **Download ZIP** packs the whole folder
   — notes, images, `.meta.json` — under one folder of its name, as a folder compressed in the

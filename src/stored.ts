@@ -264,6 +264,22 @@ export async function storeFolder(source: Vault, name = source.name): Promise<St
   });
 }
 
+/**
+ * A new folder in the browser, started from nothing — where there is no folder
+ * to open and no archive yet, as on an iPad the first time — with one note to
+ * write in, `note`, which it opens at.
+ */
+export async function newStored(name: string, note: string, text = ''): Promise<StoredFolder> {
+  const first = await recordOf(0, note, text);
+  return transact('readwrite', async (stores) => {
+    const taken = await result(stores.folders.getAll() as IDBRequest<StoredFolder[]>);
+    const record = { name: freeName(safeName(name), taken), opened: Date.now(), lastPath: note } as Omit<StoredFolder, 'id'>;
+    const id = Number(await result(stores.folders.add(record)));
+    stores.files.put({ ...first, folder: id });
+    return { ...record, id };
+  });
+}
+
 /** The files and the folders of a tree, as paths. */
 function paths(entries: readonly TreeEntry[]): { files: string[]; dirs: string[] } {
   const files: string[] = [];

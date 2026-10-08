@@ -79,7 +79,8 @@
     },
     "Export stopped: {folder} is incomplete": "Esportazione interrotta: {folder} è incompleta",
     "Export stopped": "Esportazione interrotta",
-    "Finish what is open first, then open the note again": "Termina prima ciò che è aperto, poi riapri la nota"
+    "Finish what is open first, then open the note again": "Termina prima ciò che è aperto, poi riapri la nota",
+    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "Il browser potrebbe cancellare le note quando lo spazio scarseggia: scarica ogni tanto un archivio ZIP dalle impostazioni"
   },
   "gate": {
     "In this browser": "In questo browser",
@@ -101,7 +102,9 @@
     "Open {name}": "Apri «{name}»",
     "Remove from the list": "Rimuovi dall’elenco",
     "The folder \"{name}\" is no longer there, so it was removed from the list": "La cartella «{name}» non esiste più, quindi è stata rimossa dall’elenco",
-    "Version {version}": "Versione {version}"
+    "Version {version}": "Versione {version}",
+    "New folder": "Nuova cartella",
+    "Notes": "Note"
   },
   "dialog": {
     "Delete from this browser": "Elimina da questo browser",

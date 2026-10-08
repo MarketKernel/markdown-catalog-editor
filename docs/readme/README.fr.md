@@ -89,12 +89,15 @@ d'elle-même — à condition qu'un `index.json` se trouve à côté, de la form
 ### Notes conservées dans le navigateur
 
 Là où le navigateur ne peut pas écrire dans un dossier sur le disque — Safari, Firefox, tout
-navigateur sur un téléphone ou un iPad —, l'écran de démarrage le signale et propose deux façons
-d'entrer : **Ouvrir un dossier** et **Ouvrir une archive ZIP** (ou glisser l'un ou l'autre sur la
-fenêtre). Ce que vous ouvrez est copié dans l'IndexedDB du navigateur, et dès lors l'éditeur lit
+navigateur sur un téléphone ou un iPad —, l'écran de démarrage le signale et propose trois
+façons d'entrer : **Nouveau dossier** commence par un dossier vide, droit sur une première note
+à écrire ; **Ouvrir un dossier** et **Ouvrir une archive ZIP** (ou glisser l'un ou l'autre sur
+la fenêtre) copient ce que vous ouvrez dans l'IndexedDB du navigateur. Dès lors l'éditeur lit
 et écrit cette copie : enregistrement automatique, nouvelles notes et nouveaux dossiers,
-renommage, suppression, images, étiquettes — tout fonctionne comme sur un disque. Rien ne quitte
-l'appareil.
+renommage, suppression, images, étiquettes — tout fonctionne comme sur un disque. Rien ne
+quitte l'appareil. Sur un iPad où il n'y a encore rien à apporter, Nouveau dossier est le moyen
+d'entrer : son Safari ne peut pas choisir un dossier, et une archive vient plus tard, depuis
+Télécharger le ZIP.
 
 - **Le chemin de retour** est une archive ZIP : paramètres → **Télécharger le ZIP** regroupe tout
   le dossier — notes, images, `.meta.json` — sous un dossier de son nom, comme le serait un

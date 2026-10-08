@@ -87,11 +87,14 @@ kendiliğinden fark eder — yanında `{ "name": "Notes", "files": ["Note.md",
 ### Tarayıcıda tutulan notlar
 
 Tarayıcı diske bir klasör yazamadığında — Safari, Firefox, bir telefondaki veya iPad'deki
-herhangi bir tarayıcı — başlangıç ekranı bunu belirtir ve girmek için iki yol sunar:
-**Klasör aç** ve **ZIP dosyası aç** (veya ikisinden birini pencereye sürükleyin). Açtığınız
-şey tarayıcının IndexedDB'sine kopyalanır, ve o andan itibaren düzenleyici o kopyayı okur ve
-yazar: otomatik kayıt, yeni notlar ve klasörler, yeniden adlandırma, silme, görseller,
-etiketler — hepsi bir diskteymiş gibi çalışır. Hiçbir şey cihazdan çıkmaz.
+herhangi bir tarayıcı — başlangıç ekranı bunu belirtir ve girmek için üç yol sunar: **Yeni
+klasör**, yazılacak ilk nota doğruca geçen boş bir klasörle başlar; **Klasör aç** ve **ZIP
+dosyası aç** (veya ikisinden birini pencereye sürükleyin) açtığınız şeyi tarayıcının
+IndexedDB'sine kopyalar. O andan itibaren düzenleyici o kopyayı okur ve yazar: otomatik kayıt,
+yeni notlar ve klasörler, yeniden adlandırma, silme, görseller, etiketler — hepsi bir
+diskteymiş gibi çalışır. Hiçbir şey cihazdan çıkmaz. Henüz getirecek bir şeyi olmayan bir
+iPad'de Yeni klasör girmenin yoludur: oradaki Safari bir klasör seçemez, ve bir arşiv daha
+sonra, ZIP indir ile gelir.
 
 - **Geri çıkış yolu** bir ZIP dosyasıdır: ayarlarda → **ZIP indir**, tüm klasörü — notları,
   görselleri, `.meta.json`'ı — Finder veya Explorer'da sıkıştırılmış bir klasörün olacağı

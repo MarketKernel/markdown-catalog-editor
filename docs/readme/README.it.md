@@ -86,12 +86,15 @@ da sola — a condizione che un `index.json` si trovi accanto, nella forma
 
 ### Note conservate nel browser
 
-Dove il browser non può scrivere su una cartella del disco — Safari, Firefox, qualsiasi
-browser su un telefono o un iPad — la schermata iniziale lo segnala e offre due modi per
-entrare: **Apri cartella** e **Apri archivio ZIP** (o trascina l'uno o l'altro sulla
-finestra). Ciò che apri viene copiato nell'IndexedDB del browser, e da quel momento
-l'editor legge e scrive quella copia: salvataggio automatico, nuove note e cartelle,
-rinomina, eliminazione, immagini, tag — tutto funziona come su un disco. Niente lascia il
+Dove il browser non può scrivere su una cartella del disco — Safari, Firefox, qualsiasi browser
+su un telefono o un iPad — la schermata iniziale lo segnala e offre tre modi per entrare:
+**Nuova cartella** parte da una cartella vuota, dritto a una prima nota da scrivere; **Apri
+cartella** e **Apri archivio ZIP** (o trascina l'uno o l'altro sulla finestra) copiano ciò che
+apri nell'IndexedDB del browser. Da quel momento l'editor legge e scrive quella copia:
+salvataggio automatico, nuove note e cartelle, rinomina, eliminazione, immagini, tag — tutto
+funziona come su un disco. Niente lascia il dispositivo. Su un iPad senza ancora nulla da
+portare, Nuova cartella è il modo per entrare: il suo Safari non può scegliere una cartella, e
+un archivio arriva più tardi, da Scarica ZIP.
 dispositivo.
 
 - **La via d'uscita** è un archivio ZIP: nelle impostazioni → **Scarica ZIP** impacchetta

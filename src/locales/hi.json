@@ -76,7 +76,8 @@
     "Export stopped": "निर्यात रोका गया",
     "\"{name}\" is copied into this browser": "“{name}” इस ब्राउज़र में कॉपी हो गया",
     "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "“{name}” इस ब्राउज़र में कॉपी हो गया है, जगह कम पड़ने पर ब्राउज़र इसे मिटा सकता है: समय-समय पर सेटिंग्स से एक ZIP आर्काइव डाउनलोड करते रहें",
-    "Could not make the ZIP archive: {reason}": "ZIP आर्काइव नहीं बन सका: {reason}"
+    "Could not make the ZIP archive: {reason}": "ZIP आर्काइव नहीं बन सका: {reason}",
+    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "जगह कम पड़ने पर ब्राउज़र नोट्स मिटा सकता है: समय-समय पर सेटिंग्स से एक ZIP आर्काइव डाउनलोड करते रहें"
   },
   "gate": {
     "Drag a folder or a note": "फ़ोल्डर या नोट खींचें",
@@ -98,7 +99,9 @@
     "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "यह ब्राउज़र डिस्क पर किसी फ़ोल्डर में नहीं लिख सकता, इसलिए नोट्स इसके भीतर रखे जाते हैं: आप जो फ़ोल्डर या ZIP आर्काइव खोलते हैं वह ब्राउज़र में कॉपी हो जाता है, और बदलाव वहीं सहेजे जाते हैं। कुछ भी कहीं नहीं भेजा जाता। नोट्स बाहर निकालने के लिए, सेटिंग्स से एक ZIP आर्काइव डाउनलोड करें। ब्राउज़र में साइट का डेटा साफ़ करने से ये मिट जाते हैं।",
     "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "Safari भी सात दिन तक कोई विज़िट न होने पर इन्हें मिटा देता है, जब तक एडिटर को होम स्क्रीन में न जोड़ा गया हो।",
     "Open ZIP archive": "ZIP आर्काइव खोलें",
-    "or drag a folder or a ZIP archive here": "या यहाँ कोई फ़ोल्डर या ZIP आर्काइव खींचें"
+    "or drag a folder or a ZIP archive here": "या यहाँ कोई फ़ोल्डर या ZIP आर्काइव खींचें",
+    "New folder": "नया फ़ोल्डर",
+    "Notes": "नोट्स"
   },
   "dialog": {
     "Note not found": "नोट नहीं मिला",

@@ -1,6 +1,6 @@
 {
   "name": "markdown-catalog-editor",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "private": true,
   "description": "A Markdown editor for a local folder of notes — one standalone HTML file, a PWA that opens .md files, and Markdown Knowledge Base, a Chrome extension that sends what you select to your notes",
   "license": "MIT",

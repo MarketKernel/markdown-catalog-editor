@@ -88,11 +88,14 @@ sampingnya, dengan bentuk `{ "name": "Notes", "files": ["Note.md", "Folder/Other
 ### Catatan yang disimpan di peramban
 
 Ketika peramban tidak dapat menulis ke sebuah folder di disk — Safari, Firefox, peramban mana
-pun di ponsel atau iPad — layar awal menyatakan hal itu dan menawarkan dua cara masuk: **Buka
-folder** dan **Buka arsip ZIP** (atau seret salah satunya ke jendela). Apa yang Anda buka
-disalin ke dalam IndexedDB peramban, dan sejak itu editor membaca dan menulis salinan itu:
+pun di ponsel atau iPad — layar awal menyatakan hal itu dan menawarkan tiga cara masuk:
+**Folder baru** memulai sebuah folder kosong, langsung pada catatan pertama untuk ditulis;
+**Buka folder** dan **Buka arsip ZIP** (atau seret salah satunya ke jendela) menyalin apa yang
+Anda buka ke dalam IndexedDB peramban. Sejak itu editor membaca dan menulis salinan itu:
 penyimpanan otomatis, catatan dan folder baru, mengganti nama, menghapus, gambar, tag — semua
-berfungsi seperti pada disk. Tidak ada yang keluar dari perangkat.
+berfungsi seperti pada disk. Tidak ada yang keluar dari perangkat. Pada iPad yang belum punya
+apa pun untuk dibawa, Folder baru adalah jalan masuknya: Safari-nya tidak bisa memilih folder,
+dan arsip baru datang nanti, dari Unduh ZIP.
 
 - **Cara untuk keluar lagi** adalah sebuah arsip ZIP: pada pengaturan → **Unduh ZIP** mengemas
   seluruh folder — catatan, gambar, `.meta.json` — ke dalam satu folder dengan namanya, seperti

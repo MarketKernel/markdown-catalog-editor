@@ -28,7 +28,7 @@ import {
   type Settings,
   type Theme,
 } from './settings';
-import { canStore, forgetStored, keepStored, packFolder, storedFolders, storeFolder, StoredVault, touchStored, unpackFolder, type StoredFolder } from './stored';
+import { canStore, forgetStored, keepStored, newStored, packFolder, storedFolders, storeFolder, StoredVault, touchStored, unpackFolder, type StoredFolder } from './stored';
 import { renderTagBar, renderTagPage, TagTree } from './tags';
 import { FileTree, stripExtension } from './tree';
 import { ask, confirmAsk, h, popover, toast } from './ui';
@@ -278,7 +278,9 @@ function listItem(name: string, open: () => void, forgetLabel: string, forget: (
 async function renderStored(box: HTMLElement): Promise<void> {
   const stored = await storedFolders();
   box.hidden = stored.length === 0;
-  el('open-folder').classList.toggle('button--primary', stored.length === 0);
+  // With nothing kept yet, starting a folder is the way in that works everywhere, an old iPad included.
+  el('open-folder').classList.remove('button--primary');
+  el('new-stored').classList.toggle('button--primary', stored.length === 0);
   box.replaceChildren(h('div', { class: 'recent-title', text: t('gate', 'In this browser') }));
   for (const item of stored) {
     box.append(listItem(item.name, () => void openStored(item).catch(showGateError), t('gate', 'Delete from this browser'), () => void deleteStored(item)));
@@ -321,6 +323,21 @@ async function storeAndOpen(source: Vault | Promise<Vault>): Promise<void> {
   if (!(await openStored(item))) return;
   if (await keeping) toast(t('toast', '"{name}" is copied into this browser', { name: item.name }));
   else toast(t('toast', '"{name}" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then', { name: item.name }), 'error');
+}
+
+/** A folder started from nothing, at its first note, ready to write in. */
+async function startStored(): Promise<void> {
+  gateError.textContent = '';
+  const name = await ask(t('dialog', 'New folder'), t('dialog', 'Folder name'), t('gate', 'Notes'));
+  if (!name) return;
+  const keeping = keepStored();
+  const note = `${t('dialog', 'Untitled')}.md`;
+  // The inline title already names the note; a heading is only needed without it.
+  const item = await newStored(name, note, settings.inlineTitle ? '' : `# ${t('dialog', 'Untitled')}\n\n`);
+  if (!(await openStored(item))) return;
+  editor.setMode('edit');
+  syncModeButtons();
+  if (!(await keeping)) toast(t('toast', 'The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then'), 'error');
 }
 
 function openZip(file: File): Promise<void> {
@@ -420,6 +437,7 @@ el<HTMLInputElement>('folder-picker').addEventListener('change', (event) => {
   void (storing ? storeAndOpen(source) : useVault(source)).catch(showGateError);
 });
 
+el('new-stored').addEventListener('click', () => void startStored().catch(showGateError));
 el('open-zip').addEventListener('click', () => el<HTMLInputElement>('zip-picker').click());
 el<HTMLInputElement>('zip-picker').addEventListener('change', (event) => {
   const input = event.target as HTMLInputElement;
@@ -2107,6 +2125,7 @@ function renderGateNote(): void {
       : t('gate', 'This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.');
   el('gate-copy').hidden = storing;
   el('open-zip').hidden = !storing;
+  el('new-stored').hidden = !storing;
   el('gate-hint').hidden = storing;
   el('gate-hint-zip').hidden = !storing;
 }

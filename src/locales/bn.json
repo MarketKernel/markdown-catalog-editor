@@ -53,7 +53,8 @@
     "Export stopped": "রপ্তানি থামানো হয়েছে",
     "\"{name}\" is copied into this browser": "“{name}” এই ব্রাউজারে কপি হয়েছে",
     "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "“{name}” এই ব্রাউজারে কপি হয়েছে, জায়গা কম পড়লে ব্রাউজার এটি মুছে দিতে পারে: মাঝে মাঝে সেটিংস থেকে একটি ZIP আর্কাইভ ডাউনলোড করে নিন",
-    "Could not make the ZIP archive: {reason}": "ZIP আর্কাইভ তৈরি করা যায়নি: {reason}"
+    "Could not make the ZIP archive: {reason}": "ZIP আর্কাইভ তৈরি করা যায়নি: {reason}",
+    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "জায়গা কম পড়লে ব্রাউজার নোট মুছে দিতে পারে: মাঝে মাঝে সেটিংস থেকে একটি ZIP আর্কাইভ ডাউনলোড করে নিন"
   },
   "gate": {
     "Version {version}": "সংস্করণ {version}",
@@ -75,7 +76,9 @@
     "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "এই ব্রাউজার ডিস্কের কোনো ফোল্ডারে লিখতে পারে না, তাই নোটগুলো এর ভেতরেই রাখা হয়: আপনি যে ফোল্ডার বা ZIP আর্কাইভ খোলেন তা ব্রাউজারে কপি হয়ে যায়, আর পরিবর্তনগুলো সেখানেই সংরক্ষিত হয়। কিছুই কোথাও পাঠানো হয় না। নোটগুলো বের করে নিতে, সেটিংস থেকে একটি ZIP আর্কাইভ ডাউনলোড করুন। ব্রাউজারে সাইটের ডেটা মুছে ফেললে এগুলোও মুছে যায়।",
     "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "সাত দিন কোনো ভিজিট না হলে Safari-ও এগুলো মুছে ফেলে, যদি না এডিটরটি হোম স্ক্রিনে যোগ করা থাকে।",
     "Open ZIP archive": "ZIP আর্কাইভ খুলুন",
-    "or drag a folder or a ZIP archive here": "অথবা এখানে একটি ফোল্ডার বা ZIP আর্কাইভ টেনে আনুন"
+    "or drag a folder or a ZIP archive here": "অথবা এখানে একটি ফোল্ডার বা ZIP আর্কাইভ টেনে আনুন",
+    "New folder": "নতুন ফোল্ডার",
+    "Notes": "নোট"
   },
   "dialog": {
     "Note not found": "নোট পাওয়া যায়নি",

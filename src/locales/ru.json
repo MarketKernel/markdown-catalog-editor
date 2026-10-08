@@ -59,7 +59,8 @@
     "Finish what is open first, then open the note again": "Сначала завершите то, что уже открыто, затем откройте заметку заново",
     "\"{name}\" is copied into this browser": "Папка «{name}» скопирована в этот браузер",
     "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "Папка «{name}» скопирована в этот браузер, а он может удалить её при нехватке места: время от времени скачивайте ZIP-архив в настройках",
-    "Could not make the ZIP archive: {reason}": "Не удалось создать ZIP-архив: {reason}"
+    "Could not make the ZIP archive: {reason}": "Не удалось создать ZIP-архив: {reason}",
+    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "Браузер может удалить заметки при нехватке места: время от времени скачивайте ZIP-архив в настройках"
   },
   "gate": {
     "Drag a folder or a note": "Перетащите папку или заметку",
@@ -81,7 +82,9 @@
     "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "Этот браузер не умеет записывать файлы в папку на диске, поэтому заметки хранятся внутри него: открытые папка или ZIP-архив копируются в браузер, и изменения сохраняются там же. Ничего никуда не отправляется. Чтобы забрать заметки, скачайте ZIP-архив в настройках. Очистка данных сайта в браузере удаляет их.",
     "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "Safari также удаляет их через семь дней без посещения, если редактор не добавлен на экран «Домой».",
     "Open ZIP archive": "Открыть ZIP-архив",
-    "or drag a folder or a ZIP archive here": "или перетащите папку или ZIP-архив сюда"
+    "or drag a folder or a ZIP archive here": "или перетащите папку или ZIP-архив сюда",
+    "New folder": "Новая папка",
+    "Notes": "Заметки"
   },
   "dialog": {
     "Note not found": "Заметка не найдена",

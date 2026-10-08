@@ -1219,6 +1219,28 @@ await scenario(null, async (b) => {
   eq('and the note with the unsaved text stays open rather than give way to another', await b.evaluate(`[document.getElementById('status-path').textContent, [...document.querySelectorAll('#doc > *')].some((n) => (n.value ?? n.textContent).includes('lost?'))]`), ['A.md', true]);
 }, {}, noPicker);
 
+await scenario(null, async (b) => {
+  const buttons = `['new-stored', 'open-folder', 'open-zip'].map((id) => { const n = document.getElementById(id); return n.hidden ? '-' : n.classList.contains('button--primary') ? 'primary' : 'shown'; })`;
+  eq('with nothing kept yet, a new folder is the first way in', await b.evaluate(buttons), ['primary', 'shown', 'shown']);
+  await b.evaluate(`document.getElementById('new-stored').click()`);
+  await b.sleep(100);
+  eq('it asks for a name', await b.evaluate(`[document.querySelector('.dialog h2').textContent, document.querySelector('.dialog-input').value]`), ['New folder', 'Notes']);
+  await b.evaluate(`(() => { const input = document.querySelector('.dialog-input'); input.value = 'Ideas/2026'; input.form.requestSubmit(); })()`);
+  await b.until(`document.getElementById('gate').hidden`);
+  await b.sleep(300);
+  eq('and opens at a first note, ready to write', await b.evaluate(`[document.getElementById('vault-label').textContent, document.getElementById('status-path').textContent]`), ['Ideas-2026', 'Untitled.md']);
+  await b.click('#doc');
+  await b.type('First thought');
+  await b.until(`document.getElementById('status-state').textContent === 'saved'`, 4000);
+  await b.reload();
+  await b.until(`document.getElementById('gate').hidden`);
+  await b.sleep(300);
+  eq('a new visit finds it with the text', await b.evaluate(`[document.getElementById('vault-label').textContent, document.getElementById('doc').textContent.includes('First thought')]`), ['Ideas-2026', true]);
+  await b.evaluate(`document.getElementById('vault-name').click()`);
+  await b.sleep(300);
+  eq('once a folder is kept, the list leads', await b.evaluate(buttons), ['shown', 'shown', 'shown']);
+}, {}, noPicker);
+
 await scenario('# Note\n\nText\n', async (b) => {
   const layout = () =>
     b.evaluate(`(() => {

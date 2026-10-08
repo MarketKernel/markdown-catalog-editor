@@ -91,11 +91,14 @@ carpeta por sí sola — siempre que haya un `index.json` junto a él, con la fo
 ### Notas guardadas en el navegador
 
 Donde el navegador no puede escribir en una carpeta del disco — Safari, Firefox, cualquier
-navegador en un teléfono o un iPad — la pantalla de inicio lo indica y ofrece dos formas de
-entrar: **Abrir carpeta** y **Abrir archivo ZIP** (o arrastra cualquiera de los dos a la
-ventana). Lo que abres se copia en el IndexedDB del navegador, y a partir de entonces el
-editor lee y escribe esa copia: autoguardado, notas y carpetas nuevas, renombrar, eliminar,
-imágenes, etiquetas — todo funciona como en un disco. Nada sale del dispositivo.
+navegador en un teléfono o un iPad — la pantalla de inicio lo indica y ofrece tres formas de
+entrar: **Nueva carpeta** empieza con una carpeta vacía, directo a una primera nota en la que
+escribir; **Abrir carpeta** y **Abrir archivo ZIP** (o arrastra cualquiera de los dos a la
+ventana) copian lo que abres en el IndexedDB del navegador. A partir de entonces el editor lee
+y escribe esa copia: autoguardado, notas y carpetas nuevas, renombrar, eliminar, imágenes,
+etiquetas — todo funciona como en un disco. Nada sale del dispositivo. En un iPad sin nada aún
+que traer, Nueva carpeta es la forma de entrar: su Safari no puede elegir una carpeta, y un
+archivo llega más tarde, desde Descargar ZIP.
 
 - **El camino de vuelta** es un archivo ZIP: en los ajustes → **Descargar ZIP** empaqueta
   toda la carpeta — notas, imágenes, `.meta.json` — bajo una sola carpeta con su nombre,

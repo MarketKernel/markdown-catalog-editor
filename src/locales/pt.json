@@ -56,7 +56,8 @@
     },
     "Export stopped: {folder} is incomplete": "Exportação interrompida: {folder} está incompleta",
     "Export stopped": "Exportação interrompida",
-    "Finish what is open first, then open the note again": "Termine primeiro o que está aberto e abra a nota novamente"
+    "Finish what is open first, then open the note again": "Termine primeiro o que está aberto e abra a nota novamente",
+    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "O navegador pode apagar as notas quando o espaço acabar: baixe um arquivo ZIP pelas configurações de vez em quando"
   },
   "gate": {
     "In this browser": "Neste navegador",
@@ -78,7 +79,9 @@
     "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "Quando o Chrome perguntar, escolha “Permitir em todas as visitas”: assim a pasta permanece aberta quando o painel for fechado.",
     "Remove from the list": "Remover da lista",
     "The folder \"{name}\" is no longer there, so it was removed from the list": "A pasta “{name}” não existe mais, por isso foi removida da lista",
-    "Version {version}": "Versão {version}"
+    "Version {version}": "Versão {version}",
+    "New folder": "Nova pasta",
+    "Notes": "Notas"
   },
   "dialog": {
     "Delete from this browser": "Excluir deste navegador",

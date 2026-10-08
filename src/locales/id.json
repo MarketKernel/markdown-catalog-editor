@@ -50,7 +50,8 @@
     "Export stopped": "Ekspor dihentikan",
     "\"{name}\" is copied into this browser": "\"{name}\" disalin ke browser ini",
     "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "\"{name}\" disalin ke browser ini, yang dapat dihapus saat ruang penyimpanan menipis: unduh arsip ZIP dari pengaturan sesekali",
-    "Could not make the ZIP archive: {reason}": "Tidak dapat membuat arsip ZIP: {reason}"
+    "Could not make the ZIP archive: {reason}": "Tidak dapat membuat arsip ZIP: {reason}",
+    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "Browser dapat menghapus catatan saat ruang penyimpanan menipis: unduh arsip ZIP dari pengaturan sesekali"
   },
   "gate": {
     "Version {version}": "Versi {version}",
@@ -72,7 +73,9 @@
     "This browser cannot write to a folder on disk, so the notes are kept inside it: a folder or a ZIP archive you open is copied into the browser, and edits are saved there. Nothing is sent anywhere. To take the notes out, download a ZIP archive from the settings. Clearing the site data in the browser deletes them.": "Browser ini tidak dapat menulis ke folder di disk, sehingga catatan disimpan di dalam browser: folder atau arsip ZIP yang Anda buka akan disalin ke browser, dan perubahan disimpan di sana. Tidak ada yang dikirim ke mana pun. Untuk mengeluarkan catatan, unduh arsip ZIP dari pengaturan. Menghapus data situs di browser akan menghapus catatan tersebut.",
     "Safari also deletes them after seven days without a visit, unless the editor is added to the Home Screen.": "Safari juga menghapus catatan tersebut setelah tujuh hari tanpa kunjungan, kecuali editor ditambahkan ke Layar Utama.",
     "Open ZIP archive": "Buka arsip ZIP",
-    "or drag a folder or a ZIP archive here": "atau seret folder atau arsip ZIP ke sini"
+    "or drag a folder or a ZIP archive here": "atau seret folder atau arsip ZIP ke sini",
+    "New folder": "Folder baru",
+    "Notes": "Catatan"
   },
   "dialog": {
     "Note not found": "Catatan tidak ditemukan",
