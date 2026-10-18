@@ -142,6 +142,36 @@ pasta pode ser). Sem uma pasta ao redor não há nada para criar,
 renomear ou excluir perto dela, nem imagens da sua pasta, etiquetas ou exportação: isso vem
 com abrir a pasta. Uma nota aberta assim não é adicionada às pastas recentes.
 
+### Um bloco do OneNote
+
+Um bloco de anotações do OneNote — OneNote 2010–2016 ou OneNote para Windows, mantido em um
+disco ou sincronizado pelo OneDrive ou SharePoint — entra como uma pasta de notas: **Abrir
+bloco do OneNote** na tela inicial escolhe a sua pasta, e **Abrir pasta** ou arrastá-lo para a
+janela o reconhece pelo `.onetoc2` que o OneNote mantém nela. Seções `.one` soltas sozinhas formam um
+bloco próprio. Tudo é lido na página; o OneNote não precisa estar instalado, e o bloco em si é
+apenas lido, nunca gravado.
+
+- **No que se transforma**: cada seção em uma pasta, cada página em uma nota dentro dela, com o
+  nome do seu título, e uma subpágina em uma pasta com o nome da sua página. O título e as
+  datas de criação e da última alteração da página vão para o front matter. Imagens e arquivos
+  anexados são salvos ao lado da nota em `assets/<nome da nota>/`, como o editor guarda as
+  próprias imagens.
+- **O que uma página mantém**: títulos, parágrafos e quebras de linha, negrito, itálico,
+  sublinhado, tachado, sobrescrito e subscrito, a cor e o destaque do texto, links, listas com
+  marcadores e numeradas com seu aninhamento, marcas de tarefa como tarefas, tabelas, imagens e
+  arquivos. Um link para outra página do bloco leva à sua nota. O OneNote deixa o texto em
+  qualquer lugar da página; uma nota é uma linha depois da outra, então seus contornos vêm de
+  cima para baixo e depois da esquerda para a direita. Tinta, equações e outras marcas que não
+  as de tarefa ficam de fora, assim como a lixeira; o quase preto e o branco que o texto colado
+  da web traz junto não são mantidos como cores.
+- **Somente leitura**: as notas abrem a partir da memória, em qualquer navegador, e nada é gravado
+  em lugar nenhum. Para guardá-las, **Baixar ZIP** nos ajustes as reúne em um arquivo compactado,
+  para descompactar onde devem ficar ou para abrir de novo como tal. Só vêm os arquivos que o
+  editor mostra: notas, imagens, PDFs — um arquivo do Word anexado ou uma imagem em EMF fica de
+  fora.
+- Uma seção protegida por senha, ou uma do OneNote 2007, não pode ser lida; as outras entram,
+  e o editor diz quais não entraram.
+
 ## Markdown Knowledge Base: a extensão do Chrome
 
 `npm run build` também grava `build/extension/`: o editor como extensão do Chrome, e
@@ -553,6 +583,8 @@ sistema, e o site é lido e vinculado da mesma forma.
   etiqueta, mantidas à parte das notas em `.meta.json` — ver "[Etiquetas](#etiquetas)".
 - **Exportar para HTML**: a pasta, ou uma de suas subpastas, como um site estático com
   busca, ou como uma única página — ver "[Exportar para HTML](#exportar-para-html)".
+- **Um bloco do OneNote** transformado em uma pasta de notas, sem o OneNote — ver
+  "[Um bloco do OneNote](#um-bloco-do-onenote)".
 - **Uma nota avulsa** aberta pelo Finder ou Explorador no app instalado, ou arrastada para a
   janela — ver "[Uma nota avulsa](#uma-nota-avulsa)".
 - **Notas mantidas no navegador** onde ele não consegue gravar em um disco — Safari,
@@ -756,6 +788,8 @@ src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
 src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
 src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
+src/onenote.ts      OneNote sections (.one) read: the revision store or the package of data elements, pages
+src/onenote-md.ts   a OneNote notebook → notes: folders, front matter, Markdown, pictures and files beside them
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -783,7 +817,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, OneNote, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/

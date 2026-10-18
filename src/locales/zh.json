@@ -74,7 +74,14 @@
     "\"{name}\" is copied into this browser": "“{name}”已复制到此浏览器中",
     "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "“{name}”已复制到此浏览器中，空间不足时可能会被清除：请不时从设置中下载 ZIP 压缩包",
     "Could not make the ZIP archive: {reason}": "无法生成 ZIP 压缩包：{reason}",
-    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "空间不足时浏览器可能会清除笔记：请不时从设置中下载 ZIP 压缩包"
+    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "空间不足时浏览器可能会清除笔记：请不时从设置中下载 ZIP 压缩包",
+    "Reading the OneNote notebook…": "正在读取 OneNote 笔记本…",
+    "{count} sections could not be read: {names}": {
+      "other": "有 {count} 个分区无法读取：{names}"
+    },
+    "{count} pages of OneNote, open read-only: download them as a ZIP archive from the settings": {
+      "other": "已以只读方式打开 {count} 个 OneNote 页面：如需保留，请从设置中下载 ZIP 压缩包"
+    }
   },
   "gate": {
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "此浏览器无法将文件写入磁盘：文件夹将以只读方式打开，保存时会下载修改后的文件。电脑上的 Chrome、Edge 和 Arc 支持完整编辑。",
@@ -98,7 +105,10 @@
     "Open ZIP archive": "打开 ZIP 压缩包",
     "or drag a folder or a ZIP archive here": "或将文件夹或 ZIP 压缩包拖到此处",
     "New folder": "新建文件夹",
-    "Notes": "笔记"
+    "Notes": "笔记",
+    "No OneNote sections in \"{name}\"": "“{name}”中没有 OneNote 分区",
+    "Reading OneNote sections: {done} of {total}": "正在读取 OneNote 分区：{done}/{total}",
+    "Open OneNote notebook": "打开 OneNote 笔记本"
   },
   "dialog": {
     "Note not found": "未找到笔记",
@@ -142,7 +152,11 @@
     "This is not a ZIP archive, or it is damaged": "这不是 ZIP 压缩包，或已损坏",
     "The ZIP archive is too large: over 4 GB or 65 535 files": "ZIP 压缩包过大：超过 4 GB 或 65,535 个文件",
     "The ZIP archive is encrypted: {path}": "ZIP 压缩包已加密：{path}",
-    "The ZIP archive is compressed in a way this editor cannot read: {path}": "ZIP 压缩包的压缩方式此编辑器无法读取：{path}"
+    "The ZIP archive is compressed in a way this editor cannot read: {path}": "ZIP 压缩包的压缩方式此编辑器无法读取：{path}",
+    "The OneNote file is damaged": "OneNote 文件已损坏",
+    "The section is protected with a password": "该分区受密码保护",
+    "This is not a OneNote section": "这不是 OneNote 分区",
+    "Only sections of OneNote 2010 and later can be opened": "只能打开 OneNote 2010 及更高版本的分区"
   },
   "palette": {
     "Red": "红色",

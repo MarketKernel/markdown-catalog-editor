@@ -144,6 +144,36 @@ creare, rinominare o eliminare accanto ad essa, né immagini dalla sua cartella,
 esportazione: quelli vengono con l'apertura della cartella. Una nota aperta così non viene
 aggiunta alle cartelle recenti.
 
+### Un blocco appunti OneNote
+
+Un blocco appunti di OneNote — OneNote 2010–2016 oppure OneNote per Windows, conservato su un
+disco o sincronizzato tramite OneDrive o SharePoint — entra come una cartella di note: **Apri
+blocco appunti OneNote** nella schermata iniziale ne sceglie la cartella, e **Apri cartella**
+oppure il trascinamento sulla finestra lo riconosce dal `.onetoc2` che OneNote vi conserva. Le
+sezioni `.one` trascinate da sole formano un blocco appunti a sé. Tutto viene letto nella
+pagina; OneNote non deve essere installato, e il blocco appunti stesso viene solo letto, mai
+scritto.
+
+- **In cosa si trasforma**: ogni sezione in una cartella, ogni pagina in una nota al suo
+  interno, col nome del suo titolo, una sottopagina in una cartella col nome della sua pagina.
+  Il titolo e le date di creazione e dell'ultima modifica della pagina vanno nel front matter.
+  Immagini e file allegati vengono salvati accanto alla nota in `assets/<nome della nota>/`,
+  come l'editor conserva le proprie immagini.
+- **Cosa conserva una pagina**: titoli, paragrafi e a capo, grassetto, corsivo, sottolineato,
+  barrato, apice e pedice, il colore e l'evidenziazione del testo, link, elenchi puntati e
+  numerati con il loro annidamento, i tag attività come attività, tabelle, immagini e file. Un
+  link a un'altra pagina del blocco appunti porta alla sua nota. OneNote lascia il testo in
+  qualsiasi punto della pagina; una nota è una riga dopo l'altra, quindi i suoi contorni
+  vengono dall'alto verso il basso, poi da sinistra a destra. Inchiostro, equazioni e tag
+  diversi dalle attività restano fuori, e così il cestino; il quasi nero e il bianco che il
+  testo incollato dal web si porta dietro non vengono conservati come colori.
+- **Sola lettura**: le note si aprono dalla memoria, in qualsiasi browser, e non viene scritto
+  nulla da nessuna parte. Per conservarle, **Scarica ZIP** nelle impostazioni le raccoglie in un
+  archivio, da estrarre dove devono stare o da riaprire come tale. Arrivano solo i file che
+  l'editor mostra: note, immagini, PDF — un file Word allegato o un'immagine EMF resta fuori.
+- Una sezione protetta da password, o una di OneNote 2007, non può essere letta; le altre
+  entrano, e l'editor dice quali no.
+
 ## Markdown Knowledge Base: l'estensione Chrome
 
 `npm run build` scrive anche `build/extension/`: l'editor come estensione Chrome, e
@@ -561,6 +591,8 @@ tema segue il sistema, e il sito si legge e si collega allo stesso modo.
   dalle note in `.meta.json` — vedi «[Tag](#tag)».
 - **Esporta in HTML**: la cartella, o una delle sue sottocartelle, come sito statico con
   ricerca, o come pagina singola — vedi «[Esporta in HTML](#esporta-in-html)».
+- **Un blocco appunti OneNote** trasformato in una cartella di note, senza OneNote — vedi
+  «[Un blocco appunti OneNote](#un-blocco-appunti-onenote)».
 - **Una singola nota** aperta dal Finder o da Esplora risorse nell'app installata, oppure
   trascinata sulla finestra — vedi «[Una singola nota](#una-singola-nota)».
 - **Note conservate nel browser** dove non può scrivere su un disco — Safari, Firefox,
@@ -762,6 +794,8 @@ src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
 src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
 src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
+src/onenote.ts      OneNote sections (.one) read: the revision store or the package of data elements, pages
+src/onenote-md.ts   a OneNote notebook → notes: folders, front matter, Markdown, pictures and files beside them
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -789,7 +823,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, OneNote, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/

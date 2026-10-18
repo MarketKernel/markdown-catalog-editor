@@ -136,6 +136,30 @@ IndexedDB가 꺼져 있으면(일부 비공개 창) 폴더는 이전처럼 읽�
 이런 기능들은 폴더를 열어야 따라옵니다. 이렇게 연 노트는 최근 폴더 목록에 추가되지
 않습니다.
 
+### OneNote 전자 필기장
+
+OneNote 전자 필기장 — OneNote 2010–2016 또는 Windows용 OneNote이며, 디스크에 있거나
+OneDrive나 SharePoint로 동기화되는 것 — 은 노트 폴더로 들어옵니다: 시작 화면의 **OneNote 전자
+필기장 열기**는 그 폴더를 고르고, **폴더 열기**나 창으로 드래그하면 OneNote가 폴더에 두는 `.onetoc2` 파일을
+보고 전자 필기장임을 알아봅니다. `.one` 섹션만 따로 떨어뜨리면 그것들이 하나의 전자 필기장이
+됩니다. 모든 것은 페이지 안에서 읽습니다. OneNote가 설치되어 있지 않아도 되며, 전자 필기장
+자체는 읽기만 할 뿐 쓰지 않습니다.
+
+- **무엇이 되는가**: 섹션마다 폴더가, 페이지마다 그 안의 노트가 되며 이름은 페이지 제목을
+  따릅니다. 하위 페이지는 그 상위 페이지의 이름을 딴 폴더에 들어갑니다. 제목과 페이지를 만든
+  날짜, 마지막으로 바꾼 날짜는 프런트 매터에 들어갑니다. 그림과 첨부 파일은 편집기가 자신의
+  이미지를 보관하는 방식대로, 노트 옆의 `assets/<노트 이름>/`에 저장됩니다.
+- **페이지에서 유지되는 것**: 제목, 단락과 줄바꿈, 굵게, 기울임, 밑줄, 취소선, 위 첨자와 아래
+  첨자, 글자 색과 강조, 링크, 중첩된 글머리 기호 및 번호 목록, 작업으로 바뀌는 할 일 태그,
+  표, 그림, 파일. 전자 필기장의 다른 페이지로 가는 링크는 그 노트로 이어집니다. OneNote에서는
+  텍스트를 페이지 어디에나 둘 수 있지만, 노트는 한 줄 한 줄 이어지므로 윤곽선은 위에서 아래로,
+  그다음 왼쪽에서 오른쪽으로 놓입니다. 잉크, 수식, 할 일 외의 태그는 빠지고 휴지통도 마찬가지
+  입니다. 웹에서 붙여 넣은 텍스트가 가져오는 검정에 가까운 색과 흰색은 색으로 남기지 않습니다.
+- **읽기 전용**: 노트는 어느 브라우저에서나 메모리에서 열리며, 어디에도 기록되지 않습니다. 보관하려면 설정의 **ZIP 다운로드**가 노트를 아카이브로 묶어 주며, 두고
+  싶은 곳에 풀거나 아카이브로 다시 열 수 있습니다. 편집기가 보여 주는 파일만 따라옵니다: 노트, 그림, PDF — 첨부된 Word 파일이나 EMF 그림은 빠집니다.
+- 암호로 보호된 섹션이나 OneNote 2007의 섹션은 읽을 수 없습니다. 나머지는 들어오며, 들어오지
+  못한 것은 편집기가 알려 줍니다.
+
 ## Markdown Knowledge Base: Chrome 확장 프로그램
 
 `npm run build`는 `build/extension/`도 함께 만듭니다: Chrome 확장 프로그램 형태의
@@ -544,6 +568,8 @@ CSS(`:target`)로 구현되어 스크립트 없이도 작동하며, 스크립트
   노트와는 별도로 `.meta.json`에 보관됩니다 — "[태그](#태그)" 참고.
 - **HTML로 내보내기**: 폴더 전체 또는 그 하위 폴더 하나를 검색 기능이 있는
   정적 사이트로, 또는 단일 페이지로 내보냅니다 — "[HTML로 내보내기](#html로-내보내기)" 참고.
+- **OneNote 전자 필기장**을 OneNote 없이 노트 폴더로 만듭니다 —
+  "[OneNote 전자 필기장](#onenote-전자-필기장)" 참고.
 - **단일 노트**를 설치된 앱에서 Finder나 탐색기로 열거나, 창에 드롭해서 엽니다 —
   "[단일 노트](#단일-노트)" 참고.
 - **브라우저에 보관되는 노트**는 디스크에 쓸 수 없는 경우에 쓰입니다 — Safari, Firefox,
@@ -762,6 +788,8 @@ src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
 src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
 src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
+src/onenote.ts      OneNote sections (.one) read: the revision store or the package of data elements, pages
+src/onenote-md.ts   a OneNote notebook → notes: folders, front matter, Markdown, pictures and files beside them
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -789,7 +817,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, OneNote, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/

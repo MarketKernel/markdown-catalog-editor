@@ -123,6 +123,29 @@ iPad 也是如此：Android 上的 Chrome 没有 File System Access，而 iOS �
 签或导出：这些功能都需要打开文件夹才能使用。以这种方式打开的笔记不会被加入最近使用的文件夹列
 表。
 
+### OneNote 笔记本
+
+OneNote 的笔记本——OneNote 2010–2016 或 Windows 版 OneNote，保存在磁盘上，或通过 OneDrive
+或 SharePoint 同步——会作为一个笔记文件夹导入：起始界面上的**打开 OneNote 笔记本**会选取它
+的文件夹，而**打开文件夹**或把它拖到窗口上，则会根据其中 OneNote 保存的 `.onetoc2` 文件识别出
+笔记本。单独拖入的 `.one` 分区会自成一个笔记本。一切都在页面中读取；无需安装 OneNote，笔记
+本本身只会被读取，绝不会被写入。
+
+- **它会变成什么**：每个分区成为一个文件夹，每个页面成为其中的一篇笔记，以页面标题命名，子
+  页面则放在以其上级页面命名的文件夹中。标题以及页面的创建和最后修改日期会写入前言（front
+  matter）。图片和附件会保存在笔记旁的 `assets/<笔记名>/` 中，就像编辑器保存自己的图片一样。
+- **页面保留什么**：标题、段落和换行、粗体、斜体、下划线、删除线、上标和下标、文字颜色和高
+  亮、链接、带嵌套的项目符号列表和编号列表、作为任务的待办标记、表格、图片和文件。指向笔记
+  本中另一个页面的链接会指向它的笔记。OneNote 允许文字出现在页面的任何位置；而笔记是一行接
+  着一行的，所以其中的轮廓框会按从上到下、再从左到右的顺序排列。墨迹、公式以及待办以外的其
+  他标记会被舍弃，回收站也一样；从网页粘贴文字时带来的近黑色和白色不会保留为颜色。
+- **只读**：笔记在任何浏览器中都从内存打开，不会写入任何地方。要保留它们，可用
+  设置中的**下载 ZIP** 把它们打包成压缩包，解压到它们该在的地方，或再次作
+  为压缩包打开。只有编辑器会显示的文件才会一同带入：笔记、图片、PDF——附带的
+  Word 文件或 EMF 格式的图片不会。
+- 受密码保护的分区，或 OneNote 2007 的分区，无法读取；其余的照常导入，编辑器会说明哪些没有
+  导入。
+
 ## Markdown Knowledge Base: Chrome 扩展程序
 
 `npm run build` 还会写出 `build/extension/`：以 Chrome 扩展程序形式呈现的编辑器，以及供 Chrome
@@ -454,6 +477,8 @@ Markdown。
   `.meta.json` 中——参见“[标签](#标签)”。
 - **导出为 HTML**：将文件夹或其中某个子文件夹导出为带搜索功能的静态网站，或导出为单独一个
   页面——参见“[导出为 HTML](#导出为-html)”。
+- **OneNote 笔记本**：无需 OneNote，即可变成一个笔记文件夹——参见
+  “[OneNote 笔记本](#onenote-笔记本)”。
 - **单篇笔记**：可以从 Finder 或资源管理器在已安装的应用中打开，也可以拖放到窗口上——参见
   “[单篇笔记](#单篇笔记)”。
 - **保存在浏览器中的笔记**，用于无法写入磁盘的情况——Safari、Firefox、手机、iPad——以 ZIP
@@ -633,6 +658,8 @@ src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
 src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
 src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
+src/onenote.ts      OneNote sections (.one) read: the revision store or the package of data elements, pages
+src/onenote-md.ts   a OneNote notebook → notes: folders, front matter, Markdown, pictures and files beside them
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -660,7 +687,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, OneNote, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/

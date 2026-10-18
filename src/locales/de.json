@@ -54,7 +54,16 @@
     "\"{name}\" is copied into this browser": "„{name}“ wurde in diesen Browser kopiert",
     "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "„{name}“ wurde in diesen Browser kopiert, der ihn bei Platzmangel löschen kann: Laden Sie von Zeit zu Zeit ein ZIP-Archiv in den Einstellungen herunter.",
     "Could not make the ZIP archive: {reason}": "Das ZIP-Archiv konnte nicht erstellt werden: {reason}",
-    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "Der Browser kann die Notizen bei Platzmangel löschen: Laden Sie von Zeit zu Zeit ein ZIP-Archiv in den Einstellungen herunter."
+    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "Der Browser kann die Notizen bei Platzmangel löschen: Laden Sie von Zeit zu Zeit ein ZIP-Archiv in den Einstellungen herunter.",
+    "Reading the OneNote notebook…": "OneNote-Notizbuch wird gelesen …",
+    "{count} sections could not be read: {names}": {
+      "one": "{count} Abschnitt konnte nicht gelesen werden: {names}",
+      "other": "{count} Abschnitte konnten nicht gelesen werden: {names}"
+    },
+    "{count} pages of OneNote, open read-only: download them as a ZIP archive from the settings": {
+      "one": "{count} OneNote-Seite schreibgeschützt geöffnet: Laden Sie zum Behalten ein ZIP-Archiv in den Einstellungen herunter",
+      "other": "{count} OneNote-Seiten schreibgeschützt geöffnet: Laden Sie zum Behalten ein ZIP-Archiv in den Einstellungen herunter"
+    }
   },
   "gate": {
     "Drag a folder or a note": "Ziehen Sie einen Ordner oder eine Notiz",
@@ -78,7 +87,10 @@
     "Open ZIP archive": "ZIP-Archiv öffnen",
     "or drag a folder or a ZIP archive here": "oder ziehen Sie einen Ordner oder ein ZIP-Archiv hierher",
     "New folder": "Neuer Ordner",
-    "Notes": "Notizen"
+    "Notes": "Notizen",
+    "No OneNote sections in \"{name}\"": "Keine OneNote-Abschnitte in „{name}“",
+    "Reading OneNote sections: {done} of {total}": "OneNote-Abschnitte werden gelesen: {done} von {total}",
+    "Open OneNote notebook": "OneNote-Notizbuch öffnen"
   },
   "dialog": {
     "Note not found": "Notiz nicht gefunden",
@@ -122,7 +134,11 @@
     "This is not a ZIP archive, or it is damaged": "Dies ist kein ZIP-Archiv, oder es ist beschädigt",
     "The ZIP archive is too large: over 4 GB or 65 535 files": "Das ZIP-Archiv ist zu groß: über 4 GB oder 65.535 Dateien",
     "The ZIP archive is encrypted: {path}": "Das ZIP-Archiv ist verschlüsselt: {path}",
-    "The ZIP archive is compressed in a way this editor cannot read: {path}": "Das ZIP-Archiv ist auf eine Weise komprimiert, die der Editor nicht lesen kann: {path}"
+    "The ZIP archive is compressed in a way this editor cannot read: {path}": "Das ZIP-Archiv ist auf eine Weise komprimiert, die der Editor nicht lesen kann: {path}",
+    "The OneNote file is damaged": "Die OneNote-Datei ist beschädigt",
+    "The section is protected with a password": "Der Abschnitt ist mit einem Kennwort geschützt",
+    "This is not a OneNote section": "Das ist kein OneNote-Abschnitt",
+    "Only sections of OneNote 2010 and later can be opened": "Nur Abschnitte von OneNote 2010 und neuer können geöffnet werden"
   },
   "palette": {
     "Red": "Rot",

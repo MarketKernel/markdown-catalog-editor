@@ -57,7 +57,18 @@
     "Export stopped: {folder} is incomplete": "Exportación detenida: {folder} está incompleta",
     "Export stopped": "Exportación detenida",
     "Finish what is open first, then open the note again": "Termina primero lo que está abierto y vuelve a abrir la nota",
-    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "El navegador puede borrar las notas cuando falte espacio: descarga de vez en cuando un archivo ZIP desde los ajustes"
+    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "El navegador puede borrar las notas cuando falte espacio: descarga de vez en cuando un archivo ZIP desde los ajustes",
+    "Reading the OneNote notebook…": "Leyendo el cuaderno de OneNote…",
+    "{count} sections could not be read: {names}": {
+      "one": "No se pudo leer {count} sección: {names}",
+      "many": "No se pudieron leer {count} de secciones: {names}",
+      "other": "No se pudieron leer {count} secciones: {names}"
+    },
+    "{count} pages of OneNote, open read-only: download them as a ZIP archive from the settings": {
+      "one": "{count} página de OneNote abierta en solo lectura: para conservarla, descarga un archivo ZIP desde los ajustes",
+      "many": "{count} de páginas de OneNote abiertas en solo lectura: para conservarlas, descarga un archivo ZIP desde los ajustes",
+      "other": "{count} páginas de OneNote abiertas en solo lectura: para conservarlas, descarga un archivo ZIP desde los ajustes"
+    }
   },
   "gate": {
     "In this browser": "En este navegador",
@@ -81,7 +92,10 @@
     "The folder \"{name}\" is no longer there, so it was removed from the list": "La carpeta «{name}» ya no existe, así que se quitó de la lista",
     "Version {version}": "Versión {version}",
     "New folder": "Nueva carpeta",
-    "Notes": "Notas"
+    "Notes": "Notas",
+    "No OneNote sections in \"{name}\"": "No hay secciones de OneNote en «{name}»",
+    "Reading OneNote sections: {done} of {total}": "Leyendo secciones de OneNote: {done} de {total}",
+    "Open OneNote notebook": "Abrir cuaderno de OneNote"
   },
   "dialog": {
     "Delete from this browser": "Eliminar de este navegador",
@@ -125,7 +139,11 @@
     "This name cannot be used here: {name}": "Este nombre no se puede usar aquí: {name}",
     "File not found: {path}": "Archivo no encontrado: {path}",
     "The browser was not allowed to open the folder": "No se permitió al navegador abrir la carpeta",
-    "A note opened on its own has no folder around it": "Una nota abierta por sí sola no tiene una carpeta alrededor"
+    "A note opened on its own has no folder around it": "Una nota abierta por sí sola no tiene una carpeta alrededor",
+    "The OneNote file is damaged": "El archivo de OneNote está dañado",
+    "The section is protected with a password": "La sección está protegida con contraseña",
+    "This is not a OneNote section": "Esto no es una sección de OneNote",
+    "Only sections of OneNote 2010 and later can be opened": "Solo se pueden abrir secciones de OneNote 2010 y posteriores"
   },
   "palette": {
     "Red": "Rojo",

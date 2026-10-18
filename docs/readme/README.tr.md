@@ -143,6 +143,36 @@ adlandırılacak veya silinecek bir şey yoktur, ve klasöründen görseller, et
 aktarma yoktur: bunlar klasörü açmakla gelir. Bu şekilde açılan bir not, son kullanılan
 klasörlere eklenmez.
 
+### Bir OneNote not defteri
+
+Bir OneNote not defteri — OneNote 2010–2016 veya Windows için OneNote, bir diskte tutulan ya da
+OneDrive veya SharePoint ile eşitlenen — bir not klasörü olarak içeri gelir: başlangıç
+ekranındaki **OneNote not defterini aç** klasörünü seçer; **Klasör aç** veya onu pencereye
+sürüklemek ise bir klasörü OneNote'un içinde tuttuğu `.onetoc2` dosyasından tanır. Tek başına bırakılan `.one`
+bölümleri kendi başlarına bir not defteri oluşturur. Her şey sayfada okunur; OneNote'un kurulu
+olması gerekmez ve not defterinin kendisi yalnızca okunur, asla yazılmaz.
+
+- **Neye dönüşür**: her bölüm bir klasöre, her sayfa onun içinde, başlığının adını taşıyan bir nota
+  dönüşür; bir alt sayfa, sayfasının adını taşıyan bir klasöre girer. Başlık ile sayfanın
+  oluşturulduğu ve son değiştirildiği tarihler ön bilgiye (front matter) yazılır. Resimler ve ekli
+  dosyalar, düzenleyicinin kendi görsellerini tuttuğu gibi, notun yanında `assets/<not adı>/`
+  içine kaydedilir.
+- **Bir sayfanın koruduğu**: başlıklar, paragraflar ve satır sonları, kalın, italik, altı çizili,
+  üstü çizili, üst simge ve alt simge, metnin rengi ve vurgusu, bağlantılar, iç içe geçmiş
+  madde işaretli ve numaralı listeler, görev olarak yapılacaklar etiketleri, tablolar, resimler ve
+  dosyalar. Not defterinin başka bir sayfasına giden bağlantı, onun notuna gider. OneNote metnin
+  sayfanın her yerinde durmasına izin verir; bir not ise satır satır ilerler, bu yüzden anahatları
+  yukarıdan aşağıya, sonra soldan sağa gelir. Mürekkep, denklemler ve yapılacaklar dışındaki
+  etiketler dışarıda kalır, geri dönüşüm kutusu da öyle; web'den yapıştırılan metnin getirdiği
+  siyaha yakın ve beyaz renkler renk olarak korunmaz.
+- **Salt okunur**: notlar herhangi bir tarayıcıda bellekten açılır ve hiçbir yere hiçbir şey
+  yazılmaz. Saklamak için ayarlardaki **ZIP indir** onları bir arşive paketler; arşiv, notların
+  duracağı yerde açılabilir ya da bir arşiv olarak yeniden açılabilir. Yalnızca düzenleyicinin
+  gösterdiği dosyalar gelir: notlar, resimler, PDF'ler — ekli bir Word dosyası veya EMF
+  biçimindeki bir resim dışarıda kalır.
+- Parolayla korunan bir bölüm, ya da OneNote 2007'ye ait olan, okunamaz; diğerleri içeri gelir ve
+  düzenleyici hangilerinin gelmediğini söyler.
+
 ## Markdown Knowledge Base: Chrome uzantısı
 
 `npm run build`, `build/extension/`'ı da yazar: düzenleyiciyi bir Chrome uzantısı olarak,
@@ -551,6 +581,8 @@ sistemi izler, ve site aynı şekilde okunur ve bağlantı verir.
 - **HTML'ye dışa aktarma**: klasör, veya alt klasörlerinden biri, aramalı statik bir site
   olarak, veya tek bir sayfa olarak — bkz. „[HTML'ye dışa
   aktarma](#htmlye-dışa-aktarma)“.
+- **Bir OneNote not defteri**, OneNote olmadan bir not klasörüne dönüşür — bkz.
+  „[Bir OneNote not defteri](#bir-onenote-not-defteri)“.
 - **Tek bir not**, kurulu uygulamada Finder veya Explorer'dan açılan, veya pencereye
   bırakılan — bkz. „[Tek bir not](#tek-bir-not)“.
 - **Tarayıcıda tutulan notlar**, diske yazamadığında — Safari, Firefox, telefonlar,
@@ -749,6 +781,8 @@ src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
 src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
 src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
+src/onenote.ts      OneNote sections (.one) read: the revision store or the package of data elements, pages
+src/onenote-md.ts   a OneNote notebook → notes: folders, front matter, Markdown, pictures and files beside them
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -776,7 +810,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, OneNote, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/

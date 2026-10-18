@@ -113,6 +113,18 @@ try {
   await chrome.evaluate(s, `document.getElementById('toggle-sidebar').click(), true`);
   await sleep(300);
   await shot('7b-phone-files');
+  // A tapped folder is marked for New note, and a finger held on it opens its menu.
+  await chrome.evaluate(s, `(() => {
+    const find = () => document.querySelector('#tree .tree-item[data-path="Projects"]');
+    find().click();
+    // The click drew the tree anew.
+    const row = find();
+    const box = row.getBoundingClientRect();
+    row.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'touch', clientX: box.left + 60, clientY: box.top + 10 }));
+    return true;
+  })()`);
+  await sleep(700);
+  await shot('7d-phone-tree-menu');
 
   // Without a folder picker — Safari, Firefox, a phone — the gate offers to keep the notes in the browser.
   state.notes = false;

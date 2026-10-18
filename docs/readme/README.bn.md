@@ -135,6 +135,33 @@ System Access নেই, এবং iOS ও iPadOS-এর প্রতিটি �
 বদলানো বা মোছার কিছু নেই, আর এর ফোল্ডার থেকে কোনো ছবি, ট্যাগ বা এক্সপোর্ট নেই: সেগুলো
 ফোল্ডার খোলার সাথে আসে। এভাবে খোলা একটি নোট সাম্প্রতিক ফোল্ডারে যোগ হয় না।
 
+### OneNote নোটবুক
+
+OneNote-এর নোটবুক — OneNote 2010–2016 বা Windows-এর জন্য OneNote, ডিস্কে রাখা বা OneDrive
+কিংবা SharePoint-এর মাধ্যমে সিঙ্ক করা — নোটের ফোল্ডার হিসেবে আসে: শুরুর স্ক্রিনে
+**OneNote নোটবুক খুলুন** এর ফোল্ডারটি বেছে নেয়, আর **ফোল্ডার খুলুন** বা এটিকে উইন্ডোতে টেনে
+আনা এর ভেতরে OneNote যে `.onetoc2` ফাইলটি রাখে, তা দেখে নোটবুকটি চিনে নেয়। আলাদাভাবে ফেলা `.one` বিভাগগুলো
+নিজেদের একটি নোটবুক তৈরি করে। সবকিছু পৃষ্ঠাতেই পড়া হয়; OneNote ইনস্টল থাকার দরকার নেই,
+আর নোটবুকটি শুধু পড়া হয়, কখনো লেখা হয় না।
+
+- **এটি যা হয়ে ওঠে**: প্রতিটি বিভাগ একটি ফোল্ডার, প্রতিটি পৃষ্ঠা তাতে একটি নোট, নাম এর
+  শিরোনামে, আর উপপৃষ্ঠা তার পৃষ্ঠার নামের ফোল্ডারে। শিরোনাম এবং পৃষ্ঠাটি তৈরি ও শেষ বদলানোর
+  তারিখ front matter-এ যায়। ছবি ও সংযুক্ত ফাইল নোটের পাশে `assets/<নোটের নাম>/`-এ সংরক্ষিত
+  হয়, এডিটর যেভাবে নিজের ছবি রাখে।
+- **একটি পৃষ্ঠা যা রাখে**: শিরোনাম, অনুচ্ছেদ ও লাইন ব্রেক, বোল্ড, ইটালিক, আন্ডারলাইন,
+  স্ট্রাইকথ্রু, সুপারস্ক্রিপ্ট ও সাবস্ক্রিপ্ট, টেক্সটের রং ও হাইলাইট, লিংক, বুলেট ও নম্বরযুক্ত তালিকা
+  নেস্টিংসহ, করণীয় ট্যাগ টাস্ক হিসেবে, টেবিল, ছবি ও ফাইল। নোটবুকের অন্য পৃষ্ঠার লিংক এর
+  নোটে নিয়ে যায়। OneNote টেক্সটকে পৃষ্ঠার যেকোনো জায়গায় থাকতে দেয়; নোট একটি লাইনের পর
+  আরেকটি লাইন, তাই এর আউটলাইন আসে ওপর থেকে নিচে, তারপর বাঁ থেকে ডানে। ইঙ্ক, সমীকরণ এবং
+  করণীয় ছাড়া অন্য ট্যাগ বাদ যায়, রিসাইকেল বিনও; ওয়েব থেকে পেস্ট করা টেক্সটের সঙ্গে আসা প্রায়
+  কালো ও সাদা রং হিসেবে রাখা হয় না।
+- **শুধু পড়ার জন্য**: নোটগুলো মেমোরি থেকে, যেকোনো ব্রাউজারে খোলে, আর কোথাও কিছু লেখা হয় না।
+  রাখতে চাইলে সেটিংসের **ZIP ডাউনলোড করুন** সেগুলোকে একটি আর্কাইভে প্যাক করে, যা যেখানে থাকার কথা
+  সেখানে খুলে রাখা যায় বা আবার আর্কাইভ হিসেবে খোলা যায়। এডিটর যে ফাইল দেখায় শুধু সেগুলোই আসে:
+  নোট, ছবি, PDF — সংযুক্ত Word ফাইল বা EMF ছবি বাদ থাকে।
+- পাসওয়ার্ড দিয়ে সুরক্ষিত বিভাগ, বা OneNote 2007-এর বিভাগ, পড়া যায় না; বাকিগুলো আসে, আর
+  এডিটর জানায় কোনগুলো আসেনি।
+
 ## Markdown Knowledge Base: Chrome এক্সটেনশন
 
 `npm run build` আরও লেখে `build/extension/`: Chrome এক্সটেনশন হিসেবে এডিটর, এবং Chrome Web
@@ -528,6 +555,8 @@ Markdown-এ একটি একক খালি লাইন শুধু দ�
   থেকে আলাদা `.meta.json`-এ রাখা — দেখুন "[ট্যাগ](#ট্যাগ)"।
 - **HTML-এ রপ্তানি করুন**: ফোল্ডার, বা এর একটি সাবফোল্ডার, অনুসন্ধানসহ একটি স্ট্যাটিক
   সাইট হিসেবে, বা একটি পৃষ্ঠা হিসেবে — দেখুন "[HTML-এ রপ্তানি করুন](#html-এ-রপ্তানি-করুন)"।
+- **একটি OneNote নোটবুক** OneNote ছাড়াই নোটের ফোল্ডার হয়ে যায় — দেখুন
+  "[OneNote নোটবুক](#onenote-নোটবুক)"।
 - **একটি একক নোট** ইনস্টল করা অ্যাপে Finder বা Explorer থেকে খোলা, অথবা উইন্ডোতে ড্রপ করা
   — দেখুন "[একটি একক নোট](#একটি-একক-নোট)"।
 - **ব্রাউজারে রাখা নোট** যেখানে এটি ডিস্কে লিখতে পারে না — Safari, Firefox, ফোন, iPad —
@@ -723,6 +752,8 @@ src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
 src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
 src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
+src/onenote.ts      OneNote sections (.one) read: the revision store or the package of data elements, pages
+src/onenote-md.ts   a OneNote notebook → notes: folders, front matter, Markdown, pictures and files beside them
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -750,7 +781,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, OneNote, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/

@@ -29,7 +29,13 @@ export class FileTree {
   /** The images folder's name from the settings, closed the same way as `assets`. */
   private imagesName = ASSETS_DIR;
   private active: string | null = null;
+  /** The folder tapped last: New note and New folder above the tree create in it. */
+  private folder: string | null = null;
   private filter = '';
+  /** A finger held on a row, which opens the menu Safari on a tablet never sends. */
+  private press: { timer: number; x: number; y: number } | null = null;
+  /** The menu opened under a finger: the click it ends with is not a tap. */
+  private pressed = false;
 
   constructor(
     private readonly root: HTMLElement,
@@ -38,6 +44,10 @@ export class FileTree {
   ) {
     this.root.addEventListener('click', this.onClick);
     this.root.addEventListener('contextmenu', this.onContextMenu);
+    this.root.addEventListener('pointerdown', this.onPointerDown);
+    this.root.addEventListener('pointermove', this.onPointerMove);
+    this.root.addEventListener('pointerup', this.cancelPress);
+    this.root.addEventListener('pointercancel', this.cancelPress);
   }
 
   setEntries(entries: TreeEntry[]): void {
@@ -100,7 +110,15 @@ export class FileTree {
     this.render();
   }
 
+  /** Where a new note or folder goes: the folder tapped last, while it is there, or the open note's. */
+  targetDir(): string {
+    const folder = this.folder !== null ? this.find(this.folder) : null;
+    return folder?.kind === 'dir' ? folder.path : dirOf(this.active ?? '');
+  }
+
   setActive(path: string | null): void {
+    // Another note opened: new notes go beside it again.
+    if (path !== this.active) this.folder = null;
     this.active = path;
     this.expandTo(path);
     this.render();
@@ -145,6 +163,7 @@ export class FileTree {
       const row = document.createElement('div');
       row.className = `tree-item tree-item--${entry.kind}`;
       if (entry.path === this.active) row.classList.add('tree-item--active');
+      if (entry.path === this.folder) row.classList.add('tree-item--target');
       row.style.paddingInlineStart = `${8 + depth * 14}px`;
       row.dataset['path'] = entry.path;
       row.dataset['kind'] = entry.kind;
@@ -171,20 +190,57 @@ export class FileTree {
   }
 
   private readonly onClick = (event: MouseEvent): void => {
+    if (this.pressed) {
+      this.pressed = false;
+      return;
+    }
     const row = (event.target as HTMLElement | null)?.closest<HTMLElement>('.tree-item');
     if (!row) return;
     const path = row.dataset['path'] ?? '';
     if (row.dataset['kind'] === 'dir') {
+      this.folder = path;
       this.setOpen(path, !this.isOpen(path));
       this.render();
       return;
     }
+    this.folder = null;
     this.host.onOpen(path);
   };
 
   private readonly onContextMenu = (event: MouseEvent): void => {
     event.preventDefault();
-    const row = (event.target as HTMLElement | null)?.closest<HTMLElement>('.tree-item');
+    // Chrome on Android sends one for a held finger too, once the menu is already open.
+    this.cancelPress();
+    if (this.pressed) return;
+    this.openMenu(event.target, event.clientX, event.clientY);
+  };
+
+  private readonly onPointerDown = (event: PointerEvent): void => {
+    this.pressed = false;
+    this.cancelPress();
+    if (event.pointerType !== 'touch' && event.pointerType !== 'pen') return;
+    const { target, clientX: x, clientY: y } = event;
+    const timer = window.setTimeout(() => {
+      this.press = null;
+      this.pressed = true;
+      this.openMenu(target, x, y);
+    }, LONG_PRESS_MS);
+    this.press = { timer, x, y };
+  };
+
+  /** A finger that moves is scrolling the tree, not asking for the menu. */
+  private readonly onPointerMove = (event: PointerEvent): void => {
+    if (this.press && Math.hypot(event.clientX - this.press.x, event.clientY - this.press.y) > 10) this.cancelPress();
+  };
+
+  private readonly cancelPress = (): void => {
+    if (!this.press) return;
+    window.clearTimeout(this.press.timer);
+    this.press = null;
+  };
+
+  private openMenu(target: EventTarget | null, x: number, y: number): void {
+    const row = target instanceof Element ? target.closest<HTMLElement>('.tree-item') : null;
     const entry = row ? this.find(row.dataset['path'] ?? '') : null;
     const dir = !entry ? '' : entry.kind === 'dir' ? entry.path : dirOf(entry.path);
     const editable = this.host.canEdit();
@@ -203,8 +259,8 @@ export class FileTree {
       items.push({ label: t('tree', 'Export to HTML…'), action: () => this.host.onExport(dir), disabled: !this.host.canExport() });
     }
     if (editable && entry) items.push({ label: t('tree', 'Delete'), action: () => this.host.onDelete(entry), danger: true });
-    menu(event.clientX, event.clientY, items);
-  };
+    menu(x, y, items);
+  }
 
   find(path: string): TreeEntry | null {
     const walk = (entries: readonly TreeEntry[]): TreeEntry | null => {
@@ -244,6 +300,9 @@ export class FileTree {
     return out;
   }
 }
+
+/** How long a finger is held on a row for its menu, as long as iOS waits for its own. */
+const LONG_PRESS_MS = 500;
 
 function dirPaths(entries: readonly TreeEntry[]): string[] {
   const out: string[] = [];

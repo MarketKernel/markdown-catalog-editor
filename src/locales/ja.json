@@ -74,7 +74,14 @@
     "\"{name}\" is copied into this browser": "「{name}」はこのブラウザにコピーされました",
     "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "「{name}」はこのブラウザにコピーされています。容量が不足すると消去されることがあるため、ときどき設定から ZIP アーカイブをダウンロードしてください",
     "Could not make the ZIP archive: {reason}": "ZIP アーカイブを作成できませんでした：{reason}",
-    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "ブラウザは容量が不足するとノートを消去することがあります。ときどき設定から ZIP アーカイブをダウンロードしてください"
+    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "ブラウザは容量が不足するとノートを消去することがあります。ときどき設定から ZIP アーカイブをダウンロードしてください",
+    "Reading the OneNote notebook…": "OneNote ノートブックを読み込んでいます…",
+    "{count} sections could not be read: {names}": {
+      "other": "{count} 個のセクションを読み込めませんでした: {names}"
+    },
+    "{count} pages of OneNote, open read-only: download them as a ZIP archive from the settings": {
+      "other": "OneNote のページ {count} 件を読み取り専用で開きました。保存するには、設定から ZIP アーカイブをダウンロードしてください"
+    }
   },
   "gate": {
     "This browser cannot write files to disk: the folder will open read-only, and saving will offer to download the modified file. Full editing works in Chrome, Edge and Arc on a computer.": "このブラウザはディスクにファイルを書き込めません。フォルダは読み取り専用で開かれ、保存時には変更したファイルのダウンロードを提案します。すべての編集機能はパソコンの Chrome、Edge、Arc で利用できます。",
@@ -98,7 +105,10 @@
     "Open ZIP archive": "ZIP アーカイブを開く",
     "or drag a folder or a ZIP archive here": "またはフォルダか ZIP アーカイブをここにドラッグ",
     "New folder": "新規フォルダ",
-    "Notes": "ノート"
+    "Notes": "ノート",
+    "No OneNote sections in \"{name}\"": "「{name}」に OneNote のセクションがありません",
+    "Reading OneNote sections: {done} of {total}": "OneNote のセクションを読み込み中: {done}/{total}",
+    "Open OneNote notebook": "OneNote ノートブックを開く"
   },
   "dialog": {
     "Note not found": "ノートが見つかりません",
@@ -142,7 +152,11 @@
     "This is not a ZIP archive, or it is damaged": "ZIP アーカイブではないか、破損しています",
     "The ZIP archive is too large: over 4 GB or 65 535 files": "ZIP アーカイブが大きすぎます：4 GB または 65,535 ファイルを超えています",
     "The ZIP archive is encrypted: {path}": "ZIP アーカイブは暗号化されています：{path}",
-    "The ZIP archive is compressed in a way this editor cannot read: {path}": "ZIP アーカイブがこのエディターで読み取れない方式で圧縮されています：{path}"
+    "The ZIP archive is compressed in a way this editor cannot read: {path}": "ZIP アーカイブがこのエディターで読み取れない方式で圧縮されています：{path}",
+    "The OneNote file is damaged": "OneNote ファイルが破損しています",
+    "The section is protected with a password": "このセクションはパスワードで保護されています",
+    "This is not a OneNote section": "これは OneNote のセクションではありません",
+    "Only sections of OneNote 2010 and later can be opened": "OneNote 2010 以降のセクションのみ開けます"
   },
   "palette": {
     "Red": "赤",

@@ -60,7 +60,20 @@
     "\"{name}\" is copied into this browser": "Папка «{name}» скопирована в этот браузер",
     "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "Папка «{name}» скопирована в этот браузер, а он может удалить её при нехватке места: время от времени скачивайте ZIP-архив в настройках",
     "Could not make the ZIP archive: {reason}": "Не удалось создать ZIP-архив: {reason}",
-    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "Браузер может удалить заметки при нехватке места: время от времени скачивайте ZIP-архив в настройках"
+    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "Браузер может удалить заметки при нехватке места: время от времени скачивайте ZIP-архив в настройках",
+    "Reading the OneNote notebook…": "Чтение блокнота OneNote…",
+    "{count} sections could not be read: {names}": {
+      "one": "Не удалось прочитать {count} раздел: {names}",
+      "few": "Не удалось прочитать {count} раздела: {names}",
+      "many": "Не удалось прочитать {count} разделов: {names}",
+      "other": "Не удалось прочитать {count} раздела: {names}"
+    },
+    "{count} pages of OneNote, open read-only: download them as a ZIP archive from the settings": {
+      "one": "{count} страница OneNote открыта только для чтения: чтобы сохранить её, скачайте ZIP-архив в настройках",
+      "few": "{count} страницы OneNote открыты только для чтения: чтобы сохранить их, скачайте ZIP-архив в настройках",
+      "many": "{count} страниц OneNote открыто только для чтения: чтобы сохранить их, скачайте ZIP-архив в настройках",
+      "other": "{count} страницы OneNote открыты только для чтения: чтобы сохранить их, скачайте ZIP-архив в настройках"
+    }
   },
   "gate": {
     "Drag a folder or a note": "Перетащите папку или заметку",
@@ -84,7 +97,10 @@
     "Open ZIP archive": "Открыть ZIP-архив",
     "or drag a folder or a ZIP archive here": "или перетащите папку или ZIP-архив сюда",
     "New folder": "Новая папка",
-    "Notes": "Заметки"
+    "Notes": "Заметки",
+    "No OneNote sections in \"{name}\"": "В «{name}» нет разделов OneNote",
+    "Reading OneNote sections: {done} of {total}": "Чтение разделов OneNote: {done} из {total}",
+    "Open OneNote notebook": "Открыть блокнот OneNote"
   },
   "dialog": {
     "Note not found": "Заметка не найдена",
@@ -128,7 +144,11 @@
     "This is not a ZIP archive, or it is damaged": "Это не ZIP-архив или он повреждён",
     "The ZIP archive is too large: over 4 GB or 65 535 files": "ZIP-архив слишком большой: больше 4 ГБ или 65 535 файлов",
     "The ZIP archive is encrypted: {path}": "ZIP-архив зашифрован: {path}",
-    "The ZIP archive is compressed in a way this editor cannot read: {path}": "ZIP-архив сжат способом, который редактор не может прочитать: {path}"
+    "The ZIP archive is compressed in a way this editor cannot read: {path}": "ZIP-архив сжат способом, который редактор не может прочитать: {path}",
+    "The OneNote file is damaged": "Файл OneNote повреждён",
+    "The section is protected with a password": "Раздел защищён паролем",
+    "This is not a OneNote section": "Это не раздел OneNote",
+    "Only sections of OneNote 2010 and later can be opened": "Можно открыть только разделы OneNote 2010 и новее"
   },
   "palette": {
     "Red": "Красный",

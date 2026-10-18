@@ -33,11 +33,15 @@
       <button id="open-folder" class="button button--primary" type="button"><span data-i18n="gate">Open folder</span> <span class="arrow">&rarr;</span></button>
       <!-- Where notes are kept inside the browser (stored.ts): main.ts shows it. -->
       <button id="open-zip" class="button" type="button" hidden><span data-i18n="gate">Open ZIP archive</span></button>
+      <!-- A OneNote notebook, made into a folder of notes (onenote.ts, onenote-md.ts). -->
+      <button id="open-onenote" class="button" type="button"><span data-i18n="gate">Open OneNote notebook</span></button>
     </div>
     <p id="gate-hint" class="gate-hint" data-i18n="gate">or drag a folder here</p>
     <p id="gate-hint-zip" class="gate-hint" data-i18n="gate" hidden>or drag a folder or a ZIP archive here</p>
     <input id="folder-picker" type="file" webkitdirectory multiple hidden>
     <input id="zip-picker" type="file" accept=".zip,application/zip" hidden>
+    <input id="onenote-picker" type="file" webkitdirectory multiple hidden>
+    <p id="gate-progress" class="gate-hint" aria-live="polite" hidden></p>
     <p id="gate-error" class="gate-error" aria-live="polite"></p>
     <p class="gate-version" data-i18n="gate">Version <span id="version" data-slot="version"></span></p>
     <!-- The installed app, when a new version is waiting: main.ts fills it in. -->

@@ -54,7 +54,16 @@
     "\"{name}\" is copied into this browser": "“{name}” এই ব্রাউজারে কপি হয়েছে",
     "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "“{name}” এই ব্রাউজারে কপি হয়েছে, জায়গা কম পড়লে ব্রাউজার এটি মুছে দিতে পারে: মাঝে মাঝে সেটিংস থেকে একটি ZIP আর্কাইভ ডাউনলোড করে নিন",
     "Could not make the ZIP archive: {reason}": "ZIP আর্কাইভ তৈরি করা যায়নি: {reason}",
-    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "জায়গা কম পড়লে ব্রাউজার নোট মুছে দিতে পারে: মাঝে মাঝে সেটিংস থেকে একটি ZIP আর্কাইভ ডাউনলোড করে নিন"
+    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "জায়গা কম পড়লে ব্রাউজার নোট মুছে দিতে পারে: মাঝে মাঝে সেটিংস থেকে একটি ZIP আর্কাইভ ডাউনলোড করে নিন",
+    "Reading the OneNote notebook…": "OneNote নোটবুক পড়া হচ্ছে…",
+    "{count} sections could not be read: {names}": {
+      "one": "{count}টি বিভাগ পড়া যায়নি: {names}",
+      "other": "{count}টি বিভাগ পড়া যায়নি: {names}"
+    },
+    "{count} pages of OneNote, open read-only: download them as a ZIP archive from the settings": {
+      "one": "{count}টি OneNote পৃষ্ঠা শুধু পড়ার জন্য খোলা হয়েছে: রাখতে চাইলে সেটিংস থেকে একটি ZIP আর্কাইভ ডাউনলোড করুন",
+      "other": "{count}টি OneNote পৃষ্ঠা শুধু পড়ার জন্য খোলা হয়েছে: রাখতে চাইলে সেটিংস থেকে একটি ZIP আর্কাইভ ডাউনলোড করুন"
+    }
   },
   "gate": {
     "Version {version}": "সংস্করণ {version}",
@@ -78,7 +87,10 @@
     "Open ZIP archive": "ZIP আর্কাইভ খুলুন",
     "or drag a folder or a ZIP archive here": "অথবা এখানে একটি ফোল্ডার বা ZIP আর্কাইভ টেনে আনুন",
     "New folder": "নতুন ফোল্ডার",
-    "Notes": "নোট"
+    "Notes": "নোট",
+    "No OneNote sections in \"{name}\"": "“{name}”-এ OneNote-এর কোনো বিভাগ নেই",
+    "Reading OneNote sections: {done} of {total}": "OneNote বিভাগ পড়া হচ্ছে: {total}-এর মধ্যে {done}",
+    "Open OneNote notebook": "OneNote নোটবুক খুলুন"
   },
   "dialog": {
     "Note not found": "নোট পাওয়া যায়নি",
@@ -122,7 +134,11 @@
     "This is not a ZIP archive, or it is damaged": "এটি ZIP আর্কাইভ নয়, অথবা এটি নষ্ট হয়ে গেছে",
     "The ZIP archive is too large: over 4 GB or 65 535 files": "ZIP আর্কাইভটি অনেক বড়: 4 GB বা 65535 ফাইলের বেশি",
     "The ZIP archive is encrypted: {path}": "ZIP আর্কাইভটি এনক্রিপ্ট করা: {path}",
-    "The ZIP archive is compressed in a way this editor cannot read: {path}": "ZIP আর্কাইভটি এমনভাবে সংকুচিত যা এই এডিটর পড়তে পারে না: {path}"
+    "The ZIP archive is compressed in a way this editor cannot read: {path}": "ZIP আর্কাইভটি এমনভাবে সংকুচিত যা এই এডিটর পড়তে পারে না: {path}",
+    "The OneNote file is damaged": "OneNote ফাইলটি নষ্ট",
+    "The section is protected with a password": "বিভাগটি পাসওয়ার্ড দিয়ে সুরক্ষিত",
+    "This is not a OneNote section": "এটি OneNote-এর বিভাগ নয়",
+    "Only sections of OneNote 2010 and later can be opened": "শুধু OneNote 2010 ও পরবর্তী সংস্করণের বিভাগ খোলা যায়"
   },
   "palette": {
     "Red": "লাল",

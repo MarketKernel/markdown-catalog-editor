@@ -89,7 +89,24 @@
     "\"{name}\" is copied into this browser": "نُسخ «{name}» إلى هذا المتصفح",
     "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "نُسخ «{name}» إلى هذا المتصفح، وقد يمسحه عند نفاد المساحة: نزّل أرشيف ZIP من الإعدادات بين الحين والآخر",
     "Could not make the ZIP archive: {reason}": "تعذّر إنشاء أرشيف ZIP: {reason}",
-    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "قد يمسح المتصفح الملاحظات عند نفاد المساحة: نزّل أرشيف ZIP من الإعدادات بين الحين والآخر"
+    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "قد يمسح المتصفح الملاحظات عند نفاد المساحة: نزّل أرشيف ZIP من الإعدادات بين الحين والآخر",
+    "Reading the OneNote notebook…": "جارٍ قراءة دفتر ملاحظات OneNote…",
+    "{count} sections could not be read: {names}": {
+      "zero": "تعذّرت قراءة {count} قسم: {names}",
+      "one": "تعذّرت قراءة {count} قسم: {names}",
+      "two": "تعذّرت قراءة {count} قسمين: {names}",
+      "few": "تعذّرت قراءة {count} أقسام: {names}",
+      "many": "تعذّرت قراءة {count} قسمًا: {names}",
+      "other": "تعذّرت قراءة {count} قسم: {names}"
+    },
+    "{count} pages of OneNote, open read-only: download them as a ZIP archive from the settings": {
+      "zero": "{count} صفحة من OneNote مفتوحة للقراءة فقط: للاحتفاظ بها، نزّل أرشيف ZIP من الإعدادات",
+      "one": "{count} صفحة من OneNote مفتوحة للقراءة فقط: للاحتفاظ بها، نزّل أرشيف ZIP من الإعدادات",
+      "two": "{count} صفحتان من OneNote مفتوحتان للقراءة فقط: للاحتفاظ بهما، نزّل أرشيف ZIP من الإعدادات",
+      "few": "{count} صفحات من OneNote مفتوحة للقراءة فقط: للاحتفاظ بها، نزّل أرشيف ZIP من الإعدادات",
+      "many": "{count} صفحة من OneNote مفتوحة للقراءة فقط: للاحتفاظ بها، نزّل أرشيف ZIP من الإعدادات",
+      "other": "{count} صفحة من OneNote مفتوحة للقراءة فقط: للاحتفاظ بها، نزّل أرشيف ZIP من الإعدادات"
+    }
   },
   "gate": {
     "Version {version}": "الإصدار {version}",
@@ -113,7 +130,10 @@
     "Open ZIP archive": "فتح أرشيف ZIP",
     "or drag a folder or a ZIP archive here": "أو اسحب مجلدًا أو أرشيف ZIP إلى هنا",
     "New folder": "مجلد جديد",
-    "Notes": "الملاحظات"
+    "Notes": "الملاحظات",
+    "No OneNote sections in \"{name}\"": "لا توجد أقسام OneNote في «{name}»",
+    "Reading OneNote sections: {done} of {total}": "قراءة أقسام OneNote: {done} من {total}",
+    "Open OneNote notebook": "فتح دفتر OneNote"
   },
   "dialog": {
     "Note not found": "الملاحظة غير موجودة",
@@ -157,7 +177,11 @@
     "This is not a ZIP archive, or it is damaged": "هذا ليس أرشيف ZIP، أو أنه تالف",
     "The ZIP archive is too large: over 4 GB or 65 535 files": "أرشيف ZIP كبير جدًا: يتجاوز 4 جيجابايت أو 65535 ملفًا",
     "The ZIP archive is encrypted: {path}": "أرشيف ZIP مشفّر: {path}",
-    "The ZIP archive is compressed in a way this editor cannot read: {path}": "أرشيف ZIP مضغوط بطريقة لا يستطيع هذا المحرر قراءتها: {path}"
+    "The ZIP archive is compressed in a way this editor cannot read: {path}": "أرشيف ZIP مضغوط بطريقة لا يستطيع هذا المحرر قراءتها: {path}",
+    "The OneNote file is damaged": "ملف OneNote تالف",
+    "The section is protected with a password": "القسم محمي بكلمة مرور",
+    "This is not a OneNote section": "هذا ليس قسمًا من OneNote",
+    "Only sections of OneNote 2010 and later can be opened": "يمكن فتح أقسام OneNote 2010 والإصدارات الأحدث فقط"
   },
   "palette": {
     "Red": "أحمر",

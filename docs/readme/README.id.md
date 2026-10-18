@@ -145,6 +145,36 @@ namanya, atau dihapus di sampingnya, dan tidak ada gambar dari
 foldernya, tag, atau ekspor: itu semua datang dengan membuka foldernya. Catatan yang dibuka
 dengan cara ini tidak ditambahkan ke folder terbaru.
 
+### Satu buku catatan OneNote
+
+Sebuah buku catatan OneNote — OneNote 2010–2016 atau OneNote untuk Windows, disimpan di disk
+atau disinkronkan lewat OneDrive atau SharePoint — masuk sebagai folder catatan: **Buka buku
+catatan OneNote** di layar awal memilih foldernya, dan **Buka folder** atau menyeretnya ke
+jendela mengenalinya dari `.onetoc2` yang disimpan OneNote di dalamnya. Bagian `.one` yang dijatuhkan sendiri
+membentuk buku catatan tersendiri. Semuanya dibaca di dalam halaman; OneNote tidak perlu
+terpasang, dan buku catatannya sendiri hanya dibaca, tidak pernah ditulis.
+
+- **Menjadi apa**: setiap bagian menjadi folder, setiap halaman menjadi catatan di dalamnya,
+  bernama sesuai judulnya, dan subhalaman dalam folder yang bernama sesuai halamannya. Judul
+  serta tanggal halaman dibuat dan terakhir diubah masuk ke front matter. Gambar dan file
+  terlampir disimpan di samping catatan dalam `assets/<nama catatan>/`, seperti editor menyimpan
+  gambarnya sendiri.
+- **Apa yang dipertahankan sebuah halaman**: judul, paragraf dan pemisah baris, tebal, miring,
+  garis bawah, coret, superskrip dan subskrip, warna dan sorotan teks, tautan, daftar berpoin
+  dan bernomor beserta tingkatannya, tag tugas sebagai tugas, tabel, gambar, dan file. Tautan
+  ke halaman lain di buku catatan mengarah ke catatannya. OneNote membiarkan teks berada di
+  mana saja pada halaman; sebuah catatan adalah satu baris demi satu baris, jadi garis
+  besarnya muncul dari atas ke bawah, lalu dari kiri ke kanan. Tinta, persamaan, dan tag selain
+  tugas dilewati, begitu juga tempat sampah; warna hampir hitam dan putih yang terbawa teks
+  yang ditempel dari web tidak dipertahankan sebagai warna.
+- **Hanya-baca**: catatan dibuka dari memori, di peramban mana pun, dan tidak ada yang ditulis ke
+  mana pun. Untuk menyimpannya, **Unduh ZIP** di pengaturan mengemasnya ke dalam arsip, untuk
+  diekstrak di tempat catatan itu seharusnya berada atau dibuka lagi sebagai arsip. Hanya file
+  yang ditampilkan editor yang ikut: catatan, gambar, PDF — file Word terlampir atau gambar EMF
+  tidak ikut.
+- Bagian yang dilindungi kata sandi, atau bagian dari OneNote 2007, tidak dapat dibaca; yang
+  lain masuk, dan editor menyebutkan mana yang tidak.
+
 ## Markdown Knowledge Base: ekstensi Chrome
 
 `npm run build` juga menulis `build/extension/`: editor sebagai ekstensi Chrome, dan
@@ -563,6 +593,8 @@ mengikuti sistem, dan situs tetap terbaca dan bertaut dengan cara yang sama.
   terpisah dari catatan dalam `.meta.json` — lihat "[Tag](#tag)".
 - **Ekspor ke HTML**: folder, atau salah satu subfoldernya, sebagai situs statis dengan
   pencarian, atau sebagai satu halaman — lihat "[Ekspor ke HTML](#ekspor-ke-html)".
+- **Satu buku catatan OneNote** dijadikan folder catatan, tanpa OneNote — lihat
+  "[Satu buku catatan OneNote](#satu-buku-catatan-onenote)".
 - **Satu catatan tunggal** yang dibuka dari Finder atau Explorer dalam aplikasi yang
   terpasang, atau dijatuhkan pada jendela — lihat "[Satu catatan tunggal](#satu-catatan-tunggal)".
 - **Catatan yang disimpan di peramban** ketika tidak bisa menulis ke disk — Safari, Firefox,
@@ -774,6 +806,8 @@ src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
 src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
 src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
+src/onenote.ts      OneNote sections (.one) read: the revision store or the package of data elements, pages
+src/onenote-md.ts   a OneNote notebook → notes: folders, front matter, Markdown, pictures and files beside them
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -801,7 +835,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, OneNote, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/

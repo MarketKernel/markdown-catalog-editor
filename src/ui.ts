@@ -148,17 +148,18 @@ export function menu(x: number, y: number, items: MenuItem[]): void {
   list.style.left = `${Math.min(x, window.innerWidth - width - 8)}px`;
   list.style.top = `${Math.min(y, window.innerHeight - height - 8)}px`;
 
+  // Pointer events, not mouse ones: iOS sends no mousedown for a tap on what cannot be clicked.
   const dismiss = (event: Event): void => {
     if (event.target instanceof Node && list.contains(event.target)) return;
     list.remove();
-    document.removeEventListener('mousedown', dismiss, true);
+    document.removeEventListener('pointerdown', dismiss, true);
     document.removeEventListener('keydown', onKey, true);
   };
   const onKey = (event: KeyboardEvent): void => {
     if (event.key === 'Escape') dismiss(event);
   };
   window.setTimeout(() => {
-    document.addEventListener('mousedown', dismiss, true);
+    document.addEventListener('pointerdown', dismiss, true);
     document.addEventListener('keydown', onKey, true);
   });
 }

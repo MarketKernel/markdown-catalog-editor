@@ -709,6 +709,38 @@ await scenario('Note\n', async (b) => {
   eq('the old path is gone', (await stored())['sub/B.md'], undefined);
   eq('the open note still shows them', await b.evaluate(bar), ['#later', '+']);
 
+  // Safari on an iPad sends no contextmenu: a finger held on a row opens the menu.
+  const touch = (type, dx = 0) => b.evaluate(`(() => {
+    const row = document.querySelector('#tree .tree-item[data-path="moved"]');
+    const box = row.getBoundingClientRect();
+    row.dispatchEvent(new PointerEvent(${JSON.stringify(type)}, { bubbles: true, pointerType: 'touch', clientX: box.left + 20 + ${dx}, clientY: box.top + 5 }));
+  })()`);
+  const menuItems = `[...document.querySelectorAll('.context-item')].map((n) => n.textContent)`;
+  const mark = `document.querySelector('#tree .tree-item[data-path="moved"] .tree-mark').textContent`;
+  await touch('pointerdown');
+  await b.sleep(700);
+  eq('a held finger opens the folder\'s menu', await b.evaluate(menuItems), ['New note', 'New folder', 'Rename', 'Copy path', 'Export to HTML…', 'Delete']);
+  await touch('pointerup');
+  await b.evaluate(`document.querySelector('#tree .tree-item[data-path="moved"]').click()`);
+  eq('the click it ends with leaves the folder open', await b.evaluate(mark), '▾');
+  await b.evaluate(`document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, pointerType: 'touch' }))`);
+  eq('a touch elsewhere closes the menu', await b.evaluate(menuItems), []);
+  await touch('pointerdown');
+  await touch('pointermove', 30);
+  await b.sleep(700);
+  eq('a finger that scrolls opens nothing', await b.evaluate(menuItems), []);
+  await touch('pointercancel', 30);
+
+  // A tapped folder is where New note above the tree creates.
+  await b.evaluate(`document.querySelector('#tree .tree-item[data-path="moved"]').click()`);
+  eq('the tapped folder is marked', await b.evaluate(`document.querySelector('#tree .tree-item--target')?.dataset.path`), 'moved');
+  await b.evaluate(`document.getElementById('new-note').click()`);
+  await b.sleep(100);
+  await b.evaluate(`(() => { const input = document.querySelector('.dialog-input'); input.value = 'Fresh'; input.form.requestSubmit(); })()`);
+  await b.until(`document.getElementById('status-path').textContent === 'moved/Fresh.md'`);
+  eq('the new note lands in it', await b.evaluate(`window.__fs.has('moved/Fresh.md')`), true);
+  eq('and the mark goes once a note opens', await b.evaluate(`document.querySelector('#tree .tree-item--target')`), null);
+
   const height = `document.getElementById('tags').offsetHeight`;
   const before = await b.evaluate(height);
   await b.drag('#tags-resizer', 50);

@@ -148,6 +148,36 @@ gibt es nichts daneben zu erstellen, umzubenennen oder zu löschen, und keine Bi
 Ordner, Tags oder Export: Das kommt mit dem Öffnen des Ordners. Eine so geöffnete Notiz wird
 nicht zu den zuletzt verwendeten Ordnern hinzugefügt.
 
+### Ein OneNote-Notizbuch
+
+Ein OneNote-Notizbuch — OneNote 2010–2016 oder OneNote für Windows, auf einer Festplatte abgelegt
+oder über OneDrive oder SharePoint synchronisiert — kommt als Ordner voller Notizen herein: **OneNote-Notizbuch
+öffnen** auf dem Startbildschirm wählt seinen Ordner, und **Ordner öffnen** oder das Ziehen auf das
+Fenster erkennt eines an der `.onetoc2`, die OneNote darin ablegt. `.one`-Abschnitte, die einzeln
+abgelegt werden, bilden ein eigenes Notizbuch. Alles wird in der Seite gelesen; OneNote muss nicht
+installiert sein, und das Notizbuch selbst wird nur gelesen, nie geschrieben.
+
+- **Was daraus wird**: jeder Abschnitt ein Ordner, jede Seite eine Notiz darin, benannt nach ihrem
+  Titel, eine Unterseite in einem Ordner, der nach ihrer Seite benannt ist. Der Titel und die Daten,
+  an denen die Seite erstellt und zuletzt geändert wurde, kommen in den Front Matter. Bilder und
+  angehängte Dateien werden neben der Notiz in `assets/<Notizname>/` gespeichert, so wie der Editor
+  seine eigenen Bilder ablegt.
+- **Was eine Seite behält**: Überschriften, Absätze und Zeilenumbrüche, fett, kursiv, unterstrichen,
+  durchgestrichen, hoch- und tiefgestellt, die Textfarbe und Hervorhebung, Links, Aufzählungen und
+  nummerierte Listen mit ihrer Verschachtelung, To-do-Tags als Aufgaben, Tabellen, Bilder und
+  Dateien. Ein Link auf eine andere Seite des Notizbuchs führt zu ihrer Notiz. OneNote lässt Text
+  überall auf einer Seite stehen; eine Notiz ist eine Zeile nach der anderen, daher kommen die
+  Gliederungen von oben nach unten, dann von links nach rechts. Freihandeingaben, Formeln und
+  andere Tags als To-dos bleiben draußen, ebenso der Papierkorb; das fast Schwarz und das Weiß, die
+  aus dem Web eingefügter Text mitbringt, werden nicht als Farben übernommen.
+- **Schreibgeschützt**: Die Notizen öffnen sich aus dem Speicher, in jedem Browser, und nichts
+  wird irgendwohin geschrieben. Um sie zu behalten, packt **ZIP herunterladen** in den
+  Einstellungen sie in ein Archiv, das dort entpackt werden kann, wo sie liegen sollen, oder als
+  solches wieder geöffnet wird. Nur die Dateien, die der Editor zeigt, kommen mit: Notizen,
+  Bilder, PDFs — eine angehängte Word-Datei oder ein Bild als EMF bleibt draußen.
+- Ein Abschnitt mit Passwortschutz oder einer aus OneNote 2007 lässt sich nicht lesen; die anderen
+  kommen herein, und der Editor sagt, welche nicht.
+
 ## Markdown Knowledge Base: die Chrome-Erweiterung
 
 `npm run build` schreibt auch `build/extension/`: den Editor als Chrome-Erweiterung, sowie
@@ -590,6 +620,8 @@ das Design folgt dem System, und die Website liest und verlinkt genauso.
   von den Notizen in `.meta.json` gehalten — siehe „[Tags](#tags)“.
 - **Export nach HTML**: der Ordner, oder einer seiner Unterordner, als statische Website
   mit Suche, oder als eine einzelne Seite — siehe „[Export nach HTML](#export-nach-html)“.
+- **Ein OneNote-Notizbuch**, zu einem Ordner voller Notizen gemacht, ohne OneNote — siehe
+  „[Ein OneNote-Notizbuch](#ein-onenote-notizbuch)“.
 - **Eine einzelne Notiz**, geöffnet aus dem Finder oder Explorer in der installierten App,
   oder auf das Fenster gezogen — siehe „[Eine einzelne Notiz](#eine-einzelne-notiz)“.
 - **Im Browser aufbewahrte Notizen**, wo er nicht auf eine Festplatte schreiben kann — Safari,
@@ -804,6 +836,8 @@ src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
 src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
 src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
+src/onenote.ts      OneNote sections (.one) read: the revision store or the package of data elements, pages
+src/onenote-md.ts   a OneNote notebook → notes: folders, front matter, Markdown, pictures and files beside them
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -831,7 +865,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, OneNote, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/

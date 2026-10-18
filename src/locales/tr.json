@@ -54,7 +54,16 @@
     "Export stopped: {folder} is incomplete": "Dışa aktarma durduruldu: {folder} eksik",
     "Export stopped": "Dışa aktarma durduruldu",
     "Finish what is open first, then open the note again": "Önce açık olanı bitirin, sonra notu yeniden açın",
-    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "Alan azaldığında tarayıcı notları silebilir: arada bir ayarlardan bir ZIP dosyası indirin"
+    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "Alan azaldığında tarayıcı notları silebilir: arada bir ayarlardan bir ZIP dosyası indirin",
+    "Reading the OneNote notebook…": "OneNote not defteri okunuyor…",
+    "{count} sections could not be read: {names}": {
+      "one": "{count} bölüm okunamadı: {names}",
+      "other": "{count} bölüm okunamadı: {names}"
+    },
+    "{count} pages of OneNote, open read-only: download them as a ZIP archive from the settings": {
+      "one": "{count} OneNote sayfası salt okunur açıldı: saklamak için ayarlardan bir ZIP dosyası indirin",
+      "other": "{count} OneNote sayfası salt okunur açıldı: saklamak için ayarlardan bir ZIP dosyası indirin"
+    }
   },
   "gate": {
     "In this browser": "Bu tarayıcıda",
@@ -78,7 +87,10 @@
     "Version {version}": "Sürüm {version}",
     "When Chrome asks, choose \"Allow on every visit\": the folder then stays open when the panel closes.": "Chrome sorduğunda “Her ziyarette izin ver” seçeneğini seçin: panel kapandığında klasör açık kalır.",
     "New folder": "Yeni klasör",
-    "Notes": "Notlar"
+    "Notes": "Notlar",
+    "No OneNote sections in \"{name}\"": "“{name}” içinde OneNote bölümü yok",
+    "Reading OneNote sections: {done} of {total}": "OneNote bölümleri okunuyor: {done}/{total}",
+    "Open OneNote notebook": "OneNote not defterini aç"
   },
   "dialog": {
     "Delete from this browser": "Bu tarayıcıdan sil",
@@ -122,7 +134,11 @@
     "This name cannot be used here: {name}": "Bu ad burada kullanılamaz: {name}",
     "File not found: {path}": "Dosya bulunamadı: {path}",
     "The browser was not allowed to open the folder": "Tarayıcının klasörü açmasına izin verilmedi",
-    "A note opened on its own has no folder around it": "Tek başına açılan bir notun çevresinde klasör yoktur"
+    "A note opened on its own has no folder around it": "Tek başına açılan bir notun çevresinde klasör yoktur",
+    "The OneNote file is damaged": "OneNote dosyası hasarlı",
+    "The section is protected with a password": "Bölüm parolayla korunuyor",
+    "This is not a OneNote section": "Bu bir OneNote bölümü değil",
+    "Only sections of OneNote 2010 and later can be opened": "Yalnızca OneNote 2010 ve sonraki sürümlerin bölümleri açılabilir"
   },
   "palette": {
     "Red": "Kırmızı",

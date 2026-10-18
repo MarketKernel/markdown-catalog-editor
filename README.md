@@ -132,6 +132,34 @@ The note is read and written in place, as in a folder — in Safari and Firefox 
 delete beside it, and no images from its folder, tags or export: those come with opening the
 folder. A note opened this way is not added to the recent folders.
 
+### A OneNote notebook
+
+A notebook of OneNote — OneNote 2010–2016 or OneNote for Windows, kept on a disk or synced
+through OneDrive or SharePoint — comes in as a folder of notes: **Open OneNote notebook** on
+the start screen picks its folder, and **Open folder** or dragging it onto the window
+recognises one by the `.onetoc2` OneNote keeps in it. `.one` sections dropped on their own make
+a notebook of their own. Everything is read in the page; OneNote need not be installed, and
+the notebook itself is only read, never written.
+
+- **What it becomes**: each section a folder, each page a note in it, named after its title,
+  a subpage in a folder named after its page. The title and the dates the page was created
+  and last changed go into the front matter. Pictures and attached files are saved beside
+  the note in `assets/<note name>/`, as the editor keeps its own images.
+- **What a page keeps**: headings, paragraphs and line breaks, bold, italic, underline,
+  strikethrough, superscript and subscript, the text's colour and highlight, links, bulleted
+  and numbered lists with their nesting, to-do tags as tasks, tables, pictures and files. A
+  link to another page of the notebook leads to its note. OneNote lets text stand anywhere on
+  a page; a note is one line after another, so its outlines come top to bottom, then left to
+  right. Ink, equations and other tags than to-dos are left out, and so is the recycle bin;
+  the near-black and white that text pasted from the web brings along are not kept as
+  colours.
+- **Read-only**: the notes open from memory, in any browser, and nothing is written
+  anywhere. To keep them, **Download ZIP** in the settings packs them into an archive, to
+  unpack where they should live or to open again as one. Only the files the editor shows
+  come along: notes, pictures, PDFs — an attached Word file or a picture in EMF stays out.
+- A section protected with a password, or one of OneNote 2007, cannot be read; the others
+  come in, and the editor says which ones did not.
+
 ## Markdown Knowledge Base: the Chrome extension
 
 `npm run build` also writes `build/extension/`: the editor as a Chrome extension, and
@@ -517,6 +545,8 @@ follows the system, and the site reads and links the same.
   in `.meta.json` — see "[Tags](#tags)".
 - **Export to HTML**: the folder, or one of its subfolders, as a static site with search,
   or as one page — see "[Export to HTML](#export-to-html)".
+- **A OneNote notebook** made into a folder of notes, without OneNote — see
+  "[A OneNote notebook](#a-onenote-notebook)".
 - **A single note** opened from the Finder or Explorer in the installed app, or dropped on the
   window — see "[A single note](#a-single-note)".
 - **Notes kept in the browser** where it cannot write to a disk — Safari, Firefox, phones,
@@ -709,6 +739,8 @@ src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
 src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
 src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
+src/onenote.ts      OneNote sections (.one) read: the revision store or the package of data elements, pages
+src/onenote-md.ts   a OneNote notebook → notes: folders, front matter, Markdown, pictures and files beside them
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -736,7 +768,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, OneNote, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/

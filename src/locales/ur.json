@@ -77,7 +77,16 @@
     "\"{name}\" is copied into this browser": "\"{name}\" اس براؤزر میں کاپی ہو گیا",
     "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "\"{name}\" اس براؤزر میں کاپی ہو گیا، جگہ کم ہونے پر براؤزر اسے مٹا سکتا ہے: وقتاً فوقتاً ترتیبات سے ZIP آرکائیو ڈاؤن لوڈ کرتے رہیں",
     "Could not make the ZIP archive: {reason}": "ZIP آرکائیو نہیں بن سکا: {reason}",
-    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "جگہ کم ہونے پر براؤزر نوٹس مٹا سکتا ہے: وقتاً فوقتاً ترتیبات سے ZIP آرکائیو ڈاؤن لوڈ کرتے رہیں"
+    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "جگہ کم ہونے پر براؤزر نوٹس مٹا سکتا ہے: وقتاً فوقتاً ترتیبات سے ZIP آرکائیو ڈاؤن لوڈ کرتے رہیں",
+    "Reading the OneNote notebook…": "OneNote نوٹ بک پڑھی جا رہی ہے…",
+    "{count} sections could not be read: {names}": {
+      "one": "{count} سیکشن پڑھا نہیں جا سکا: {names}",
+      "other": "{count} سیکشن پڑھے نہیں جا سکے: {names}"
+    },
+    "{count} pages of OneNote, open read-only: download them as a ZIP archive from the settings": {
+      "one": "{count} OneNote صفحہ صرف پڑھنے کے لیے کھولا گیا: اسے رکھنے کے لیے ترتیبات سے ZIP آرکائیو ڈاؤن لوڈ کریں",
+      "other": "{count} OneNote صفحات صرف پڑھنے کے لیے کھولے گئے: انہیں رکھنے کے لیے ترتیبات سے ZIP آرکائیو ڈاؤن لوڈ کریں"
+    }
   },
   "gate": {
     "Version {version}": "ورژن {version}",
@@ -101,7 +110,10 @@
     "Open ZIP archive": "ZIP آرکائیو کھولیں",
     "or drag a folder or a ZIP archive here": "یا کوئی فولڈر یا ZIP آرکائیو یہاں گھسیٹیں",
     "New folder": "نیا فولڈر",
-    "Notes": "نوٹس"
+    "Notes": "نوٹس",
+    "No OneNote sections in \"{name}\"": "\"{name}\" میں OneNote کا کوئی سیکشن نہیں",
+    "Reading OneNote sections: {done} of {total}": "OneNote سیکشن پڑھے جا رہے ہیں: {done} از {total}",
+    "Open OneNote notebook": "OneNote نوٹ بک کھولیں"
   },
   "dialog": {
     "Note not found": "نوٹ نہیں ملا",
@@ -145,7 +157,11 @@
     "This is not a ZIP archive, or it is damaged": "یہ ZIP آرکائیو نہیں ہے، یا خراب ہے",
     "The ZIP archive is too large: over 4 GB or 65 535 files": "ZIP آرکائیو بہت بڑا ہے: 4 GB یا 65535 فائلوں سے زیادہ",
     "The ZIP archive is encrypted: {path}": "ZIP آرکائیو خفیہ کاری شدہ ہے: {path}",
-    "The ZIP archive is compressed in a way this editor cannot read: {path}": "ZIP آرکائیو ایسے طریقے سے کمپریس کیا گیا ہے جسے یہ ایڈیٹر نہیں پڑھ سکتا: {path}"
+    "The ZIP archive is compressed in a way this editor cannot read: {path}": "ZIP آرکائیو ایسے طریقے سے کمپریس کیا گیا ہے جسے یہ ایڈیٹر نہیں پڑھ سکتا: {path}",
+    "The OneNote file is damaged": "OneNote فائل خراب ہے",
+    "The section is protected with a password": "سیکشن پاس ورڈ سے محفوظ ہے",
+    "This is not a OneNote section": "یہ OneNote کا سیکشن نہیں ہے",
+    "Only sections of OneNote 2010 and later can be opened": "صرف OneNote 2010 اور بعد کے سیکشن کھولے جا سکتے ہیں"
   },
   "palette": {
     "Red": "سرخ",

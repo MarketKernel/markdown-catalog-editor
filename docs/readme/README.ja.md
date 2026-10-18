@@ -142,6 +142,35 @@ IndexedDB がオフになっている場合(一部のプライベートウィン
 するものもなく、フォルダ内の画像、タグ、書き出しもありません。それらはフォルダを開くことで
 利用できます。この方法で開いたノートは、最近使ったフォルダの一覧には加わりません。
 
+### OneNote ノートブック
+
+OneNote のノートブック——OneNote 2010–2016 または Windows 版 OneNote で、ディスクに置かれて
+いるか、OneDrive や SharePoint で同期されているもの——は、ノートのフォルダとして取り込まれ
+ます。開始画面の**OneNote ノートブックを開く**でそのフォルダを選ぶか、**フォルダを開く**ま
+たはウィンドウへドラッグすると、OneNote がフォルダに置く `.onetoc2` からノートブックと判断されま
+す。`.one` セクションだけをドロップした場合は、それ自体が一つのノートブックになります。すべ
+てページの中で読み込まれ、OneNote のインストールは不要で、ノートブック自体は読み取られるだ
+けで、書き込まれることはありません。
+
+- **何になるか**：各セクションがフォルダに、各ページがその中のノートになり、ページのタイトル
+  が名前になります。サブページは、親ページの名前のフォルダに入ります。タイトルと、ページの作
+  成日・最終更新日はフロントマターに入ります。画像と添付ファイルは、エディタが自分の画像を保
+  存するのと同じように、ノートの隣の `assets/<ノート名>/` に保存されます。
+- **ページに残るもの**：見出し、段落と改行、太字、斜体、下線、取り消し線、上付き文字と下付き
+  文字、文字の色とハイライト、リンク、入れ子になった箇条書きと番号付きリスト、タスクとして
+  の ToDo タグ、表、画像、ファイル。ノートブック内の別のページへのリンクは、そのノートへつな
+  がります。OneNote ではページのどこにでも文字を置けますが、ノートは 1 行ずつ続くものなの
+  で、アウトラインは上から下へ、次に左から右へと並びます。インク、数式、ToDo 以外のタグは除
+  かれ、ごみ箱も同様です。Web から貼り付けたテキストに付いてくるほぼ黒や白は、色としては残
+  りません。
+- **読み取り専用**：ノートは、どのブラウザでもメモリから開かれ、どこにも書き込
+  まれません。残しておくには、設定の**ZIP をダウンロード**でアーカイブにま
+  とめ、置きたい場所に展開するか、アーカイブとしてもう一度開きます。エディタが表示
+  するファイルだけが一緒に来ます。ノート、画像、PDF は来ますが、添付された
+  Word ファイルや EMF 形式の画像は来ません。
+- パスワードで保護されたセクションや OneNote 2007 のセクションは読み込めません。それ以外は取
+  り込まれ、取り込めなかったものはエディタが知らせます。
+
 ## Markdown Knowledge Base: Chrome 拡張機能
 
 `npm run build` は `build/extension/` も出力します。Chrome 拡張機能としてのエディタと、
@@ -554,6 +583,8 @@ Markdown は元のまま保たれ、フォルダの全タグはノートの隣�
 - **HTML に書き出す**：フォルダ、またはそのサブフォルダの一つを、検索付きの静的サイトとし
   て、あるいは単一ページとして書き出します——「[HTML に書き出す](#html-に書き出す)」を参照
   してください。
+- **OneNote ノートブック** は、OneNote なしでノートのフォルダになります——「[OneNote ノートブック](#onenote-ノートブック)」を
+  参照してください。
 - **単独のノート** は Finder やエクスプローラーからインストール済みのアプリで開く、あるい
   はウィンドウへドロップすることで開けます——「[単独のノート](#単独のノート)」を参照してく
   ださい。
@@ -759,6 +790,8 @@ src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
 src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
 src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
+src/onenote.ts      OneNote sections (.one) read: the revision store or the package of data elements, pages
+src/onenote-md.ts   a OneNote notebook → notes: folders, front matter, Markdown, pictures and files beside them
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -786,7 +819,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, OneNote, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/

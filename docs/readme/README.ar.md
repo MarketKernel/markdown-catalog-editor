@@ -129,6 +129,30 @@ Chrome على Android خاصية File System Access، وكل متصفح على i
 صور من مجلدها، ولا وسوم، ولا تصدير: تلك تأتي مع فتح المجلد. لا تُضاف الملاحظة المفتوحة
 بهذه الطريقة إلى المجلدات الأخيرة.
 
+### دفتر ملاحظات OneNote
+
+يدخل دفتر ملاحظات OneNote — OneNote 2010–2016 أو OneNote لنظام Windows، المحفوظ على قرص أو
+المزامَن عبر OneDrive أو SharePoint — على هيئة مجلد ملاحظات: يختار **فتح دفتر OneNote** في
+شاشة البداية مجلده، ويتعرف **فتح مجلد** أو سحبه إلى النافذة على الدفتر من ملف `.onetoc2` الذي يحتفظ به OneNote فيه. وتكوّن أقسام `.one` المسقطة وحدها دفترًا خاصًا بها. كل شيء يُقرأ داخل الصفحة؛
+لا حاجة إلى تثبيت OneNote، والدفتر نفسه يُقرأ فقط ولا يُكتب أبدًا.
+
+- **ما يصير إليه**: كل قسم مجلد، وكل صفحة ملاحظة داخله باسم عنوانها، والصفحة الفرعية في
+  مجلد باسم صفحتها. يدخل العنوان وتاريخا إنشاء الصفحة وآخر تغيير فيها في front matter. تُحفظ
+  الصور والملفات المرفقة بجانب الملاحظة في `assets/<اسم الملاحظة>/`، كما يحفظ المحرر صوره.
+- **ما تحتفظ به الصفحة**: العناوين والفقرات وفواصل الأسطر، والغامق والمائل والتسطير
+  والشطب والرفع والخفض، ولون النص وتمييزه، والروابط، والقوائم النقطية والمرقمة بتداخلها،
+  ووسوم المهام كمهام، والجداول والصور والملفات. يقود الرابط إلى صفحة أخرى من الدفتر إلى
+  ملاحظتها. يتيح OneNote وضع النص في أي مكان من الصفحة؛ أما الملاحظة فسطر بعد سطر، لذا تأتي
+  مخططاتها من الأعلى إلى الأسفل، ثم من اليسار إلى اليمين. يُترك الحبر والمعادلات والوسوم غير
+  المهام، وكذلك سلة المحذوفات؛ ولا يُحتفَظ بالأسود القريب والأبيض اللذين يجلبهما النص
+  الملصق من الويب كألوان.
+- **للقراءة فقط**: تُفتح الملاحظات من الذاكرة، في أي متصفح، ولا يُكتب شيء في أي مكان. ولحفظها
+  يضعها **تنزيل ZIP** في الإعدادات في أرشيف، لتُفك حيث ينبغي أن تقيم أو لتُفتح من جديد كأرشيف. لا
+  يأتي إلا ما يعرضه المحرر من ملفات: الملاحظات والصور وملفات PDF — ويبقى ملف Word مرفق أو صورة
+  بصيغة EMF خارجًا.
+- القسم المحمي بكلمة مرور، أو قسم من OneNote 2007، لا يمكن قراءته؛ أما الأقسام الأخرى فتدخل،
+  ويذكر المحرر أيها لم يدخل.
+
 ## Markdown Knowledge Base: إضافة Chrome
 
 يكتب `npm run build` أيضًا `build/extension/`: المحرر في صورة إضافة Chrome، و
@@ -488,6 +512,8 @@ HTML…** في قائمة سياق المجلد الأمر نفسه لذلك ا�
   الملاحظات في `.meta.json` — انظر «[الوسوم](#الوسوم)».
 - **تصدير إلى HTML**: المجلد، أو أحد مجلداته الفرعية، كموقع ثابت ببحث، أو كصفحة واحدة —
   انظر «[تصدير إلى HTML](#تصدير-إلى-html)».
+- **دفتر ملاحظات OneNote** يتحول إلى مجلد ملاحظات، دون OneNote — انظر
+  «[دفتر ملاحظات OneNote](#دفتر-ملاحظات-onenote)».
 - **ملاحظة واحدة** تُفتح من Finder أو مستكشف الملفات في التطبيق المثبَّت، أو تُسحَب إلى
   النافذة — انظر «[ملاحظة واحدة](#ملاحظة-واحدة)».
 - **الملاحظات المحفوظة في المتصفح** حيث لا يستطيع الكتابة على قرص — Safari، Firefox،
@@ -676,6 +702,8 @@ src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
 src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
 src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
+src/onenote.ts      OneNote sections (.one) read: the revision store or the package of data elements, pages
+src/onenote-md.ts   a OneNote notebook → notes: folders, front matter, Markdown, pictures and files beside them
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -703,7 +731,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, OneNote, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/

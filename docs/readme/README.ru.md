@@ -137,6 +137,34 @@ Android нет File System Access, а любой браузер на iOS и iPad
 рядом с ней, и нет изображений из её папки, тегов или экспорта: это всё приходит вместе с
 открытием папки. Заметка, открытая так, не добавляется в недавние папки.
 
+### Блокнот OneNote
+
+Блокнот OneNote — OneNote 2010–2016 или OneNote для Windows, лежащий на диске или синхронизируемый
+через OneDrive или SharePoint — приходит как папка заметок: «Открыть блокнот OneNote» на начальном
+экране выбирает его папку, а «Открыть папку» или перетаскивание её на окно распознаёт блокнот по
+файлу `.onetoc2`, который OneNote хранит в ней. Разделы `.one`, брошенные сами по себе, образуют отдельный блокнот.
+Всё читается в странице; OneNote не обязан быть установлен, а сам блокнот только читается и
+никогда не записывается.
+
+- **Во что он превращается**: каждый раздел — в папку, каждая страница — в заметку в ней, с именем по
+  заголовку, подстраница — в папку с именем её страницы. Заголовок и даты создания и последнего
+  изменения страницы попадают во front matter. Картинки и вложенные файлы сохраняются рядом с
+  заметкой в `assets/<имя заметки>/`, как редактор хранит собственные изображения.
+- **Что сохраняет страница**: заголовки, абзацы и переносы строк, жирный, курсив, подчёркивание,
+  зачёркивание, верхний и нижний индексы, цвет текста и выделение, ссылки, маркированные и
+  нумерованные списки с вложенностью, теги задач — как задачи, таблицы, картинки и файлы. Ссылка
+  на другую страницу блокнота ведёт на её заметку. OneNote позволяет ставить текст где угодно на
+  странице; заметка же — строка за строкой, поэтому его контуры идут сверху вниз, затем слева
+  направо. Рукописный ввод, формулы и теги, кроме задач, опускаются, как и корзина; почти чёрный и
+  белый, которые приносит текст, вставленный из веба, цветами не сохраняются.
+- **Только чтение**: заметки открываются из памяти, в любом браузере, и нигде ничего не
+  записывается. Чтобы сохранить их, «Скачать ZIP» в настройках упаковывает их в архив, чтобы
+  распаковать там, где они должны лежать, или открыть снова как архив. Приходят только файлы,
+  которые показывает редактор: заметки, картинки, PDF — вложенный файл Word или картинка в EMF
+  остаётся за бортом.
+- Раздел, защищённый паролем, или раздел OneNote 2007 прочитать нельзя; остальные приходят, а
+  редактор сообщает, какие не удалось.
+
 ## Markdown Knowledge Base: расширение для Chrome
 
 `npm run build` также создаёт `build/extension/`: редактор в виде расширения для Chrome, и
@@ -525,6 +553,8 @@ id с префиксом из имени заметки, так что ссыл�
   от заметок в `.meta.json` — см. «[Теги](#теги)».
 - **Экспорт в HTML**: папка или одна из её подпапок — в виде статического сайта с поиском,
   либо в виде одной страницы — см. «[Экспорт в HTML](#экспорт-в-html)».
+- **Блокнот OneNote**, превращённый в папку заметок, без OneNote — см.
+  «[Блокнот OneNote](#блокнот-onenote)».
 - **Отдельная заметка**, открытая из Finder или Проводника в установленном приложении, или
   перетащенная на окно — см. «[Отдельная заметка](#отдельная-заметка)».
 - **Заметки, хранящиеся в браузере**, там, где он не может записывать на диск, — Safari, Firefox,
@@ -717,6 +747,8 @@ src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
 src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
 src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
+src/onenote.ts      OneNote sections (.one) read: the revision store or the package of data elements, pages
+src/onenote-md.ts   a OneNote notebook → notes: folders, front matter, Markdown, pictures and files beside them
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -744,7 +776,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, OneNote, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/

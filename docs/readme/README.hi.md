@@ -141,6 +141,35 @@ IndexedDB में कॉपी कर देते हैं। उसके �
 नाम बदलने या हटाने को कुछ नहीं है, और न उसके फ़ोल्डर से छवियाँ, न टैग, न निर्यात: वे
 फ़ोल्डर खोलने के साथ आते हैं। इस तरह खोला गया नोट हाल के फ़ोल्डरों में नहीं जुड़ता।
 
+### OneNote नोटबुक
+
+OneNote की नोटबुक — OneNote 2010–2016 या Windows के लिए OneNote, जो डिस्क पर रखी हो या
+OneDrive या SharePoint से सिंक होती हो — नोट्स के फ़ोल्डर के रूप में आती है: शुरुआती स्क्रीन पर
+**OneNote नोटबुक खोलें** उसका फ़ोल्डर चुनता है, और **फ़ोल्डर खोलें** या उसे विंडो पर खींचना उसे
+उसमें OneNote जो `.onetoc2` फ़ाइल रखता है, उससे पहचान लेता है। अकेले छोड़े गए `.one` सेक्शन अपनी अलग
+नोटबुक बनाते हैं। सब कुछ पृष्ठ में पढ़ा जाता है; OneNote का इंस्टॉल होना ज़रूरी नहीं, और नोटबुक
+को केवल पढ़ा जाता है, कभी लिखा नहीं जाता।
+
+- **वह क्या बनती है**: हर सेक्शन एक फ़ोल्डर, हर पृष्ठ उसमें एक नोट जिसका नाम उसके शीर्षक पर हो,
+  और उप-पृष्ठ अपने पृष्ठ के नाम वाले फ़ोल्डर में। शीर्षक और पृष्ठ के बनने व आख़िरी बार बदलने की
+  तारीख़ें front matter में जाती हैं। छवियाँ और संलग्न फ़ाइलें नोट के बगल में
+  `assets/<नोट का नाम>/` में सहेजी जाती हैं, जैसे एडिटर अपनी छवियाँ रखता है।
+- **पृष्ठ क्या रखता है**: शीर्षक, पैराग्राफ़ और लाइन ब्रेक, बोल्ड, इटैलिक, अंडरलाइन, स्ट्राइकथ्रू,
+  सुपरस्क्रिप्ट और सबस्क्रिप्ट, टेक्स्ट का रंग और हाइलाइट, लिंक, बुलेट वाली और क्रमांकित सूचियाँ
+  उनके नेस्टिंग समेत, करने के कामों के टैग टास्क के रूप में, तालिकाएँ, छवियाँ और फ़ाइलें।
+  नोटबुक के किसी दूसरे पृष्ठ का लिंक उसके नोट तक ले जाता है। OneNote टेक्स्ट को पृष्ठ पर कहीं भी
+  रखने देता है; नोट एक लाइन के बाद दूसरी लाइन है, इसलिए उसकी रूपरेखाएँ ऊपर से नीचे, फिर
+  बाएँ से दाएँ आती हैं। इंक, समीकरण और करने के कामों के अलावा दूसरे टैग छोड़ दिए जाते हैं,
+  और रीसायकल बिन भी; वेब से पेस्ट किए टेक्स्ट के साथ आने वाले लगभग काले और सफ़ेद को रंग के
+  रूप में नहीं रखा जाता।
+- **केवल पढ़ने के लिए**: नोट्स किसी भी ब्राउज़र में मेमोरी से खुलते हैं, और कहीं कुछ नहीं लिखा
+  जाता। उन्हें रखने के लिए सेटिंग्स में **ZIP डाउनलोड करें** उन्हें एक आर्काइव में पैक कर देता है,
+  जिसे जहाँ वे रहें वहाँ खोलकर रखा जा सकता है या फिर से आर्काइव के रूप में खोला जा सकता है। केवल
+  वही फ़ाइलें आती हैं जो एडिटर दिखाता है: नोट्स, चित्र, PDF — संलग्न Word फ़ाइल या EMF चित्र बाहर
+  रहता है।
+- पासवर्ड से सुरक्षित सेक्शन, या OneNote 2007 का सेक्शन, पढ़ा नहीं जा सकता; बाक़ी आ जाते हैं,
+  और एडिटर बताता है कि कौन से नहीं आए।
+
 ## Markdown Knowledge Base: Chrome एक्सटेंशन
 
 `npm run build`, `build/extension/` भी लिखता है: Chrome एक्सटेंशन के रूप में एडिटर, और
@@ -547,6 +576,8 @@ PDF — वह उसी के लिंक के रूप में पह�
   `.meta.json` में रखे जाते हैं — देखें "[टैग](#टैग)"।
 - **HTML में निर्यात करें**: फ़ोल्डर, या उसका कोई सबफ़ोल्डर, खोज के साथ एक स्टैटिक साइट
   के रूप में, या एक पृष्ठ के रूप में — देखें "[HTML में निर्यात करें](#html-में-निर्यात-करें)"।
+- **OneNote नोटबुक** जो OneNote के बिना नोट्स का फ़ोल्डर बन जाती है — देखें
+  "[OneNote नोटबुक](#onenote-नोटबुक)"।
 - **एक अकेला नोट** इंस्टॉल किए गए ऐप में Finder या Explorer से खोला गया, या विंडो पर
   छोड़ा गया — देखें "[एक अकेला नोट](#एक-अकेला-नोट)"।
 - **ब्राउज़र में रखे गए नोट्स** जहाँ वह डिस्क पर लिख नहीं सकता — Safari, Firefox, फ़ोन,
@@ -747,6 +778,8 @@ src/main.ts         opening a folder, saving, toolbar, search, settings
 src/vault.ts        File System Access API, drag-and-drop, webkitdirectory; file CRUD; a note on its own
 src/stored.ts       folders kept in the browser's IndexedDB where it cannot write to a disk; a folder ⇄ ZIP
 src/zip.ts          ZIP archives: writing, reading, and an inflater for browsers without DecompressionStream
+src/onenote.ts      OneNote sections (.one) read: the revision store or the package of data elements, pages
+src/onenote-md.ts   a OneNote notebook → notes: folders, front matter, Markdown, pictures and files beside them
 src/editor.ts       live preview: active block, caret, Enter, joining, undo
 src/blocks.ts       splitting the document into blocks by markdown-it tokens
 src/format.ts       toolbar actions as pure text transforms
@@ -774,7 +807,7 @@ src/extension/      "Markdown Knowledge Base": manifest.json; popup.ts, popup.ht
                     knowledge.ts (adding to a note from the popup and the worker); offscreen.ts,
                     offscreen.html (HTML → Markdown for the worker)
 tools/              build helpers (load.mjs, i18n.mjs, chrome.mjs) and the tests: block model,
-                    formatting, tags, the export, clippings, ZIP archives, dictionaries; in headless Chrome
+                    formatting, tags, the export, clippings, ZIP archives, OneNote, dictionaries; in headless Chrome
                     the editor, HTML → Markdown, the PWA and the extension
 assets/             icon.svg; pwa/ its PNG sizes for the PWA; extension/ the extension's icons
 docs/               the README screenshot and its translations, docs/readme/

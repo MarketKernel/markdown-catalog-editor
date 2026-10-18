@@ -51,7 +51,14 @@
     "\"{name}\" is copied into this browser": "\"{name}\" disalin ke browser ini",
     "\"{name}\" is copied into this browser, which may clear it when space runs low: download a ZIP archive from the settings now and then": "\"{name}\" disalin ke browser ini, yang dapat dihapus saat ruang penyimpanan menipis: unduh arsip ZIP dari pengaturan sesekali",
     "Could not make the ZIP archive: {reason}": "Tidak dapat membuat arsip ZIP: {reason}",
-    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "Browser dapat menghapus catatan saat ruang penyimpanan menipis: unduh arsip ZIP dari pengaturan sesekali"
+    "The browser may clear the notes when space runs low: download a ZIP archive from the settings now and then": "Browser dapat menghapus catatan saat ruang penyimpanan menipis: unduh arsip ZIP dari pengaturan sesekali",
+    "Reading the OneNote notebook…": "Membaca buku catatan OneNote…",
+    "{count} sections could not be read: {names}": {
+      "other": "{count} bagian tidak dapat dibaca: {names}"
+    },
+    "{count} pages of OneNote, open read-only: download them as a ZIP archive from the settings": {
+      "other": "{count} halaman OneNote dibuka hanya-baca: untuk menyimpannya, unduh arsip ZIP dari pengaturan"
+    }
   },
   "gate": {
     "Version {version}": "Versi {version}",
@@ -75,7 +82,10 @@
     "Open ZIP archive": "Buka arsip ZIP",
     "or drag a folder or a ZIP archive here": "atau seret folder atau arsip ZIP ke sini",
     "New folder": "Folder baru",
-    "Notes": "Catatan"
+    "Notes": "Catatan",
+    "No OneNote sections in \"{name}\"": "Tidak ada bagian OneNote di \"{name}\"",
+    "Reading OneNote sections: {done} of {total}": "Membaca bagian OneNote: {done} dari {total}",
+    "Open OneNote notebook": "Buka buku catatan OneNote"
   },
   "dialog": {
     "Note not found": "Catatan tidak ditemukan",
@@ -119,7 +129,11 @@
     "This is not a ZIP archive, or it is damaged": "Ini bukan arsip ZIP, atau rusak",
     "The ZIP archive is too large: over 4 GB or 65 535 files": "Arsip ZIP terlalu besar: lebih dari 4 GB atau 65.535 file",
     "The ZIP archive is encrypted: {path}": "Arsip ZIP ini dienkripsi: {path}",
-    "The ZIP archive is compressed in a way this editor cannot read: {path}": "Arsip ZIP ini dikompresi dengan cara yang tidak dapat dibaca editor ini: {path}"
+    "The ZIP archive is compressed in a way this editor cannot read: {path}": "Arsip ZIP ini dikompresi dengan cara yang tidak dapat dibaca editor ini: {path}",
+    "The OneNote file is damaged": "File OneNote rusak",
+    "The section is protected with a password": "Bagian ini dilindungi dengan kata sandi",
+    "This is not a OneNote section": "Ini bukan bagian OneNote",
+    "Only sections of OneNote 2010 and later can be opened": "Hanya bagian OneNote 2010 dan yang lebih baru yang dapat dibuka"
   },
   "palette": {
     "Red": "Merah",

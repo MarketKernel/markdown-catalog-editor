@@ -12,6 +12,7 @@ import { exportDialog, type ExportChoice } from './export-ui';
 import { FLAGS, isRightToLeft, language as currentLanguage, LANGUAGES, setLanguage, t, tn, translatePage, type Language } from './i18n';
 import { createMarkdown, imageMarkdown, retargetImages } from './markdown';
 import { Meta } from './meta';
+import { convertNotebook, isNotebookFolder, isNotebookList, sectionsIn, sectionsOf, type ConvertedNotebook, type NotebookFile } from './onenote-md';
 import { platform } from './platform';
 import { forgetFolder, isGranted, recentFolders, regainAccess, rememberFolder, rememberNote, type RecentFolder } from './recent';
 import {
@@ -219,6 +220,7 @@ async function pickFolder(): Promise<void> {
   if (window.showDirectoryPicker) {
     try {
       const handle = await window.showDirectoryPicker({ mode: 'readwrite' });
+      if (await isNotebookFolder(handle)) return await openOneNote(handle.name, await sectionsIn(handle));
       const writable = await ensureWritable(handle);
       await useVault(new DirectoryVault(handle, writable), handle);
       if (!writable) toast(t('toast', 'Read-only access: saving will offer to download the file'), 'error');
@@ -344,6 +346,52 @@ function openZip(file: File): Promise<void> {
   return storeAndOpen(unpackFolder(file).then(({ name, files }) => new FileListVault(files, name)));
 }
 
+/* OneNote: a notebook read into notes. */
+
+/**
+ * A OneNote notebook — its folder, or sections on their own — read into
+ * notes and opened read-only, from memory: nothing is written anywhere, the
+ * notebook least of all. Download ZIP in the settings takes the notes out.
+ */
+async function openOneNote(name: string, sources: NotebookFile[]): Promise<void> {
+  gateError.textContent = '';
+  // The open note is saved before the work starts, as before any other folder takes its place.
+  await flushSave();
+  if (dirty && vault?.writable) return;
+  if (!sources.length) throw new Error(t('gate', 'No OneNote sections in "{name}"', { name }));
+  if (gate.hidden) toast(t('toast', 'Reading the OneNote notebook…'));
+  let converted: ConvertedNotebook;
+  try {
+    converted = await convertNotebook(sources, {
+      heading: !settings.inlineTitle,
+      progress: (done, total) => showProgress(t('gate', 'Reading OneNote sections: {done} of {total}', { done, total })),
+    });
+  } finally {
+    showProgress('');
+  }
+  if (!converted.pages) throw new Error(converted.failed[0]?.reason ?? t('gate', 'No OneNote sections in "{name}"', { name }));
+  const files = [...converted.files].map(([path, data]) => {
+    const file = new File([data], baseOf(path));
+    // The path a picked folder would give, its own name first: FileListVault drops that step.
+    Object.defineProperty(file, 'webkitRelativePath', { value: `${name}/${path}` });
+    return file;
+  });
+  if (!(await useVault(new FileListVault(files, name)))) return;
+  if (converted.failed.length) {
+    const names = converted.failed.map((item) => `${item.path} (${item.reason})`).join(', ');
+    toast(tn('toast', '{count} section could not be read: {names}', '{count} sections could not be read: {names}', converted.failed.length, { names }), 'error');
+  } else {
+    toast(tn('toast', '{count} page of OneNote, open read-only: download it as a ZIP archive from the settings', '{count} pages of OneNote, open read-only: download them as a ZIP archive from the settings', converted.pages));
+  }
+}
+
+/** The start screen's line of progress; nothing hides it. */
+function showProgress(text: string): void {
+  const line = el('gate-progress');
+  line.hidden = !text;
+  line.textContent = text;
+}
+
 function folderIcon(): SVGSVGElement {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('viewBox', '0 0 24 24');
@@ -433,12 +481,45 @@ el<HTMLInputElement>('folder-picker').addEventListener('change', (event) => {
   // Emptied, so that the same folder picked again is taken again.
   input.value = '';
   if (files.length === 0) return;
+  if (isNotebookList(files)) {
+    void openOneNote(folderNameOf(files), sectionsOf(files)).catch(showGateError);
+    return;
+  }
   const source = new FileListVault(files);
   void (storing ? storeAndOpen(source) : useVault(source)).catch(showGateError);
 });
 
 el('new-stored').addEventListener('click', () => void startStored().catch(showGateError));
 el('open-zip').addEventListener('click', () => el<HTMLInputElement>('zip-picker').click());
+el('open-onenote').addEventListener('click', () => void pickNotebook().catch(showGateError));
+el<HTMLInputElement>('onenote-picker').addEventListener('change', (event) => {
+  const input = event.target as HTMLInputElement;
+  const files = Array.from(input.files ?? []);
+  input.value = '';
+  if (files.length) void openOneNote(folderNameOf(files), sectionsOf(files)).catch(showGateError);
+});
+
+/** The notebook's folder: through the picker that gives a handle where there is one. */
+async function pickNotebook(): Promise<void> {
+  if (!window.showDirectoryPicker) {
+    el<HTMLInputElement>('onenote-picker').click();
+    return;
+  }
+  let handle: DirHandleLike;
+  try {
+    handle = await window.showDirectoryPicker({ mode: 'read' });
+  } catch (error) {
+    if ((error as DOMException)?.name === 'AbortError') return;
+    throw error;
+  }
+  await openOneNote(handle.name, await sectionsIn(handle));
+}
+
+/** The name of the folder picked files came from: the first step of their path. */
+function folderNameOf(files: readonly File[]): string {
+  const relative = (files[0] as (File & { webkitRelativePath?: string }) | undefined)?.webkitRelativePath ?? '';
+  return relative.includes('/') ? relative.slice(0, relative.indexOf('/')) : stripExtension(files[0]?.name ?? 'OneNote');
+}
 el<HTMLInputElement>('zip-picker').addEventListener('change', (event) => {
   const input = event.target as HTMLInputElement;
   const [file] = Array.from(input.files ?? []);
@@ -468,9 +549,11 @@ async function acceptDrop(event: DragEvent): Promise<void> {
   // Asked for before anything is awaited: the drop's items are gone after that.
   const entries = Array.from(transfer.items, (item) => item.webkitGetAsEntry?.() ?? null);
   const files = Array.from(transfer.files).filter((file) => isNote(file.name));
+  const sections = sectionsOf(Array.from(transfer.files));
   const archive = Array.from(transfer.files).find((file) => file.name.toLowerCase().endsWith('.zip'));
   const handles = await handlesFromDataTransfer(transfer.items);
   const handle = handles.find((item): item is DirHandleLike => item.kind === 'directory');
+  if (handle && (await isNotebookFolder(handle))) return openOneNote(handle.name, await sectionsIn(handle));
   if (handle) {
     await useVault(new DirectoryVault(handle, await ensureWritable(handle)), handle);
     return;
@@ -481,9 +564,13 @@ async function acceptDrop(event: DragEvent): Promise<void> {
     return;
   }
   if (storing && archive) return openZip(archive);
+  // OneNote sections dropped on their own make a notebook of their own.
+  if (sections.length) return openOneNote(folderNameOf(sections.map((item) => item.file as File)), sections);
   for (const entry of entries) {
     if (entry?.isDirectory) {
-      const source = new FileListVault(await filesFromEntry(entry), entry.name);
+      const found = await filesFromEntry(entry);
+      if (isNotebookList(found)) return openOneNote(entry.name, sectionsOf(found));
+      const source = new FileListVault(found, entry.name);
       await (storing ? storeAndOpen(source) : useVault(source));
       return;
     }
@@ -1426,8 +1513,8 @@ async function deleteEntry(entry: TreeEntry): Promise<void> {
   }
 }
 
-el('new-note').addEventListener('click', () => void createNote(dirOf(currentPath ?? '')));
-el('new-folder').addEventListener('click', () => void createFolder(dirOf(currentPath ?? '')));
+el('new-note').addEventListener('click', () => void createNote(tree.targetDir()));
+el('new-folder').addEventListener('click', () => void createFolder(tree.targetDir()));
 
 el('expand-all').addEventListener('click', () => {
   tree.expandAll();
