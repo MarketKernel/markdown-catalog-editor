@@ -162,7 +162,8 @@
     "The OneNote file is damaged": "OneNote फ़ाइल खराब है",
     "The section is protected with a password": "सेक्शन पासवर्ड से सुरक्षित है",
     "This is not a OneNote section": "यह OneNote का सेक्शन नहीं है",
-    "Only sections of OneNote 2010 and later can be opened": "केवल OneNote 2010 और बाद के सेक्शन खोले जा सकते हैं"
+    "Only sections of OneNote 2010 and later can be opened": "केवल OneNote 2010 और बाद के सेक्शन खोले जा सकते हैं",
+    "The browser does not answer for \"{name}\". Open it with \"Open folder\" — or restart the browser.": "ब्राउज़र «{name}» के बारे में जवाब नहीं दे रहा। इसे «फ़ोल्डर खोलें» से खोलें — या ब्राउज़र फिर से शुरू करें।"
   },
   "palette": {
     "Red": "लाल",

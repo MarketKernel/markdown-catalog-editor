@@ -182,7 +182,8 @@
     "The OneNote file is damaged": "ملف OneNote تالف",
     "The section is protected with a password": "القسم محمي بكلمة مرور",
     "This is not a OneNote section": "هذا ليس قسمًا من OneNote",
-    "Only sections of OneNote 2010 and later can be opened": "يمكن فتح أقسام OneNote 2010 والإصدارات الأحدث فقط"
+    "Only sections of OneNote 2010 and later can be opened": "يمكن فتح أقسام OneNote 2010 والإصدارات الأحدث فقط",
+    "The browser does not answer for \"{name}\". Open it with \"Open folder\" — or restart the browser.": "لا يستجيب المتصفح بشأن «{name}». افتحه عبر «فتح مجلد» — أو أعد تشغيل المتصفح."
   },
   "palette": {
     "Red": "أحمر",

@@ -149,7 +149,8 @@
     "The OneNote file is damaged": "Файл OneNote пошкоджено",
     "The section is protected with a password": "Розділ захищено паролем",
     "This is not a OneNote section": "Це не розділ OneNote",
-    "Only sections of OneNote 2010 and later can be opened": "Можна відкрити лише розділи OneNote 2010 і новіших версій"
+    "Only sections of OneNote 2010 and later can be opened": "Можна відкрити лише розділи OneNote 2010 і новіших версій",
+    "The browser does not answer for \"{name}\". Open it with \"Open folder\" — or restart the browser.": "Браузер не відповідає щодо «{name}». Відкрийте її через «Відкрити папку» — або перезапустіть браузер."
   },
   "palette": {
     "Red": "Червоний",

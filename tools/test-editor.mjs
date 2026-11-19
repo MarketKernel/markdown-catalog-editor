@@ -1083,8 +1083,20 @@ await scenario(null, async (b) => {
   });
   await b.evaluate(`document.querySelectorAll('.recent-open')[0].click()`);
   await b.sleep(2600);
-  eq('where a click on the folder asks for access and opens it', await open(), { shown: true, folder: 'Notes', note: 'b.md' });
+  eq('where a click on the folder, with no prompt to come, says what to do', await gate(), {
+    shown: true, recent: ['Notes', 'Other'], primary: false,
+    error: 'The browser does not answer for "Notes". Open it with "Open folder" — or restart the browser.',
+  });
+  // The browser does not answer whether the folder picked is a remembered one either.
+  await b.evaluate(`FileSystemHandle.prototype.isSameEntry = () => new Promise(() => {})`);
+  await pick('Notes');
+  await b.sleep(4600);
+  eq('the same folder picked anew opens', (await open()).folder, 'Notes');
+  await toGate();
+  eq('in place of the silent one on the list', (await gate()).recent, ['Notes', 'Other']);
   await b.evaluate(`localStorage.removeItem('__permission')`);
+  await b.reload();
+  await toGate();
 
   await b.evaluate(`localStorage.setItem('__slow', 'Notes')`);
   await b.reload();

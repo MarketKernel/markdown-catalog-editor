@@ -167,7 +167,8 @@
     "The OneNote file is damaged": "Il file di OneNote è danneggiato",
     "The section is protected with a password": "La sezione è protetta da password",
     "This is not a OneNote section": "Questa non è una sezione di OneNote",
-    "Only sections of OneNote 2010 and later can be opened": "Si possono aprire solo sezioni di OneNote 2010 e successivi"
+    "Only sections of OneNote 2010 and later can be opened": "Si possono aprire solo sezioni di OneNote 2010 e successivi",
+    "The browser does not answer for \"{name}\". Open it with \"Open folder\" — or restart the browser.": "Il browser non risponde per «{name}». Aprila con «Apri cartella», oppure riavvia il browser."
   },
   "palette": {
     "Red": "Rosso",

@@ -269,15 +269,20 @@ export interface DirHandleLike {
 }
 
 /**
- * The access the page has to a handle; null when the browser does not say.
- * Chrome has been seen never to answer for a folder remembered from an earlier
- * session, and whoever waits on it — the start, with the gate hidden — would
- * wait for good: past two seconds that counts as no answer.
+ * Chrome has been seen to stop answering anything about a folder remembered
+ * from an earlier session — whether the page may open it, whether it is the
+ * one just picked — and whoever waits on it would wait for good: the start
+ * with the gate hidden, a click that does nothing. Past two seconds `late`
+ * stands for the answer.
  */
+export function answered<T>(asked: Promise<T>, late: T): Promise<T> {
+  return Promise.race([asked, new Promise<T>((resolve) => setTimeout(() => resolve(late), 2000))]);
+}
+
+/** The access the page has to a handle; null when the browser does not say, or not in time. */
 export function permissionOf(handle: DirHandleLike | FileHandleLike, mode: 'read' | 'readwrite'): Promise<PermissionState | null> {
   if (!handle.queryPermission) return Promise.resolve(null);
-  const late = new Promise<null>((resolve) => setTimeout(() => resolve(null), 2000));
-  return Promise.race([handle.queryPermission({ mode }).catch(() => null), late]);
+  return answered(handle.queryPermission({ mode }).catch(() => null), null);
 }
 
 declare global {

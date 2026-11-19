@@ -139,7 +139,8 @@
     "The OneNote file is damaged": "OneNote ফাইলটি নষ্ট",
     "The section is protected with a password": "বিভাগটি পাসওয়ার্ড দিয়ে সুরক্ষিত",
     "This is not a OneNote section": "এটি OneNote-এর বিভাগ নয়",
-    "Only sections of OneNote 2010 and later can be opened": "শুধু OneNote 2010 ও পরবর্তী সংস্করণের বিভাগ খোলা যায়"
+    "Only sections of OneNote 2010 and later can be opened": "শুধু OneNote 2010 ও পরবর্তী সংস্করণের বিভাগ খোলা যায়",
+    "The browser does not answer for \"{name}\". Open it with \"Open folder\" — or restart the browser.": "ব্রাউজার «{name}»-এর ব্যাপারে সাড়া দিচ্ছে না। «ফোল্ডার খুলুন» দিয়ে এটি খুলুন — অথবা ব্রাউজার আবার চালু করুন।"
   },
   "palette": {
     "Red": "লাল",

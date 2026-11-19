@@ -157,7 +157,8 @@
     "The OneNote file is damaged": "OneNote 文件已损坏",
     "The section is protected with a password": "该分区受密码保护",
     "This is not a OneNote section": "这不是 OneNote 分区",
-    "Only sections of OneNote 2010 and later can be opened": "只能打开 OneNote 2010 及更高版本的分区"
+    "Only sections of OneNote 2010 and later can be opened": "只能打开 OneNote 2010 及更高版本的分区",
+    "The browser does not answer for \"{name}\". Open it with \"Open folder\" — or restart the browser.": "浏览器没有响应“{name}”。请通过“打开文件夹”打开它，或重新启动浏览器。"
   },
   "palette": {
     "Red": "红色",

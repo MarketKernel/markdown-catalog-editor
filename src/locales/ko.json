@@ -157,7 +157,8 @@
     "The OneNote file is damaged": "OneNote 파일이 손상되었습니다",
     "The section is protected with a password": "이 섹션은 암호로 보호되어 있습니다",
     "This is not a OneNote section": "OneNote 섹션이 아닙니다",
-    "Only sections of OneNote 2010 and later can be opened": "OneNote 2010 이상의 섹션만 열 수 있습니다"
+    "Only sections of OneNote 2010 and later can be opened": "OneNote 2010 이상의 섹션만 열 수 있습니다",
+    "The browser does not answer for \"{name}\". Open it with \"Open folder\" — or restart the browser.": "브라우저가 \"{name}\"에 응답하지 않습니다. \"폴더 열기\"로 여세요. 또는 브라우저를 다시 시작하세요."
   },
   "palette": {
     "Red": "빨간색",

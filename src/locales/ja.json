@@ -157,7 +157,8 @@
     "The OneNote file is damaged": "OneNote ファイルが破損しています",
     "The section is protected with a password": "このセクションはパスワードで保護されています",
     "This is not a OneNote section": "これは OneNote のセクションではありません",
-    "Only sections of OneNote 2010 and later can be opened": "OneNote 2010 以降のセクションのみ開けます"
+    "Only sections of OneNote 2010 and later can be opened": "OneNote 2010 以降のセクションのみ開けます",
+    "The browser does not answer for \"{name}\". Open it with \"Open folder\" — or restart the browser.": "ブラウザが「{name}」に応答しません。「フォルダを開く」から開くか、ブラウザを再起動してください。"
   },
   "palette": {
     "Red": "赤",

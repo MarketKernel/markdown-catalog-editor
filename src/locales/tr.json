@@ -139,7 +139,8 @@
     "The OneNote file is damaged": "OneNote dosyası hasarlı",
     "The section is protected with a password": "Bölüm parolayla korunuyor",
     "This is not a OneNote section": "Bu bir OneNote bölümü değil",
-    "Only sections of OneNote 2010 and later can be opened": "Yalnızca OneNote 2010 ve sonraki sürümlerin bölümleri açılabilir"
+    "Only sections of OneNote 2010 and later can be opened": "Yalnızca OneNote 2010 ve sonraki sürümlerin bölümleri açılabilir",
+    "The browser does not answer for \"{name}\". Open it with \"Open folder\" — or restart the browser.": "Tarayıcı \"{name}\" için yanıt vermiyor. \"Klasör aç\" ile açın ya da tarayıcıyı yeniden başlatın."
   },
   "palette": {
     "Red": "Kırmızı",

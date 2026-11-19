@@ -134,7 +134,8 @@
     "The OneNote file is damaged": "File OneNote rusak",
     "The section is protected with a password": "Bagian ini dilindungi dengan kata sandi",
     "This is not a OneNote section": "Ini bukan bagian OneNote",
-    "Only sections of OneNote 2010 and later can be opened": "Hanya bagian OneNote 2010 dan yang lebih baru yang dapat dibuka"
+    "Only sections of OneNote 2010 and later can be opened": "Hanya bagian OneNote 2010 dan yang lebih baru yang dapat dibuka",
+    "The browser does not answer for \"{name}\". Open it with \"Open folder\" — or restart the browser.": "Browser tidak menjawab untuk \"{name}\". Buka dengan \"Buka folder\" — atau mulai ulang browser."
   },
   "palette": {
     "Red": "Merah",

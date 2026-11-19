@@ -10,7 +10,7 @@
  */
 
 import { t } from './i18n';
-import { ensureWritable, permissionOf, type DirHandleLike } from './vault';
+import { answered, ensureWritable, permissionOf, type DirHandleLike } from './vault';
 
 export interface RecentFolder {
   id: number;
@@ -70,12 +70,17 @@ export async function rememberFolder(handle: DirHandleLike): Promise<RecentFolde
   try {
     const all = await recentFolders();
     let known: RecentFolder | undefined;
+    let silent: RecentFolder | undefined;
     for (const item of all) {
-      if (await sameFolder(item.handle, handle)) {
+      const same = await sameFolder(item.handle, handle);
+      if (same) {
         known = item;
         break;
       }
+      // One the browser no longer answers for, of the same name: most likely this folder, picked anew.
+      if (same === null && item.name === handle.name) silent ??= item;
     }
+    known ??= silent;
     const record = { name: handle.name, handle, opened: Date.now(), lastPath: known?.lastPath ?? null } as RecentFolder;
     if (known) record.id = known.id;
     record.id = Number(await withStore('readwrite', (store) => store.put(record)));
@@ -133,6 +138,10 @@ export async function isGranted(handle: DirHandleLike): Promise<boolean> {
  * Resolves to whether the folder is writable.
  */
 export async function regainAccess(handle: DirHandleLike): Promise<boolean> {
+  // Where the browser no longer says anything about the folder, it shows no prompt for it either:
+  // the click would do nothing at all. Picked anew, the same folder is a handle it answers for.
+  const silent = handle.queryPermission && !(await answered(handle.queryPermission({ mode: 'read' }).then(() => true, () => true), false));
+  if (silent) throw new Error(t('errors', 'The browser does not answer for "{name}". Open it with "Open folder" — or restart the browser.', { name: handle.name }));
   if (await ensureWritable(handle)) return true;
   try {
     if ((await permissionOf(handle, 'read')) === 'granted') return false;
@@ -143,9 +152,10 @@ export async function regainAccess(handle: DirHandleLike): Promise<boolean> {
   throw new Error(t('errors', 'The browser was not allowed to open the folder'));
 }
 
-async function sameFolder(a: DirHandleLike, b: DirHandleLike): Promise<boolean> {
+/** Null when the browser does not say in time. */
+async function sameFolder(a: DirHandleLike, b: DirHandleLike): Promise<boolean | null> {
   try {
-    return a.isSameEntry ? await a.isSameEntry(b) : false;
+    return a.isSameEntry ? await answered<boolean | null>(a.isSameEntry(b), null) : false;
   } catch {
     return false;
   }
