@@ -73,7 +73,9 @@ The editor remembers the last six folders opened there (a page never learns a fo
 so it keeps the folder's handle in the browser's IndexedDB), and the note last open in each.
 On the next start the last folder opens by itself if the browser still allows it — in an
 installed app, or once you chose "Allow on every visit". Otherwise the start screen lists the
-recent folders: one click, and the browser asks for access again. To go back to that list —
+recent folders: one click, and the browser asks for access again. Should the folder take more
+than a few seconds to open, or the browser not answer at all, the start screen comes up
+meanwhile and says so; whatever you open there stays. To go back to that list —
 to switch folders or open a new one — click the folder's name at the top of the file panel,
 or "Close folder" in the settings; × removes a folder from the list.
 
@@ -709,7 +711,9 @@ cannot be saved), lets the new worker in and reloads the page, which says once t
 been updated; the old cache is deleted. Without the button the new version starts once every
 window of the app has been closed — or, with "Install updates by themselves when everything is
 saved and the app is in the background" ticked in the settings, as soon as nothing is unsaved
-and the window is out of sight.
+and the window is out of sight. One exception: over a version up to 0.14.0, whose start could
+stay a blank page with no Update to press, the new worker takes over at once — reloading the
+page brings the new version (a second reload, if the first one was still blank).
 
 That is also the trade-off: an installed PWA runs whatever the last deploy put there, while a
 downloaded file stays the version it is. For a version fixed on disk, take `macaed-<tag>.html`

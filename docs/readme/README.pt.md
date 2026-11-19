@@ -77,7 +77,7 @@ caminho de uma pasta, então guarda o identificador da pasta no IndexedDB do nav
 nota aberta por último em cada uma. Na próxima vez que iniciar, a última pasta se abre
 sozinha se o navegador ainda permitir — em um app instalado, ou depois que você escolheu
 "Permitir em cada visita". Caso contrário, a tela inicial lista as pastas recentes: um
-clique, e o navegador pede acesso de novo. Para voltar a essa lista — para trocar de pasta
+clique, e o navegador pede acesso de novo. Se a pasta demorar mais do que alguns segundos para abrir, ou o navegador não responder de jeito nenhum, a tela inicial aparece enquanto isso e avisa; o que você abrir ali permanece. Para voltar a essa lista — para trocar de pasta
 ou abrir uma nova — clique no nome da pasta no topo do painel de arquivos, ou em "Fechar
 pasta" nas configurações; × remove uma pasta da lista.
 
@@ -756,7 +756,7 @@ salva), deixa o novo worker entrar e recarrega a página, que avisa uma vez que 
 atualizada; o cache antigo é excluído. Sem o botão, a nova versão começa assim que todas as
 janelas do app forem fechadas — ou, com "Instalar as atualizações automaticamente quando
 tudo estiver salvo e o app estiver em segundo plano" marcada nas configurações, assim que
-não houver nada sem salvar e a janela estiver fora de vista.
+não houver nada sem salvar e a janela estiver fora de vista. Uma exceção: em uma versão até a 0.14.0, cujo início podia ficar numa página em branco sem Atualizar para pressionar, o novo worker assume de imediato — recarregar a página traz a nova versão (um segundo recarregamento, se o primeiro ainda terminou em branco).
 
 Essa também é a contrapartida: uma PWA instalada roda o que a última implantação colocou,
 enquanto um arquivo baixado fica com a versão que é. Para uma versão fixa no disco, pegue

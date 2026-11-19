@@ -100,7 +100,8 @@
     "Notes": "Заметки",
     "No OneNote sections in \"{name}\"": "В «{name}» нет разделов OneNote",
     "Reading OneNote sections: {done} of {total}": "Чтение разделов OneNote: {done} из {total}",
-    "Open OneNote notebook": "Открыть блокнот OneNote"
+    "Open OneNote notebook": "Открыть блокнот OneNote",
+    "The last folder is taking long to open. You can open it or another one meanwhile.": "Последняя папка долго открывается. Пока можно открыть её или другую папку."
   },
   "dialog": {
     "Note not found": "Заметка не найдена",

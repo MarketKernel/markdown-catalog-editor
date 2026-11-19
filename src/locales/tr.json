@@ -90,7 +90,8 @@
     "Notes": "Notlar",
     "No OneNote sections in \"{name}\"": "“{name}” içinde OneNote bölümü yok",
     "Reading OneNote sections: {done} of {total}": "OneNote bölümleri okunuyor: {done}/{total}",
-    "Open OneNote notebook": "OneNote not defterini aç"
+    "Open OneNote notebook": "OneNote not defterini aç",
+    "The last folder is taking long to open. You can open it or another one meanwhile.": "Son klasörün açılması uzun sürüyor. Bu arada onu ya da başka bir klasörü açabilirsiniz."
   },
   "dialog": {
     "Delete from this browser": "Bu tarayıcıdan sil",

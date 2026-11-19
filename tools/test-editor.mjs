@@ -980,8 +980,9 @@ await scenario('Text\n', async (b) => {
  * memoryFolder(), can be kept in IndexedDB. Access is played through
  * localStorage, since a page that is loaded again forgets what it was granted:
  * `__permission` is what queryPermission answers after a load ('granted' if
- * unset), `__answer-read` and `__answer-readwrite` what the user says when
- * asked. `window.__asked` lists the modes asked for.
+ * unset; 'hang' never answers, as Chrome has been seen to), `__answer-read` and
+ * `__answer-readwrite` what the user says when asked. `window.__asked` lists
+ * the modes asked for. The folder named by `__slow` takes five seconds to read.
  */
 const originFolders = `
   window.showDirectoryPicker = async () => (await navigator.storage.getDirectory()).getDirectoryHandle(window.__pick || 'Notes');
@@ -989,7 +990,13 @@ const originFolders = `
   window.__asked = [];
   FileSystemHandle.prototype.queryPermission = async function ({ mode }) {
     if (granted.has(mode) || (mode === 'read' && granted.has('readwrite'))) return 'granted';
+    if (localStorage.getItem('__permission') === 'hang') return new Promise(() => {});
     return localStorage.getItem('__permission') || 'granted';
+  };
+  const values = FileSystemDirectoryHandle.prototype.values;
+  FileSystemDirectoryHandle.prototype.values = async function* () {
+    if (this.name === localStorage.getItem('__slow')) await new Promise((resolve) => setTimeout(resolve, 5000));
+    yield* values.call(this);
   };
   FileSystemHandle.prototype.requestPermission = async function ({ mode }) {
     window.__asked.push(mode);
@@ -1068,6 +1075,31 @@ await scenario(null, async (b) => {
   await toGate();
   await openRecent(1);
   eq('each folder at the note last open in it', await open(), { shown: true, folder: 'Notes', note: 'b.md' });
+
+  await b.evaluate(`localStorage.setItem('__permission', 'hang')`);
+  await b.reload();
+  eq('when the browser never says whether the last folder may be opened, the start goes on to the gate', await gate(), {
+    shown: true, recent: ['Notes', 'Other'], primary: false, error: '',
+  });
+  await b.evaluate(`document.querySelectorAll('.recent-open')[0].click()`);
+  await b.sleep(2600);
+  eq('where a click on the folder asks for access and opens it', await open(), { shown: true, folder: 'Notes', note: 'b.md' });
+  await b.evaluate(`localStorage.removeItem('__permission')`);
+
+  await b.evaluate(`localStorage.setItem('__slow', 'Notes')`);
+  await b.reload();
+  eq('a last folder slow to open brings the gate up meanwhile, saying so', { ...(await gate()), note: await b.evaluate(`document.getElementById('gate-progress').textContent`) }, {
+    shown: true, recent: ['Notes', 'Other'], primary: false, error: '',
+    note: 'The last folder is taking long to open. You can open it or another one meanwhile.',
+  });
+  await pick('Other');
+  eq('another folder opens from there', (await open()).folder, 'Other');
+  await b.sleep(2500);
+  eq('and stays when the slow one is read at last', (await open()).folder, 'Other');
+  await b.evaluate(`localStorage.removeItem('__slow')`);
+  await toGate();
+  await openRecent(1);
+  eq('the slow folder opens with a click once it is quick again', (await open()).folder, 'Notes');
 
   // Access lapsed, as after a restart of the browser.
   await b.evaluate(`localStorage.setItem('__permission', 'prompt')`);

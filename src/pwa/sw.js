@@ -8,14 +8,30 @@
  * while the old one keeps serving the old page. The page's Update button
  * (update.ts) tells it to go ahead; otherwise the browser lets it in once every
  * window of the app is closed, and the next launch is the new version.
+ *
+ * Except over the pages from before the caches named macaed-2-…: one of them
+ * could stay blank at the start for good — Chrome never answering whether the
+ * last folder may be opened — with no Update button to be seen, and a reload
+ * of a tab brought back the same page. Over their cache this worker takes
+ * over at once, so a reload, or the next launch, is the page that shows the
+ * start screen whatever keeps the folder from opening.
  */
-const CACHE = 'macaed-__CACHE__';
+const FIXED = 'macaed-2-';
+const CACHE = `${FIXED}__CACHE__`;
 const VERSION = '__VERSION__';
 const SHELL = ['./', 'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png', 'icon-maskable-512.png', 'apple-touch-icon.png'];
 
 self.addEventListener('install', (event) => {
   // Past the HTTP cache: a page Pages served a few minutes ago may be the previous deploy's.
-  event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(SHELL.map((url) => new Request(url, { cache: 'reload' })))));
+  event.waitUntil(
+    caches
+      .open(CACHE)
+      .then((cache) => cache.addAll(SHELL.map((url) => new Request(url, { cache: 'reload' }))))
+      .then(() => caches.keys())
+      .then((keys) => {
+        if (keys.some((key) => key.startsWith('macaed-') && !key.startsWith(FIXED))) self.skipWaiting();
+      }),
+  );
 });
 
 self.addEventListener('activate', (event) => {

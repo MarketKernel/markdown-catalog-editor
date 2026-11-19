@@ -78,7 +78,9 @@ dossier, elle conserve donc le descripteur du dossier dans l'IndexedDB du naviga
 dernière note ouverte dans chacun. Au démarrage suivant, le dernier dossier s'ouvre de lui-même si
 le navigateur le permet encore — dans une application installée, ou une fois que vous avez choisi
 « Autoriser à chaque visite ». Sinon, l'écran de démarrage liste les dossiers récents : un clic, et
-le navigateur redemande l'accès. Pour revenir à cette liste — pour changer de dossier ou en ouvrir
+le navigateur redemande l'accès. Si le dossier met plus de quelques secondes à s'ouvrir, ou si le
+navigateur ne répond pas du tout, l'écran de démarrage s'affiche entre-temps et le dit ; ce que vous
+y ouvrez reste ouvert. Pour revenir à cette liste — pour changer de dossier ou en ouvrir
 un nouveau — cliquez sur le nom du dossier en haut du panneau des fichiers, ou sur « Fermer le
 dossier » dans les paramètres ; × retire un dossier de la liste.
 
@@ -769,7 +771,10 @@ note ouverte (ou le demande, quand elle ne peut pas être enregistrée), laisse 
 worker et recharge la page, qui annonce une fois qu'elle a été mise à jour ; l'ancien cache est
 supprimé. Sans le bouton, la nouvelle version démarre une fois que chaque fenêtre de
 l'application a été fermée — ou, avec « Installer les mises à jour automatiquement quand tout est enregistré et que l’app est en arrière-plan » coché dans les paramètres, dès que rien n'est
-non enregistré et que la fenêtre est hors de vue.
+non enregistré et que la fenêtre est hors de vue. Une exception : sur une version jusqu'à 0.14.0,
+dont le démarrage pouvait rester une page blanche sans Mettre à jour sur lequel appuyer, le nouveau
+worker prend la main aussitôt — recharger la page apporte la nouvelle version (un second
+rechargement, si le premier était encore blanc).
 
 C'est aussi le compromis : une PWA installée exécute ce que le dernier déploiement y a mis,
 tandis qu'un fichier téléchargé reste à la version qu'il est. Pour une version figée sur le

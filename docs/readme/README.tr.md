@@ -76,7 +76,7 @@ Düzenleyici orada açılan son altı klasörü hatırlar (bir sayfa bir klasör
 birinde en son açık olan notu. Sonraki başlangıçta, tarayıcı hâlâ izin veriyorsa son
 klasör kendiliğinden açılır — kurulu bir uygulamada, veya „Her ziyarette izin ver“i
 seçtiğinizde. Aksi takdirde başlangıç ekranı son kullanılan klasörleri listeler: bir
-tıklama, ve tarayıcı yeniden erişim ister. O listeye geri dönmek için — klasörleri
+tıklama, ve tarayıcı yeniden erişim ister. Klasörün açılması birkaç saniyeden uzun sürerse veya tarayıcı hiç yanıt vermezse, başlangıç ekranı bu arada gelir ve bunu söyler; orada açtığınız şey kalır. O listeye geri dönmek için — klasörleri
 değiştirmek veya yenisini açmak için — dosya panelinin üstündeki klasör adına veya
 ayarlardaki „Klasörü kapat“a tıklayın; × bir klasörü listeden kaldırır.
 
@@ -749,7 +749,7 @@ bir noktayla, ve başlangıç ekranı o zaman „Sürüm … hazır. Güncelle�
 notu kaydeder (veya kaydedilemiyorsa sorar), yeni işçiyi içeri alır ve sayfayı yeniden
 yükler, ki bu güncellendiğini bir kez söyler; eski önbellek silinir. Düğme olmadan yeni
 sürüm, uygulamanın her penceresi kapandığında başlar — veya, ayarlarda „Her şey kaydedildiğinde ve uygulama arka planda çalışırken güncellemeleri kendiliğinden yükle“ işaretliyse,
-hiçbir şey kaydedilmemiş değilken ve pencere görünmez olur olmaz.
+hiçbir şey kaydedilmemiş değilken ve pencere görünmez olur olmaz. Bir istisna: başlangıcı boş bir sayfa kalabilen ve basılacak bir Güncelle düğmesi olmayan 0.14.0'a kadarki bir sürümde yeni işçi hemen devreye girer — sayfayı yeniden yüklemek yeni sürümü getirir (ilk yükleme hâlâ boşsa ikinci bir yeniden yükleme).
 
 Bu aynı zamanda ödünleşimdir: kurulu bir PWA, son dağıtımın oraya koyduğu her neyse onunla
 çalışır, indirilen bir dosya ise olduğu sürüm olarak kalır. Diskte sabitlenmiş bir sürüm

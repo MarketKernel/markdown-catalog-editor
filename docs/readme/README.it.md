@@ -76,7 +76,9 @@ percorso di una cartella, quindi conserva il riferimento (handle) della cartella
 del browser), e l'ultima nota aperta in ciascuna. All'avvio successivo l'ultima cartella si apre
 da sola se il browser lo permette ancora — in un'app installata, o una volta scelto «Consenti a
 ogni visita». Altrimenti la schermata iniziale elenca le cartelle recenti: un clic, e il browser
-richiede di nuovo l'accesso. Per tornare a quella lista — per cambiare cartella o aprirne una
+richiede di nuovo l'accesso. Se la cartella impiega più di qualche secondo ad aprirsi, o il browser
+non risponde affatto, nel frattempo compare la schermata iniziale e lo dice; ciò che apri lì resta
+aperto. Per tornare a quella lista — per cambiare cartella o aprirne una
 nuova — fai clic sul nome della cartella in alto nel pannello dei file, oppure su «Chiudi
 cartella» nelle impostazioni; × rimuove una cartella dalla lista.
 
@@ -761,7 +763,9 @@ Aggiorna»: Aggiorna salva la nota aperta (o lo chiede, quando non può essere s
 il nuovo worker e ricarica la pagina, che annuncia una volta di essere stata aggiornata; la
 vecchia cache viene eliminata. Senza il pulsante, la nuova versione parte una volta che ogni
 finestra dell'app è stata chiusa — oppure, con «Installa gli aggiornamenti da sola quando tutto è salvato e l’app è in background» selezionata nelle impostazioni, non appena nulla resta da
-salvare e la finestra è fuori vista.
+salvare e la finestra è fuori vista. Un'eccezione: su una versione fino alla 0.14.0, il cui avvio poteva restare
+una pagina bianca senza Aggiorna da premere, il nuovo worker subentra subito — ricaricare la pagina
+porta la nuova versione (un secondo ricaricamento, se il primo era ancora bianco).
 
 Questo è anche il compromesso: una PWA installata esegue ciò che l'ultima distribuzione vi ha
 messo, mentre un file scaricato resta alla versione che è. Per una versione fissata su disco,

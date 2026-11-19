@@ -90,7 +90,8 @@
     "Notes": "নোট",
     "No OneNote sections in \"{name}\"": "“{name}”-এ OneNote-এর কোনো বিভাগ নেই",
     "Reading OneNote sections: {done} of {total}": "OneNote বিভাগ পড়া হচ্ছে: {total}-এর মধ্যে {done}",
-    "Open OneNote notebook": "OneNote নোটবুক খুলুন"
+    "Open OneNote notebook": "OneNote নোটবুক খুলুন",
+    "The last folder is taking long to open. You can open it or another one meanwhile.": "শেষ ফোল্ডারটি খুলতে অনেক সময় লাগছে। এর মধ্যে আপনি সেটি বা অন্য কোনো ফোল্ডার খুলতে পারেন।"
   },
   "dialog": {
     "Note not found": "নোট পাওয়া যায়নি",

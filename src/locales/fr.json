@@ -118,7 +118,8 @@
     "Notes": "Notes",
     "No OneNote sections in \"{name}\"": "Aucune section OneNote dans « {name} »",
     "Reading OneNote sections: {done} of {total}": "Lecture des sections OneNote : {done} sur {total}",
-    "Open OneNote notebook": "Ouvrir un bloc-notes OneNote"
+    "Open OneNote notebook": "Ouvrir un bloc-notes OneNote",
+    "The last folder is taking long to open. You can open it or another one meanwhile.": "Le dernier dossier met du temps à s’ouvrir. Vous pouvez l’ouvrir, ou en ouvrir un autre, en attendant."
   },
   "dialog": {
     "Note not found": "Note introuvable",

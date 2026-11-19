@@ -90,7 +90,8 @@
     "Notes": "Notizen",
     "No OneNote sections in \"{name}\"": "Keine OneNote-Abschnitte in „{name}“",
     "Reading OneNote sections: {done} of {total}": "OneNote-Abschnitte werden gelesen: {done} von {total}",
-    "Open OneNote notebook": "OneNote-Notizbuch öffnen"
+    "Open OneNote notebook": "OneNote-Notizbuch öffnen",
+    "The last folder is taking long to open. You can open it or another one meanwhile.": "Der zuletzt geöffnete Ordner braucht lange zum Öffnen. Sie können ihn oder einen anderen Ordner inzwischen öffnen."
   },
   "dialog": {
     "Note not found": "Notiz nicht gefunden",

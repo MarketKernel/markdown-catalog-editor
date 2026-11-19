@@ -171,17 +171,28 @@ tagTree.setCollapsed(settings.collapsedTags);
  * ------------------------------------------------------------------ */
 
 const gateError = el('gate-error');
+/**
+ * Set once the user clicks, types or drops anything while the start still
+ * waits on the browser — the gate shows by then, and may already be opening
+ * their folder: the start then opens none of its own over it.
+ */
+let startOverruled = false;
 
 /**
  * `handle` → the folder is remembered, to be offered — or reopened at once —
  * next time. False when it stayed where it was: the open note could not be
- * saved, which was said, and its text is not dropped for another folder.
+ * saved, which was said, and its text is not dropped for another folder; or
+ * `still` said no once the folder was read — the start's, overruled meanwhile.
  */
-async function useVault(next: Vault, handle: DirHandleLike | null = null): Promise<boolean> {
+async function useVault(next: Vault, handle: DirHandleLike | null = null, still: () => boolean = () => true): Promise<boolean> {
   await flushSave();
   if (dirty && vault?.writable) return false;
   // Scanned first: a folder that is gone leaves the open one, or the gate, as it was.
   const entries = await next.scan();
+  if (!still()) return false;
+  // A big folder takes a while to read, and the note open meanwhile may have been typed in.
+  await flushSave();
+  if (dirty && vault?.writable) return false;
   vault = next;
   folder = handle ? await rememberFolder(handle) : null;
   currentPath = null;
@@ -306,9 +317,9 @@ async function deleteStored(item: StoredFolder): Promise<void> {
 }
 
 /** A folder kept in the browser: there is no access to ask for, so it opens at once. */
-async function openStored(item: StoredFolder): Promise<boolean> {
+async function openStored(item: StoredFolder, still?: () => boolean): Promise<boolean> {
   gateError.textContent = '';
-  if (!(await useVault(new StoredVault(item)))) return false;
+  if (!(await useVault(new StoredVault(item), null, still))) return false;
   void touchStored(item.id);
   return true;
 }
@@ -451,21 +462,21 @@ async function closeFolder(): Promise<void> {
 
 /** The last folder, straight away — when the browser still lets the page into it without a click. */
 async function reopenLast(): Promise<boolean> {
+  // Should the user open a folder while this waits on the browser, theirs stays.
+  const still = (): boolean => !startOverruled;
   if (storing) {
     const [stored] = await storedFolders();
-    if (!stored) return false;
+    if (!stored || !still()) return false;
     try {
-      await openStored(stored);
-      return true;
+      return await openStored(stored, still);
     } catch {
       return false;
     }
   }
   const [last] = await recentFolders();
-  if (!last || !(await isGranted(last.handle))) return false;
+  if (!last || !(await isGranted(last.handle)) || !still()) return false;
   try {
-    await useVault(new DirectoryVault(last.handle, true), last.handle);
-    return true;
+    return await useVault(new DirectoryVault(last.handle, true), last.handle, still);
   } catch {
     /* moved or deleted — the gate lists it, and a click says what happened */
     return false;
@@ -2419,8 +2430,7 @@ async function openServedFolder(): Promise<boolean> {
         return file;
       }),
     );
-    await useVault(new FileListVault(files, listing.name ?? 'Notes'));
-    return true;
+    return await useVault(new FileListVault(files, listing.name ?? 'Notes'), null, () => !startOverruled);
   } catch {
     /* no listing next to the page — the folder picker stays */
     return false;
@@ -2431,13 +2441,29 @@ startUpdates(showUpdate);
 if (justUpdated()) toast(t('update', 'Updated to version {version}.', { version: __APP_VERSION__ }));
 platform.start({ clip: receiveClip, append: appendFromPopup, changed: (id, path) => void noteChanged(id, path) });
 
-// The gate stays blank meanwhile, so it does not flash up before the folder opens by itself.
+// The gate stays blank meanwhile, so it does not flash up before the folder opens by itself —
+// but not for long: whatever the browser keeps the start waiting on, a blank page would leave
+// the user with nothing to do, not even to update the app.
 void (async () => {
+  const slowNote = t('gate', 'The last folder is taking long to open. You can open it or another one meanwhile.');
+  const slow = window.setTimeout(() => {
+    gate.classList.remove('gate--starting');
+    showProgress(slowNote);
+    void renderRecent();
+  }, 3000);
+  const overrule = (): void => {
+    startOverruled = true;
+  };
+  const acts = ['click', 'keydown', 'drop'] as const;
+  for (const type of acts) document.addEventListener(type, overrule, true);
   try {
     storing = !window.showDirectoryPicker && (await canStore());
     renderGateNote();
     if (!(await openServedFolder())) await reopenLast();
   } finally {
+    window.clearTimeout(slow);
+    for (const type of acts) document.removeEventListener(type, overrule, true);
+    if (el('gate-progress').textContent === slowNote) showProgress('');
     gate.classList.remove('gate--starting');
     if (!gate.hidden) await renderRecent();
     // After the last folder has reopened, or a note launched with the app would be replaced by it.

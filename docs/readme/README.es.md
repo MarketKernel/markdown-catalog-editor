@@ -79,7 +79,7 @@ la ruta de una carpeta, así que guarda el identificador de la carpeta en el Ind
 navegador), y la última nota abierta en cada una. En el siguiente inicio, la última carpeta
 se abre por sí sola si el navegador todavía lo permite — en una app instalada, o una vez
 que elegiste "Permitir en cada visita". Si no, la pantalla de inicio muestra las carpetas
-recientes: un clic, y el navegador vuelve a pedir acceso. Para volver a esa lista — para
+recientes: un clic, y el navegador vuelve a pedir acceso. Si la carpeta tarda más de unos segundos en abrirse, o el navegador no responde en absoluto, la pantalla de inicio aparece mientras tanto y lo dice; lo que abras ahí se queda. Para volver a esa lista — para
 cambiar de carpeta o abrir una nueva — haz clic en el nombre de la carpeta en la parte
 superior del panel de archivos, o en "Cerrar carpeta" en los ajustes; × quita una carpeta
 de la lista.
@@ -788,7 +788,7 @@ vez de que se ha actualizado; la caché antigua se elimina. Sin el botón, la ve
 arranca en cuanto se han cerrado todas las ventanas de la app — o, con "Instalar las
 actualizaciones por sí solas cuando todo esté guardado y la app esté en segundo plano"
 marcada en los ajustes, en cuanto no queda nada sin guardar y la ventana está fuera de la
-vista.
+vista. Una excepción: sobre una versión hasta la 0.14.0, cuyo inicio podía quedarse en una página en blanco sin Actualizar que pulsar, el nuevo worker toma el control de inmediato — recargar la página trae la versión nueva (una segunda recarga, si la primera seguía en blanco).
 
 Ese es también el compromiso: una PWA instalada ejecuta lo que puso el último despliegue,
 mientras que un archivo descargado se queda con la versión que es. Para una versión fija

@@ -108,7 +108,8 @@
     "Notes": "ノート",
     "No OneNote sections in \"{name}\"": "「{name}」に OneNote のセクションがありません",
     "Reading OneNote sections: {done} of {total}": "OneNote のセクションを読み込み中: {done}/{total}",
-    "Open OneNote notebook": "OneNote ノートブックを開く"
+    "Open OneNote notebook": "OneNote ノートブックを開く",
+    "The last folder is taking long to open. You can open it or another one meanwhile.": "前回のフォルダを開くのに時間がかかっています。その間に、このフォルダや別のフォルダを開くことができます。"
   },
   "dialog": {
     "Note not found": "ノートが見つかりません",

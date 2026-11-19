@@ -80,7 +80,7 @@ Browsers) sowie die zuletzt geöffnete Notiz in jedem. Beim nächsten Start öff
 letzte Ordner von selbst, wenn der Browser das noch erlaubt — in einer installierten App,
 oder sobald Sie „Bei jedem Besuch erlauben“ gewählt haben. Andernfalls listet der
 Startbildschirm die zuletzt verwendeten Ordner auf: ein Klick, und der Browser fragt erneut
-nach Zugriff. Um zu dieser Liste zurückzukehren — um die Ordner zu wechseln oder einen neuen
+nach Zugriff. Braucht der Ordner mehr als ein paar Sekunden zum Öffnen oder antwortet der Browser gar nicht, erscheint währenddessen der Startbildschirm und sagt das; was Sie dort öffnen, bleibt. Um zu dieser Liste zurückzukehren — um die Ordner zu wechseln oder einen neuen
 zu öffnen — klicken Sie auf den Ordnernamen oben in der Dateileiste oder auf „Ordner
 schließen“ in den Einstellungen; × entfernt einen Ordner aus der Liste.
 
@@ -801,7 +801,7 @@ die geöffnete Notiz (oder fragt, wenn sie nicht gespeichert werden kann), läss
 Worker herein und lädt die Seite neu, die einmal sagt, dass sie aktualisiert wurde; der alte
 Cache wird gelöscht. Ohne die Schaltfläche beginnt die neue Version, sobald jedes Fenster
 der App geschlossen wurde — oder, wenn „Updates von selbst installieren, wenn alles gespeichert ist und die App im Hintergrund läuft“ in den Einstellungen aktiviert ist, sobald
-nichts ungespeichert ist und das Fenster außer Sicht ist.
+nichts ungespeichert ist und das Fenster außer Sicht ist. Eine Ausnahme: Über einer Version bis 0.14.0, deren Start eine leere Seite ohne Aktualisieren zum Drücken bleiben konnte, übernimmt der neue Worker sofort — ein Neuladen der Seite bringt die neue Version (ein zweites Neuladen, wenn das erste noch leer war).
 
 Das ist auch der Kompromiss: Eine installierte PWA läuft mit dem, was das letzte Deployment
 dorthin gebracht hat, während eine heruntergeladene Datei die Version bleibt, die sie ist.

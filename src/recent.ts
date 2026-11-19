@@ -10,7 +10,7 @@
  */
 
 import { t } from './i18n';
-import { ensureWritable, type DirHandleLike } from './vault';
+import { ensureWritable, permissionOf, type DirHandleLike } from './vault';
 
 export interface RecentFolder {
   id: number;
@@ -125,11 +125,7 @@ export async function forgetFolder(id: number): Promise<void> {
 
 /** True when the browser already lets the page write to the folder — no click needed. */
 export async function isGranted(handle: DirHandleLike): Promise<boolean> {
-  try {
-    return (await handle.queryPermission?.({ mode: 'readwrite' })) === 'granted';
-  } catch {
-    return false;
-  }
+  return (await permissionOf(handle, 'readwrite')) === 'granted';
 }
 
 /**
@@ -139,7 +135,7 @@ export async function isGranted(handle: DirHandleLike): Promise<boolean> {
 export async function regainAccess(handle: DirHandleLike): Promise<boolean> {
   if (await ensureWritable(handle)) return true;
   try {
-    if ((await handle.queryPermission?.({ mode: 'read' })) === 'granted') return false;
+    if ((await permissionOf(handle, 'read')) === 'granted') return false;
     if ((await handle.requestPermission?.({ mode: 'read' })) === 'granted') return false;
   } catch {
     /* reported below */

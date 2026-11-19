@@ -77,7 +77,9 @@ peramban), beserta catatan yang terakhir dibuka di masing-masing. Pada saat beri
 dimulai, folder terakhir terbuka dengan sendirinya jika peramban masih mengizinkannya —
 dalam aplikasi yang terpasang, atau setelah Anda memilih "Izinkan setiap kunjungan". Jika
 tidak, layar awal menampilkan daftar folder terbaru: satu klik, dan peramban meminta akses
-lagi. Untuk kembali ke daftar itu — untuk berpindah folder atau membuka folder baru — klik
+lagi. Jika folder butuh lebih dari beberapa detik untuk terbuka, atau peramban sama sekali tidak
+menjawab, layar awal muncul untuk sementara dan menyatakannya; apa pun yang Anda buka di sana tetap
+terbuka. Untuk kembali ke daftar itu — untuk berpindah folder atau membuka folder baru — klik
 nama folder di bagian atas panel file, atau "Tutup folder" di pengaturan; × menghapus sebuah
 folder dari daftar.
 
@@ -771,7 +773,9 @@ halaman, yang sekali mengatakan bahwa halaman telah diperbarui; cache lama dihap
 tombol itu, versi baru dimulai begitu setiap jendela aplikasi telah ditutup — atau, dengan
 "Pasang pembaruan secara otomatis saat semua tersimpan dan aplikasi berada di latar belakang"
 dicentang pada pengaturan, segera setelah tidak ada yang belum tersimpan dan jendelanya tidak
-terlihat.
+terlihat. Satu pengecualian: pada versi hingga 0.14.0, yang permulaannya bisa tetap berupa halaman
+kosong tanpa Perbarui untuk ditekan, worker baru langsung mengambil alih — memuat ulang halaman
+membawa versi baru (pemuatan ulang kedua, jika yang pertama masih kosong).
 
 Itu juga menjadi kompromisnya: sebuah PWA yang terpasang menjalankan apa pun yang ditaruh
 oleh deploy terakhir, sementara sebuah file yang diunduh tetap pada versinya. Untuk sebuah

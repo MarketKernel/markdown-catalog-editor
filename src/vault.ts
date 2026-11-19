@@ -268,6 +268,18 @@ export interface DirHandleLike {
   isSameEntry?(other: DirHandleLike): Promise<boolean>;
 }
 
+/**
+ * The access the page has to a handle; null when the browser does not say.
+ * Chrome has been seen never to answer for a folder remembered from an earlier
+ * session, and whoever waits on it — the start, with the gate hidden — would
+ * wait for good: past two seconds that counts as no answer.
+ */
+export function permissionOf(handle: DirHandleLike | FileHandleLike, mode: 'read' | 'readwrite'): Promise<PermissionState | null> {
+  if (!handle.queryPermission) return Promise.resolve(null);
+  const late = new Promise<null>((resolve) => setTimeout(() => resolve(null), 2000));
+  return Promise.race([handle.queryPermission({ mode }).catch(() => null), late]);
+}
+
 declare global {
   interface Window {
     showDirectoryPicker?(options?: { mode?: 'read' | 'readwrite' }): Promise<DirHandleLike>;
@@ -591,7 +603,7 @@ export async function fileWritable(handle: FileHandleLike): Promise<boolean> {
   if (!handle.createWritable) return false;
   try {
     if (!handle.queryPermission) return true;
-    if ((await handle.queryPermission({ mode: 'readwrite' })) === 'granted') return true;
+    if ((await permissionOf(handle, 'readwrite')) === 'granted') return true;
     return (await handle.requestPermission?.({ mode: 'readwrite' })) === 'granted';
   } catch {
     return false;
@@ -684,7 +696,7 @@ export class NoteFilesVault implements Vault {
 export async function ensureWritable(handle: DirHandleLike): Promise<boolean> {
   if (!handle.requestPermission) return false;
   try {
-    if ((await handle.queryPermission?.({ mode: 'readwrite' })) === 'granted') return true;
+    if ((await permissionOf(handle, 'readwrite')) === 'granted') return true;
     return (await handle.requestPermission({ mode: 'readwrite' })) === 'granted';
   } catch {
     return false;

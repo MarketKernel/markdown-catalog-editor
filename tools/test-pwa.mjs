@@ -4,7 +4,9 @@
  * gone. Then updates: the settings check for one — none yet, no connection,
  * a new deploy — and a new version waits beside the running one until Update
  * lets it in; the old cache goes, "Updated to …" is said once. A version that
- * turns up while the start screen shows is offered there.
+ * turns up while the start screen shows is offered there. Over a worker from
+ * before the macaed-2- caches, whose page could stay blank with no Update to
+ * press, the new one takes over at once.
  *
  * The server here plays GitHub Pages: it serves build/pages/ and, beside the
  * page, a note with its index.json, so the page opens a folder by itself
@@ -33,7 +35,7 @@ if (!existsSync(join(PAGES, 'sw.js'))) {
 
 const { check, done } = checker();
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.webmanifest': 'application/manifest+json', '.svg': 'image/svg+xml', '.png': 'image/png', '.json': 'application/json' };
-const state = { offline: false, notes: true, nextVersion: null };
+const state = { offline: false, notes: true, nextVersion: null, legacy: true };
 
 const server = createServer(async (req, res) => {
   if (state.offline) {
@@ -58,11 +60,17 @@ const server = createServer(async (req, res) => {
     return;
   }
   let body = await readFile(file);
+  if (path === '/sw.js' && state.legacy) {
+    body = body
+      .toString()
+      .replace(/const VERSION = '[^']*'/, `const VERSION = 'legacy'`)
+      .replace(/const CACHE = [^;]*;/, `const CACHE = 'macaed-0.14.0-legacy';`);
+  }
   if (path === '/sw.js' && state.nextVersion) {
     body = body
       .toString()
       .replace(/const VERSION = '[^']*'/, `const VERSION = '${state.nextVersion}'`)
-      .replace(/const CACHE = '([^']*)'/, `const CACHE = '$1-${state.nextVersion}'`);
+      .replace(/const CACHE = `([^`]*)`/, `const CACHE = \`$1-${state.nextVersion}\``);
   }
   res.setHeader('content-type', TYPES[extname(file)] ?? 'application/octet-stream');
   // As Pages does: a short HTTP cache, which the worker's install goes past.
@@ -99,6 +107,17 @@ try {
   check('pwa: service worker in control', await until(`navigator.serviceWorker.controller !== null`), true);
   check('pwa: manifest parsed', (await chrome.send('Page.getAppManifest', {}, s)).errors, []);
   check('pwa: installable', (await chrome.send('Page.getInstallabilityErrors', {}, s)).installabilityErrors, []);
+  // A worker from before the macaed-2- caches: its page could stay blank at the start.
+  check('pwa: a worker of an older version at first', await workerVersion(), 'legacy');
+  state.legacy = false;
+  await evaluate(`navigator.serviceWorker.getRegistration().then((r) => r.update()).then(() => true)`);
+  check(
+    'pwa: the next one takes over at once, with no Update to press',
+    await until(`new Promise((resolve) => { const c = new MessageChannel(); c.port1.onmessage = (e) => resolve(e.data !== 'legacy'); navigator.serviceWorker.controller.postMessage('version', [c.port2]); })`, 15000),
+    true,
+  );
+  check('pwa: and the older cache is gone', await until(`caches.keys().then((keys) => keys.length === 1 && keys[0].startsWith('macaed-2-'))`), true);
+  await load();
   const running = await workerVersion();
   check('pwa: the page and its worker are one version', await evaluate(`document.getElementById('version').textContent`), running);
 
