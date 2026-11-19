@@ -221,8 +221,16 @@ button, input, textarea, select {
 .gate-error { color: var(--danger); min-height: 1.4em; margin: 12px 0 0; }
 .gate-version { color: var(--faint); font-size: 12px; margin: 14px 0 0; }
 .gate-update { margin-top: 4px; }
-/* Blank until the start has tried to reopen the last folder by itself. */
-.gate--starting .gate-inner { visibility: hidden; }
+/*
+ * While the start reopens the last folder by itself: blank at first, so a quick start flashes
+ * nothing; past a moment, a splash of the logo and the folder being opened (main.ts).
+ */
+.gate--starting .gate-inner > :not(.gate-logo, #gate-progress) { display: none; }
+.gate--starting .gate-inner { animation: gate-splash 0.25s ease 0.4s both; }
+@keyframes gate-splash {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
 .recent {
   text-align: start;

@@ -96,7 +96,8 @@
     "No OneNote sections in \"{name}\"": "Nenhuma seção do OneNote em “{name}”",
     "Reading OneNote sections: {done} of {total}": "Lendo seções do OneNote: {done} de {total}",
     "Open OneNote notebook": "Abrir bloco do OneNote",
-    "The last folder is taking long to open. You can open it or another one meanwhile.": "A última pasta está demorando para abrir. Enquanto isso, você pode abri-la ou abrir outra pasta."
+    "The last folder is taking long to open. You can open it or another one meanwhile.": "A última pasta está demorando para abrir. Enquanto isso, você pode abri-la ou abrir outra pasta.",
+    "Opening \"{name}\"…": "Abrindo \"{name}\"…"
   },
   "dialog": {
     "Delete from this browser": "Excluir deste navegador",

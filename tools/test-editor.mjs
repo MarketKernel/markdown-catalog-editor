@@ -1099,7 +1099,15 @@ await scenario(null, async (b) => {
   await toGate();
 
   await b.evaluate(`localStorage.setItem('__slow', 'Notes')`);
-  await b.reload();
+  await b.evaluate(`location.reload(), true`);
+  await b.sleep(1500);
+  eq('a start that takes a moment shows a splash with the folder it opens', await b.evaluate(`({
+    starting: document.getElementById('gate').classList.contains('gate--starting'),
+    opacity: getComputedStyle(document.querySelector('.gate-inner')).opacity,
+    shown: [...document.querySelectorAll('.gate-inner > *')].filter((n) => n.getClientRects().length).map((n) => n.id || n.className),
+    line: document.getElementById('gate-progress').textContent,
+  })`), { starting: true, opacity: '1', shown: ['gate-logo', 'gate-progress'], line: 'Opening "Notes"…' });
+  await b.sleep(2000);
   eq('a last folder slow to open brings the gate up meanwhile, saying so', { ...(await gate()), note: await b.evaluate(`document.getElementById('gate-progress').textContent`) }, {
     shown: true, recent: ['Notes', 'Other'], primary: false, error: '',
     note: 'The last folder is taking long to open. You can open it or another one meanwhile.',

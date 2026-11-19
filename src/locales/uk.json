@@ -101,7 +101,8 @@
     "No OneNote sections in \"{name}\"": "У «{name}» немає розділів OneNote",
     "Reading OneNote sections: {done} of {total}": "Читання розділів OneNote: {done} з {total}",
     "Open OneNote notebook": "Відкрити блокнот OneNote",
-    "The last folder is taking long to open. You can open it or another one meanwhile.": "Остання папка довго відкривається. Тим часом можна відкрити її або іншу папку."
+    "The last folder is taking long to open. You can open it or another one meanwhile.": "Остання папка довго відкривається. Тим часом можна відкрити її або іншу папку.",
+    "Opening \"{name}\"…": "Відкриваю «{name}»…"
   },
   "dialog": {
     "Note not found": "Нотатку не знайдено",

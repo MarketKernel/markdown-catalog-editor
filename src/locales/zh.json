@@ -109,7 +109,8 @@
     "No OneNote sections in \"{name}\"": "“{name}”中没有 OneNote 分区",
     "Reading OneNote sections: {done} of {total}": "正在读取 OneNote 分区：{done}/{total}",
     "Open OneNote notebook": "打开 OneNote 笔记本",
-    "The last folder is taking long to open. You can open it or another one meanwhile.": "上次的文件夹打开时间较长。在此期间，你可以打开它或其他文件夹。"
+    "The last folder is taking long to open. You can open it or another one meanwhile.": "上次的文件夹打开时间较长。在此期间，你可以打开它或其他文件夹。",
+    "Opening \"{name}\"…": "正在打开“{name}”…"
   },
   "dialog": {
     "Note not found": "未找到笔记",

@@ -86,7 +86,8 @@
     "No OneNote sections in \"{name}\"": "Tidak ada bagian OneNote di \"{name}\"",
     "Reading OneNote sections: {done} of {total}": "Membaca bagian OneNote: {done} dari {total}",
     "Open OneNote notebook": "Buka buku catatan OneNote",
-    "The last folder is taking long to open. You can open it or another one meanwhile.": "Folder terakhir lama sekali terbuka. Sementara itu, Anda dapat membukanya atau membuka folder lain."
+    "The last folder is taking long to open. You can open it or another one meanwhile.": "Folder terakhir lama sekali terbuka. Sementara itu, Anda dapat membukanya atau membuka folder lain.",
+    "Opening \"{name}\"…": "Membuka \"{name}\"…"
   },
   "dialog": {
     "Note not found": "Catatan tidak ditemukan",

@@ -134,7 +134,8 @@
     "No OneNote sections in \"{name}\"": "لا توجد أقسام OneNote في «{name}»",
     "Reading OneNote sections: {done} of {total}": "قراءة أقسام OneNote: {done} من {total}",
     "Open OneNote notebook": "فتح دفتر OneNote",
-    "The last folder is taking long to open. You can open it or another one meanwhile.": "يستغرق فتح المجلد الأخير وقتًا طويلًا. يمكنك في هذه الأثناء فتحه أو فتح مجلد آخر."
+    "The last folder is taking long to open. You can open it or another one meanwhile.": "يستغرق فتح المجلد الأخير وقتًا طويلًا. يمكنك في هذه الأثناء فتحه أو فتح مجلد آخر.",
+    "Opening \"{name}\"…": "جارٍ فتح «{name}»…"
   },
   "dialog": {
     "Note not found": "الملاحظة غير موجودة",

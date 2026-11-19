@@ -119,7 +119,8 @@
     "No OneNote sections in \"{name}\"": "Nessuna sezione di OneNote in «{name}»",
     "Reading OneNote sections: {done} of {total}": "Lettura delle sezioni di OneNote: {done} di {total}",
     "Open OneNote notebook": "Apri blocco appunti OneNote",
-    "The last folder is taking long to open. You can open it or another one meanwhile.": "L’ultima cartella sta impiegando molto ad aprirsi. Nel frattempo puoi aprirla tu o aprirne un’altra."
+    "The last folder is taking long to open. You can open it or another one meanwhile.": "L’ultima cartella sta impiegando molto ad aprirsi. Nel frattempo puoi aprirla tu o aprirne un’altra.",
+    "Opening \"{name}\"…": "Apertura di «{name}»…"
   },
   "dialog": {
     "Delete from this browser": "Elimina da questo browser",

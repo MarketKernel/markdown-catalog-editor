@@ -177,6 +177,15 @@ const gateError = el('gate-error');
  * their folder: the start then opens none of its own over it.
  */
 let startOverruled = false;
+/** What the start says on the gate while it opens a folder by itself; cleared when it is over. */
+let startNote = '';
+
+/** The start's line on the gate — unless the user has gone on to something of their own there. */
+function noteStart(text: string): void {
+  if (startOverruled) return;
+  startNote = text;
+  showProgress(text);
+}
 
 /**
  * `handle` → the folder is remembered, to be offered — or reopened at once —
@@ -467,6 +476,7 @@ async function reopenLast(): Promise<boolean> {
   if (storing) {
     const [stored] = await storedFolders();
     if (!stored || !still()) return false;
+    noteStart(t('gate', 'Opening "{name}"…', { name: stored.name }));
     try {
       return await openStored(stored, still);
     } catch {
@@ -474,7 +484,9 @@ async function reopenLast(): Promise<boolean> {
     }
   }
   const [last] = await recentFolders();
-  if (!last || !(await isGranted(last.handle)) || !still()) return false;
+  if (!last) return false;
+  noteStart(t('gate', 'Opening "{name}"…', { name: last.name }));
+  if (!(await isGranted(last.handle)) || !still()) return false;
   try {
     return await useVault(new DirectoryVault(last.handle, true), last.handle, still);
   } catch {
@@ -2422,6 +2434,7 @@ async function openServedFolder(): Promise<boolean> {
     if (!response.ok) return false;
     const listing = (await response.json()) as { files?: string[]; name?: string };
     if (!Array.isArray(listing.files) || listing.files.length === 0) return false;
+    noteStart(t('gate', 'Opening "{name}"…', { name: listing.name ?? 'Notes' }));
     const files = await Promise.all(
       listing.files.map(async (path) => {
         const blob = await (await fetch(path)).blob();
@@ -2448,7 +2461,7 @@ void (async () => {
   const slowNote = t('gate', 'The last folder is taking long to open. You can open it or another one meanwhile.');
   const slow = window.setTimeout(() => {
     gate.classList.remove('gate--starting');
-    showProgress(slowNote);
+    noteStart(slowNote);
     void renderRecent();
   }, 3000);
   const overrule = (): void => {
@@ -2463,7 +2476,7 @@ void (async () => {
   } finally {
     window.clearTimeout(slow);
     for (const type of acts) document.removeEventListener(type, overrule, true);
-    if (el('gate-progress').textContent === slowNote) showProgress('');
+    if (startNote && el('gate-progress').textContent === startNote) showProgress('');
     gate.classList.remove('gate--starting');
     if (!gate.hidden) await renderRecent();
     // After the last folder has reopened, or a note launched with the app would be replaced by it.

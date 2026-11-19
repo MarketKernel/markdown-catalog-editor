@@ -114,7 +114,8 @@
     "No OneNote sections in \"{name}\"": "\"{name}\" میں OneNote کا کوئی سیکشن نہیں",
     "Reading OneNote sections: {done} of {total}": "OneNote سیکشن پڑھے جا رہے ہیں: {done} از {total}",
     "Open OneNote notebook": "OneNote نوٹ بک کھولیں",
-    "The last folder is taking long to open. You can open it or another one meanwhile.": "آخری فولڈر کھلنے میں کافی وقت لے رہا ہے۔ اس دوران آپ اسے یا کوئی دوسرا فولڈر کھول سکتے ہیں۔"
+    "The last folder is taking long to open. You can open it or another one meanwhile.": "آخری فولڈر کھلنے میں کافی وقت لے رہا ہے۔ اس دوران آپ اسے یا کوئی دوسرا فولڈر کھول سکتے ہیں۔",
+    "Opening \"{name}\"…": "«{name}» کھولا جا رہا ہے…"
   },
   "dialog": {
     "Note not found": "نوٹ نہیں ملا",
